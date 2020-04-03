@@ -105,8 +105,8 @@ exports.createUser = functions.https.onCall((data, context) => {
         throw new functions.https.HttpsError('failed-precondition', 'You must be an admin to call this function');
     }
 
-    const branchRef = db.collection('branches').doc(adminid);
-    branchRef.get().then(doc => {
+    const departmentRef = db.doc(`branches/${adminid}/departments/${data.departmentid}`);
+    departmentRef.get().then(doc => {
         if (doc.exists) {
             const emailPrefix =  data.emailPrefix;
             const password = data.password;
@@ -120,8 +120,7 @@ exports.createUser = functions.https.onCall((data, context) => {
             .then( userRecord => {
                 const newUid = userRecord.uid;
                 admin.auth().setCustomUserClaims(newUid, {branchid: adminid});
-                branchRef.collection('departments').doc(departmentid)
-                .collection('users').doc(newUid).set({
+                departmentRef.collection('users').doc(newUid).set({
                     branchid: adminid,
                     departmentid: departmentid,
                     name: name,

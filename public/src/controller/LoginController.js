@@ -1,10 +1,11 @@
+import Auth from '../data/Auth.js';
+
 export default class LoginController {
     
-    constructor(auth, loginView) {
-        this.auth = auth;
+    constructor(loginView) {
+        this.auth = Auth.getInstance();
         this.loginView = loginView;
 
-        this.auth.on('signed-in', this.signedIn.bind(this));
         this.auth.on('signed-out', this.signedOut.bind(this));
         this.auth.on('error', this.error.bind(this));
 
@@ -13,15 +14,11 @@ export default class LoginController {
         });
 
         this.appRouter = document.querySelector('app-router');
-        this.auth.init();
-    }
-
-    signedIn(user) {
-
     }
 
     signedOut() {
-        this.appRouter.showView('home', this.loginView);
+        this.appRouter.addView('login', this.loginView);
+        this.appRouter.showView('login');
     }
 
     error(e) {

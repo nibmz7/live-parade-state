@@ -1,0 +1,51 @@
+@font-face {
+    font-family: "Quicksand";
+    src: url("quicksand.ttf");
+    font-weight: 1 999;
+}
+  
+* {
+    -webkit-tap-highlight-color: transparent;
+    -webkit-touch-callout: none;
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+}
+  
+input,
+textarea{
+    -webkit-touch-callout: default;
+    -webkit-user-select: text;
+    -moz-user-select: text;
+    -ms-user-select: text;
+    user-select: text;
+}
+
+wc-button {
+    --button-font-size: 1.3rem;
+    --button-padding: 15px 10px;
+}
+
+html,
+body {
+    overflow: hidden;
+    height: 100%;
+    width: 100%;
+    padding: 0;
+    margin: 0;
+    --color-primary: #FF3838;
+    --color-primary-dark: #E90000;
+    --color-primary-rgb: 255,56,56;
+    font-family: 'Quicksand';
+    font-weight: 500;
+    background: #FAF5FA;
+    --primary-blue: #0652DD;
+    --primary-blue-dark: #043DA5;
+    --primary-blue-rgb: 6,82,221;
+}
+
+::-webkit-scrollbar {
+  display: none;
+}

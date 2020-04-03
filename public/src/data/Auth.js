@@ -1,11 +1,17 @@
 import EventDispatcher from '../util/EventDispatcher.js';
 
+let instance;
 export default class Auth extends EventDispatcher {
 
     constructor() {
         super();
     }
-    
+
+    static getInstance() {
+        if (!instance) instance = new Auth();
+        return instance;
+    }
+
     init() {
         firebase.auth().onAuthStateChanged(user => {
             if (user) {

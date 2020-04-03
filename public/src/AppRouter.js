@@ -1,7 +1,13 @@
 const template = `
 
     <style>
-
+        .container {
+            height: 100%;
+            width: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
     </style>
 
     <div class="container">
@@ -18,8 +24,19 @@ export default class AppRouter extends HTMLElement {
         this.container = this.shadowRoot.querySelector('.container');
     }
 
-    showView(id, view) {
-        view.id = id;
+    addView(id, view) {
+        while (this.container.firstChild) {
+            this.container.removeChild(this.container.firstChild);
+        }
         this.container.appendChild(view);
     }
+
+    showView(id) {
+
+    }
+
+    hideView(id) {
+
+    }
+
 } 
