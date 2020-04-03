@@ -119,6 +119,7 @@ exports.createUser = functions.https.onCall((data, context) => {
             })
             .then( userRecord => {
                 const newUid = userRecord.uid;
+                admin.auth().setCustomUserClaims(newUid, {branchid: adminid});
                 branchRef.collection('departments').doc(departmentid)
                 .collection('users').doc(newUid).set({
                     branchid: adminid,
