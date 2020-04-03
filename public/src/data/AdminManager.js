@@ -1,5 +1,7 @@
 export default class AdminManager {
     constructor() {
+        this.functions = firebase.app().functions('asia-northeast1');
+        this.functions.useFunctionsEmulator('http://localhost:5001');
         this.user = firebase.auth().currentUser;
         this.db = firebase.firestore();
     }
@@ -18,7 +20,7 @@ export default class AdminManager {
     }
 
     createUser(emailPrefix, password, name, rank, departmentid) {
-        var createUser = firebase.functions().httpsCallable('createUser');
+        let createUser = this.functions.httpsCallable('createUser');
         createUser({ emailPrefix, password, name, rank, departmentid }).then(result => {
             console.log(result);
         }).catch(error => {

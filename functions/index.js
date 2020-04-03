@@ -1,10 +1,13 @@
 //TODO: remove duplicate codes
 const functions = require('firebase-functions');
 const admin = require('firebase-admin');
-admin.initializeApp();
+serviceAccount = require(process.env.PATH_TO_SAKFILE);
+const adminConfig = JSON.parse(process.env.FIREBASE_CONFIG);
+adminConfig.credential = admin.credential.cert(serviceAccount);
+admin.initializeApp(adminConfig);
 const db = admin.firestore();
 
-exports.deleteUser = functions.https.onCall((data, context) => {
+exports.deleteUser = functions.region('asia-northeast1').https.onCall((data, context) => {
     if (!context.auth) {
         throw new functions.https.HttpsError('failed-precondition', 'The function must be called ' +
             'while authenticated.');
@@ -35,7 +38,7 @@ exports.deleteUser = functions.https.onCall((data, context) => {
     });
 });
 
-exports.updateUser = functions.https.onCall((data, context) => {
+exports.updateUser = functions.region('asia-northeast1').https.onCall((data, context) => {
     if (!context.auth) {
         throw new functions.https.HttpsError('failed-precondition', 'The function must be called ' +
             'while authenticated.');
@@ -68,7 +71,7 @@ exports.updateUser = functions.https.onCall((data, context) => {
     });
 });
 
-exports.updatePassword = functions.https.onCall((data, context) => {
+exports.updatePassword = functions.region('asia-northeast1').https.onCall((data, context) => {
     if (!context.auth) {
         throw new functions.https.HttpsError('failed-precondition', 'The function must be called ' +
             'while authenticated.');
@@ -93,7 +96,7 @@ exports.updatePassword = functions.https.onCall((data, context) => {
     });
 });
 
-exports.createUser = functions.https.onCall((data, context) => {
+exports.createUser = functions.region('asia-northeast1').https.onCall( async (data, context) => {
     if (!context.auth) {
         throw new functions.https.HttpsError('failed-precondition', 'The function must be called ' +
             'while authenticated.');
@@ -104,7 +107,8 @@ exports.createUser = functions.https.onCall((data, context) => {
     if (adminEmail.split('@')[0] != 'admin') {
         throw new functions.https.HttpsError('failed-precondition', 'You must be an admin to call this function');
     }
-
+    await db.collection('branches').add({name: "john doe"});
+    return {success: true};
     const departmentRef = db.doc(`branches/${adminid}/departments/${data.departmentid}`);
     departmentRef.get().then(doc => {
         if (doc.exists) {

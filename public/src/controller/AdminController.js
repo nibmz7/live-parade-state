@@ -7,11 +7,16 @@ export default class AdminController {
         this.adminView = adminView;
         this.appRouter = document.querySelector('app-router');
         this.adminView.bindCreateDepartment(this.createDepartment.bind(this));
+        this.adminView.bindCreateUser(this.createUser.bind(this));
         Auth.getInstance().on('signed-in', this.signedIn.bind(this));
     }
 
     createDepartment(name) {
         this.adminManager.createDepartment(name);
+    }
+
+    createUser(emailPrefix, password, name, rank, departmentid) {
+        this.adminManager.createUser(emailPrefix, password, name, rank, departmentid);
     }
 
     signedIn(user) {

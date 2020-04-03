@@ -16,8 +16,21 @@ export default class AdminView extends HTMLElement {
 
     bindCreateDepartment(listener) {
         let button = this.shadowRoot.querySelector('wc-button');
+        // button.onclick = e => {
+        //     listener('Log branch');
+        // }
+    }
+
+    bindCreateUser(listener) {
+        let button = this.shadowRoot.querySelector('wc-button');
         button.onclick = e => {
-            listener('Log branch');
+            listener(
+                "jimbob", 
+                "lol1234", 
+                "jim bob", 
+                "lcp", 
+                "VQYJGNSRt9FHDUjq9R3P"
+            );
         }
     }
 }
