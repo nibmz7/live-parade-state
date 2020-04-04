@@ -1,4 +1,4 @@
-export const input = `
+export const inputStyle = `
     input {
         font: inherit;
         margin: 15px 0;
@@ -21,3 +21,13 @@ export const input = `
         100% { border-color: var(--color-primary); }
     }
 `;
+
+export const cardStyle = `
+    .card {
+        background: white;
+        box-shadow: 0px 2px 50px 0px rgba(209, 202, 209, 1);
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+    }
+`; 

@@ -1,6 +1,5 @@
 import EventDispatcher from '../util/EventDispatcher.js';
 
-let instance;
 export default class Auth extends EventDispatcher {
 
     constructor() {
@@ -8,8 +7,8 @@ export default class Auth extends EventDispatcher {
     }
 
     static getInstance() {
-        if (!instance) instance = new Auth();
-        return instance;
+        if (!Auth.instance) Auth.instance = new Auth();
+        return Auth.instance;
     }
 
     init() {
@@ -30,3 +29,4 @@ export default class Auth extends EventDispatcher {
     }
 
 }
+Auth.instance = null;

@@ -22,7 +22,7 @@ exports.deleteUser = functions.region('asia-northeast1').https.onCall(async (dat
     let isAdmin = await checkIsAdmin(context);
     if (isAdmin) {
         const adminid = context.auth.uid;
-        await admin.auth().deleteUser(uid)
+        await admin.auth().deleteUser(data.uid);
         await doc(`branches/${adminid}/departments/${data.departmentid}/users/${data.uid}`).delete();
         return { success: true };
     }

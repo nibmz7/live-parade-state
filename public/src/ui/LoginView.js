@@ -1,4 +1,4 @@
-import {input} from '../util/GlobalStyles.js';
+import {inputStyle, cardStyle} from '../util/GlobalStyles.js';
 
 const template = `
     <style>
@@ -6,7 +6,9 @@ const template = `
             width: 70%;
         }
 
-        ${input}
+        ${inputStyle}
+
+        ${cardStyle}
 
         input {
             --color-primary: #8899a9;
@@ -24,11 +26,6 @@ const template = `
 
         .card {
             border-radius: 5px;
-            background: white;
-            box-shadow: 0px 2px 50px 0px rgba(209, 202, 209, 1);
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
             padding: 10px 20px;
         }
 
