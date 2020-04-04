@@ -10,12 +10,6 @@ const template = `
 
         ${cardStyle}
 
-        input {
-            --color-primary: #8899a9;
-            --color-primary-dark: #34495e;
-            font-size: 1rem;
-        }
-
         #email {
             margin-bottom: 0px;
         }

@@ -1,5 +1,7 @@
 export const inputStyle = `
     input {
+        --color-primary: #8899a9;
+        --color-primary-dark: #34495e;
         font: inherit;
         margin: 15px 0;
         outline: none;

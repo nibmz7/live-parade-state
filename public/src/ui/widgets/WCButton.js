@@ -6,7 +6,6 @@ const template = `
         --button-font-size: 1.3rem;
         --button-padding: 15px 10px;
         --button-radius: 5px;
-        box-shadow: 0 4px 6px -1px rgba(var(--color-primary-rgb), 0.2), 0 2px 4px -1px rgba(var(--color-primary-rgb), 0.12);
     }
 
     :host([type="outline"]) > button {
@@ -46,6 +45,7 @@ const template = `
         background: var(--color-primary);
         width: 100%;
         transition: all .2s;
+        box-shadow: 0 4px 6px -1px rgba(var(--color-primary-rgb), 0.2), 0 2px 4px -1px rgba(var(--color-primary-rgb), 0.12);
     }
     
     button:active {

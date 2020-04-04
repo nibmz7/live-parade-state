@@ -11,9 +11,10 @@ const template = content => `
             grid-template-areas: "content";
             justify-items: center;
             align-items: center;
-            height: 100vh;
+            height: 100%;
+            width: 100%;
             opacity: 1;
-            z-index: 99;
+            z-index: 98;
         }
 
         @keyframes fade-in {
@@ -54,8 +55,8 @@ const template = content => `
         #scrim {
             background: rgba(0,0,0,.2);
             grid-area: content;
-            height: 100vh;
-            width: 100vw;
+            height: 100%;
+            width: 100%;
         }
 
         #dialogue {
@@ -111,13 +112,14 @@ export default class Dialogue extends HTMLElement {
         this.attachShadow({ mode: 'open' });
         this.shadowRoot.innerHTML = template(content);
         this.root = this.shadowRoot.getElementById('root');
+        this.isCancelleable = true;
         let scrim = this.shadowRoot.getElementById('scrim');
         let dialogue = this.shadowRoot.getElementById('dialogue');
 
         Utils.animate(this.root, 'show', () => {
             this.root.classList.remove('show');
             scrim.onclick = e => {
-                this.close();
+                if(this.isCancelleable) this.close();
             }
         });
     }

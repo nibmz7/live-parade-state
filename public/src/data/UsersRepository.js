@@ -21,7 +21,18 @@ export default class UserRepository extends EventDispatcher {
         else userRef.update({"status.pm": {...status}});
     }
 
-    subscribe(branchid) {
+    subscribeDepartments(branchid) {
+        let departments = this.db.collection(`branches/${branchid}/departments`);
+        this.departmentsUnsubscribe = departments.onSnapshot(snapshot => {
+            for (let change of snapshot.docChanges()) {
+                let uid = change.doc.id;
+                let name = change.doc.data().name;
+                this.emit(`department-${change.type}`, {uid, name});
+            }
+        });
+    }
+
+    subscribeUsers(branchid) {
         let users = this.db.collectionGroup('users').where('branchid', '==', branchid);
         this.usersUnsubscribe = users.onSnapshot(snapshot => {
             for (let change of snapshot.docChanges()) {
@@ -38,7 +49,12 @@ export default class UserRepository extends EventDispatcher {
         });
     }
 
-    unsubscribe() {
+    unsubscribeDepartments() {
+        this.departmentsUnsubscribe();
+
+    }
+
+    unsubscribeUsers() {
         this.usersUnsubscribe();
     }
 
