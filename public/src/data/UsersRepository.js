@@ -1,12 +1,13 @@
-import EventDispatcher from "../util/EventDispatcher";
+import EventDispatcher from "../util/EventDispatcher.js";
 
 export default class UserRepository extends EventDispatcher {
 
     constructor() {
+        super();
         this.db = firebase.firestore();
     }
 
-    getBranchName(branchid) {
+    async getBranchName(branchid) {
         return await this.db.doc(`branches/${branchid}`);
     }
 

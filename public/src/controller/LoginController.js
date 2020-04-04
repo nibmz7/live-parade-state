@@ -13,12 +13,11 @@ export default class LoginController {
             this.auth.login(email, password);
         });
 
-        this.appRouter = document.querySelector('app-router');
+        this.viewSwitcher = document.querySelector('view-switcher');
     }
 
     signedOut() {
-        this.appRouter.addView('login', this.loginView);
-        this.appRouter.showView('login');
+        this.viewSwitcher.showView('login', this.loginView);
     }
 
     error(e) {

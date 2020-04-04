@@ -15,7 +15,7 @@ const template = `
     </div>
 `;
 
-export default class AppRouter extends HTMLElement {
+export default class ViewSwitcher extends HTMLElement {
 
     constructor() {
         super();
@@ -24,19 +24,11 @@ export default class AppRouter extends HTMLElement {
         this.container = this.shadowRoot.querySelector('.container');
     }
 
-    addView(id, view) {
+    showView(id, view) {
         while (this.container.firstChild) {
             this.container.removeChild(this.container.firstChild);
         }
         this.container.appendChild(view);
-    }
-
-    showView(id) {
-
-    }
-
-    hideView(id) {
-
     }
 
 } 

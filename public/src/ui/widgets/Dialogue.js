@@ -1,4 +1,4 @@
-import Utils from '../util/Utils.js';
+import Utils from '../../util/Utils.js';
 
 const template = content => `
     <style>

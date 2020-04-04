@@ -1,4 +1,4 @@
-import EventElement from '../../widget/EventElement.js';
+import EventElement from '../widgets/EventElement.js';
 
 const template = `
     <style>
@@ -14,25 +14,11 @@ export default class AdminView extends EventElement {
         super();
         this.attachShadow({mode: 'open'});
         this.shadowRoot.innerHTML = template;
-    }
-
-    bindCreateDepartment(listener) {
-        let button = this.shadowRoot.querySelector('wc-button');
-        // button.onclick = e => {
-        //     listener('Log branch');
-        // }
-    }
-
-    bindCreateUser(listener) {
         let button = this.shadowRoot.querySelector('wc-button');
         button.onclick = e => {
-            listener(
-                "jimbob", 
-                "lol1234", 
-                "jim bob", 
-                "lcp", 
-                "VQYJGNSRt9FHDUjq9R3P"
-            );
+            let toast = document.createElement('wc-toast');
+            toast.textContent = 'This is just a test message';
+            document.body.appendChild(toast);
         }
     }
 }

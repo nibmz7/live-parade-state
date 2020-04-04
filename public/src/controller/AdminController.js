@@ -6,7 +6,7 @@ export default class AdminController {
 
     constructor() {
         this.adminView = document.createElement('admin-view');
-        this.appRouter = document.querySelector('app-router');
+        this.viewSwitcher = document.querySelector('view-switcher');
         this.adminView.on('create-department', this.createDepartment.bind(this));
         this.adminView.on('create-user', this.createUser.bind(this));
         Auth.getInstance().on('signed-in', this.signedIn.bind(this));
@@ -20,7 +20,7 @@ export default class AdminController {
             this.usersRepository.on('user-added', this.onUserAdded.bind(this));
             this.usersRepository.on('user-removed', this.onUserAdded.bind(this));
             this.usersRepository.on('user-changed', this.onUserAdded.bind(this));
-            this.appRouter.addView('admin', this.adminView);
+            this.viewSwitcher.showView('admin', this.adminView);
         }
     }
 
