@@ -18,14 +18,16 @@ export default class AdminManager {
         this.db.collection(`branches/${this.adminid}/departments`).add({ name });
     }
 
-    createUser(emailPrefix, password, name, rank, departmentid) {
+    createUser(user) {
+        //emailPrefix, password, name, rank, departmentid
         let createUserFunc = this.functions.httpsCallable('createUser');
-        createUserFunc({ emailPrefix, password, name, rank, departmentid });
+        createUserFunc({ ...user });
     }
 
-    updateUser(emailPrefix, name, rank, departmentid) {
+    updateUser(user) {
+        //emailPrefix, name, rank, departmentid
         let updateUserFunc = this.functions.httpsCallable('updateUser');
-        updateUserFunc({ emailPrefix, name, rank, departmentid });
+        updateUserFunc({ ...user });
     }
 
     updatePassword(uid, password) {

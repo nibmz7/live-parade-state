@@ -1,12 +1,14 @@
+import EventElement from '../../widget/EventElement.js';
+
 const template = `
     <style>
 
     </style>
 
-    <wc-button>Create</wc-button>
+    <wc-button>Create department</wc-button>
 `;
 
-export default class AdminView extends HTMLElement {
+export default class AdminView extends EventElement {
 
     constructor() {
         super();

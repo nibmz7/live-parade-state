@@ -78,7 +78,7 @@ export default class DepartmentCard extends HTMLElement {
     }
 
     setDepartmentId(depId) {
-        this.depId = depId;
+        this.id = depId;
     }
 
     setDepartmentName(name) {

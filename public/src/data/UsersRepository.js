@@ -1,4 +1,6 @@
-export default class UserRepository {
+import EventDispatcher from "../util/EventDispatcher";
+
+export default class UserRepository extends EventDispatcher {
 
     constructor() {
         this.db = firebase.firestore();

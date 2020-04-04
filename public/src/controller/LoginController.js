@@ -2,9 +2,9 @@ import Auth from '../data/Auth.js';
 
 export default class LoginController {
     
-    constructor(loginView) {
+    constructor() {
         this.auth = Auth.getInstance();
-        this.loginView = loginView;
+        this.loginView = document.createElement('login-view');
 
         this.auth.on('signed-out', this.signedOut.bind(this));
         this.auth.on('error', this.error.bind(this));
