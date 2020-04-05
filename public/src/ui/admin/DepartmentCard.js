@@ -78,17 +78,29 @@ export default class DepartmentCard extends HTMLElement {
         this.attachShadow({ mode: 'open' });
         this.shadowRoot.innerHTML = template;
         let editDepartment = this.shadowRoot.getElementById('edit-dep');
-        editDepartment.onclick = e => {
-            let dialogue = document.createElement('edit-department');
-            dialogue.setEditMode(true);
-            dialogue.setDepartment(this.id, this.depName);
-            dialogue.setController(this.controller);
-            document.body.appendChild(dialogue);
-        }
+        let addUser = this.shadowRoot.getElementById('add-user');
+        editDepartment.onclick = this.showEditDepDialogue.bind(this);
+        addUser.onclick = this.showAddUserDialogue.bind(this);
     }
 
     setController(controller) {
         this.controller = controller;
+    }
+
+    showEditDepDialogue(e) {
+        let dialogue = document.createElement('edit-department');
+        dialogue.setEditMode(true);
+        dialogue.setDepartment(this.id, this.depName);
+        dialogue.setController(this.controller);
+        document.body.appendChild(dialogue);
+    }
+
+    showAddUserDialogue(e) {
+        let dialogue = document.createElement('edit-user');
+        dialogue.setEditMode(false);
+        dialogue.setController(this.controller);
+        dialogue.setDepartment(this.id, this.depName);
+        document.body.appendChild(dialogue);
     }
 
     setDepartmentId(depId) {

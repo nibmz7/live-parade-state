@@ -64,11 +64,10 @@ const template = content => `
             background: white;
             border-radius: 5px;
             box-shadow: 0px 4px 4px rgba(0,0,0,.25);
-            padding: 15px 25px;
+            padding: 15px 20px;
             transform: translateY(0px);
-            width: calc(100% - 50px);
+            width: calc(100% - 30px);
             box-sizing: border-box;
-            margin: 0 30px;
         }
         
         #dialogue.shake {

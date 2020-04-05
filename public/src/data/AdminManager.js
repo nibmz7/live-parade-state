@@ -3,6 +3,7 @@ export default class AdminManager {
         this.functions = firebase.app().functions('asia-northeast1');
         this.functions.useFunctionsEmulator('http://localhost:5001');
         this.adminid = firebase.auth().currentUser.uid;
+        this.email = firebase.auth().currentUser.email;
         this.db = firebase.firestore();
     }
 

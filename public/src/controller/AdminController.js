@@ -28,6 +28,10 @@ export default class AdminController {
         }
     }
 
+    getDomain() {
+        return this.adminManager.email.split('@')[1];
+    }
+
     onDepartmentRemoved(data) {
         this.adminView.removeDepartment(data.uid);
     }
