@@ -4,6 +4,10 @@ const template = `
     <style>
         ${cardStyle}
 
+        .container {
+            padding: 30px;
+        }
+
         .card {
             border-radius: 15px;
         }
@@ -39,24 +43,22 @@ const template = `
             text-transform: capitalize;
         }
 
-        #add-user {
+        .header-holder {
             display: flex;
-            justify-content: center;
+            flex-direction: row;
+            justify-content: space-between;
             align-items: center;
-            padding: 10px;
-            font-weight: 900;
-            background: #34495e;
-            border-top-left-radius: 15px;
-            border-top-right-radius: 15px;
-            color:white;
         }
 
     </style>
     
-    <div>
-        <h3 id="header"></h3>
+    <div class="container">
+        <div class="header-holder">
+            <h3 id="header"></h3>
+            <wc-button type="plain" id="edit-dep">edit</wc-button>
+        </div>
         <div class="card">
-            <div id="add-user">Add user</div>
+            <wc-button type="plain" id="add-user">Add user</wc-button>
             <div id="list"></div>
         </div>
     </div>
@@ -75,6 +77,18 @@ export default class DepartmentCard extends HTMLElement {
         super();
         this.attachShadow({ mode: 'open' });
         this.shadowRoot.innerHTML = template;
+        let editDepartment = this.shadowRoot.getElementById('edit-dep');
+        editDepartment.onclick = e => {
+            let dialogue = document.createElement('edit-department');
+            dialogue.setEditMode(true);
+            dialogue.setDepartment(this.id, this.depName);
+            dialogue.setController(this.controller);
+            document.body.appendChild(dialogue);
+        }
+    }
+
+    setController(controller) {
+        this.controller = controller;
     }
 
     setDepartmentId(depId) {
@@ -82,6 +96,7 @@ export default class DepartmentCard extends HTMLElement {
     }
 
     setDepartmentName(name) {
+        this.depName = name;
         let depText = this.shadowRoot.getElementById('header');
         depText.textContent = name;
     }

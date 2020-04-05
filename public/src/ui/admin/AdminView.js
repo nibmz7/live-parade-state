@@ -2,6 +2,11 @@ import EventElement from '../widgets/EventElement.js';
 
 const template = `
     <style>
+        :host {
+            width: inherit;
+            height: inherit;
+        }
+
         #add-department {
             position: fixed;
             --button-radius: 50px;
@@ -42,10 +47,23 @@ export default class AdminView extends EventElement {
     addDepartment(uid, name) {
         if(!this.departmentViews[uid]) {
             let departmentCard = document.createElement('department-card');
+            this.departmentViews[uid] = departmentCard;
             departmentCard.setDepartmentId(uid);
             departmentCard.setDepartmentName(name);
+            departmentCard.setController(this.controller);
             this.root.appendChild(departmentCard);
         }
+    }
+
+    modifyDepartment(uid, name) {
+        let departmentCard = this.departmentViews[uid];
+        departmentCard.setDepartmentName(name);
+    }
+
+    removeDepartment(uid) {
+        let departmentCard = this.departmentViews[uid];
+        departmentCard.remove();
+        delete this.departmentViews[uid];
     }
 
 }

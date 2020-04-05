@@ -28,16 +28,16 @@ export default class AdminController {
         }
     }
 
-    onDepartmentRemoved(uid, name) {
-
+    onDepartmentRemoved(data) {
+        this.adminView.removeDepartment(data.uid);
     }
 
-    onDepartmentChanged(uid, name) {
-
+    onDepartmentChanged(data) {
+        this.adminView.modifyDepartment(data.uid, data.name);
     }
 
-    onDepartmentAdded(uid, name) {
-        this.adminView.addDepartment(uid, name);
+    onDepartmentAdded(data) {
+        this.adminView.addDepartment(data.uid, data.name);
         if (!this.hasDepartmentsLoaded) {
             this.hasDepartmentsLoaded = true;
             this.usersRepository.subscribeUsers(this.adminManager.adminid);
@@ -54,6 +54,10 @@ export default class AdminController {
 
     onUserChanged(e) {
 
+    }
+    
+    deleteDepartment(departmentId) {
+        this.adminManager.deleteDepartment(departmentId);
     }
 
     createDepartment(name) {

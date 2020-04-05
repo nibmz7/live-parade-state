@@ -18,6 +18,11 @@ export default class AdminManager {
         this.db.collection(`branches/${this.adminid}/departments`).add({ name });
     }
 
+    deleteDepartment(departmentid) {
+        let deleteDepartmentFunc = this.functions.httpsCallable('deleteDepartment');
+        deleteDepartmentFunc({ departmentid });
+    }
+
     createUser(user) {
         //emailPrefix, password, name, rank, departmentid
         let createUserFunc = this.functions.httpsCallable('createUser');

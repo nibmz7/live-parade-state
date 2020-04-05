@@ -11,9 +11,8 @@ const template = `
     :host([type="outline"]) > button {
         background: white;
         color: var(--color-primary);
-        border: 2px solid;
         border-radius: 2px;
-        border-color: var(--color-primary);
+        border: 2px solid var(--color-primary);
     }
     
     :host([type="outline"]) button:active {
@@ -21,9 +20,11 @@ const template = `
     }
     
     :host([type="plain"]) > button {
-        background: white;
+        --button-padding: 10px;
         color: var(--color-primary);
         border-radius: 15px;
+        box-shadow: none;
+        background: transparent;
     }
     
     :host([type="plain"]) > button:active {
@@ -39,12 +40,12 @@ const template = `
         white-space: nowrap;
         cursor: pointer;
         outline: none;
-        border: 2px solid var(--color-primary);
         border-radius: var(--button-radius);
         color: white;
         background: var(--color-primary);
         width: 100%;
         transition: all .2s;
+        border: none;
         box-shadow: 0 4px 6px -1px rgba(var(--color-primary-rgb), 0.2), 0 2px 4px -1px rgba(var(--color-primary-rgb), 0.12);
     }
     
