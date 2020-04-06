@@ -40,6 +40,10 @@ const template = `
             --button-radius: 15px 15px 0 0;
         }
 
+        #add-user.empty {
+            --button-radius: 15px;
+        }
+
         .user {
             padding: 10px 15px;
             transition: .3s background;
@@ -71,7 +75,7 @@ const template = `
             <wc-button type="plain" id="edit-dep">edit</wc-button>
         </div>
         <div class="card">
-            <wc-button type="plain" id="add-user">Add user</wc-button>
+            <wc-button type="plain" id="add-user" class="empty">Add user</wc-button>
             <div id="list"></div>
         </div>
     </div>
@@ -93,7 +97,8 @@ export default class DepartmentCard extends HTMLElement {
         this.list = this.shadowRoot.getElementById('list');
         this.users = {};
         this.shadowRoot.getElementById('edit-dep').onclick = this.showEditDepDialogue.bind(this);
-        this.shadowRoot.getElementById('add-user').onclick = this.showAddUserDialogue.bind(this);
+        this.addUserButton = this.shadowRoot.getElementById('add-user');
+        this.addUserButton.onclick = this.showAddUserDialogue.bind(this);
     }
 
     setController(controller) {
@@ -151,6 +156,7 @@ export default class DepartmentCard extends HTMLElement {
         this.setUserItemData(userItem, user);
         Utils.onclick(userItem, () => this.onUserSelected(user.uid));
         this.list.appendChild(clone);
+        this.addUserButton.classList.remove('empty');
     }
 
     changeUser(user) {
@@ -163,5 +169,6 @@ export default class DepartmentCard extends HTMLElement {
         delete this.users[uid];
         let userItem = this.shadowRoot.getElementById(uid);
         userItem.remove();
+        if(Object.keys(this.users).length === 0) this.addUserButton.classList.add('empty');
     }
 }
