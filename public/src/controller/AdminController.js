@@ -32,6 +32,10 @@ export default class AdminController {
         }
     }
 
+    updatePassword(uid, password) {
+        this.adminManager.updatePassword(uid, password);
+    }
+
     getDomain() {
         return this.adminManager.email.split('@')[1];
     }
@@ -76,8 +80,12 @@ export default class AdminController {
         this.adminManager.changeDepartmentName(uid, name);
     }
 
-    createUser(e) {
+    createUser(user) {
         this.adminManager.createUser(user);
+    }
+
+    updateUser(user) {
+        this.adminManager.updateUser(user);
     }
 
 }

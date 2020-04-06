@@ -3,16 +3,16 @@ import Auth from '../data/Auth.js';
 export default class LoginController {
     
     constructor() {
-        let auth = Auth.getInstance();
-        auth.on('signed-out', this.signedOut.bind(this));
-        auth.on('error', this.error.bind(this));
+        this.auth = Auth.getInstance();
+        this.auth.on('signed-out', this.signedOut.bind(this));
+        this.auth.on('error', this.error.bind(this));
     }
     
     init() {
       this.loginView = document.createElement('login-view');
       this.viewSwitcher = document.querySelector('view-switcher');
       this.loginView.bindSignIn((email, password) => {
-        auth.login(email, password);
+        this.auth.login(email, password);
       });
     }
 

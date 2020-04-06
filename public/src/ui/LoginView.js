@@ -50,7 +50,7 @@ const template = `
 
         <input id="email" type="email" placeholder="Email" autocomplete="off" required>
 
-        <input id="password" type="password" placeholder="Password" autocomplete="off" required>
+        <input id="password" type="password" minlength="8" placeholder="Password" autocomplete="off" required>
 
         <wc-button id="login">Continue</wc-button>
 

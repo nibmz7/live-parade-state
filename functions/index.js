@@ -48,13 +48,15 @@ exports.deleteUser = functions.region('asia-northeast1').https.onCall(async (dat
 exports.updateUser = functions.region('asia-northeast1').https.onCall(async (data, context) => {
     let isAdmin = await checkIsAdmin(context);
     if (isAdmin) {
+        const adminEmail = context.auth.token.email;
         const adminid = context.auth.uid;
         const domain = adminEmail.split('@')[1];
-        const emailPrefix = data.emailPrefix;
-        admin.auth().updateUser(data.uid, { email: `${emailPrefix}@${domain}` });
+        const email = `${data.emailPrefix}@${domain}`;
+        admin.auth().updateUser(data.uid, { email });
         await db.doc(`branches/${adminid}/departments/${data.departmentid}/users/${uid}`).update({
             name: data.name,
-            rank: data.rank
+            rank: data.rank,
+            email
         });
         return { success: true };
     }
@@ -74,10 +76,12 @@ exports.createUser = functions.region('asia-northeast1').https.onCall(async (dat
     let isAdmin = await checkIsAdmin(context);
     if (isAdmin) {
         const adminid = context.auth.uid;
+        const adminEmail = context.auth.token.email;
         const domain = adminEmail.split('@')[1];
+        const email = `${data.emailPrefix}@${domain}`;
         const usersRef = db.collection(`branches/${adminid}/departments/${data.departmentid}/users`);
         const userRecord = await admin.auth().createUser({
-            email: `${data.emailPrefix}@${domain}`,
+            email,
             password: data.password
         });
         const newUid = userRecord.uid;
@@ -87,6 +91,7 @@ exports.createUser = functions.region('asia-northeast1').https.onCall(async (dat
             departmentid: data.departmentid,
             name: data.name,
             rank: data.rank,
+            email,
             status: {
                 am: {
                     code: 0,

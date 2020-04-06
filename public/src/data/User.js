@@ -1,11 +1,12 @@
 export default class User {
 
-    constructor(branchid, departmentid, name, rank, status) {
+    constructor(branchid, departmentid, name, rank, email, status) {
         this.branchid = branchid;
         this.departmentid = departmentid;
         this.name = name;
         this.rank = rank;
         this.status = status;
+        this.email = email;
     }
 
     static createStatus(code, remarks, updatedby) {
@@ -21,12 +22,13 @@ export default class User {
                 departmentid: user.departmentid,
                 name: user.name,
                 rank: user.rank,
+                email: user.email,
                 status: user.status
             }
         },
         fromFirestore: (snapshot, options) => {
             const data = snapshot.data(options);
-            return new User(data.branchid, data.departmentid, data.name, data.rank, data.status);
+            return new User(data.branchid, data.departmentid, data.name, data.rank, data.email, data.status);
         }
     }
 

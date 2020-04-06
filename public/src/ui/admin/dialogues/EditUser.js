@@ -1,5 +1,6 @@
 import Dialogue from '../../widgets/Dialogue.js';
 import { inputStyle } from '../../../util/GlobalStyles.js';
+import Rank from '../../../data/Rank.js';
 
 const template = `
     <style>
@@ -12,6 +13,14 @@ const template = `
             flex-wrap: wrap;
         }
 
+        #department-name {
+            width: 100%;
+            text-align: center;
+            margin: 0;
+            font-size: 1.2rem;
+            font-weight: 900;
+        }
+
         .header-holder {
             display: flex;
             flex-direction: row;
@@ -20,13 +29,9 @@ const template = `
             width: 100%;
         }
 
-        #confirm {
-            width: 100%;
-            --button-padding: 10px;
-        }
-
         input {
             box-sizing: border-box;
+            margin: 0 0 10px;
         }
 
         #rank {
@@ -61,6 +66,18 @@ const template = `
             flex-grow: 1;
         }
 
+        #change-password {
+            --button-font-size: 1rem;
+            --button-padding: 0;
+            margin: 0 0 0 10px;
+        }
+
+        #confirm {
+            width: 100%;
+            --button-padding: 10px;
+            margin-top: 20px;
+        }
+
         .row-box {
             display: flex;
             flex-direction: row-reverse;
@@ -70,6 +87,7 @@ const template = `
     </style>
 
     <div class="container">
+        <p id="department-name"></p>
         <div class="header-holder">
             <h3 id="header">Department</h3>
             <wc-button type="plain" id="delete-user" hidden>delete</wc-button>
@@ -82,7 +100,10 @@ const template = `
             <input id="email" type="text" pattern="^[a-zA-Z0-9]+$" placeholder="Email" autocomplete="off" required/>
         </div>
         <div class="break"></div>
-        <input id="password" type="password" placeholder="Password" autocomplete="off" required/>
+        <div class="row-box">
+            <wc-button type="plain" id="change-password" hidden>change</wc-button>
+            <input id="password" minlength="8" type="password" placeholder="Password" autocomplete="off" required/>
+        </div>
         <wc-button id="confirm">Confirm</wc-button>
     </div>
 `;
@@ -91,12 +112,19 @@ export default class EditUser extends Dialogue {
 
     constructor() {
         super(template);
+        this.shadowRoot.getElementById('confirm').onclick = this.onSubmit.bind(this);
         this.deleteUser = this.shadowRoot.getElementById('delete-user');
-        this.deleteUser.onclick = this.onDelete.bind(this);
+        this.changePasswordButton = this.shadowRoot.getElementById('change-password');
         this.domain = this.shadowRoot.getElementById('domain');
-        this.email = this.shadowRoot.getElementById('email');
-        this.email.oninput = e => {
-            this.email.value = this.email.value.replace(' ', '');
+        this.emailPrefix = this.shadowRoot.getElementById('email');
+        this.rank = this.shadowRoot.getElementById('rank');
+        this.name = this.shadowRoot.getElementById('name');
+        this.password = this.shadowRoot.getElementById('password');
+
+        this.deleteUser.onclick = this.onDelete.bind(this);
+        this.changePasswordButton.onclick = this.changePassword.bind(this);
+        this.emailPrefix.oninput = e => {
+            this.emailPrefix.value = this.emailPrefix.value.replace(/\W/g, '');
         }
     }
 
@@ -109,12 +137,69 @@ export default class EditUser extends Dialogue {
 
     }
 
-    onSubmit(e) {
+    checkFormValidity(isEdit) {
+        let emailValid = this.emailPrefix.checkValidity();
+        let nameValid = this.name.checkValidity();
+        let rankValid = Rank.isValid(this.rank.value.toUpperCase());
+        let passwordValid = this.password.checkValidity();
+        if(!rankValid) return {success: false, msg: 'Enter a valid rank'};
+        if(!nameValid) return {success: false, msg: 'Enter a valid name'};
+        if(!emailValid) return {success: false, msg: 'Enter a valid email'};
+        if(!isEdit && !passwordValid) return {success: false, msg: 'Enter a valid password'};
+        //emailPrefix, password, name, rank, departmentid
+        let user = {};
+        user.departmentid = this.departmentId;
+        user.emailPrefix = this.emailPrefix.value;
+        user.name = this.name.value;
+        user.rank = this.rank.value.toUpperCase();
+        if(!isEdit) user.password = this.password.value;
+        return {success: true, user};
+    }
 
+    onSubmit(e) {
+        let formValidity = this.checkFormValidity(this.isEdit);
+        let message = '';
+        if(!formValidity.success) {
+            message = formValidity.msg;
+        } else {
+            if(this.isEdit) {
+                this.controller.updateUser(formValidity.user);
+                message = 'User update has been initiated.';
+            } else {
+                this.controller.createUser(formValidity.user);
+                message = 'User creation has been initiated.';
+            }
+            this.close();
+        }
+        this.showToast(message);
+    }
+
+    changePassword(e) {
+        let message = 'Password has been changed successfully.';
+        if (this.password.checkValidity()) {
+            this.controller.updatePassword(this.uid, this.password.value);
+            this.password.value = '';
+        } else message = 'Please enter a valid password';
+        this.showToast(message);
+    }
+
+    showToast(message) {
+        let toast = document.createElement('wc-toast');
+        toast.textContent = message;
+        document.body.appendChild(toast);
+    }
+
+    setUser(user) {
+        this.uid = user.uid;
+        this.emailPrefix.value = user.email.split('@')[0];
+        this.rank.value = user.rank;
+        this.name.value = user.name;
     }
 
     setDepartment(depId, depName) {
         this.departmentId = depId;
+        let depText = this.shadowRoot.getElementById('department-name');
+        depText.textContent = depName;
     }
 
     setEditMode(isEdit) {
@@ -122,6 +207,7 @@ export default class EditUser extends Dialogue {
         let header = this.shadowRoot.getElementById('header');
         if (isEdit) {
             this.deleteUser.hidden = false;
+            this.changePassword.hidden = false;
             header.textContent = 'Edit user';
         } else header.textContent = 'Add user';
     }
