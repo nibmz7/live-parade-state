@@ -12,7 +12,7 @@ const checkIsAdmin = async context => {
     }
     const adminid = context.auth.uid;
     const adminEmail = context.auth.token.email;
-    if (adminEmail.split('@')[0] != 'admin') {
+    if (adminEmail.split('@')[0] !== 'admin') {
         throw new functions.https.HttpsError('failed-precondition', 'You must be an admin to call this function');
     }
     let branchDoc = await db.doc(`branches/${adminid}`).get();
