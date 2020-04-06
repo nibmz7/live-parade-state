@@ -17,8 +17,8 @@ export default class UserRepository extends EventDispatcher {
 
     updateUserStatus(isMorning, status, uid, departmentid) {
         let userRef = db.doc(`branches/${branchid}/departments/${departmentid}/users/${uid}`);
-        if(isMorning) userRef.update({"status.am": {...status}});
-        else userRef.update({"status.pm": {...status}});
+        if (isMorning) userRef.update({ "status.am": { ...status } });
+        else userRef.update({ "status.pm": { ...status } });
     }
 
     subscribeDepartments(branchid) {
@@ -27,7 +27,7 @@ export default class UserRepository extends EventDispatcher {
             for (let change of snapshot.docChanges()) {
                 let uid = change.doc.id;
                 let name = change.doc.data().name;
-                this.emit(`department-${change.type}`, {uid, name});
+                this.emit(`department-${change.type}`, { uid, name });
             }
         });
     }
@@ -36,26 +36,20 @@ export default class UserRepository extends EventDispatcher {
         let users = this.db.collectionGroup('users').where('branchid', '==', branchid);
         this.usersUnsubscribe = users.onSnapshot(snapshot => {
             for (let change of snapshot.docChanges()) {
-                if (change.type === "added") {
-                    console.log("New city: ", change.doc.data());
-                }
-                if (change.type === "modified") {
-                    console.log("Modified city: ", change.doc.data());
-                }
-                if (change.type === "removed") {
-                    console.log("Removed city: ", change.doc.data());
-                }
-            }
-        });
+                let uid = change.doc.id;
+                let user = change.doc.data();
+                this.emit(`user-${change.type}`, { uid, ...user });
+    }
+});
     }
 
-    unsubscribeDepartments() {
-        this.departmentsUnsubscribe();
+unsubscribeDepartments() {
+    this.departmentsUnsubscribe();
 
-    }
+}
 
-    unsubscribeUsers() {
-        this.usersUnsubscribe();
-    }
+unsubscribeUsers() {
+    this.usersUnsubscribe();
+}
 
 }

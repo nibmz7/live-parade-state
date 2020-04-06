@@ -21,8 +21,8 @@ const template = `
     
     :host([type="plain"]) > button {
         --button-padding: 10px;
+        --border-radius: 15px;
         color: var(--color-primary);
-        border-radius: 15px;
         box-shadow: none;
         background: transparent;
     }

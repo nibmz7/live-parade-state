@@ -16,8 +16,8 @@ export default class AdminController {
       this.adminManager = new AdminManager();
       this.usersRepository = new UserRepository();
       this.usersRepository.on('user-added', this.onUserAdded.bind(this));
-      this.usersRepository.on('user-removed', this.onUserAdded.bind(this));
-      this.usersRepository.on('user-changed', this.onUserAdded.bind(this));
+      this.usersRepository.on('user-removed', this.onUserRemoved.bind(this));
+      this.usersRepository.on('user-modified', this.onUserChanged.bind(this));
       this.usersRepository.on('department-added', this.onDepartmentAdded.bind(this));
       this.usersRepository.on('department-modified', this.onDepartmentChanged.bind(this));
       this.usersRepository.on('department-removed', this.onDepartmentRemoved.bind(this));
@@ -56,16 +56,19 @@ export default class AdminController {
         }
     }
 
-    onUserAdded(e) {
-
+    onUserAdded(user) {
+        let departmentCard = this.adminView.getDepartmentCard(user.departmentid);
+        departmentCard.addUser(user);
     }
 
-    onUserRemoved(e) {
-
+    onUserRemoved(user) {
+        let departmentCard = this.adminView.getDepartmentCard(user.departmentid);
+        departmentCard.removeUser(user.uid);
     }
 
-    onUserChanged(e) {
-
+    onUserChanged(user) {
+        let departmentCard = this.adminView.getDepartmentCard(user.departmentid);
+        departmentCard.changeUser(user);
     }
     
     deleteDepartment(departmentId) {
@@ -86,6 +89,10 @@ export default class AdminController {
 
     updateUser(user) {
         this.adminManager.updateUser(user);
+    }
+
+    deleteUser(depId, uid) {
+        this.adminManager.deleteUser(depId, uid);
     }
 
 }

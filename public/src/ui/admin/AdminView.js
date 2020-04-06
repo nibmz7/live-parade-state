@@ -44,6 +44,10 @@ export default class AdminView extends EventElement {
         this.controller = controller;
     }
 
+    getDepartmentCard(uid) {
+        return this.departmentViews[uid];
+    }
+
     addDepartment(uid, name) {
         if(!this.departmentViews[uid]) {
             let departmentCard = document.createElement('department-card');

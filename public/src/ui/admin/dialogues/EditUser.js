@@ -97,7 +97,7 @@ const template = `
         <div class="break"></div>
         <div class="row-box">
             <p id="domain"></p>
-            <input id="email" type="text" pattern="^[a-zA-Z0-9]+$" placeholder="Email" autocomplete="off" required/>
+            <input id="email" type="text" placeholder="Email" autocomplete="off" required/>
         </div>
         <div class="break"></div>
         <div class="row-box">
@@ -134,7 +134,9 @@ export default class EditUser extends Dialogue {
     }
 
     onDelete(e) {
-
+        this.controller.deleteUser(this.departmentId, this.uid);
+        this.showToast('User is being deleted...');
+        this.close();
     }
 
     checkFormValidity(isEdit) {
@@ -152,6 +154,7 @@ export default class EditUser extends Dialogue {
         user.emailPrefix = this.emailPrefix.value;
         user.name = this.name.value;
         user.rank = this.rank.value.toUpperCase();
+        if(isEdit) user.uid = this.uid;
         if(!isEdit) user.password = this.password.value;
         return {success: true, user};
     }
@@ -207,7 +210,7 @@ export default class EditUser extends Dialogue {
         let header = this.shadowRoot.getElementById('header');
         if (isEdit) {
             this.deleteUser.hidden = false;
-            this.changePassword.hidden = false;
+            this.changePasswordButton.hidden = false;
             header.textContent = 'Edit user';
         } else header.textContent = 'Add user';
     }

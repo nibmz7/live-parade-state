@@ -39,8 +39,8 @@ exports.deleteUser = functions.region('asia-northeast1').https.onCall(async (dat
     let isAdmin = await checkIsAdmin(context);
     if (isAdmin) {
         const adminid = context.auth.uid;
+        await db.doc(`branches/${adminid}/departments/${data.departmentid}/users/${data.uid}`).delete();
         await admin.auth().deleteUser(data.uid);
-        await doc(`branches/${adminid}/departments/${data.departmentid}/users/${data.uid}`).delete();
         return { success: true };
     }
 });
@@ -52,12 +52,12 @@ exports.updateUser = functions.region('asia-northeast1').https.onCall(async (dat
         const adminid = context.auth.uid;
         const domain = adminEmail.split('@')[1];
         const email = `${data.emailPrefix}@${domain}`;
-        admin.auth().updateUser(data.uid, { email });
-        await db.doc(`branches/${adminid}/departments/${data.departmentid}/users/${uid}`).update({
+        await db.doc(`branches/${adminid}/departments/${data.departmentid}/users/${data.uid}`).update({
             name: data.name,
             rank: data.rank,
             email
         });
+        await admin.auth().updateUser(data.uid, { email });
         return { success: true };
     }
 });
@@ -85,7 +85,7 @@ exports.createUser = functions.region('asia-northeast1').https.onCall(async (dat
             password: data.password
         });
         const newUid = userRecord.uid;
-        admin.auth().setCustomUserClaims(newUid, { branchid: adminid });
+        await admin.auth().setCustomUserClaims(newUid, { branchid: adminid });
         await usersRef.doc(newUid).set({
             branchid: adminid,
             departmentid: data.departmentid,
