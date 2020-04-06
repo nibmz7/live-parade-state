@@ -25,9 +25,9 @@ exports.deleteDepartment = functions.region('asia-northeast1').https.onCall(asyn
         const adminid = context.auth.uid;
         let users = await db.collection(`branches/${adminid}/departments/${data.departmentid}/users`).get();
         if(!users.empty) {
-            for(let user of users) {
-                await admin.auth().deleteUser(user.id);
-                await user.delete();
+            for(let user of users.docChanges()) {
+                await admin.auth().deleteUser(user.doc.id);
+                await user.doc.ref.delete();
             }
         }
         await db.doc(`branches/${adminid}/departments/${data.departmentid}`).delete();
