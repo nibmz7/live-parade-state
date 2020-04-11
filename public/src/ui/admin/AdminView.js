@@ -15,9 +15,34 @@ const template = `
             left: 25%;
             right: 25%;
         }
+        
+        #root {
+          height: 100%;
+          width: 100%;
+        }
+        
+        #list {
+          height: 100%
+        }
+        
+        #empty {
+          position: absolute;
+          top: 40%;
+          text-align: center;
+          width: 100%;
+          color: #34495e;
+          display: none;
+        }
+        
+        #list:empty + #empty {
+          display: block;
+        }
+        
     </style>
     
     <div id="root">
+        <div id="list"></div>
+        <p id="empty">Loading...</p>
         <wc-button id="add-department">Create department</wc-button>
     </div>
 
@@ -30,6 +55,8 @@ export default class AdminView extends EventElement {
         this.attachShadow({mode: 'open'});
         this.shadowRoot.innerHTML = template;
         this.root = this.shadowRoot.getElementById('root');
+        this.list = this.shadowRoot.getElementById('list');
+        this.emptyText = this.shadowRoot.getElementById('empty');
         this.departmentViews = {};
         let addDepartment = this.shadowRoot.getElementById('add-department');
         addDepartment.onclick = e => {
@@ -55,7 +82,7 @@ export default class AdminView extends EventElement {
             departmentCard.setDepartmentId(uid);
             departmentCard.setDepartmentName(name);
             departmentCard.setController(this.controller);
-            this.root.appendChild(departmentCard);
+            this.list.appendChild(departmentCard);
         }
     }
 
@@ -68,6 +95,10 @@ export default class AdminView extends EventElement {
         let departmentCard = this.departmentViews[uid];
         departmentCard.remove();
         delete this.departmentViews[uid];
+    }
+    
+    showEmpty() {
+      this.emptyText.textContent = "No departments found";
     }
 
 }

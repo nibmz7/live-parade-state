@@ -36,6 +36,7 @@ export default class AdminController {
       this.usersRepository.on('department-added', this.onDepartmentAdded.bind(this));
       this.usersRepository.on('department-modified', this.onDepartmentChanged.bind(this));
       this.usersRepository.on('department-removed', this.onDepartmentRemoved.bind(this));
+      this.usersRepository.on('department-empty', this.onDepartmentEmpty.bind(this));
     }
 
     updatePassword(uid, password) {
@@ -60,6 +61,10 @@ export default class AdminController {
             this.hasDepartmentsLoaded = true;
             this.usersRepository.subscribeUsers(this.adminManager.adminid);
         }
+    }
+    
+    onDepartmentEmpty() {
+      this.adminView.showEmpty();
     }
 
     onUserAdded(user) {

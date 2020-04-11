@@ -171,4 +171,5 @@ export default class DepartmentCard extends HTMLElement {
         userItem.remove();
         if(Object.keys(this.users).length === 0) this.addUserButton.classList.add('empty');
     }
+    
 }

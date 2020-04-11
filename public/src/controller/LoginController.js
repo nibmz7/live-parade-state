@@ -17,16 +17,14 @@ export default class LoginController {
       this.loginView = document.createElement('login-view');
       this.viewSwitcher = document.querySelector('view-switcher');
       this.loginView.bindSignIn((email, password) => {
-        this.auth.login(email, password)
-        .then(() => {
-          this.loginView.reset();
-        });
+        this.auth.login(email, password);
       });
       this.auth.on('error', this.onError);
     }
 
     activate() {
       if(!this.loginView) this.init();
+      this.loginView.reset();
       this.viewSwitcher.showView('login', this.loginView);
     }
     
