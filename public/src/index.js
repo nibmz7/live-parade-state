@@ -3,9 +3,34 @@ import Auth from './data/Auth.js';
 import LoginController from './controller/LoginController.js';
 import AdminController from './controller/AdminController.js';
 
-UI.init();
-new LoginController();
-new AdminController();
+const App = () => {
+  
+  
+  
+  UI.init();
+  
+  const auth = Auth.getInstance();
+  
+  let currentController = null;
+  
+  const swapControllers = (newController, data) => {
+    if (currentController) currentController.deactivate();
+    if (data) newController.activate(data);
+    else newController.activate();
+    currentController = newController;
+  }
+  
+  auth.on('signed-out', () => {
+    let newController = LoginController.getInstance();
+    swapControllers(newController);
+  });
+  
+  auth.on('signed-in', user => {
+    let newController = AdminController.getInstance();
+    swapControllers(newController, user);
+  });
+  auth.init();
+}
 
-Auth.getInstance().init();
+App();
 

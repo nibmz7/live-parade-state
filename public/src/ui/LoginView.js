@@ -83,12 +83,20 @@ export default class LoginView extends HTMLElement {
         this.login.onclick = e => {
             let emailInput = this.email.validity.valid ? this.email.value : false;
             let passwordInput = this.password.validity.valid ? this.password.value : false;
-            if(emailInput && passwordInput) {
-                listener(emailInput, passwordInput);
-            } else {
-                this.showError("Please enter a valid input!");
+            if(!emailInput) this.showError("Please enter a valid email!");
+            else if(!passwordInput) this.showError("Please enter a valid password!");
+            else {
+              if(this.isLoading) return;
+              this.isLoading = false;
+              this.login.textContent = "Loading...";
+              listener(emailInput, passwordInput);
             }
         }
+    }
+    
+    reset() {
+      this.login.textContent = "Continue";
+      this.isLoading = false;
     }
 
     showError(message) {

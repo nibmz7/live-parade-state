@@ -11,6 +11,7 @@ dist
 # Firebase cache
 .firebase/
 
+public/init.js
 # Firebase config
 
 # Uncomment this if you'd like others to create their own Firebase project.

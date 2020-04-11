@@ -9,8 +9,14 @@ const UI = {
         customElements.define('wc-button', WCButton);
         customElements.define('wc-toast', WCToast);
         customElements.define('view-switcher', ViewSwitcher);
-        customElements.define('login-view', LoginView);
-        AdminScreen();
+    },
+    
+    adminScreen: () => {
+      AdminScreen();
+    },
+    
+    loginScreen: () => {
+      customElements.define('login-view', LoginView);
     }
 }
 

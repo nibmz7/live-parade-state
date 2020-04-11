@@ -1,15 +1,30 @@
 import AdminManager from '../data/AdminManager.js';
-import Auth from '../data/Auth.js';
 import UserRepository from '../data/UsersRepository.js';
-
+import UI from '../ui/index.js';
 export default class AdminController {
 
     constructor() {
         this.hasDepartmentsLoaded = false;
-        Auth.getInstance().on('signed-in', this.signedIn.bind(this));
+    }
+    
+    static getInstance() {
+      if (!AdminController.instance) AdminController.instance = new AdminController();
+      return AdminController.instance;
+    }
+    
+    activate(user) {
+      if(!this.adminView) this.init();
+      this.adminManager.setAdminInfo(user.uid, user.email);
+      this.viewSwitcher.showView('admin', this.adminView);
+      this.usersRepository.subscribeDepartments(this.adminManager.adminid);
+    }
+    
+    deactivate() {
+      this.usersRepository.unsubscribeDepartments();
     }
     
     init() {
+      UI.adminScreen();
       this.viewSwitcher = document.querySelector('view-switcher');
       this.adminView = document.createElement('admin-view');
       this.adminView.setController(this);
@@ -21,15 +36,6 @@ export default class AdminController {
       this.usersRepository.on('department-added', this.onDepartmentAdded.bind(this));
       this.usersRepository.on('department-modified', this.onDepartmentChanged.bind(this));
       this.usersRepository.on('department-removed', this.onDepartmentRemoved.bind(this));
-      this.usersRepository.subscribeDepartments(this.adminManager.adminid);
-    }
-
-    signedIn(user) {
-        let email = user.email;
-        if (email.split('@')[0] == 'admin') {
-          if(!this.adminView) this.init();
-          this.viewSwitcher.showView('admin', this.adminView);
-        }
     }
 
     updatePassword(uid, password) {
@@ -96,3 +102,5 @@ export default class AdminController {
     }
 
 }
+
+AdminController.instance = null;

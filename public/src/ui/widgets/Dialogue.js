@@ -45,6 +45,7 @@ const template = content => `
         }
 
         .show > #dialogue {
+            pointer-events: none;
             animation: slide-in .2s;
         }
         
@@ -110,8 +111,9 @@ export default class Dialogue extends HTMLElement {
         super();
         this.attachShadow({ mode: 'open' });
         this.shadowRoot.innerHTML = template(content);
-        this.root = this.shadowRoot.getElementById('root');
         this.isCancelleable = true;
+        this.disabled = true;
+        this.root = this.shadowRoot.getElementById('root');
         let scrim = this.shadowRoot.getElementById('scrim');
         let dialogue = this.shadowRoot.getElementById('dialogue');
 

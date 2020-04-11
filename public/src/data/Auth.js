@@ -23,9 +23,16 @@ export default class Auth extends EventDispatcher {
 
     login(email, password) {
         firebase.auth().signInWithEmailAndPassword(email, password).catch(error => {
-            console.log(error);
-            this.emit('error', error);
+            let message = 'User doesn\'t exist';
+            if (error.code === 'auth/wrong-password') message = 'Password is invalid';
+            this.emit('error', message);
         });
+    }
+    
+    logout() {
+      firebase.auth().signOut().then( () => {
+        this.emit('signed-out');
+      });
     }
 
 }
