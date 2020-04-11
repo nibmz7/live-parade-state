@@ -9,6 +9,8 @@ const App = () => {
   
   UI.init();
   
+  const welcomeText = document.getElementById('welcome-text');
+  
   const auth = Auth.getInstance();
   
   let currentController = null;
@@ -23,13 +25,20 @@ const App = () => {
   auth.on('signed-out', () => {
     let newController = LoginController.getInstance();
     swapControllers(newController);
+    welcomeText.style.display = "none";
   });
   
   auth.on('signed-in', user => {
     let newController = AdminController.getInstance();
     swapControllers(newController, user);
+    welcomeText.style.display = 'block';
   });
   auth.init();
+  
+  welcomeText.onclick = e => {
+    let signOutDialogue = document.createElement('sign-out');
+    document.body.appendChild(signOutDialogue);
+  }
 }
 
 App();

@@ -24,13 +24,12 @@ export default class UserRepository extends EventDispatcher {
     subscribeDepartments(branchid) {
         let departments = this.db.collection(`branches/${branchid}/departments`);
         this.departmentsUnsubscribe = departments.onSnapshot(snapshot => {
-          if(snapshot.exists) {
             for (let change of snapshot.docChanges()) {
               let uid = change.doc.id;
               let name = change.doc.data().name;
               this.emit(`department-${change.type}`, { uid, name });
             }
-          } else this.emit('department-empty');
+           if(snapshot.empty) this.emit('department-empty');
         });
     }
 

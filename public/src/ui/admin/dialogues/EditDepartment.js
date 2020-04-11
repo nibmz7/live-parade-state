@@ -57,7 +57,7 @@ export default class EditDepartment extends Dialogue {
     onDelete(e) {
         this.controller.deleteDepartment(this.uid);
         let toast = document.createElement('wc-toast');
-        toast.textContent = 'Deleting department and its users. Please wait...';
+        toast.textContent = 'Deleting department and its users.\nThis may take a while...';
         document.body.appendChild(toast);
         this.close();
     }

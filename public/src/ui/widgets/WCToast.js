@@ -10,13 +10,15 @@ const template = `
             padding: 10px;
             display: flex;
             justify-content: center;
+            text-align: center;
             bottom: 10px;
             left: 10px;
             right: 10px;
             font-size: 1rem;
             border-radius: 3px;
+            white-space: pre-line;
             font-weight: 600;
-            box-shadow: 1px 1px 5px 1px rgb(181, 173, 181);
+            box-shadow: 1px 1px 5px 1px rgba(181, 173, 181, 0.6);
         }
 
         .slide-up {

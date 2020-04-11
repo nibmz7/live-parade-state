@@ -167,10 +167,10 @@ export default class EditUser extends Dialogue {
         } else {
             if(this.isEdit) {
                 this.controller.updateUser(formValidity.user);
-                message = 'User update has been initiated.';
+                message = 'User update has been initiated.\n This may take a while...';
             } else {
                 this.controller.createUser(formValidity.user);
-                message = 'User creation has been initiated.';
+                message = 'User creation has been initiated.\n This may take a while...';
             }
             this.close();
         }

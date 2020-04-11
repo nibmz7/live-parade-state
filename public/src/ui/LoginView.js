@@ -96,6 +96,7 @@ export default class LoginView extends HTMLElement {
     
     reset() {
       this.login.textContent = "Continue";
+      this.password.value = '';
       this.isLoading = false;
     }
 
