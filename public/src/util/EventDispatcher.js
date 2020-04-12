@@ -4,7 +4,7 @@ export default class EventDispatcher {
         this._listeners = {};
     }
     
-    removeEventListener(type, listener) {
+    stop(type, listener) {
         let index = this._listeners[type].findIndex(item => item.listener === listener);
         if (index >= 0) this._listeners.splice(index, 1);
     }
@@ -14,6 +14,7 @@ export default class EventDispatcher {
     }
 
     emit(type, data) {
+      if(!this._listeners[type]) return;
         this._listeners[type].forEach(
             listener => {
                 if (data) listener(data);

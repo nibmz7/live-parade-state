@@ -22,14 +22,22 @@ export default class UserRepository extends EventDispatcher {
     }
 
     subscribeDepartments(branchid) {
+      let initialLoad = true;
         let departments = this.db.collection(`branches/${branchid}/departments`);
         this.departmentsUnsubscribe = departments.onSnapshot(snapshot => {
             for (let change of snapshot.docChanges()) {
               let uid = change.doc.id;
               let name = change.doc.data().name;
-              this.emit(`department-${change.type}`, { uid, name });
+              let department = {uid, name};
+              this.emit('department-event', {type: change.type, department});
             }
-           if(snapshot.empty) this.emit('department-empty');
+           if(snapshot.empty) this.emit('department-event', {type: 'empty'});
+           else {
+             if(initialLoad) {
+               initialLoad = false;
+               this.emit('department-event', {type: 'loaded'});
+             }
+           }
         });
     }
 
@@ -39,7 +47,7 @@ export default class UserRepository extends EventDispatcher {
             for (let change of snapshot.docChanges()) {
                 let uid = change.doc.id;
                 let user = change.doc.data();
-                this.emit(`user-${change.type}`, { uid, ...user });
+                this.emit('user-event', {type: change.type, user: { uid, ...user }});
     }
 });
     }

@@ -4,7 +4,7 @@ import UI from '../ui/index.js';
 export default class AdminController {
 
     constructor() {
-        this.hasDepartmentsLoaded = false;
+        
     }
     
     static getInstance() {
@@ -17,10 +17,15 @@ export default class AdminController {
       this.adminManager.setAdminInfo(user.uid, user.email);
       this.viewSwitcher.showView('admin', this.adminView);
       this.usersRepository.subscribeDepartments(this.adminManager.adminid);
+      this.usersRepository.on('user-event', this.onUserEvent);
+      this.usersRepository.on('department-event', this.onDepartmentEvent);
     }
     
     deactivate() {
+      this.usersRepository.stop('user-event', this.onUserEvent);
+      this.usersRepository.stop('department-event', this.onDepartmentEvent);
       this.usersRepository.unsubscribeDepartments();
+      this.usersRepository.unsubscribeUsers();
     }
     
     init() {
@@ -30,13 +35,41 @@ export default class AdminController {
       this.adminView.setController(this);
       this.adminManager = new AdminManager();
       this.usersRepository = new UserRepository();
-      this.usersRepository.on('user-added', this.onUserAdded.bind(this));
-      this.usersRepository.on('user-removed', this.onUserRemoved.bind(this));
-      this.usersRepository.on('user-modified', this.onUserChanged.bind(this));
-      this.usersRepository.on('department-added', this.onDepartmentAdded.bind(this));
-      this.usersRepository.on('department-modified', this.onDepartmentChanged.bind(this));
-      this.usersRepository.on('department-removed', this.onDepartmentRemoved.bind(this));
-      this.usersRepository.on('department-empty', this.onDepartmentEmpty.bind(this));
+    }
+    
+    onUserEvent = data => {
+      let type = data.type;
+      let user = data.user;
+      let departmentCard = this.adminView.getDepartmentCard(user.departmentid);
+      if(type == 'added') {
+        departmentCard.addUser(user);
+      }
+      if(type == 'modified') {
+        departmentCard.changeUser(user);
+      }
+      if(type == 'removed') {
+        departmentCard.removeUser(user.uid);
+      }
+    }
+    
+    onDepartmentEvent = data => {
+      let type = data.type;
+      let department = data.department;
+      if(type == 'added') {
+        this.adminView.addDepartment(department.uid, department.name);
+      }
+      if(type == 'modified') {
+        this.adminView.modifyDepartment(data.uid, data.name);
+      }
+      if(type == 'removed') {
+        this.adminView.removeDepartment(data.uid);
+      }
+      if(type == 'loaded') {
+        this.usersRepository.subscribeUsers(this.adminManager.adminid);
+      }
+      if(type == 'empty') {
+        this.adminView.showEmpty();
+      }
     }
 
     updatePassword(uid, password) {
@@ -45,41 +78,6 @@ export default class AdminController {
 
     getDomain() {
         return this.adminManager.email.split('@')[1];
-    }
-
-    onDepartmentRemoved(data) {
-        this.adminView.removeDepartment(data.uid);
-    }
-
-    onDepartmentChanged(data) {
-        this.adminView.modifyDepartment(data.uid, data.name);
-    }
-
-    onDepartmentAdded(data) {
-        this.adminView.addDepartment(data.uid, data.name);
-        if (!this.hasDepartmentsLoaded) {
-            this.hasDepartmentsLoaded = true;
-            this.usersRepository.subscribeUsers(this.adminManager.adminid);
-        }
-    }
-    
-    onDepartmentEmpty() {
-      this.adminView.showEmpty();
-    }
-
-    onUserAdded(user) {
-        let departmentCard = this.adminView.getDepartmentCard(user.departmentid);
-        departmentCard.addUser(user);
-    }
-
-    onUserRemoved(user) {
-        let departmentCard = this.adminView.getDepartmentCard(user.departmentid);
-        departmentCard.removeUser(user.uid);
-    }
-
-    onUserChanged(user) {
-        let departmentCard = this.adminView.getDepartmentCard(user.departmentid);
-        departmentCard.changeUser(user);
     }
     
     deleteDepartment(departmentId) {

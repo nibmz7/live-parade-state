@@ -5,7 +5,16 @@ import AdminController from './controller/AdminController.js';
 
 const App = () => {
   
-  
+  const firebaseConfig = {
+    apiKey: "AIzaSyCHukIqjtICPyJrDKo96UFvDXy5a9A8how",
+    authDomain: "live-parade-state.firebaseapp.com",
+    databaseURL: "https://live-parade-state.firebaseio.com",
+    projectId: "live-parade-state",
+    storageBucket: "live-parade-state.appspot.com",
+    messagingSenderId: "148198970958",
+    appId: "1:148198970958:web:dd372f6fe731846ad6d51f"
+  };
+  firebase.initializeApp(firebaseConfig);
   
   UI.init();
   
@@ -29,7 +38,8 @@ const App = () => {
   });
   
   auth.on('signed-in', user => {
-    let newController = AdminController.getInstance();
+    let isAdmin = user.email.split('@')[0] == 'admin';
+    let newController = isAdmin ? AdminController.getInstance() : false;
     swapControllers(newController, user);
     welcomeText.style.display = 'block';
   });
