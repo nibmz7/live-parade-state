@@ -1,4 +1,4 @@
-import { cardStyle } from '../../util/GlobalStyles.js';
+import { cardStyle, listItemStyle } from '../../util/GlobalStyles.js';
 import Utils from '../../util/Utils.js';
 
 const template = `
@@ -13,16 +13,6 @@ const template = `
             border-radius: 15px;
         }
 
-        #name {
-            text-transform: capitalize;
-            color: #323232;
-            font-weight: 700;
-        }
-        #email {
-            color: #878787;
-            font-size: 0.8rem;
-            font-weight: 600;
-        }
 
         #header {
             color: #828282;
@@ -44,30 +34,9 @@ const template = `
             --button-radius: 15px;
         }
 
-        .user {
-            padding: 10px 15px;
-            transition: .3s background;
-            cursor: pointer;
-        }
-        
-        .user:active {
-            background: #F0F0F0;
-        }
-
-        .user:first-child {
-            border-top: 2px dashed var(--color-primary);
-        }
-        
-        .user:last-child {
-            border-bottom-left-radius: 15px;
-            border-bottom-right-radius: 15px;
-        }
-
-        .user > p {
-            margin: 0;
-        }
-
     </style>
+    
+    ${listItemStyle}
     
     <div class="container">
         <div class="header-holder">
@@ -79,13 +48,7 @@ const template = `
             <div id="list"></div>
         </div>
     </div>
-
-    <template id="user">
-        <div class="user">
-            <p id="name"></p>
-            <p id="email"></p>
-        </div>
-    </template>
+    
 `;
 
 export default class DepartmentCard extends HTMLElement {
@@ -141,17 +104,17 @@ export default class DepartmentCard extends HTMLElement {
     }
 
     setUserItemData(item, user) {
-        let name = item.querySelector('#name');
-        let email = item.querySelector('#email');
+        let name = item.querySelector('#primary-text');
+        let email = item.querySelector('#secondary-text');
         name.textContent = user.rank + ' ' + user.name;
         email.textContent = user.email;
     }
 
     addUser(user) {
         this.users[user.uid] = user;
-        let template = this.shadowRoot.getElementById('user');
+        let template = this.shadowRoot.getElementById('list-item');
         let clone = template.content.cloneNode(true);
-        let userItem = clone.querySelector('.user');
+        let userItem = clone.querySelector('.list-item');
         userItem.id = user.uid;
         this.setUserItemData(userItem, user);
         Utils.onclick(userItem, () => this.onUserSelected(user.uid));
