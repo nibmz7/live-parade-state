@@ -15,6 +15,19 @@ export default class UserRepository extends EventDispatcher {
         return await this.db.doc(`branches/${branchid}/departments/${departmentid}`);
     }
 
+    async getDepartments(branchid) {
+        let querySnapshot = await this.db.collection(`branches/${branchid}/departments`).get();
+        if(!querySnapshot.empty) {
+            let departments = [];
+            for(let doc of querySnapshot.docs) {
+                let department = {uid: doc.id, ...doc.data()};
+                departments.push(department);
+            }
+            this.emit('departments-found', departments);
+        }
+        
+    }
+
     updateUserStatus(isMorning, status, uid, departmentid) {
         let userRef = db.doc(`branches/${branchid}/departments/${departmentid}/users/${uid}`);
         if (isMorning) userRef.update({ "status.am": { ...status } });
@@ -47,7 +60,8 @@ export default class UserRepository extends EventDispatcher {
             for (let change of snapshot.docChanges()) {
                 let uid = change.doc.id;
                 let user = change.doc.data();
-                this.emit('user-event', {type: change.type, user: { uid, ...user }});
+                let fullname = user.rank + ' ' + user.name;
+                this.emit('user-event', {type: change.type, user: { uid,  fullname, ...user }});
     }
 });
     }

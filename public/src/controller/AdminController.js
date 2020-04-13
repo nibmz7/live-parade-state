@@ -56,13 +56,13 @@ export default class AdminController {
       let type = data.type;
       let department = data.department;
       if(type == 'added') {
-        this.adminView.addDepartment(department.uid, department.name);
+        this.adminView.addDepartment(department);
       }
       if(type == 'modified') {
-        this.adminView.modifyDepartment(data.uid, data.name);
+        this.adminView.modifyDepartment(department);
       }
       if(type == 'removed') {
-        this.adminView.removeDepartment(data.uid);
+        this.adminView.removeDepartment(department.uid);
       }
       if(type == 'loaded') {
         this.usersRepository.subscribeUsers(this.adminManager.adminid);

@@ -75,20 +75,20 @@ export default class AdminView extends EventElement {
         return this.departmentViews[uid];
     }
 
-    addDepartment(uid, name) {
+    addDepartment(department) {
+        let uid = department.uid;
         if(!this.departmentViews[uid]) {
-            let departmentCard = document.createElement('department-card');
+            let departmentCard = document.createElement('admin-department-card');
             this.departmentViews[uid] = departmentCard;
-            departmentCard.setDepartmentId(uid);
-            departmentCard.setDepartmentName(name);
+            departmentCard.setDepartment(department);
             departmentCard.setController(this.controller);
             this.list.appendChild(departmentCard);
         }
     }
 
-    modifyDepartment(uid, name) {
-        let departmentCard = this.departmentViews[uid];
-        departmentCard.setDepartmentName(name);
+    modifyDepartment() {
+        let departmentCard = this.departmentViews[department.uid];
+        departmentCard.setDepartment(department);
     }
 
     removeDepartment(uid) {

@@ -1,5 +1,5 @@
 import Utils from '../../util/Utils.js';
-import SectionView from '../widgets/SectionView.js';
+import BasicDepartmentCard from '../widgets/BasicDepartmentCard.js';
 
 const customStyle = `
     #sub-header {
@@ -17,7 +17,7 @@ const customStyle = `
     }
 `;
 
-export default class DepartmentCard extends SectionView {
+export default class AdminDepartmentCard extends BasicDepartmentCard {
 
     constructor() {
         super(customStyle);
@@ -31,8 +31,12 @@ export default class DepartmentCard extends SectionView {
         this.subHeader = 'Add user';
     }
 
-    setController(controller) {
-        this.controller = controller;
+    getItemPrimaryText(user) {
+        return user.fullname;
+    }
+
+    getItemSecondaryText(user) {
+        return user.email;
     }
 
     showEditDepDialogue(e) {
@@ -50,15 +54,6 @@ export default class DepartmentCard extends SectionView {
         dialogue.setDepartment(this.id, this.depName);
         document.body.appendChild(dialogue);
     }
-
-    setDepartmentId(depId) {
-        this.id = depId;
-    }
-
-    setDepartmentName(name) {
-        this.depName = name;
-        this.header = name;
-    }
     
     onUserSelected(uid) {
         let dialogue = document.createElement('edit-user');
@@ -67,30 +62,6 @@ export default class DepartmentCard extends SectionView {
         dialogue.setDepartment(this.id, this.depName);
         dialogue.setUser(this.users[uid]);
         document.body.appendChild(dialogue);
-    }
-
-    addUser(user) {
-        this.users[user.uid] = user;
-
-        let item = this.createListItem();
-        item.id = user.uid;
-        item.primaryText = user.rank + ' ' + user.name;
-        item.secondaryText = user.email;
-        item.onclick = () => this.onUserSelected(user.uid);
-
-        this.list.appendChild(item.clone());
-    }
-
-    changeUser(user) {
-        this.users[user.uid] = user;
-        let userItem = this.shadowRoot.getElementById(user.uid);
-        this.setListItemData(userItem, user.rank + ' ' + user.name, user.email);
-    }
-
-    removeUser(uid) {
-        delete this.users[uid];
-        let userItem = this.shadowRoot.getElementById(uid);
-        userItem.remove();
     }
     
 }

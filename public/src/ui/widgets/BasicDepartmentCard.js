@@ -97,7 +97,7 @@ const template = customStyle => `
 `;
     
 
-export default class SectionView extends HTMLElement {
+export default class BasicDepartmentCard extends HTMLElement {
 
     constructor(customStyle) {
         super();
@@ -106,6 +106,12 @@ export default class SectionView extends HTMLElement {
         this.list = this.shadowRoot.getElementById('list');
         this.headerText = this.shadowRoot.getElementById('header');
         this.subHeaderText = this.shadowRoot.getElementById('sub-header');
+        this.users = {};
+        this.listItems = [];
+    }
+
+    setController(controller) {
+        this.controller = controller;
     }
 
     set header(title) {
@@ -116,30 +122,42 @@ export default class SectionView extends HTMLElement {
         this.subHeaderText.textContent = title;
     }
 
-    setListItemData(item, primaryText, secondaryText) {
+    setListItemData(item, user) {
         let primaryTextItem = item.querySelector('#primary-text');
         let secondaryTextItem = item.querySelector('#secondary-text');
-        primaryTextItem.textContent = primaryText;
-        secondaryTextItem.textContent = secondaryText;
+        primaryTextItem.textContent = this.getItemPrimaryText(user);
+        secondaryTextItem.textContent = this.getItemSecondaryText(user);
     }
 
-    createListItem() {
-        let self = this;
-        return {
-            id: '',
-            primaryText: '',
-            secondaryText: '',
-            onclick: () => {},
-            clone: function() {
-                let template = self.shadowRoot.getElementById('list-item');
-                let clone = template.content.cloneNode(true);
-                let item = clone.querySelector('.list-item');
-                item.id = this.id;
-                self.setListItemData(item, this.primaryText, this.secondaryText);
-                Utils.onclick(item, this.onclick);
-                return clone;
-            }
-        }
+    setDepartment(department) {
+        this.id = department.uid;
+        this.departmentName = department.name;
+        this.header = department.name;
+    }
+
+    addUser(user) {
+        this.users[user.uid] = user;
+
+        let template = this.shadowRoot.getElementById('list-item');
+        let clone = template.content.cloneNode(true);
+        let item = clone.querySelector('.list-item');
+        item.id = user.uid;
+        this.setListItemData(item, user);
+        Utils.onclick(item, () => {this.onUserSelected(user.uid)});
+
+        this.list.appendChild(clone);
+    }
+
+    changeUser(user) {
+        this.users[user.uid] = user;
+        let userItem = this.shadowRoot.getElementById(user.uid);
+        this.setListItemData(userItem, user);
+    }
+
+    removeUser(uid) {
+        delete this.users[uid];
+        let userItem = this.shadowRoot.getElementById(uid);
+        userItem.remove();
     }
     
 }

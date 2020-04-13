@@ -9,9 +9,7 @@ const template = `
 export default class StatusDialogue extends Dialogue {
 
   constructor() {
-    super();
-    this.attachShadow({ mode: 'open' });
-    this.shadowRoot.innerHTML = template;
-
+    super(template);
+    
   }
 }
