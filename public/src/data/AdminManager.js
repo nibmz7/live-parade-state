@@ -1,7 +1,7 @@
 export default class AdminManager {
     constructor() {
         this.functions = firebase.app().functions('asia-northeast1');
-        //this.functions.useFunctionsEmulator('http://localhost:5001');
+        this.functions.useFunctionsEmulator('http://localhost:5001');
         this.db = firebase.firestore();
     }
     
