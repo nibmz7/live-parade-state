@@ -5,8 +5,6 @@ import AdminController from './controller/AdminController.js';
 
 const App = () => {
   
-  
-  
   UI.init();
   
   const welcomeText = document.getElementById('welcome-text');

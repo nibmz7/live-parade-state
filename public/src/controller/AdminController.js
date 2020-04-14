@@ -6,8 +6,10 @@ import User from "../data/User.js";
 export default class AdminController {
 
   constructor() {
-    this.isLoaded = false;
-    this.usersSorted = [];
+    UI.adminScreen();
+    this.viewSwitcher = document.querySelector('view-switcher');
+    this.adminManager = new AdminManager();
+    this.usersRepository = new UserRepository();
   }
 
   static getInstance() {
@@ -16,7 +18,9 @@ export default class AdminController {
   }
 
   activate(user) {
-    if (!this.adminView) this.init();
+    this.isLoaded = false;
+    this.usersSorted = [];
+    this.adminView = document.createElement('admin-view');
     this.adminManager.setAdminInfo(user.uid, user.email);
     this.viewSwitcher.showView('admin', this.adminView);
     this.usersRepository.subscribeDepartments(this.adminManager.adminid);
@@ -29,15 +33,7 @@ export default class AdminController {
     this.usersRepository.stop('department-event', this.onDepartmentEvent);
     this.usersRepository.unsubscribeDepartments();
     this.usersRepository.unsubscribeUsers();
-  }
-
-  init() {
-    UI.adminScreen();
-    this.viewSwitcher = document.querySelector('view-switcher');
-    this.adminView = document.createElement('admin-view');
-    this.adminView.setController(this);
-    this.adminManager = new AdminManager();
-    this.usersRepository = new UserRepository();
+    this.adminView = null;
   }
 
   onUserEvent = data => {

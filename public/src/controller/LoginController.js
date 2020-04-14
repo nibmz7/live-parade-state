@@ -29,7 +29,7 @@ export default class LoginController {
     }
     
     deactivate() {
-      this.auth.removeEventListener('error', this.onError);
+      this.auth.stop('error', this.onError);
     }
 
     onError = message => {

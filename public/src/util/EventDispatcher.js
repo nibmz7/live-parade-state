@@ -5,8 +5,8 @@ export default class EventDispatcher {
     }
     
     stop(type, listener) {
-        let index = this._listeners[type].findIndex(item => item.listener === listener);
-        if (index >= 0) this._listeners.splice(index, 1);
+        let index = this._listeners[type].findIndex(item => item === listener);
+        if (index >= 0) this._listeners[type].splice(index, 1);
     }
 
     removeEventListeners() {
