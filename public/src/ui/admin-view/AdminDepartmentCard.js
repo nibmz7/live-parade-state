@@ -21,7 +21,6 @@ export default class AdminDepartmentCard extends BasicDepartmentCard {
 
     constructor() {
         super(customStyle);
-        this.users = {};
         let editButton = document.createElement('wc-button');
         editButton.setAttribute('type', 'plain');
         editButton.onclick = this.showEditDepDialogue.bind(this);

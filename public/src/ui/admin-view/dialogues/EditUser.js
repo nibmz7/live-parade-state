@@ -142,7 +142,7 @@ export default class EditUser extends Dialogue {
     checkFormValidity(isEdit) {
         let emailValid = this.emailPrefix.checkValidity();
         let nameValid = this.name.checkValidity();
-        let rankValid = Rank.isValid(this.rank.value.toUpperCase());
+        let rankValid = Rank.isValid(this.rank.value.toUpperCase().trim());
         let passwordValid = this.password.checkValidity();
         if(!rankValid) return {success: false, msg: 'Enter a valid rank'};
         if(!nameValid) return {success: false, msg: 'Enter a valid name'};
@@ -153,7 +153,7 @@ export default class EditUser extends Dialogue {
         user.departmentid = this.departmentId;
         user.emailPrefix = this.emailPrefix.value;
         user.name = this.name.value;
-        user.rank = this.rank.value.toUpperCase();
+        user.rank = this.rank.value.toUpperCase().trim();
         if(isEdit) user.uid = this.uid;
         if(!isEdit) user.password = this.password.value;
         return {success: true, user};

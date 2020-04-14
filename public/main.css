@@ -83,8 +83,15 @@ view-switcher:not(:defined) {
   text-align: center;
   font-weight: 500;
   color: var(--color-primary-dark);
+  font-size: 1.1rem;
   z-index: 95;
   margin: 0;
-  padding: 15px;
+  padding: 10px;
   cursor: pointer;
+  background: #faf5faa1;
+  box-shadow: none;
+  transition: all .5s;
+}
+#welcome-text.elevate {
+  box-shadow: 0px 1px 1px 0px #928d8d6b;
 }

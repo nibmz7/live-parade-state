@@ -1,3 +1,5 @@
+import Rank from './Rank.js';
+
 export default class User {
 
     constructor(branchid, departmentid, name, rank, email, status) {
@@ -30,6 +32,32 @@ export default class User {
             const data = snapshot.data(options);
             return new User(data.branchid, data.departmentid, data.name, data.rank, data.email, data.status);
         }
+    }
+    
+    static compare(a,b) {
+        let aRank = Rank.rankToInt(a.rank);
+        let bRank = Rank.rankToInt(b.rank);
+
+        if (aRank < bRank) return -1;
+        if (bRank < aRank) return 1;
+
+        if (a.name < b.name) return -1;
+        if (b.name < a.name) return 1;
+
+        return 0;
+    }
+
+    static compareLinear(a,b) {
+        let aRank = Rank.rankToInt(a.rank);
+        let bRank = Rank.rankToInt(b.rank);
+
+        if (aRank < bRank) return true;
+        if (bRank < aRank) return false;
+
+        if (a.name < b.name) return true;
+        if (b.name < a.name) return false;
+
+        return false;
     }
 
 }

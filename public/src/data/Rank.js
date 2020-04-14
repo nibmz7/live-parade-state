@@ -16,7 +16,7 @@ const Rank = {
         "1WO": 14,
         "2WO": 15,
         "3WO": 16,
-        "DX": 17,
+        "DX": 36,
         "MSG": 37,
         "SSG": 38,
         "1SG": 39,
@@ -36,7 +36,7 @@ const Rank = {
     rankToInt(rank) {
         if (rank.toUpperCase().includes('DX')) {
             let suffix = Number(rank.substring(2));
-            return 37 - suffix;
+            return this.ranks['DX'] - suffix;
         }
         return this.ranks[rank];
     }

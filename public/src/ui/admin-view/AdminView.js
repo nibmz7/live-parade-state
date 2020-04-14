@@ -22,7 +22,9 @@ const template = `
         }
         
         #list {
-          height: 100%
+            overflow-x: hidden;
+            overflow-y: scroll;
+            height: 100%;
         }
         
         #empty {

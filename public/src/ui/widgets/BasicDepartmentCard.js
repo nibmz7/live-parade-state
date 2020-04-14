@@ -1,5 +1,6 @@
 import { cardStyle } from '../../util/GlobalStyles.js';
 import Utils from '../../util/Utils.js';
+import User from '../../data/User.js';
 
 const template = customStyle => `
 
@@ -13,7 +14,6 @@ const template = customStyle => `
         .card {
             border-radius: 15px;
         }
-
 
         #header {
             color: #828282;
@@ -107,7 +107,7 @@ export default class BasicDepartmentCard extends HTMLElement {
         this.headerText = this.shadowRoot.getElementById('header');
         this.subHeaderText = this.shadowRoot.getElementById('sub-header');
         this.users = {};
-        this.listItems = [];
+        this.uidArray = [];
     }
 
     setController(controller) {
@@ -135,6 +135,24 @@ export default class BasicDepartmentCard extends HTMLElement {
         this.header = department.name;
     }
 
+    getUserReferenceNode(user) {
+        if(this.uidArray.length == 0) {
+            this.uidArray.push(user.uid);
+            return null;
+        }
+        let i = this.uidArray.length - 1;
+        let uid = null;
+        while(i >= 0) {
+            let nextUserUid = this.uidArray[i];
+            let nextUser = this.users[nextUserUid];
+            let isHigher = User.compareLinear(user, nextUser);
+            if(!isHigher) break;
+            else uid = this.uidArray[i--];
+        }
+        this.uidArray.splice(++i, 0, user.uid);
+        return uid ? this.shadowRoot.getElementById(uid) : null;
+    }
+
     addUser(user) {
         this.users[user.uid] = user;
 
@@ -145,19 +163,28 @@ export default class BasicDepartmentCard extends HTMLElement {
         this.setListItemData(item, user);
         Utils.onclick(item, () => {this.onUserSelected(user.uid)});
 
-        this.list.appendChild(clone);
+        let referenceNode = this.getUserReferenceNode(user);
+        this.list.insertBefore(item, referenceNode);
     }
 
     changeUser(user) {
-        this.users[user.uid] = user;
-        let userItem = this.shadowRoot.getElementById(user.uid);
-        this.setListItemData(userItem, user);
+        let currentUser = this.users[user.uid];
+        if(currentUser.rank != user.rank) {
+            this.removeUser(user.uid);
+            this.addUser(user);
+        } else {
+            this.users[user.uid] = user;
+            let userItem = this.shadowRoot.getElementById(user.uid);
+            this.setListItemData(userItem, user);
+        }
     }
 
     removeUser(uid) {
         delete this.users[uid];
         let userItem = this.shadowRoot.getElementById(uid);
         userItem.remove();
+        var index = this.uidArray.indexOf(uid);
+        this.uidArray.splice(index, 1);
     }
     
 }
