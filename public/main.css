@@ -88,10 +88,10 @@ view-switcher:not(:defined) {
   margin: 0;
   padding: 10px;
   cursor: pointer;
-  background: #faf5faa1;
+  background: #faf5fad4;
   box-shadow: none;
   transition: all .5s;
 }
-#welcome-text.elevate {
-  box-shadow: 0px 1px 1px 0px #928d8d6b;
+#welcome-text.elevation {
+  box-shadow: 0px 1px 2px 1px #928d8d4f;
 }

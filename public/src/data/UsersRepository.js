@@ -35,7 +35,6 @@ export default class UserRepository extends EventDispatcher {
     }
 
     subscribeDepartments(branchid) {
-        console.log('Department subscribed');
         let initialLoad = true;
         let departments = this.db.collection(`branches/${branchid}/departments`);
         this.departmentsUnsubscribe = departments.onSnapshot(snapshot => {

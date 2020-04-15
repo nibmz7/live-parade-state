@@ -54,7 +54,7 @@ export default class AdminView extends EventElement {
 
     constructor() {
         super();
-        this.attachShadow({mode: 'open'});
+        this.attachShadow({ mode: 'open' });
         this.shadowRoot.innerHTML = template;
         this.root = this.shadowRoot.getElementById('root');
         this.list = this.shadowRoot.getElementById('list');
@@ -66,6 +66,14 @@ export default class AdminView extends EventElement {
             dialogue.setEditMode(false);
             dialogue.setController(this.controller);
             document.body.appendChild(dialogue);
+        }
+        let welcomeText = document.getElementById('welcome-text');
+        this.list.onscroll = e => {
+            if (this.list.scrollTop > 0) {
+                welcomeText.classList.add('elevation');
+            } else {
+                welcomeText.classList.remove('elevation');
+            }
         }
     }
 
@@ -79,7 +87,7 @@ export default class AdminView extends EventElement {
 
     addDepartment(department) {
         let uid = department.uid;
-        if(!this.departmentViews[uid]) {
+        if (!this.departmentViews[uid]) {
             let departmentCard = document.createElement('admin-department-card');
             this.departmentViews[uid] = departmentCard;
             departmentCard.setDepartment(department);
@@ -98,9 +106,9 @@ export default class AdminView extends EventElement {
         departmentCard.remove();
         delete this.departmentViews[uid];
     }
-    
+
     showEmpty() {
-      this.emptyText.textContent = "No departments found";
+        this.emptyText.textContent = "No departments found";
     }
 
 }

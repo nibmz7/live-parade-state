@@ -2,6 +2,7 @@ import AdminManager from '../data/AdminManager.js';
 import UserRepository from '../data/UsersRepository.js';
 import UI from '../ui/index.js';
 import User from "../data/User.js";
+import Utils from '../util/Utils.js';
 
 export default class AdminController {
 
@@ -18,6 +19,7 @@ export default class AdminController {
   }
 
   activate(user) {
+    Utils.addWelcomeText('admin user');
     this.isLoaded = false;
     this.usersSorted = [];
     this.adminView = document.createElement('admin-view');
