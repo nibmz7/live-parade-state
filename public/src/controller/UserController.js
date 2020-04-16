@@ -13,6 +13,16 @@ export default class UserController extends BaseController {
         return document.createElement('user-view');
     }
 
+    updateUserStatus(isMorning, code, remarks, uid) {
+        const status = {
+                code, 
+                remarks, 
+                updatedby: this.authUser.uid, 
+                timestamp: firebase.firestore.FieldValue.serverTimestamp()
+        }
+        this.usersRepository.updateUserStatus(isMorning, status, uid, this.branchid, this.departmentid);
+    }
+
     async activate(user) {
         super.activate(user);
         this.authUser = user;

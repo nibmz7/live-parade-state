@@ -41,6 +41,10 @@ const template = `
         #list:empty + #empty {
           display: block;
         }
+
+        #list > * {
+            padding: 15px 30px;
+        }
         
     </style>
     

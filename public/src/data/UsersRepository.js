@@ -7,8 +7,8 @@ export default class UserRepository extends EventDispatcher {
         this.db = firebase.firestore();
     }
 
-    updateUserStatus(isMorning, status, uid, departmentid) {
-        let userRef = db.doc(`branches/${branchid}/departments/${departmentid}/users/${uid}`);
+    updateUserStatus(isMorning, status, uid, branchid, departmentid) {
+        let userRef = this.db.doc(`branches/${branchid}/departments/${departmentid}/users/${uid}`);
         if (isMorning) userRef.update({ "status.am": { ...status } });
         else userRef.update({ "status.pm": { ...status } });
     }

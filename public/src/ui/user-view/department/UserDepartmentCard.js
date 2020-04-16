@@ -23,6 +23,7 @@ export default class UserDepartmentCard extends BasicDepartmentCard {
         super(customStyle);
         this.subHeader = 'Total strength';
         this.isEditable = false;
+        this.dialogue = {isopen: false, uid: null, view: null};
     }
 
     getItemPrimaryText(user) {
@@ -38,16 +39,44 @@ export default class UserDepartmentCard extends BasicDepartmentCard {
 
     getStatus(status, prefix) {
         let hasRemark = status.remarks.length > 0;
-        let statusName =  `${prefix}: ${STATUS[status.code].name}`;
+        let statusName = `${prefix}: ${STATUS[status.code].name}`;
         return hasRemark ? `${statusName} (${status.remarks})` : statusName;
     }
-    
-    onUserSelected(uid) {
-        if(this.isEditable) {
 
+    updateDialogue(uid) {
+        let user = this.users[uid];
+        let amUpdater = this.users[user.status.am.updatedby];
+        let pmUpdater = this.users[user.status.pm.updatedby];
+        this.dialogue.view.setUser(user,
+            amUpdater ? amUpdater.fullname : 'owner',
+            pmUpdater ? pmUpdater.fullname : 'owner');
+    }
+
+    onUserSelected(uid) {
+        if (this.isEditable) {
+            let dialogue = document.createElement('edit-status');
+            this.dialogue.isopen = true;
+            this.dialogue.uid = uid;
+            this.dialogue.view = dialogue;
+            this.updateDialogue(uid);
+            dialogue.setController(this.controller);
+            dialogue.ondismiss = () => {
+                this.dialogue.isopen = false; 
+                this.dialogue.uid = null;
+                this.dialogue.view = null;
+            }
+            document.body.appendChild(dialogue);
         } else {
 
         }
     }
-    
+
+    changeUser(user) {
+        super.changeUser(user);
+        if(this.dialogue.isopen && this.dialogue.uid == user.uid) {
+            if(user.status.am.timestamp && user.status.pm.timestamp)
+                this.updateDialogue(user.uid);
+        }
+    }
+
 }

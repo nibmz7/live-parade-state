@@ -8,7 +8,7 @@ const template = customStyle => `
         ${cardStyle}
 
         .container {
-            padding: 30px;
+            padding: inherit;
         }
 
         .card {

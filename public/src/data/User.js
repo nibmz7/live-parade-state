@@ -11,9 +11,9 @@ export default class User {
         this.email = email;
     }
 
-    static createStatus(code, remarks, updatedby) {
+    static createStatus(code, remarks, user) {
         return {
-            code, remarks, updatedby, timestamp: firebase.firestore.FieldValue.serverTimestamp()
+            code, remarks, updatedby: user.uid, timestamp: firebase.firestore.FieldValue.serverTimestamp()
         }
     }
 

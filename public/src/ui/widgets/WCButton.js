@@ -8,10 +8,17 @@ const template = `
         --button-radius: 5px;
     }
 
+    :host([type="outline"]), :host([type="solid"]){
+        --button-radius: 2px;
+    }
+
+    :host([type="solid"]) > button {
+        border: 2px solid var(--color-primary);
+    }
+
     :host([type="outline"]) > button {
         background: white;
         color: var(--color-primary);
-        border-radius: 2px;
         border: 2px solid var(--color-primary);
     }
     
