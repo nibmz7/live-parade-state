@@ -48,8 +48,8 @@ export default class UserDepartmentCard extends BasicDepartmentCard {
         let amUpdater = this.users[user.status.am.updatedby];
         let pmUpdater = this.users[user.status.pm.updatedby];
         this.dialogue.view.setUser(user,
-            amUpdater ? amUpdater.fullname : 'owner',
-            pmUpdater ? pmUpdater.fullname : 'owner');
+            amUpdater ? amUpdater.fullname : 'admin',
+            pmUpdater ? pmUpdater.fullname : 'admin');
     }
 
     onUserSelected(uid) {
