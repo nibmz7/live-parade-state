@@ -1,4 +1,4 @@
-import SectionView from '../widgets/SectionView.js';
+import BasicDepartmentCard from '../../widgets/BasicDepartmentCard.js';
 
 const customStyle = `
     #sub-header {
@@ -11,40 +11,32 @@ const customStyle = `
     }
 `;
 
-export default class DepartmentView extends SectionView {
+export default class UserDepartmentCard extends BasicDepartmentCard {
 
     constructor() {
         super(customStyle);
-        this.users = {};
-        this.listItems = [];
-    }
-
-    setDepartment(department) {
-        this.header = department.name;
-        this.id = department.uid;
+        this.subHeader = 'Total strength';
     }
 
     setEditable(isEditable) {
         this.isEditable = isEditable;
     }
 
+    getItemPrimaryText(user) {
+        return user.fullname;
+    }
+
+    getItemSecondaryText(user) {
+        return user.email;
+    }
+    
     onUserSelected(uid) {
+        console.log(this.users[uid]);
         if(this.isEditable) {
 
         } else {
 
         }
     }
-
-    addUser(user) {
-        this.users[user.uid] = user;
-
-        let item = this.createListItem();
-        item.id = user.uid;
-        item.primaryText = user.rank + ' ' + user.name;
-        item.secondaryText = user.email;
-        item.onclick = () => this.onUserSelected(user.uid);
-
-        this.list.appendChild(item.clone());
-    }
+    
 }

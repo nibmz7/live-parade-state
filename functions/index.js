@@ -63,7 +63,7 @@ exports.updateUser = functions.region('asia-northeast1').https.onCall(async (dat
 });
 
 exports.updatePassword = functions.region('asia-northeast1').https.onCall(async (data, context) => {
-    let isAdmin = await cehckIsAdmin(context);
+    let isAdmin = await checkIsAdmin(context);
     if (isAdmin) {
         const uid = data.uid;
         const password = data.password;

@@ -1,78 +1,35 @@
-import UserRepository from '../data/UsersRepository.js';
 import UI from '../ui/index.js';
-import User from "../data/User.js";
+import BaseController from './BaseController.js';
 
-export default class UserController {
+export default class UserController extends BaseController {
 
     constructor() {
-        this.isLoaded = false;
-        this.usersSorted = [];
+        super();
+        UI.userScreen();
+        this.viewName = 'user';
     }
 
-    static getInstance() {
-        if (!UserController.instance) UserController.instance = new UserController();
-        return UserController.instance;
+    createMainView() {
+        return document.createElement('user-view');
     }
 
     async activate(user) {
+        super.activate(user);
+        this.authUser = user;
         let idTokenResult = await firebase.auth().currentUser.getIdTokenResult();
         this.branchid = idTokenResult.claims.branchid;
-        this.user = user;
-        if (!this.userView) this.init();
-        this.viewSwitcher.showView('user', this.userView);
-        this.usersRepository.on('user-event', this.onUserEvent);
-        this.usersRepository.on('departments-found', this.onDepartmentsFound);
         this.usersRepository.getDepartments(branchid);
     }
 
-    deactivate() {
-        this.usersRepository.stop('user-event', this.onUserEvent);
-        this.usersRepository.stop('departments-found', this.onDepartmentEvent);
-        this.usersRepository.unsubscribeUsers();
-    }
-
-    init() {
-        UI.userScreen();
-        this.viewSwitcher = document.querySelector('view-switcher');
-        this.userView = document.createElement('user-view');
-        this.userView.setController(this);
-        this.usersRepository = new UserRepository();
-    }
-
     onUserEvent = data => {
-        let type = data.type;
-        let user = data.user;
-        if (type == 'loaded') {
-            this.isLoaded = true;
-            this.usersSorted.sort(User.compare);
-            for (let user of this.usersSorted) {
-                let departmentCard = this.userView.getDepartmentCard(user.departmentid);
-                departmentCard.addUser(user);
-            }
-            return;
-        }
-        let departmentCard = this.userView.getDepartmentCard(user.departmentid);
-        if (type == 'added') {
-            if (this.isLoaded) departmentCard.addUser(user);
-            else {
-                this.usersSorted.push(user);
-            }
-        }
-        if (type == 'modified') {
-            departmentCard.changeUser(user);
-        }
-        if (type == 'removed') {
-            departmentCard.removeUser(user.uid);
+        super.onUserEvent(data);
+        if(data.type == 'found') {
+            let user = this.usersSorted.find(obj => obj.uid == this.authUser.uid);
+            this.mainView.showWelcomeText(user.fullname);
+        } else {
+
         }
     }
-
-    onDepartmentsFound = departments => {
-        for (let department of departments) {
-            this.userView.addDepartment(department);
-        }
-        this.usersRepository.subscribeUsers(this.branchid);
-    }
-
 }
 
 UserController.instance = null;

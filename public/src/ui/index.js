@@ -1,9 +1,10 @@
 import LoginView from './LoginView.js';
 import ViewSwitcher from './ViewSwitcher.js';
 import WCButton from './widgets/WCButton.js';
-import AdminScreen from './admin-view/index.js';
+import AdminScreen from './admin-view/AdminScreen.js';
 import WCToast from './widgets/WCToast.js';
 import SignOutDialogue from './widgets/SignOutDialogue.js';
+import UserScreen from './user-view/UserScreen.js';
 
 const UI = {
     init: () => {
@@ -12,9 +13,13 @@ const UI = {
         customElements.define('sign-out', SignOutDialogue);
         customElements.define('view-switcher', ViewSwitcher);
     },
-    
+
     adminScreen: () => {
       AdminScreen();
+    },
+
+    userScreem: () => {
+      UserScreen();
     },
     
     loginScreen: () => {
