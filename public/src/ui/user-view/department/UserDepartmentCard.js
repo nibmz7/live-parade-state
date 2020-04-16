@@ -31,7 +31,6 @@ export default class UserDepartmentCard extends BasicDepartmentCard {
     }
     
     onUserSelected(uid) {
-        console.log(this.users[uid]);
         if(this.isEditable) {
 
         } else {

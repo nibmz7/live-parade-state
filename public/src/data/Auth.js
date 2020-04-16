@@ -30,9 +30,7 @@ export default class Auth extends EventDispatcher {
     }
     
     logout() {
-      firebase.auth().signOut().then( () => {
-        this.emit('signed-out');
-      });
+      firebase.auth().signOut();
     }
 
 }

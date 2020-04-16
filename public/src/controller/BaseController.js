@@ -7,6 +7,8 @@ export default class BaseController {
         this.viewSwitcher = document.querySelector('view-switcher');
         this.usersRepository = new UserRepository();
         this.usersSorted = [];
+        this.onUserEvent = this.onUserEvent.bind(this);
+        this.onDepartmentEvent = this.onDepartmentEvent.bind(this);
     }
 
     static getInstance() {
@@ -34,7 +36,7 @@ export default class BaseController {
         this.usersSorted.sort(User.compare);
     }
 
-    onUserEvent = data => {
+    onUserEvent(data) {
         let type = data.type;
         let user = data.user;
         if (type == 'found') {
@@ -60,7 +62,7 @@ export default class BaseController {
         }
     }
 
-    onDepartmentEvent = data => {
+    onDepartmentEvent(data) {
         let type = data.type;
         let department = data.department;
         if (type == 'found') {

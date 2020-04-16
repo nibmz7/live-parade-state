@@ -2,6 +2,7 @@ import UI from './ui/index.js';
 import Auth from './data/Auth.js';
 import LoginController from './controller/LoginController.js';
 import AdminController from './controller/AdminController.js';
+import UserController from './controller/UserController.js';
 
 const App = () => {
   
@@ -25,7 +26,7 @@ const App = () => {
   
   auth.on('signed-in', user => {
     let isAdmin = user.email.split('@')[0] == 'admin';
-    let newController = isAdmin ? AdminController.getInstance() : false;
+    let newController = isAdmin ? AdminController.getInstance() : UserController.getInstance();
     swapControllers(newController, user);
   });
   auth.init();

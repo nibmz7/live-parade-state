@@ -18,10 +18,10 @@ export default class UserController extends BaseController {
         this.authUser = user;
         let idTokenResult = await firebase.auth().currentUser.getIdTokenResult();
         this.branchid = idTokenResult.claims.branchid;
-        this.usersRepository.getDepartments(branchid);
+        this.usersRepository.getDepartments(this.branchid);
     }
 
-    onUserEvent = data => {
+    onUserEvent(data) {
         super.onUserEvent(data);
         if(data.type == 'found') {
             let user = this.usersSorted.find(obj => obj.uid == this.authUser.uid);

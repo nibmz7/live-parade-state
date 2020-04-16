@@ -18,7 +18,7 @@ const UI = {
       AdminScreen();
     },
 
-    userScreem: () => {
+    userScreen: () => {
       UserScreen();
     },
     
