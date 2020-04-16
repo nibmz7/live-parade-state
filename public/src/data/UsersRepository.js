@@ -21,7 +21,7 @@ export default class UserRepository extends EventDispatcher {
         return await this.db.doc(`branches/${branchid}/departments/${departmentid}`);
     }
 
-    toDepartment = doc => {
+    toDepartment(doc) {
         return {
             uid: doc.id,
             ...doc.data()
@@ -65,7 +65,7 @@ export default class UserRepository extends EventDispatcher {
         });
     }
 
-    toUser = doc => {
+    toUser(doc) {
         let user = doc.data();
         return {
             uid: doc.id,

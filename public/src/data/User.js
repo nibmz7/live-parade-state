@@ -16,23 +16,6 @@ export default class User {
             code, remarks, updatedby: user.uid, timestamp: firebase.firestore.FieldValue.serverTimestamp()
         }
     }
-
-    static userConverter = {
-        toFirestore: user => {
-            return {
-                branchid: user.branchid,
-                departmentid: user.departmentid,
-                name: user.name,
-                rank: user.rank,
-                email: user.email,
-                status: user.status
-            }
-        },
-        fromFirestore: (snapshot, options) => {
-            const data = snapshot.data(options);
-            return new User(data.branchid, data.departmentid, data.name, data.rank, data.email, data.status);
-        }
-    }
     
     static compare(a,b) {
         let aRank = Rank.rankToInt(a.rank);
