@@ -85,7 +85,7 @@ exports.createUser = functions.region('asia-northeast1').https.onCall(async (dat
             password: data.password
         });
         const newUid = userRecord.uid;
-        await admin.auth().setCustomUserClaims(newUid, { branchid: adminid });
+        await admin.auth().setCustomUserClaims(newUid, { branchid: adminid, departmentid: data.departmentid });
         await usersRef.doc(newUid).set({
             branchid: adminid,
             departmentid: data.departmentid,

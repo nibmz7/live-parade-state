@@ -25,6 +25,8 @@ const template = `
             overflow-x: hidden;
             overflow-y: scroll;
             height: 100%;
+            padding-bottom: 55px;
+            box-sizing: border-box;
         }
         
         #empty {

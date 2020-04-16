@@ -15,6 +15,9 @@ const customStyle = `
     #sub-header:active {
         background: rgba(0,0,0,.1);
     }
+    .list-item:first-child {
+        border-top: 2px dashed var(--color-primary);
+    }
 `;
 
 export default class AdminDepartmentCard extends BasicDepartmentCard {

@@ -35,8 +35,6 @@ const template = customStyle => `
             border-radius: 15px;
         }
 
-        ${customStyle}
-
     </style>
     
     <div class="container">
@@ -73,10 +71,6 @@ const template = customStyle => `
             background: #F0F0F0;
         }
 
-        .list-item:first-child {
-            border-top: 2px dashed var(--color-primary);
-        }
-
         .list-item:last-child {
             border-bottom-left-radius: 15px;
             border-bottom-right-radius: 15px;
@@ -85,6 +79,8 @@ const template = customStyle => `
         .list-item > p {
             margin: 0;
         }
+
+        ${customStyle}
 
     </style>
           

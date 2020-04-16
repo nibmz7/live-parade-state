@@ -53,6 +53,7 @@ export default class UserRepository extends EventDispatcher {
                         let department = this.toDepartment(change.doc);
                         departments.push(department);
                     }
+                    initialLoad = false;
                     this.emit('department-event', { type: 'found', departments });
                 } else {
                     for (let change of snapshot.docChanges()) {
@@ -85,6 +86,7 @@ export default class UserRepository extends EventDispatcher {
                         let user = this.toUser(change.doc);
                         users.push(user);
                     }
+                    initialLoad = false;
                     this.emit('user-event', { type: 'found', users });
                 } else {
                     for (let change of snapshot.docChanges()) {
