@@ -41,9 +41,6 @@ body {
     font-family: 'Quicksand';
     font-weight: 500;
     background: #FAF5FA;
-    --primary-blue: #0652DD;
-    --primary-blue-dark: #043DA5;
-    --primary-blue-rgb: 6,82,221;
 }
 
 ::-webkit-scrollbar {

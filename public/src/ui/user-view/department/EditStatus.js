@@ -74,9 +74,24 @@ const template = `
         text-align: center;
     }
 
+    #expired {
+        text-align: center;
+        font-weight: 900;
+        color: var(--color-primary);
+        max-height: 0;
+        opacity: 0;
+        transition: .5s all;
+    }
+
+    :host([expired="true"]) #expired {
+        max-height: 100px;
+        opacity: 1;
+    }
+
   </style>
   
   <div class="container">
+      <div id="expired">[Expired] - Please verify again</div>
       <div class="header">
         <h4 id="name"></h4>
         <div id="time-selector">
@@ -136,13 +151,15 @@ export default class EditStatus extends Dialogue {
         let afternoonType = isMorning ? 'outline' : 'solid';
         this.timeSelectors[0].setAttribute('type', morningType);
         this.timeSelectors[1].setAttribute('type', afternoonType);
-        let code = this.status[this.timeOfDay].code;
-        let remarks = this.status[this.timeOfDay].remarks;
-        let updater = this.status[this.timeOfDay].updater;
-        let updatedTime = this.status[this.timeOfDay].date;
+        let status = this.status[this.timeOfDay];
+        let code = status.code;
+        let remarks = status.remarks;
+        let updater = status.updater;
+        let updatedTime = status.date;
         this.remarksInput.value = remarks;
         this.comment.textContent = `Last verified by ${updater}\non ${updatedTime}`;
         this.setStatus(code);
+        this.setAttribute('expired', status.expired);
     }
 
     saveRemarks() {
@@ -203,6 +220,7 @@ export default class EditStatus extends Dialogue {
             let status = {
                 code: userStatus.code,
                 remarks: userStatus.remarks,
+                expired: userStatus.expired,
                 date: userDate,
                 updater
             }

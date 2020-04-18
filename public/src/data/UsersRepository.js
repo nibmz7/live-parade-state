@@ -47,7 +47,7 @@ export default class UserRepository extends EventDispatcher {
         this.departmentsUnsubscribe = departments.onSnapshot(snapshot => {
             if (snapshot.empty) this.emit('department-event', { type: 'empty' });
             else {
-                if(initialLoad) {
+                if (initialLoad) {
                     let departments = [];
                     for (let change of snapshot.docChanges()) {
                         let department = this.toDepartment(change.doc);
@@ -65,8 +65,26 @@ export default class UserRepository extends EventDispatcher {
         });
     }
 
+    checkSameDay(statusDate) {
+        let date = new Date();
+        return date.getFullYear() === statusDate.getFullYear() &&
+            date.getMonth() === statusDate.getMonth() &&
+            date.getDate() === statusDate.getDate();
+    }
+
     toUser(doc) {
         let user = doc.data();
+        let amTimestamp = user.status.am.timestamp;
+        let pmTimestamp = user.status.pm.timestamp;
+        let amIsExpired = false;
+        let pmIsExpired = false;
+        if(amTimestamp && pmTimestamp) {
+            amIsExpired = !this.checkSameDay(amTimestamp.toDate());
+            pmIsExpired = !this.checkSameDay(pmTimestamp.toDate());
+        }
+        user.status.am.expired = amIsExpired;
+        user.status.pm.expired = pmIsExpired; 
+
         return {
             uid: doc.id,
             fullname: user.rank + ' ' + user.name,
@@ -80,7 +98,7 @@ export default class UserRepository extends EventDispatcher {
         this.usersUnsubscribe = users.onSnapshot(snapshot => {
             if (snapshot.empty) this.emit('user-event', { type: 'empty' });
             else {
-                if(initialLoad) {
+                if (initialLoad) {
                     let users = [];
                     for (let change of snapshot.docChanges()) {
                         let user = this.toUser(change.doc);

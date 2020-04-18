@@ -122,7 +122,7 @@ export default class BasicDepartmentCard extends HTMLElement {
         let primaryTextItem = item.querySelector('#primary-text');
         let secondaryTextItem = item.querySelector('#secondary-text');
         primaryTextItem.textContent = this.getItemPrimaryText(user);
-        secondaryTextItem.textContent = this.getItemSecondaryText(user);
+        secondaryTextItem.innerHTML = this.getItemSecondaryText(user);
     }
 
     setDepartment(department) {

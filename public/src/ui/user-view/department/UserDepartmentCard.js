@@ -16,6 +16,10 @@ const customStyle = `
         margin-top: 3px;
         letter-spacing: 0.1em;
     }
+
+    #secondary-text > span {
+        color: var(--color-primary);
+    }
 `;
 
 export default class UserDepartmentCard extends BasicDepartmentCard {
@@ -32,9 +36,12 @@ export default class UserDepartmentCard extends BasicDepartmentCard {
     }
 
     getItemSecondaryText(user) {
+        const expiredText = ' <span>-- Expired</span>';
         let status = user.status;
         let am = this.getStatus(status.am, 'AM');
         let pm = this.getStatus(status.pm, 'PM');
+        if(status.am.expired) am += expiredText;
+        if(status.pm.expired) pm += expiredText;
         return am + '\n' + pm;
     }
 
