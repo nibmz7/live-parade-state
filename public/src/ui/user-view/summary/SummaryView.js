@@ -1,4 +1,5 @@
 import STATUS, { STATUS_CATEGORY } from "../../../data/Status.js";
+import Utils from "../../../util/Utils.js";
 
 const template = `
 
@@ -6,7 +7,7 @@ const template = `
         :host {
             
         }
-        .root {
+        #root {
             height: 100%;
             width: 100%;
             position: absolute;
@@ -16,7 +17,7 @@ const template = `
         }
         .container {
             padding: 30px;
-            max-height: 100%;
+            max-height: 99.9%;
             overflow-y: auto;
             box-sizing: border-box;
             padding-bottom: 80px;
@@ -45,6 +46,7 @@ const template = `
             --button-font-size: 1rem;
             --button-padding: 7px 15px;
             --button-radius: 35px;
+            transform: translateY(0px);
         }
 
         #export {
@@ -52,13 +54,63 @@ const template = `
             bottom: 10px;
             --button-font-size: 1rem;
             left: 45%;
-            transform: translateX(-45%);
+            transform: translateX(-45%) translateY(0px);
             --button-padding: 15px;
             --button-radius: 35px;
         }
+
+        wc-button {
+            transition: .5s all;
+        }
+
+        .show {
+            animation: fade-in .3s;
+        } 
+        .show > .container {
+            animation: slide-in .3s;
+        }
+        .show > #export {
+            transform: translateX(-45%) translateY(150%);
+        }
+        .show > #close {
+            transform: translateY(150%);
+        }
+
+        .hide {
+            animation: fade-out .3s;
+        } 
+        .hide > .container {
+            animation: slide-out .3s;
+        }
+        .hide > #export {
+            transform: translateX(-45%) translateY(150%);
+        }
+        .hide > #close {
+            transform: translateY(150%);
+        }
+
+
+        @keyframes fade-in {
+            0% { opacity: 0; }
+            100% { opacity: 1; }
+        }
+    
+        @keyframes fade-out {
+            0% { opacity: 1; }
+            100% { opacity: 0; }
+        }
+
+        @keyframes slide-in {
+            0% { transform: translateY(100px); }
+            100% { transform: translateY(0px); }
+        }
+        
+        @keyframes slide-out {
+            100% { transform: translateY(100px); }
+        }
     </style>
 
-    <div class="root">
+    <div id="root">
         <div class="container">
             
         </div>
@@ -77,8 +129,28 @@ export default class SummaryView extends HTMLElement {
         super();
         this.attachShadow({mode: 'open'});
         this.shadowRoot.innerHTML = template;
+        this.root = this.shadowRoot.getElementById('root');
         this.containers = this.shadowRoot.querySelectorAll('.container');
         this.categoryViews = {am: [], pm: []};
+        Utils.onclick(this.shadowRoot.getElementById('close'), this.closeView.bind(this));
+        Utils.onclick(this.shadowRoot.getElementById('export'), this.exportToExcel.bind(this));
+    }
+
+    connectedCallback() {
+        Utils.animate(this.root, 'show', () => {
+            this.root.classList.remove('show');
+        });
+    }
+
+    closeView() {
+        Utils.animate(this.root, 'hide', () => {
+            this.remove();
+            this.root.classList.remove('hide');
+        });
+    }
+
+    exportToExcel() {
+
     }
 
     toggleTimeOfDay() {

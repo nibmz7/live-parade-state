@@ -23,6 +23,10 @@ const timeChooserTemplate = `
         #time-selector > wc-button:nth-of-type(2) {
             --button-radius: 0 35px 35px 0;
         }
+        #float-button {
+            left: 15%;
+            right: 35%;
+        }
     </style>
 
     <div id="time-selector">

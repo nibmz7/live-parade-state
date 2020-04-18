@@ -51,4 +51,8 @@ export default class SummaryCard extends BasicDepartmentCard {
         super.removeUser(user.uid);
         this.showStrength();
     }   
+
+    onUserSelected(uid) {
+        
+    }
 } 
