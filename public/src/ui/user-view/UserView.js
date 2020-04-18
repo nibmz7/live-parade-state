@@ -18,10 +18,10 @@ const timeChooserTemplate = `
         }
 
         #time-selector > wc-button:nth-of-type(1) {
-            --button-radius: 15px 0 0 15px;
+            --button-radius: 35px 0 0 35px;
         }
         #time-selector > wc-button:nth-of-type(2) {
-            --button-radius: 0 15px 15px 0;
+            --button-radius: 0 35px 35px 0;
         }
     </style>
 
@@ -41,10 +41,16 @@ export default class UserView extends MainView {
         this.shadowRoot.appendChild(el);
         this.timeSelectors = el.querySelectorAll('wc-button');
         this.timeSelectors.forEach((el, i) => el.onclick = e => this.toggleTime(i == 0));
+        this.summaryView = document.createElement('summary-view');
     }
 
-    
+    setController(controller) {
+        super.setController(controller);
+        this.summaryView.setController(controller);
+    }
+
     toggleTime(isMorning) {
+        this.summaryView.toggleTimeOfDay();
         let morningType = isMorning ? 'solid' : 'outline';
         let afternoonType = isMorning ? 'outline' : 'solid';
         this.timeSelectors[0].setAttribute('type', morningType);
@@ -59,7 +65,7 @@ export default class UserView extends MainView {
     }
 
     onFloatButtonClick() {
-        
+        document.body.appendChild(this.summaryView);
     }
 
 }

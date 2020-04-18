@@ -6,9 +6,9 @@ export default class BaseController {
     constructor() {
         this.viewSwitcher = document.querySelector('view-switcher');
         this.usersRepository = new UserRepository();
-        this.usersSorted = [];
         this.onUserEvent = this.onUserEvent.bind(this);
         this.onDepartmentEvent = this.onDepartmentEvent.bind(this);
+        this.users = {};
     }
 
     static getInstance() {
@@ -17,7 +17,7 @@ export default class BaseController {
     }
 
     activate(user) {
-        this.usersSorted = [];
+        this.users = {};
         this.mainView = this.createMainView();
         this.mainView.setController(this);
         this.viewSwitcher.showView(this.viewName, this.mainView);
@@ -32,33 +32,43 @@ export default class BaseController {
         this.usersRepository.unsubscribeUsers();
     }
 
-    resortUsers() {
-        this.usersSorted.sort(User.compare);
+    getUser(uid) {
+        return this.users[uid];
     }
+
+    userEventFound(type, user) {};
 
     onUserEvent(data) {
         let type = data.type;
         let user = data.user;
         if (type == 'found') {
-            this.usersSorted = data.users;
-            this.resortUsers();
-            for (let user of this.usersSorted) {
+            data.users.sort(User.compare);
+            for (let user of data.users) {
                 let departmentCard = this.mainView.getDepartmentCard(user.departmentid);
                 departmentCard.addUser(user);
+                this.userEventFound('added', user);
+                this.users[user.uid] = user;
             }
             return;
         }
-        if(type == 'empty') return;
-        let departmentCard = this.mainView.getDepartmentCard(user.departmentid);
 
+        if(type == 'empty') return;
+
+        let departmentCard = this.mainView.getDepartmentCard(user.departmentid);
         if (type == 'added') {
             departmentCard.addUser(user);
+            this.userEventFound('added', user);
+            this.users[user.uid] = user;
         }
         if (type == 'modified') {
             departmentCard.changeUser(user);
+            this.userEventFound('modified', user);
+            this.users[user.uid] = user;
         }
         if (type == 'removed') {
             departmentCard.removeUser(user.uid);
+            this.userEventFound('removed', user);
+            delete this.users[user.uid];
         }
     }
 

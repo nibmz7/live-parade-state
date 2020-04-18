@@ -55,37 +55,31 @@ export default class UserDepartmentCard extends BasicDepartmentCard {
         return hasRemark ? `${statusName} (${status.remarks})` : statusName;
     }
 
-    updateDialogue(uid) {
-        let user = this.users[uid];
-        let amUpdater = this.users[user.status.am.updatedby];
-        let pmUpdater = this.users[user.status.pm.updatedby];
+    updateDialogue(user) {
+        let amUpdater = this.getUser(user.status.am.updatedby).fullname;
+        let pmUpdater = this.getUser(user.status.pm.updatedby).fullname;
         this.dialogue.view.setUser(user,
-            amUpdater ? amUpdater.fullname : 'admin',
-            pmUpdater ? pmUpdater.fullname : 'admin');
+            amUpdater ? amUpdater : 'admin',
+            pmUpdater ? pmUpdater : 'admin');
     }
 
     onUserSelected(uid) {
+        let user = this.getUser(uid);
+        let dialogue;
         if (this.isEditable) {
-            let dialogue = document.createElement('edit-status');
-            this.dialogue.isopen = true;
-            this.dialogue.uid = uid;
-            this.dialogue.view = dialogue;
-            this.updateDialogue(uid);
+            dialogue = document.createElement('edit-status');
             dialogue.setController(this.controller);
-            dialogue.ondismiss = () => {
-                this.dialogue.isopen = false; 
-                this.dialogue.uid = null;
-                this.dialogue.view = null;
-            }
-            document.body.appendChild(dialogue);
-        } else {
-            let dialogue = document.createElement('status-details');
-            this.dialogue.isopen = true;
-            this.dialogue.uid = uid;
-            this.dialogue.view = dialogue;
-            this.updateDialogue(uid);
-            document.body.appendChild(dialogue);
+        } else dialogue = document.createElement('status-details');
+        dialogue.ondismiss = () => {
+            this.dialogue.isopen = false; 
+            this.dialogue.uid = null;
+            this.dialogue.view = null;
         }
+        this.dialogue.isopen = true;
+        this.dialogue.uid = uid;
+        this.dialogue.view = dialogue;
+        this.updateDialogue(user);
+        document.body.appendChild(dialogue);
     }
 
     setTimeOfDay(isMorning) {
@@ -101,7 +95,7 @@ export default class UserDepartmentCard extends BasicDepartmentCard {
 
     changeUser(user) {
         const checkIsPresent = (timeOfDay, statusCode) => {
-            let prevStatus = this.users[user.uid].status[timeOfDay].code;
+            let prevStatus = this.getUser(user.uid).status[timeOfDay].code;
             if(prevStatus == statusCode) return;
             let prefix = user.regular ? 'regular' : 'nsf';
             if(statusCode == 1) this.strength[timeOfDay][prefix] += 1;
@@ -113,7 +107,7 @@ export default class UserDepartmentCard extends BasicDepartmentCard {
         super.changeUser(user);
         if(this.dialogue.isopen && this.dialogue.uid == user.uid) {
             if(user.status.am.timestamp && user.status.pm.timestamp)
-                this.updateDialogue(user.uid);
+                this.updateDialogue(user);
         }
         this.showStrength();
     }   
@@ -138,7 +132,7 @@ export default class UserDepartmentCard extends BasicDepartmentCard {
                 this.strength[timeOfDay][prefix] -= 1;
             }
         }
-        let user = this.users[uid];
+        let user = this.getUser(uid);
         checkIsPresent('am', user.status.am.code);
         checkIsPresent('pm', user.status.pm.code);
         super.removeUser(uid);

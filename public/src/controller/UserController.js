@@ -1,5 +1,6 @@
 import UI from '../ui/index.js';
 import BaseController from './BaseController.js';
+import STATUS from '../data/Status.js';
 
 export default class UserController extends BaseController {
 
@@ -7,6 +8,7 @@ export default class UserController extends BaseController {
         super();
         UI.userScreen();
         this.viewName = 'user';
+        this.users = {};
     }
 
     createMainView() {
@@ -25,6 +27,7 @@ export default class UserController extends BaseController {
 
     async activate(user) {
         super.activate(user);
+        this.users = {};
         this.authUser = user;
         let idTokenResult = await firebase.auth().currentUser.getIdTokenResult();
         this.branchid = idTokenResult.claims.branchid;
@@ -32,14 +35,23 @@ export default class UserController extends BaseController {
         this.usersRepository.getDepartments(this.branchid);
     }
 
+    userEventFound(type, user) {
+        if(type == 'added') {
+            this.mainView.summaryView.addUser(user);
+        }
+        if(type == 'modified') {
+            
+        }
+        if(type == 'removed') {
+            
+        }
+    }
+
     onUserEvent(data) {
         super.onUserEvent(data);
         if(data.type == 'found') {
-            let user = this.usersSorted.find(obj => obj.uid == this.authUser.uid);
-            this.user = user;
-            this.mainView.showWelcomeText(user.fullname);
-        } else {
-
+            this.user = this.users[this.authUser.uid];
+            this.mainView.showWelcomeText(this.user.fullname);
         }
     }
 
@@ -59,6 +71,20 @@ export default class UserController extends BaseController {
             }
             this.mainView.departmentViews[this.departmentid].isEditable = true;
             this.usersRepository.subscribeUsers(this.branchid);
+        }
+    }
+
+    getSummaryData() {
+        this.resortUsers();
+        this.summaryData = {am: [], pm: []};
+        const insertUserByStatus = (prefix, user) => {
+            let userStatusCode = user.status[prefix].code;
+            let category = STATUS[userStatusCode].category;
+            this.summaryData[prefix][category].push(user);
+        }
+        for(let user of this.usersSorted) {
+            insertUserByStatus('am', user);
+            insertUserByStatus('pm', user);
         }
     }
 }

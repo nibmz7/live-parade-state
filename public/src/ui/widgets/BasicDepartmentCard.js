@@ -102,8 +102,11 @@ export default class BasicDepartmentCard extends HTMLElement {
         this.list = this.shadowRoot.getElementById('list');
         this.headerText = this.shadowRoot.getElementById('header');
         this.subHeaderText = this.shadowRoot.getElementById('sub-header');
-        this.users = {};
         this.uidArray = [];
+    }
+
+    getUser(uid) {
+        return this.controller.getUser(uid);
     }
 
     setController(controller) {
@@ -140,7 +143,7 @@ export default class BasicDepartmentCard extends HTMLElement {
         let uid = null;
         while(i >= 0) {
             let nextUserUid = this.uidArray[i];
-            let nextUser = this.users[nextUserUid];
+            let nextUser = this.getUser(nextUserUid);
             let isHigher = User.compareLinear(user, nextUser);
             if(!isHigher) break;
             else uid = this.uidArray[i--];
@@ -150,8 +153,6 @@ export default class BasicDepartmentCard extends HTMLElement {
     }
 
     addUser(user) {
-        this.users[user.uid] = user;
-
         let template = this.shadowRoot.getElementById('list-item');
         let clone = template.content.cloneNode(true);
         let item = clone.querySelector('.list-item');
@@ -164,19 +165,17 @@ export default class BasicDepartmentCard extends HTMLElement {
     }
 
     changeUser(user) {
-        let currentUser = this.users[user.uid];
-        if(currentUser.rank != user.rank) {
+        let currentUserRank = this.getUser(user.uid).rank;
+        if(currentUserRank != user.rank) {
             this.removeUser(user.uid);
             this.addUser(user);
         } else {
-            this.users[user.uid] = user;
             let userItem = this.shadowRoot.getElementById(user.uid);
             this.setListItemData(userItem, user);
         }
     }
 
     removeUser(uid) {
-        delete this.users[uid];
         let userItem = this.shadowRoot.getElementById(uid);
         userItem.remove();
         var index = this.uidArray.indexOf(uid);

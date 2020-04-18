@@ -62,7 +62,7 @@ export default class AdminDepartmentCard extends BasicDepartmentCard {
         dialogue.setEditMode(true);
         dialogue.setController(this.controller);
         dialogue.setDepartment(this.id, this.depName);
-        dialogue.setUser(this.users[uid]);
+        dialogue.setUser(this.getUser(uid));
         document.body.appendChild(dialogue);
     }
     
