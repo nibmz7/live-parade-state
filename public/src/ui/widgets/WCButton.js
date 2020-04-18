@@ -28,7 +28,7 @@ const template = `
     }
     
     :host([type="outline"]) button:active {
-        background: rgba(0,0,0,.2);
+        background: rgb(199, 199, 199);
     }
     
     :host([type="plain"]) > button {

@@ -43,7 +43,7 @@ const template = `
         }
 
         #list > * {
-            padding: 15px 30px;
+            padding: 5px 30px;
         }
         
     </style>

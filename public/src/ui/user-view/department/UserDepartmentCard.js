@@ -5,10 +5,10 @@ const customStyle = `
     #sub-header {
         padding: 10px;
         text-align: center;
-        padding: 10 px;
-        font-weight: 900;
-        background: #34495e;
-        color:white;
+        font-weight: 300;
+        background: #33475a;
+        font-size: 0.9rem;
+        color: white;
     }
     #secondary-text {
         white-space: pre-line;
@@ -19,6 +19,7 @@ const customStyle = `
 
     #secondary-text > span {
         color: var(--color-primary);
+        font-weight: 900;
     }
 `;
 
@@ -26,9 +27,10 @@ export default class UserDepartmentCard extends BasicDepartmentCard {
 
     constructor() {
         super(customStyle);
-        this.subHeader = 'Total strength';
         this.isEditable = false;
         this.dialogue = {isopen: false, uid: null, view: null};
+        this.strength = {am: {regular: 0, nsf: 0}, pm:  {regular: 0, nsf: 0}};
+        this.timeOfDay = 'am';
     }
 
     getItemPrimaryText(user) {
@@ -79,12 +81,60 @@ export default class UserDepartmentCard extends BasicDepartmentCard {
         }
     }
 
+    setTimeOfDay(isMorning) {
+        this.timeOfDay = isMorning ? 'am' : 'pm';
+        this.showStrength();
+    }
+
+    showStrength() {
+        let strength = this.strength[this.timeOfDay];
+        let totol = strength.regular + strength.nsf;
+        this.subHeader = `${totol} Present ~ ${strength.regular} Regular + ${strength.nsf} Nsf`;
+    }
+
     changeUser(user) {
+        const checkIsPresent = (timeOfDay, statusCode) => {
+            let prevStatus = this.users[user.uid].status[timeOfDay].code;
+            if(prevStatus == statusCode) return;
+            let prefix = user.regular ? 'regular' : 'nsf';
+            if(statusCode == 1) this.strength[timeOfDay][prefix] += 1;
+             else this.strength[timeOfDay][prefix] -= 1;
+            
+        }
+        checkIsPresent('am', user.status.am.code);
+        checkIsPresent('pm', user.status.pm.code);
         super.changeUser(user);
         if(this.dialogue.isopen && this.dialogue.uid == user.uid) {
             if(user.status.am.timestamp && user.status.pm.timestamp)
                 this.updateDialogue(user.uid);
         }
+        this.showStrength();
+    }   
+
+    addUser(user) {
+        super.addUser(user);
+        const checkIsPresent = (timeOfDay, statusCode) => {
+            if(statusCode == 1) {
+                let prefix = user.regular ? 'regular' : 'nsf';
+                this.strength[timeOfDay][prefix] += 1;
+            }
+        }
+        checkIsPresent('am', user.status.am.code);
+        checkIsPresent('pm', user.status.pm.code);
+        this.showStrength();
     }
 
+    removeUser(uid) {
+        const checkIsPresent = (timeOfDay, statusCode) => {
+            if(statusCode == 1) {
+                let prefix = user.regular ? 'regular' : 'nsf';
+                this.strength[timeOfDay][prefix] -= 1;
+            }
+        }
+        let user = this.users[uid];
+        checkIsPresent('am', user.status.am.code);
+        checkIsPresent('pm', user.status.pm.code);
+        super.removeUser(uid);
+        this.showStrength();
+    }   
 }
