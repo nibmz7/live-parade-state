@@ -14,6 +14,7 @@ const customStyle = `
         white-space: pre-line;
         font-size: 0.7rem;
         margin-top: 3px;
+        letter-spacing: 0.1em;
     }
 `;
 

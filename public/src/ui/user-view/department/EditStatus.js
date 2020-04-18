@@ -102,7 +102,8 @@ export default class EditStatus extends Dialogue {
 
     constructor() {
         super(template);
-        this.isMorning = true;
+        this.timeOfDay = 'am';
+        this.status = { 'am': {}, 'pm': {} };
         this.statusChooser = [];
         this.isProcessing = false;
         this.remarksInput = this.shadowRoot.getElementById('remarks-input');
@@ -115,8 +116,7 @@ export default class EditStatus extends Dialogue {
         this.timeSelectors.forEach((el, i) => el.onclick = e => this.toggleTime(i == 0));
         this.populateStatusChooser();
         this.remarksInput.onblur = e => {
-            if(this.isMorning) this.amRemarks = this.remarksInput.value;
-            else this.pmRemarks = this.remarksInput.value;
+            this.saveRemarks();
         }
     }
 
@@ -130,37 +130,41 @@ export default class EditStatus extends Dialogue {
     }
 
     toggleTime(isMorning) {
+        this.saveRemarks();
+        this.timeOfDay = isMorning ? 'am' : 'pm';
         let morningType = isMorning ? 'solid' : 'outline';
         let afternoonType = isMorning ? 'outline' : 'solid';
         this.timeSelectors[0].setAttribute('type', morningType);
         this.timeSelectors[1].setAttribute('type', afternoonType);
-        let status = isMorning ? this.amStatus : this.pmStatus;
-        let remarks = isMorning ? this.amRemarks : this.pmRemarks;
-        let updater = isMorning ? this.amUpdater : this.pmUpdater;
-        let updatedTime = isMorning ? this.amDate : this.pmDate;
+        let code = this.status[this.timeOfDay].code;
+        let remarks = this.status[this.timeOfDay].remarks;
+        let updater = this.status[this.timeOfDay].updater;
+        let updatedTime = this.status[this.timeOfDay].date;
         this.remarksInput.value = remarks;
         this.comment.textContent = `Last verified by ${updater}\non ${updatedTime}`;
-        this.isMorning = isMorning;
-        this.setStatus(status);
+        this.setStatus(code);
+    }
+
+    saveRemarks() {
+        this.status[this.timeOfDay].remarks = this.remarksInput.value;
     }
 
     verify(e) {
-        if(this.isProcessing) return;
+        if (this.isProcessing) return;
         this.isProcessing = true;
         this.save.textContent = 'Processing...';
-        let inputStatus = this.isMorning ? this.amStatus : this.pmStatus;
+        let inputStatusCode = this.status[this.timeOfDay].code;
         let inputRemarks = this.remarksInput.value;
-        this.controller.updateUserStatus(this.isMorning, inputStatus, inputRemarks, this.user.uid);
+        this.controller.updateUserStatus(this.timeOfDay == 'am', inputStatusCode, inputRemarks, this.user.uid);
     }
 
     setStatus(code) {
-        if(this.prevButton) {
+        if (this.prevButton) {
             this.prevButton.setAttribute('type', 'outline');
         }
         this.statusChooser[code].setAttribute('type', 'solid');
         this.prevButton = this.statusChooser[code];
-        if(this.isMorning) this.amStatus = code;
-        else this.pmStatus = code;
+        this.status[this.timeOfDay].code = code;
     }
 
     populateStatusChooser() {
@@ -169,8 +173,8 @@ export default class EditStatus extends Dialogue {
             button.setAttribute('type', 'outline');
             button.textContent = STATUS[idx].name;
             button.onclick = e => {
-                let currentStatus = this.isMorning ? this.amStatus : this.pmStatus;
-                if(currentStatus == idx) return;
+                let currentCode = this.status[this.timeOfDay].code;
+                if (currentCode == idx) return;
                 this.setStatus(idx);
             };
             this.statusChooserContainer.appendChild(button);
@@ -182,27 +186,32 @@ export default class EditStatus extends Dialogue {
         this.isProcessing = true;
         this.name.textContent = user.fullname;
         this.user = user;
-        this.amUpdater = amUpdater;
-        this.pmUpdater = pmUpdater;
-        this.save.textContent = 'Verify';
-        this.checkChanges();
-    }
 
-    checkChanges() {
-        if(!this.amDate || this.amDate != this.user.status.am.timestamp.toDate()) {
-            this.updateMorningStatus();
-        }
-        if(!this.pmDate || this.amDate != this.user.status.pm.timestamp.toDate()) {
-            this.updateAfternoonStatus();
-        }
-        this.toggleTime(this.isMorning);
+        this.compareStatusDate('am', amUpdater);
+        this.compareStatusDate('pm', pmUpdater);
+        this.toggleTime(this.timeOfDay == 'am');
+
+        this.save.textContent = 'Verify';
         this.isProcessing = false;
     }
 
-    updateMorningStatus() {
-        this.amStatus = this.user.status.am.code;
-        this.amRemarks = this.user.status.am.remarks;
-        this.amDate = this.user.status.am.timestamp.toDate();
+    compareStatusDate(timeOfDay, updater) {
+        let userStatus = this.user.status[timeOfDay];
+        let userDate = userStatus.timestamp.toDate();
+        let statusDate = this.status[timeOfDay].date;
+        if (!statusDate || statusDate.getTime() != userDate.getTime()) {
+            let status = {
+                code: userStatus.code,
+                remarks: userStatus.remarks,
+                date: userDate,
+                updater
+            }
+            this.status[timeOfDay] = status;
+            if(this.timeOfDay == timeOfDay) {
+                this.remarksInput.value = this.status[timeOfDay].remarks;
+            }
+        }
+
     }
 
     updateAfternoonStatus() {

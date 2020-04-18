@@ -16,6 +16,11 @@ const template = `
         border: 2px solid var(--color-primary);
     }
 
+    :host([type="solid"]) button:active {
+        border-color: var(--color-primary-dark);
+        background: var(--color-primary-dark);
+    }
+
     :host([type="outline"]) > button {
         background: white;
         color: var(--color-primary);
