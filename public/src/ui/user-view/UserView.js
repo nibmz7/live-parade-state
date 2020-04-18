@@ -6,7 +6,7 @@ const timeChooserTemplate = `
     <style>
         #time-selector {
             display: flex;
-            position: absolute;
+            position: fixed;
             z-index: 99;
             right: 10px;
             bottom: 10px;
@@ -38,7 +38,7 @@ export default class UserView extends MainView {
         this.floatButton.textContent = 'View summary';
         let el = document.createElement('div');
         el.innerHTML = timeChooserTemplate;
-        this.root.prepend(el);
+        this.shadowRoot.appendChild(el);
         this.timeSelectors = el.querySelectorAll('wc-button');
         this.timeSelectors.forEach((el, i) => el.onclick = e => this.toggleTime(i == 0));
     }

@@ -15,11 +15,13 @@ const customStyle = `
         font-size: 0.7rem;
         margin-top: 3px;
         letter-spacing: 0.1em;
+        text-transform: uppercase;
     }
 
     #secondary-text > span {
         color: var(--color-primary);
         font-weight: 900;
+        text-transform: capitalize;
     }
 `;
 
@@ -77,7 +79,12 @@ export default class UserDepartmentCard extends BasicDepartmentCard {
             }
             document.body.appendChild(dialogue);
         } else {
-
+            let dialogue = document.createElement('status-details');
+            this.dialogue.isopen = true;
+            this.dialogue.uid = uid;
+            this.dialogue.view = dialogue;
+            this.updateDialogue(uid);
+            document.body.appendChild(dialogue);
         }
     }
 
