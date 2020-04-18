@@ -72,8 +72,8 @@ export default class MainView extends HTMLElement {
         }
     }
 
-    showWelcomeText(name) {
-        Utils.addWelcomeText(name);
+    showWelcomeText() {
+        Utils.addWelcomeText(this.welcomeText);
         this.welcomeText = document.getElementById('welcome-text');
         this.list.onscroll = e => {
             if (this.list.scrollTop > 0) {
@@ -82,6 +82,10 @@ export default class MainView extends HTMLElement {
                 this.welcomeText.classList.remove('elevation');
             }
         }
+    }
+
+    connectedCallback() {
+        this.showWelcomeText();
     }
 
     disconnectedCallback() {

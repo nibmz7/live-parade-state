@@ -37,6 +37,9 @@ export default class UserController extends BaseController {
 
     userEventFound(type, user) {
         if(type == 'added') {
+            if(this.authUser.uid == user.uid) {
+                this.mainView.welcomeText = user.fullname;
+            }
             this.mainView.summaryView.addUser(user, 'am');
             this.mainView.summaryView.addUser(user, 'pm');
         }
@@ -57,15 +60,7 @@ export default class UserController extends BaseController {
             this.mainView.summaryView.removeUser(user, 'pm');
         }
     }
-
-    onUserEvent(data) {
-        super.onUserEvent(data);
-        if(data.type == 'found') {
-            this.user = this.users[this.authUser.uid];
-            this.mainView.showWelcomeText(this.user.fullname);
-        }
-    }
-
+    
     onDepartmentEvent(data) {
         let type = data.type;
         if (type == 'found') {

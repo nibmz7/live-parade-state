@@ -96,7 +96,13 @@ export default class UserRepository extends EventDispatcher {
         let initialLoad = true;
         let users = this.db.collectionGroup('users').where('branchid', '==', branchid);
         this.usersUnsubscribe = users.onSnapshot(snapshot => {
-            if (snapshot.empty) this.emit('user-event', { type: 'empty' });
+            if (snapshot.empty) {
+                if(initialLoad) {
+                    initialLoad = false;
+                    this.emit('user-event', { type: 'empty', users: []});
+                }
+                else this.emit('user-event', { type: 'empty' });
+            }
             else {
                 if (initialLoad) {
                     let users = [];

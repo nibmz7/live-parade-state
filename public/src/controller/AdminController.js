@@ -17,7 +17,7 @@ export default class AdminController extends BaseController {
 
   activate(user) {
     super.activate(user);
-    this.mainView.showWelcomeText('admin user');
+    this.mainView.welcomeText = 'admin user';
     this.branchid = user.uid;
     this.adminManager.setAdminInfo(user.uid, user.email);
     this.usersRepository.subscribeDepartments(this.adminManager.adminid);
