@@ -177,30 +177,46 @@ export default class SummaryView extends HTMLElement {
         list.className = 'list';
         div.appendChild(header);
         div.appendChild(list);
-        this.categoryViews[timeOfDay][id] = {header, list, cards: []};
-        if(id == 0 || id == 1) this.containers[idx].prepend(div);
-        else this.containers[idx].appendChild(div);
+        this.categoryViews[timeOfDay][id] = {div, header, list, count: 0, cards: []};
     }
 
-    addUser(user) {
-        const addToList = timeOfDay => {
-            let status = user.status[timeOfDay];
-            let code = status.code;
-            let category = STATUS[code].category;
-            if(!this.categoryViews[timeOfDay][category]) {
-                this.createCategory(timeOfDay, category);
-            }
-            let categoryView = this.categoryViews[timeOfDay][category];
-            if(!categoryView.cards[code]) {
-                let summaryCard = document.createElement('summary-card');
-                summaryCard.setController(this.controller);
-                summaryCard.setStatusName(STATUS[code].fullName);
-                categoryView.cards[code] = summaryCard;
-                categoryView.list.appendChild(summaryCard);
-            }
-            categoryView.cards[code].addUser(user);  
+    addUser(user, timeOfDay) {
+        let status = user.status[timeOfDay];
+        let code = status.code;
+        let category = STATUS[code].category;
+        if(!this.categoryViews[timeOfDay][category]) {
+            this.createCategory(timeOfDay, category);
         }
-        addToList('am');
-        addToList('pm');
+        let categoryView = this.categoryViews[timeOfDay][category];
+        if(categoryView.count == 0) {
+            let idx = timeOfDay == 'am' ? 0 : 1;
+            if(category == 0 || category == 1) this.containers[idx].prepend(categoryView.div);
+            else this.containers[idx].appendChild(categoryView.div);
+        }
+        if(!categoryView.cards[code]) {
+            let summaryCard = document.createElement('summary-card');
+            summaryCard.setController(this.controller);
+            summaryCard.setStatusName(STATUS[code].fullName);
+            summaryCard.timeOfDay = timeOfDay;
+            categoryView.cards[code] = summaryCard;
+            categoryView.list.appendChild(summaryCard);
+        } else {
+            if(categoryView.cards[code].uidArray.length == 0) {
+                categoryView.list.appendChild(categoryView.cards[code]);
+            }
+        }
+        categoryView.cards[code].addUser(user);  
+        categoryView.count++;
+    }
+
+    removeUser(user, timeOfDay) {
+        let code = user.status[timeOfDay].code;
+        let category = STATUS[code].category;
+        let categoryView = this.categoryViews[timeOfDay][category];
+        let card = categoryView.cards[code];
+        card.removeUser(user);
+        categoryView.count--;
+        if(card.uidArray.length == 0) card.remove();
+        if(categoryView.count == 0) categoryView.div.remove();
     }
 }

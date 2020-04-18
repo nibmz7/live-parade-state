@@ -37,13 +37,24 @@ export default class UserController extends BaseController {
 
     userEventFound(type, user) {
         if(type == 'added') {
-            this.mainView.summaryView.addUser(user);
+            this.mainView.summaryView.addUser(user, 'am');
+            this.mainView.summaryView.addUser(user, 'pm');
         }
         if(type == 'modified') {
-            
+            const checkIfStatusChanged = timeOfDay => {
+                let status = user.status[timeOfDay];
+                let prevStatus = this.users[user.uid].status[timeOfDay];
+                if(prevStatus.code != status.code) {
+                    this.mainView.summaryView.removeUser(this.users[user.uid], timeOfDay);
+                    this.mainView.summaryView.addUser(user, timeOfDay);
+                }
+            }
+            checkIfStatusChanged('am');
+            checkIfStatusChanged('pm');
         }
         if(type == 'removed') {
-            
+            this.mainView.summaryView.removeUser(user, 'am');
+            this.mainView.summaryView.removeUser(user, 'pm');
         }
     }
 

@@ -5,7 +5,6 @@ import AdminController from './controller/AdminController.js';
 import UserController from './controller/UserController.js';
 
 const App = () => {
-  
   UI.init();
     
   const auth = Auth.getInstance();

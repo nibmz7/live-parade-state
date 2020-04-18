@@ -12,8 +12,8 @@ const template = `
             --button-radius: 50px;
             --button-font-size: 1.1rem;
             bottom: 10px;
-            left: 25%;
-            right: 25%;
+            left: 20%;
+            right: 35%;
         }
         
         #root {

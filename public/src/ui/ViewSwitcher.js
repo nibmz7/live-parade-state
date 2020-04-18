@@ -1,6 +1,10 @@
 const template = `
 
     <style>
+        #root {
+            height: 100%;
+            width: 100%;
+        }
         .container {
             height: 100%;
             width: 100%;
@@ -8,10 +12,39 @@ const template = `
             justify-content: center;
             align-items: center;
         }
+
+        .container:empty + .loading {
+            display: block;
+        }
+
+        .loading {
+            display: none;
+            position: absolute;
+            width: 40px;
+            height: 40px;
+            top: 50%;
+            left: 50%;
+            margin: -20px 0 0 -20px;
+            background-color: #333;
+            border-radius: 100%;
+            animation: sk-scaleout 1.0s infinite ease-in-out;
+        }
+          
+        @keyframes sk-scaleout {
+            0% {
+                transform: scale(0);
+            }
+
+            100% {
+                transform: scale(1.0);
+                opacity: 0;
+            }
+        }
     </style>
 
-    <div class="container">
-
+    <div id="root">
+        <div class="container"></div>
+        <div class="loading"></div>
     </div>
 `;
 

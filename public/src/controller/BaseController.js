@@ -20,7 +20,6 @@ export default class BaseController {
         this.users = {};
         this.mainView = this.createMainView();
         this.mainView.setController(this);
-        this.viewSwitcher.showView(this.viewName, this.mainView);
         this.usersRepository.on('user-event', this.onUserEvent);
         this.usersRepository.on('department-event', this.onDepartmentEvent);
     }
@@ -49,6 +48,7 @@ export default class BaseController {
                 this.userEventFound('added', user);
                 this.users[user.uid] = user;
             }
+            this.viewSwitcher.showView(this.viewName, this.mainView);
             return;
         }
 

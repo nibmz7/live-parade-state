@@ -10,7 +10,7 @@ const customStyle = `
         color: white;
     }
     #secondary-text {
-        display: none;
+        text-transform: lowercase;
     }
 `;
 
@@ -19,6 +19,7 @@ export default class SummaryCard extends BasicDepartmentCard {
     constructor() {
         super(customStyle);
         this.strength = {regular: 0, nsf: 0};
+        this.timeOfDay = 'am';
     }
 
     setStatusName(name) {
@@ -30,7 +31,8 @@ export default class SummaryCard extends BasicDepartmentCard {
     }
 
     getItemSecondaryText(user) {
-        return '';
+        let remarks = user.status[this.timeOfDay].remarks;
+        return remarks.length > 0 ? `Remarks: ${remarks}` : '';
     }
 
     showStrength() {
@@ -47,12 +49,14 @@ export default class SummaryCard extends BasicDepartmentCard {
 
     removeUser(user) {
         let prefix = user.regular ? 'regular' : 'nsf';
-        this.strength[timeOfDay][prefix] -= 1;
+        this.strength[prefix] -= 1;
         super.removeUser(user.uid);
         this.showStrength();
     }   
 
     onUserSelected(uid) {
-        
+        let toast = document.createElement('wc-toast');
+        toast.textContent = 'Self destruct sequence initiated';
+        document.body.appendChild(toast);
     }
 } 
