@@ -311,6 +311,7 @@ export default class SummaryView extends HTMLElement {
         let count = 0;
         let maxNameLength = 0;
         let maxRemarksLength = 0;
+        let presentStrength = 0;
         const getUser = uid => {
             return this.controller.getUser(uid);
         }
@@ -338,6 +339,7 @@ export default class SummaryView extends HTMLElement {
                                     if (remarks.length > maxRemarksLength) maxRemarksLength = remarks.length;
                                     row.push(remarks.toUpperCase());
                                 }
+                                if(code == 1) presentStrength++;
                                 data.push(row);
                             }
                             data[start][0] = `*${STATUS[code].fullName}*`;
@@ -357,7 +359,7 @@ export default class SummaryView extends HTMLElement {
             ["SBW PLC Strength", "", "", ""],
             [],
             ["Date", dateText],
-            ["Total Strength", strength.present + '/' + strength.total]
+            ["Total Strength", presentStrength + '/' + strength.total]
         ];
 
         let workbook = await XlsxPopulate.fromBlankAsync()
