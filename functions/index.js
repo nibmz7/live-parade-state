@@ -55,7 +55,8 @@ exports.updateUser = functions.region('asia-northeast1').https.onCall(async (dat
         await db.doc(`branches/${adminid}/departments/${data.departmentid}/users/${data.uid}`).update({
             name: data.name,
             rank: data.rank,
-            email
+            regular: data.regular,
+            email,
         });
         await admin.auth().updateUser(data.uid, { email });
         return { success: true };
@@ -91,6 +92,7 @@ exports.createUser = functions.region('asia-northeast1').https.onCall(async (dat
             departmentid: data.departmentid,
             name: data.name,
             rank: data.rank,
+            regular: data.regular,
             email,
             status: {
                 am: {

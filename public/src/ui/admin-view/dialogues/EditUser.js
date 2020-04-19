@@ -75,13 +75,26 @@ const template = `
         #confirm {
             width: 100%;
             --button-padding: 10px;
-            margin-top: 20px;
+            margin-top: 10px;
         }
 
         .row-box {
             display: flex;
             flex-direction: row-reverse;
             width: 100%;
+        }
+
+        .regular-box {
+            display: flex;
+            align-items: center;
+            width: 100%;
+        }
+        .regular-box input {
+            margin: 0 10px 0 0;
+        }
+
+        .regular-box .label {
+            font-size: 1rem;
         }
 
     </style>
@@ -104,7 +117,12 @@ const template = `
             <wc-button type="plain" id="change-password" hidden>change</wc-button>
             <input id="password" minlength="8" type="password" placeholder="Password" autocomplete="off" required/>
         </div>
+        <div class="regular-box">
+            <input type="checkbox" id="regular">
+            <div class="label">Regular serviceman</div>
+        </div>
         <wc-button id="confirm">Confirm</wc-button>
+        
     </div>
 `;
 
@@ -120,6 +138,7 @@ export default class EditUser extends Dialogue {
         this.rank = this.shadowRoot.getElementById('rank');
         this.name = this.shadowRoot.getElementById('name');
         this.password = this.shadowRoot.getElementById('password');
+        this.regular = this.shadowRoot.getElementById('regular');
 
         this.deleteUser.onclick = this.onDelete.bind(this);
         this.changePasswordButton.onclick = this.changePassword.bind(this);
@@ -156,6 +175,7 @@ export default class EditUser extends Dialogue {
         user.rank = this.rank.value.toUpperCase().trim();
         if(isEdit) user.uid = this.uid;
         if(!isEdit) user.password = this.password.value;
+        user.regular = this.regular.checked;
         return {success: true, user};
     }
 
@@ -197,6 +217,7 @@ export default class EditUser extends Dialogue {
         this.emailPrefix.value = user.email.split('@')[0];
         this.rank.value = user.rank;
         this.name.value = user.name;
+        this.regular.checked = user.regular;
     }
 
     setDepartment(depId, depName) {
