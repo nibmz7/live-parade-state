@@ -45,7 +45,13 @@ export default class UserRepository extends EventDispatcher {
         let initialLoad = true;
         let departments = this.db.collection(`branches/${branchid}/departments`);
         this.departmentsUnsubscribe = departments.onSnapshot(snapshot => {
-            if (snapshot.empty) this.emit('department-event', { type: 'empty' });
+            if (snapshot.empty) {
+                if(initialLoad) {
+                    initialLoad = false;
+                    this.emit('department-event', { type: 'found', departments: []});
+                }
+                this.emit('department-event', { type: 'empty' });
+            }
             else {
                 if (initialLoad) {
                     let departments = [];
@@ -99,9 +105,9 @@ export default class UserRepository extends EventDispatcher {
             if (snapshot.empty) {
                 if(initialLoad) {
                     initialLoad = false;
-                    this.emit('user-event', { type: 'empty', users: []});
+                    this.emit('user-event', { type: 'found', users: []});
                 }
-                else this.emit('user-event', { type: 'empty' });
+                this.emit('user-event', { type: 'empty' });
             }
             else {
                 if (initialLoad) {

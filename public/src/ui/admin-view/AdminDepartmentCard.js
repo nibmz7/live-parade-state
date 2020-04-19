@@ -44,7 +44,7 @@ export default class AdminDepartmentCard extends BasicDepartmentCard {
     showEditDepDialogue(e) {
         let dialogue = document.createElement('edit-department');
         dialogue.setEditMode(true);
-        dialogue.setDepartment(this.id, this.depName);
+        dialogue.setDepartment(this.id, this.departmentName);
         dialogue.setController(this.controller);
         document.body.appendChild(dialogue);
     }
@@ -53,7 +53,7 @@ export default class AdminDepartmentCard extends BasicDepartmentCard {
         let dialogue = document.createElement('edit-user');
         dialogue.setEditMode(false);
         dialogue.setController(this.controller);
-        dialogue.setDepartment(this.id, this.depName);
+        dialogue.setDepartment(this.id, this.departmentName);
         document.body.appendChild(dialogue);
     }
     
@@ -61,7 +61,7 @@ export default class AdminDepartmentCard extends BasicDepartmentCard {
         let dialogue = document.createElement('edit-user');
         dialogue.setEditMode(true);
         dialogue.setController(this.controller);
-        dialogue.setDepartment(this.id, this.depName);
+        dialogue.setDepartment(this.id, this.departmentName);
         dialogue.setUser(this.getUser(uid));
         document.body.appendChild(dialogue);
     }

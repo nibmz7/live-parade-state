@@ -5,9 +5,13 @@ const template = `
     
     h4 {
       width: 100%;
+      color: #313131;
+      margin-top: 15px;
     }
     #yes{
-      width: 50%;
+      --button-font-size: 1rem;
+      --button-padding: 10px;
+      --button-radius: 3px;
     }
   </style>
   

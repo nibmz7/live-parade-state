@@ -15,6 +15,7 @@ const template = content => `
             width: 100%;
             opacity: 1;
             z-index: 98;
+            backdrop-filter: blur(2px);
         }
 
         @keyframes fade-in {

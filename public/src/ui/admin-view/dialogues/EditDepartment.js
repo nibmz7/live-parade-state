@@ -15,6 +15,7 @@ const template = `
             font-size: 1.2rem;
             padding: 10px;
             margin-bottom: 20px;
+            text-transform: capitalize;
         }
 
         .header-holder {
