@@ -16,16 +16,21 @@ const template = `
             z-index: 98;
         }
         .container {
-            padding: 30px;
             max-height: 99.9%;
             overflow-y: auto;
             box-sizing: border-box;
             padding-bottom: 80px;
+            padding-top: 50px;
+        }
+
+        .container > .list {
+            padding: 0 30px 30px 30px;
         }
         
         .category {
 
         }
+
         .header {
             margin-bottom: 0;
             margin-top: 50px;
@@ -33,10 +38,6 @@ const template = `
 
         .category:first-child .header {
             margin: 0;
-        }
-
-        .list {
-            
         }
 
         #close {
@@ -108,14 +109,34 @@ const template = `
         @keyframes slide-out {
             100% { transform: translateY(100px); }
         }
+        .strength-count {
+            position: fixed;
+            width: 100%;
+            top: 0;
+            text-align: center;
+            padding: 10px 0;
+            font-size: 1rem;
+            text-transform: uppercase;
+            font-weight: 600;
+            color: var(--color-primary);
+            background: #faf5fab8;
+            transition: all .5s;
+            backdrop-filter: blur(2px);
+            box-shadow: none;
+        }
+        .elevate {
+            box-shadow: 0px 1px 2px 1px #928d8d4f;
+        }
     </style>
 
     <div id="root">
         <div class="container">
-            
+            <div class="strength-count"></div>
+            <div class="list"></div>
         </div>
         <div class="container" hidden>
-            
+            <div class="strength-count"></div>
+            <div class="list"></div>
         </div>
         <wc-button id="close">X</wc-button>
         <wc-button id="export">Export to excel</wc-button>
@@ -130,10 +151,19 @@ export default class SummaryView extends HTMLElement {
         this.attachShadow({mode: 'open'});
         this.shadowRoot.innerHTML = template;
         this.root = this.shadowRoot.getElementById('root');
+        this.strengths = this.shadowRoot.querySelectorAll('.strength-count');
         this.containers = this.shadowRoot.querySelectorAll('.container');
+        this.containersList = this.shadowRoot.querySelectorAll('.container > .list'); 
+        this.strengthCount = {am: {total: 0, present: 0, current: 0}, pm: {total: 0, present: 0, current: 0}};
         this.categoryViews = {am: [], pm: []};
         Utils.onclick(this.shadowRoot.getElementById('close'), this.closeView.bind(this));
         Utils.onclick(this.shadowRoot.getElementById('export'), this.exportToExcel.bind(this));
+        this.containers.forEach( (el, idx) => {
+            el.onscroll = e => {
+                if (el.scrollTop > 0) this.strengths[idx].classList.add('elevate'); 
+                else this.strengths[idx].classList.remove('elevate');
+            }
+        });
     }
 
     connectedCallback() {
@@ -173,7 +203,6 @@ export default class SummaryView extends HTMLElement {
         let list = document.createElement('div');
         div.className = 'category';
         header.className = 'header';
-        header.textContent = STATUS_CATEGORY[id];
         list.className = 'list';
         div.appendChild(header);
         div.appendChild(list);
@@ -190,8 +219,8 @@ export default class SummaryView extends HTMLElement {
         let categoryView = this.categoryViews[timeOfDay][category];
         if(categoryView.count == 0) {
             let idx = timeOfDay == 'am' ? 0 : 1;
-            if(category == 0 || category == 1) this.containers[idx].prepend(categoryView.div);
-            else this.containers[idx].appendChild(categoryView.div);
+            if(category == 0 || category == 1) this.containersList[idx].prepend(categoryView.div);
+             else this.containersList[idx].appendChild(categoryView.div);
         }
         if(!categoryView.cards[code]) {
             let summaryCard = document.createElement('summary-card');
@@ -207,6 +236,24 @@ export default class SummaryView extends HTMLElement {
         }
         categoryView.cards[code].addUser(user);  
         categoryView.count++;
+        categoryView.header.textContent = `${STATUS_CATEGORY[category]} - ${categoryView.count}`;
+        this.strengthCount[timeOfDay].total++;
+        if(status.code == 1) {
+            this.strengthCount[timeOfDay].present++;
+            if(status.remarks.length > 0) this.strengthCount[timeOfDay].current++;
+        }
+        this.updateStrengthCount(timeOfDay);
+    }
+    
+    changeUser(user, timeOfDay, remarksChanged) {
+        let code = user.status[timeOfDay].code;
+        let category = STATUS[code].category;
+        let card = this.categoryViews[timeOfDay][category].cards[code];
+        card.changeUser(user);
+        if(code == 1) {
+            this.strengthCount[timeOfDay].current += remarksChanged;
+            this.updateStrengthCount(timeOfDay);
+        }
     }
 
     removeUser(user, timeOfDay) {
@@ -216,7 +263,22 @@ export default class SummaryView extends HTMLElement {
         let card = categoryView.cards[code];
         card.removeUser(user);
         categoryView.count--;
+        categoryView.header.textContent = `${STATUS_CATEGORY[category]} - ${categoryView.count}`;
         if(card.uidArray.length == 0) card.remove();
         if(categoryView.count == 0) categoryView.div.remove();
+        this.strengthCount[timeOfDay].total--;
+        if(code == 1) {
+            this.strengthCount[timeOfDay].present--;
+            if(user.status[timeOfDay].remarks.length > 0) this.strengthCount[timeOfDay].current--;
+        }
+        this.updateStrengthCount(timeOfDay);
     }
+
+    updateStrengthCount(timeOfDay) {
+        let idx = timeOfDay == 'am' ? 0 : 1;
+        let strengthCount = this.strengthCount[timeOfDay];
+        let text = `Strength: ${strengthCount.total} ~ Present: ${strengthCount.present}  Current: ${strengthCount.current}`;
+        this.strengths[idx].textContent = text;
+    }
+
 }

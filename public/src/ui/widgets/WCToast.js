@@ -18,7 +18,7 @@ const template = `
             border-radius: 3px;
             white-space: pre-line;
             font-weight: 600;
-            box-shadow: 1px 1px 5px 1px rgba(181, 173, 181, 0.6);
+            box-shadow: 0 0 4px 1px rgba(60, 58, 60, 0.46);
         }
 
         .slide-up {
@@ -43,9 +43,7 @@ const template = `
         }
     </style>
 
-    <div id="root">
-        <slot></slot>
-    </div>
+    <div id="root"><slot></slot></div>
 `;
 
 export default class WCToast extends HTMLElement {

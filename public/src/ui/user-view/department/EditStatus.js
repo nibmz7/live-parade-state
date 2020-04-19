@@ -171,7 +171,7 @@ export default class EditStatus extends Dialogue {
         this.isProcessing = true;
         this.save.textContent = 'Processing...';
         let inputStatusCode = this.status[this.timeOfDay].code;
-        let inputRemarks = this.remarksInput.value;
+        let inputRemarks = this.remarksInput.value.trim();
         this.controller.updateUserStatus(this.timeOfDay == 'am', inputStatusCode, inputRemarks, this.user.uid);
     }
 

@@ -1,9 +1,3 @@
-@font-face {
-    font-family: "Quicksand";
-    src: url("quicksand.ttf");
-    font-weight: 1 999;
-}
-  
 * {
     -webkit-tap-highlight-color: transparent;
     -webkit-touch-callout: none;
@@ -30,15 +24,15 @@ wc-button {
 
 html,
 body {
+  --color-primary: #FF3838;
+  --color-primary-dark: #E90000;
+  --color-primary-rgb: 255,56,56;
     overflow: hidden;
     height: 100%;
     width: 100%;
     padding: 0;
     margin: 0;
-    --color-primary: #FF3838;
-    --color-primary-dark: #E90000;
-    --color-primary-rgb: 255,56,56;
-    font-family: 'Quicksand';
+    font-family: 'Quicksand', sans-serif;
     font-weight: 500;
     background: #FAF5FA;
 }
