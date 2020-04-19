@@ -246,7 +246,7 @@ export default class SummaryView extends HTMLElement {
         categoryView.count++;
         categoryView.header.textContent = `${STATUS_CATEGORY[category]} - ${categoryView.count}`;
         this.strengthCount[timeOfDay].total++;
-        if (status.code == 1) {
+        if (!user.regular && status.code == 1) {
             this.strengthCount[timeOfDay].present++;
             if (status.remarks.length > 0) this.strengthCount[timeOfDay].current++;
         }
@@ -258,7 +258,7 @@ export default class SummaryView extends HTMLElement {
         let category = STATUS[code].category;
         let card = this.categoryViews[timeOfDay][category].cards[code];
         card.changeUser(user);
-        if (code == 1) {
+        if (!user.regular && code == 1) {
             this.strengthCount[timeOfDay].current += remarksChanged;
             this.updateStrengthCount(timeOfDay);
         }
@@ -275,7 +275,7 @@ export default class SummaryView extends HTMLElement {
         if (card.uidArray.length == 0) card.remove();
         if (categoryView.count == 0) categoryView.div.remove();
         this.strengthCount[timeOfDay].total--;
-        if (code == 1) {
+        if (!user.regular && code == 1) {
             this.strengthCount[timeOfDay].present--;
             if (user.status[timeOfDay].remarks.length > 0) this.strengthCount[timeOfDay].current--;
         }
@@ -293,10 +293,17 @@ export default class SummaryView extends HTMLElement {
         if(this.isExporting) return;
         this.isExporting = true;
         Utils.animate(this.loading, 'fade-in', () => {
-            this.downloadSpreadsheet();
+            this.loading.classList.remove('fade-in');
+            setTimeout(() => {
+                Utils.animate(this.loading, 'fade-out', () => {
+                    this.loading.remove();
+                    this.loading.classList.remove('fade-out');
+                    this.isExporting = false;
+                });
+            }, 1000);
         });
         document.body.appendChild(this.loading);
-        
+        this.downloadSpreadsheet();  
     }
 
     async downloadSpreadsheet() {
@@ -373,10 +380,7 @@ export default class SummaryView extends HTMLElement {
         a.click();
         a.remove();
         window.URL.revokeObjectURL(url);
-        Utils.animate(this.loading, 'fade-out', () => {
-            this.loading.remove();
-            this.isExporting = false;
-        });
+        
     }
 
 }
