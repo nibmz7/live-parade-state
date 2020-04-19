@@ -54,7 +54,7 @@ export default class UserView extends MainView {
     }
 
     toggleTime(isMorning) {
-        this.summaryView.toggleTimeOfDay();
+        this.summaryView.toggleTimeOfDay(isMorning);
         let morningType = isMorning ? 'solid' : 'outline';
         let afternoonType = isMorning ? 'outline' : 'solid';
         this.timeSelectors[0].setAttribute('type', morningType);

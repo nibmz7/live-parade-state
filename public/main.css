@@ -76,3 +76,41 @@ view-switcher:not(:defined)::after {
 #welcome-text.elevation {
   box-shadow: 0px 1px 2px 1px #928d8d4f;
 }
+
+#export-loading {
+  position: fixed;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 1.3rem;
+    color: #292828;
+    font-weight: 400;
+    top: 0;
+    height: 100%;
+    width: 100%;
+    background: #faf5fab8;
+    backdrop-filter: blur(2px);
+    z-index: 99;
+    white-space: pre-line;
+    padding-left: 30px;
+    padding-right: 30px;
+    box-sizing: border-box;
+}
+
+.fade-in {
+  animation: fade-in 0.5s;
+}
+
+.fade-out {
+  animation: fade-out 1s;
+}
+
+@keyframes fade-in {
+  0% { opacity: 0; }
+  100% { opacity: 1; }
+}
+
+@keyframes fade-out {
+  0% { opacity: 1; }
+  100% { opacity: 0; }
+}
