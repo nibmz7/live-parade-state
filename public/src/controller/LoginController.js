@@ -1,11 +1,10 @@
-import Auth from '../data/Auth.js';
 import UI from '../ui/index.js';
 
 export default class LoginController {
 
   constructor() {
     UI.loginScreen();
-    this.auth = Auth.getInstance();
+    this.auth = ApplicationContext.getAuth();
     this.viewSwitcher = document.querySelector('view-switcher');
     this.onError = this.onError.bind(this);
   }

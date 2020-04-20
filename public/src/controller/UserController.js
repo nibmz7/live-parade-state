@@ -29,7 +29,7 @@ export default class UserController extends BaseController {
         super.activate(user);
         this.users = {};
         this.authUser = user;
-        let idTokenResult = await firebase.auth().currentUser.getIdTokenResult();
+        let idTokenResult = await ApplicationContext.getAuth().getUserToken();
         this.branchid = idTokenResult.claims.branchid;
         this.departmentid = idTokenResult.claims.departmentid;
         this.usersRepository.getDepartments(this.branchid);

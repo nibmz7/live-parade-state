@@ -1,15 +1,10 @@
 import EventDispatcher from "../util/EventDispatcher.js";
 
-export default class UsersRepository extends EventDispatcher {
+export default class UserRepository extends EventDispatcher {
 
     constructor() {
         super();
         this.db = firebase.firestore();
-    }
-
-    static getInstance() {
-        if (!UsersRepository.instance) UsersRepository.instance = new UsersRepository();
-        return UsersRepository.instance;
     }
 
     updateUserStatus(isMorning, status, uid, branchid, departmentid) {
@@ -143,4 +138,3 @@ export default class UsersRepository extends EventDispatcher {
     }
 
 }
-UsersRepository.instance = null;

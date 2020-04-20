@@ -1,11 +1,10 @@
-import UserRepository from '../data/UsersRepository.js';
 import User from "../data/User.js";
 
 export default class BaseController {
 
     constructor() {
+        this.usersRepository = ApplicationContext.getUsersRepository();
         this.viewSwitcher = document.querySelector('view-switcher');
-        this.usersRepository = new UserRepository();
         this.onUserEvent = this.onUserEvent.bind(this);
         this.onDepartmentEvent = this.onDepartmentEvent.bind(this);
         this.users = {};

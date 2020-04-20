@@ -21,10 +21,6 @@ export default class Auth extends EventDispatcher {
         });
     }
 
-    async getUserToken() {
-        return await firebase.auth().currentUser.getIdTokenResult();
-    }
-
     login(email, password) {
         firebase.auth().signInWithEmailAndPassword(email, password).catch(error => {
             let message = 'User doesn\'t exist';

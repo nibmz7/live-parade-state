@@ -14,13 +14,6 @@ const App = () => {
   const auth = getAuth();
   let currentController = null;
 
-  if (location.hostname === "localhost") {
-    firebase.firestore().settings({
-      host: "localhost:8080",
-      ssl: false
-    });
-  }
-
   const swapControllers = (newController, data) => {
     if (currentController) currentController.deactivate();
     if (data) newController.activate(data);
@@ -49,4 +42,8 @@ const App = () => {
 }
 
 window.ApplicationContext = App();
+
+
+
+//mock firebase.firestore.FieldValue.serverTimestamp()
 
