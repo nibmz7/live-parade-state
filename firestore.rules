@@ -1,0 +1,44 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+  
+  	match /{path=**}/users/{uid} {
+      allow read: if request.auth.uid == resource.data.branchid ||
+      request.auth.token.branchid == resource.data.branchid;
+    }
+  
+    match /branches/{adminid} {
+    
+    	function getAdmins() {
+      	return ["admin@sbw.plc"];
+      }
+    
+    	function isAdmin() {
+    		return request.auth.token.email in getAdmins()
+        && request.auth.uid == adminid;
+    	}
+      
+      function isSameBranch() {
+        return request.auth.token.branchid == adminid;
+      }
+    
+      allow update: if isAdmin() && request.resource.data.size() == 1;
+      allow read: if isAdmin() || isSameBranch();
+      
+      match /departments/{departmentid} {
+      
+        allow create, update: if isAdmin() && request.resource.data.size() == 1;
+      	allow read: if isAdmin() || isSameBranch();
+        
+        match /users/{uid} {
+
+          allow update: if isAdmin() || isSameBranch()  
+          && request.resource.data.diff(resource.data).changedKeys().hasOnly(["status"]);
+          
+        	allow read: if isAdmin() || isSameBranch();
+          
+        }
+      }
+    }  
+  }
+}

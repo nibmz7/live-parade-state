@@ -48,6 +48,12 @@ export default class UserView extends MainView {
         this.summaryView = document.createElement('summary-view');
     }
 
+    connectedCallback() {
+        super.connectedCallback();
+        let isMorning = new Date().getHours() <= 12;
+        this.toggleTime(isMorning);
+    }
+
     setController(controller) {
         super.setController(controller);
         this.summaryView.setController(controller);

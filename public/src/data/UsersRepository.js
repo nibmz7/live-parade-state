@@ -46,9 +46,9 @@ export default class UserRepository extends EventDispatcher {
         let departments = this.db.collection(`branches/${branchid}/departments`);
         this.departmentsUnsubscribe = departments.onSnapshot(snapshot => {
             if (snapshot.empty) {
-                if(initialLoad) {
+                if (initialLoad) {
                     initialLoad = false;
-                    this.emit('department-event', { type: 'found', departments: []});
+                    this.emit('department-event', { type: 'found', departments: [] });
                 }
                 this.emit('department-event', { type: 'empty' });
             }
@@ -84,12 +84,12 @@ export default class UserRepository extends EventDispatcher {
         let pmTimestamp = user.status.pm.timestamp;
         let amIsExpired = false;
         let pmIsExpired = false;
-        if(amTimestamp && pmTimestamp) {
+        if (amTimestamp && pmTimestamp) {
             amIsExpired = !this.checkSameDay(amTimestamp.toDate());
             pmIsExpired = !this.checkSameDay(pmTimestamp.toDate());
         }
         user.status.am.expired = amIsExpired;
-        user.status.pm.expired = pmIsExpired; 
+        user.status.pm.expired = pmIsExpired;
 
         return {
             uid: doc.id,
@@ -103,9 +103,9 @@ export default class UserRepository extends EventDispatcher {
         let users = this.db.collectionGroup('users').where('branchid', '==', branchid);
         this.usersUnsubscribe = users.onSnapshot(snapshot => {
             if (snapshot.empty) {
-                if(initialLoad) {
+                if (initialLoad) {
                     initialLoad = false;
-                    this.emit('user-event', { type: 'found', users: []});
+                    this.emit('user-event', { type: 'found', users: [] });
                 }
                 this.emit('user-event', { type: 'empty' });
             }

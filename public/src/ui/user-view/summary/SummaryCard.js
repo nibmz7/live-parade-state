@@ -12,6 +12,14 @@ const customStyle = `
     #secondary-text {
         text-transform: lowercase;
     }
+    #secondary-text > .remarks {
+        text-transform: uppercase;
+    }
+    #secondary-text > .expired {
+        color: var(--color-primary);
+        font-weight: 900;
+        text-transform: capitalize;
+    }
 `;
 
 export default class SummaryCard extends BasicDepartmentCard {
@@ -32,7 +40,9 @@ export default class SummaryCard extends BasicDepartmentCard {
 
     getItemSecondaryText(user) {
         let remarks = user.status[this.timeOfDay].remarks;
-        return remarks.length > 0 ? `Remarks: ${remarks}` : '';
+        let expiredText = user.status[this.timeOfDay].expired ? '<span class="remarks"> -- Expired</span>' : '';
+        let remarksText = remarks.length > 0 ? `Remarks: <span class="remarks">${remarks}</span>` : '';
+        return remarksText + expiredText;
     }
 
     showStrength() {

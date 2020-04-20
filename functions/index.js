@@ -10,13 +10,12 @@ const checkIsAdmin = async context => {
         throw new functions.https.HttpsError('failed-precondition', 'The function must be called ' +
             'while authenticated.');
     }
-    const adminid = context.auth.uid;
+    const admins = ["admin@sbw.plc"];
     const adminEmail = context.auth.token.email;
-    if (adminEmail.split('@')[0] !== 'admin') {
+    if (!admins.includes(adminEmail)) {
         throw new functions.https.HttpsError('failed-precondition', 'You must be an admin to call this function');
     }
-    let branchDoc = await db.doc(`branches/${adminid}`).get();
-    return branchDoc.exists;
+    return true;
 }
 
 exports.deleteDepartment = functions.region('asia-northeast1').https.onCall(async (data, context) => {
@@ -24,8 +23,8 @@ exports.deleteDepartment = functions.region('asia-northeast1').https.onCall(asyn
     if (isAdmin) {
         const adminid = context.auth.uid;
         let users = await db.collection(`branches/${adminid}/departments/${data.departmentid}/users`).get();
-        if(!users.empty) {
-            for(let user of users.docChanges()) {
+        if (!users.empty) {
+            for (let user of users.docChanges()) {
                 await admin.auth().deleteUser(user.doc.id);
                 await user.doc.ref.delete();
             }

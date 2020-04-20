@@ -22,7 +22,7 @@ export default class UserController extends BaseController {
                 updatedby: this.authUser.uid, 
                 timestamp: firebase.firestore.FieldValue.serverTimestamp()
         }
-        this.usersRepository.updateUserStatus(isMorning, status, uid, this.branchid, this.departmentid);
+        this.usersRepository.updateUserStatus(isMorning, status, uid, this.branchid, this.users[uid].departmentid);
     }
 
     async activate(user) {
@@ -39,6 +39,11 @@ export default class UserController extends BaseController {
         if(type == 'added') {
             if(this.authUser.uid == user.uid) {
                 this.mainView.welcomeText = user.fullname;
+                if(user.regular) {
+                    for(const id in this.mainView.departmentViews) {
+                        this.mainView.departmentViews[id].isEditable = true;
+                    }
+                }
             }
             this.mainView.summaryView.addUser(user, 'am');
             this.mainView.summaryView.addUser(user, 'pm');

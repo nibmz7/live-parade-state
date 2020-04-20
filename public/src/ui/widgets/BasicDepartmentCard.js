@@ -55,6 +55,10 @@ const template = customStyle => `
             font-weight: 700;
         }
 
+        #primary-text.regular {
+            color: var(--color-primary);
+        }
+
         #secondary-text {
             color: #878787;
             font-size: 0.8rem;
@@ -126,6 +130,7 @@ export default class BasicDepartmentCard extends HTMLElement {
         let secondaryTextItem = item.querySelector('#secondary-text');
         primaryTextItem.textContent = this.getItemPrimaryText(user);
         secondaryTextItem.innerHTML = this.getItemSecondaryText(user);
+        if(user.regular) primaryTextItem.classList.add('regular');
     }
 
     setDepartment(department) {

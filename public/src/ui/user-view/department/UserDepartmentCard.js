@@ -68,6 +68,7 @@ export default class UserDepartmentCard extends BasicDepartmentCard {
         let dialogue;
         if (this.isEditable) {
             dialogue = document.createElement('edit-status');
+            dialogue.timeOfDay = this.timeOfDay;
             dialogue.setController(this.controller);
         } else dialogue = document.createElement('status-details');
         dialogue.ondismiss = () => {
