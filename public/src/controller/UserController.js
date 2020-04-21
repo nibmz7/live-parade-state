@@ -59,8 +59,8 @@ export default class UserController extends BaseController {
                     let prevRemarksLength = prevStatus.remarks.length;
                     let remarksLength = status.remarks.length;
                     let remarksChanged = 0;
-                    if (prevRemarksLength == 0 && remarksLength > 0) remarksChanged = 1;
-                    if (prevRemarksLength > 0 && remarksLength == 0) remarksChanged = -1;
+                    if (prevRemarksLength == 0 && remarksLength > 0) remarksChanged = -1;
+                    if (prevRemarksLength > 0 && remarksLength == 0) remarksChanged = 1;
                     this.mainView.summaryView.changeUser(user, timeOfDay, remarksChanged);
                 }
             }

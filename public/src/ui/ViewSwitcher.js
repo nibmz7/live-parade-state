@@ -12,6 +12,7 @@ const template = `
             width: 100%;
             display: grid;
             grid-template-columns: 1fr;
+            grid-template-rows: 100%;
             grid-template-areas: "content";
             align-items: center;
         }

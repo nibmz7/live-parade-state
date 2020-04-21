@@ -100,8 +100,7 @@ export default class UserDepartmentCard extends BasicDepartmentCard {
             if(prevStatus == statusCode) return;
             let prefix = user.regular ? 'regular' : 'nsf';
             if(statusCode == 1) this.strength[timeOfDay][prefix] += 1;
-             else this.strength[timeOfDay][prefix] -= 1;
-            
+            else if(prevStatus == 1) this.strength[timeOfDay][prefix] -= 1;     
         }
         checkIsPresent('am', user.status.am.code);
         checkIsPresent('pm', user.status.pm.code);

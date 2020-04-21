@@ -130,6 +130,8 @@ export default class UsersRepository extends EventDispatcher {
                     }
                 }
             }
+        }, error => {
+            alert('Please restart the page');
         });
     }
 

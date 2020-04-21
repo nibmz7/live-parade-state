@@ -46,10 +46,11 @@ export default class UserView extends MainView {
         this.timeSelectors = el.querySelectorAll('wc-button');
         this.timeSelectors.forEach((el, i) => el.onclick = e => this.toggleTime(i == 0));
         this.summaryView = document.createElement('summary-view');
+        this.isMorning = true;
     }
 
     connectedCallback() {
-        let isMorning = new Date().getHours() <= 12;
+        let isMorning = new Date().getHours() < 12;
         this.toggleTime(isMorning);
     }
 
@@ -59,7 +60,9 @@ export default class UserView extends MainView {
     }
 
     toggleTime(isMorning) {
-        this.summaryView.toggleTimeOfDay(isMorning);
+        if(this.isMorning == isMorning) return;
+        this.isMorning = isMorning;
+        this.summaryView.setTimeOfDay(isMorning);
         let morningType = isMorning ? 'solid' : 'outline';
         let afternoonType = isMorning ? 'outline' : 'solid';
         this.timeSelectors[0].setAttribute('type', morningType);

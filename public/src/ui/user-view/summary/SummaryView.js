@@ -80,11 +80,8 @@ const template = `
         }
 
         .hide {
-            animation: fade-out .3s;
+            animation: slide-out 0.3s;
         } 
-        .hide > .container {
-            animation: slide-out .3s;
-        }
         .hide > #export {
             transform: translateX(-45%) translateY(150%);
         }
@@ -109,7 +106,10 @@ const template = `
         }
         
         @keyframes slide-out {
-            100% { transform: translateY(100px); }
+            100% { 
+                transform: translateY(100px); 
+                opacity: 0;
+            }
         }
         .strength-count {
             position: fixed;
@@ -190,14 +190,14 @@ export default class SummaryView extends HTMLElement {
         });
     }
 
-    toggleTimeOfDay(isMorning) {
+    setTimeOfDay(isMorning) {
         this.timeOfDay = isMorning ? 'am' : 'pm';
-        const hideOrShow = view => {
-            if (view.hasAttribute('hidden')) view.removeAttribute('hidden');
+        const hideOrShow = (view, timeOfDay) => {
+            if(this.timeOfDay == timeOfDay) view.removeAttribute('hidden');
             else view.setAttribute('hidden', '');
         }
-        hideOrShow(this.containers[0]);
-        hideOrShow(this.containers[1]);
+        hideOrShow(this.containers[0], 'am');
+        hideOrShow(this.containers[1], 'pm');
     }
 
     setController(controller) {
@@ -205,7 +205,6 @@ export default class SummaryView extends HTMLElement {
     }
 
     createCategory(timeOfDay, id) {
-        let idx = timeOfDay == 'am' ? 0 : 1;
         let div = document.createElement('div');
         let header = document.createElement('h2');
         let list = document.createElement('div');
@@ -246,9 +245,9 @@ export default class SummaryView extends HTMLElement {
         categoryView.count++;
         categoryView.header.textContent = `${STATUS_CATEGORY[category]} - ${categoryView.count}`;
         this.strengthCount[timeOfDay].total++;
-        if (!user.regular && status.code == 1) {
+        if (status.code == 1) {
             this.strengthCount[timeOfDay].present++;
-            if (status.remarks.length > 0) this.strengthCount[timeOfDay].current++;
+            if (!user.regular && status.remarks.length == 0) this.strengthCount[timeOfDay].current++;
         }
         this.updateStrengthCount(timeOfDay);
     }
@@ -275,9 +274,9 @@ export default class SummaryView extends HTMLElement {
         if (card.uidArray.length == 0) card.remove();
         if (categoryView.count == 0) categoryView.div.remove();
         this.strengthCount[timeOfDay].total--;
-        if (!user.regular && code == 1) {
+        if (code == 1) {
             this.strengthCount[timeOfDay].present--;
-            if (user.status[timeOfDay].remarks.length > 0) this.strengthCount[timeOfDay].current--;
+            if (!user.regular && user.status[timeOfDay].remarks.length == 0) this.strengthCount[timeOfDay].current--;
         }
         this.updateStrengthCount(timeOfDay);
     }
@@ -300,7 +299,7 @@ export default class SummaryView extends HTMLElement {
                     this.loading.classList.remove('fade-out');
                     this.isExporting = false;
                 });
-            }, 1000);
+            }, 2000);
         });
         document.body.appendChild(this.loading);
         this.downloadSpreadsheet();  
@@ -311,7 +310,6 @@ export default class SummaryView extends HTMLElement {
         let count = 0;
         let maxNameLength = 0;
         let maxRemarksLength = 0;
-        let presentStrength = 0;
         const getUser = uid => {
             return this.controller.getUser(uid);
         }
@@ -339,7 +337,6 @@ export default class SummaryView extends HTMLElement {
                                     if (remarks.length > maxRemarksLength) maxRemarksLength = remarks.length;
                                     row.push(remarks.toUpperCase());
                                 }
-                                if(code == 1) presentStrength++;
                                 data.push(row);
                             }
                             data[start][0] = `*${STATUS[code].fullName}*`;
@@ -359,7 +356,7 @@ export default class SummaryView extends HTMLElement {
             ["SBW PLC Strength", "", "", ""],
             [],
             ["Date", dateText],
-            ["Total Strength", presentStrength + '/' + strength.total]
+            ["Total Strength", strength.present + '/' + strength.total]
         ];
 
         let workbook = await XlsxPopulate.fromBlankAsync()
