@@ -8,9 +8,9 @@ import AdminManager from './data/AdminManager.js';
 
 const App = () => {
 
-  const getUsersRepository = () => {return UsersRepository.getInstance();}
-  const getAdminManager = () => {return AdminManager.getInstance();}
-  const getAuth = () => {return Auth.getInstance();}
+  const getUsersRepository = () => { return UsersRepository.getInstance(); }
+  const getAdminManager = () => { return AdminManager.getInstance(); }
+  const getAuth = () => { return Auth.getInstance(); }
   const auth = getAuth();
   let currentController = null;
 
@@ -39,9 +39,12 @@ const App = () => {
     swapControllers(newController, user);
   });
 
-  UI.init();
-  auth.init();
+  const init = () => {
+    UI.init();
+    auth.init();
+  }
   return {
+    init,
     getAuth,
     getUsersRepository,
     getAdminManager
@@ -49,4 +52,5 @@ const App = () => {
 }
 
 window.ApplicationContext = App();
+ApplicationContext.init();
 

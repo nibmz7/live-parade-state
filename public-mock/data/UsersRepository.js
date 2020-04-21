@@ -1,4 +1,4 @@
-import EventDispatcher from "../util/EventDispatcher.js";
+import EventDispatcher from "../../public/src/util/EventDispatcher.js";
 
 export default class UserRepository extends EventDispatcher {
 

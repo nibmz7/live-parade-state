@@ -1,16 +1,16 @@
-import UI from './ui/index.js';
-import Auth from './data/Auth.js';
-import LoginController from './controller/LoginController.js';
-import AdminController from './controller/AdminController.js';
-import UserController from './controller/UserController.js';
+import UI from '../public/src/ui/index.js';
+import LoginController from '../public/src/controller/LoginController.js';
+import AdminController from '../public/src/controller/AdminController.js';
+import UserController from '../public/src/controller/UserController.js';
 import UsersRepository from './data/UsersRepository.js';
 import AdminManager from './data/AdminManager.js';
+import Auth from './data/Auth.js';
 
 const App = () => {
 
-  const getUsersRepository = () => {return UsersRepository.getInstance();}
-  const getAdminManager = () => {return AdminManager.getInstance();}
-  const getAuth = () => {return Auth.getInstance();}
+  const getUsersRepository = () => { return UsersRepository.getInstance(); }
+  const getAdminManager = () => { return AdminManager.getInstance(); }
+  const getAuth = () => { return Auth.getInstance(); }
   const auth = getAuth();
   let currentController = null;
 
@@ -32,9 +32,12 @@ const App = () => {
     swapControllers(newController, user);
   });
 
-  UI.init();
-  auth.init();
+  const init = () => {
+    UI.init();
+    auth.init();
+  }
   return {
+    init,
     getAuth,
     getUsersRepository,
     getAdminManager
@@ -42,8 +45,7 @@ const App = () => {
 }
 
 window.ApplicationContext = App();
-
-
+ApplicationContext.init();
 
 //mock firebase.firestore.FieldValue.serverTimestamp()
 
