@@ -17,10 +17,10 @@ export default class UserController extends BaseController {
 
     updateUserStatus(isMorning, code, remarks, uid) {
         const status = {
-                code, 
-                remarks, 
-                updatedby: this.authUser.uid, 
-                timestamp: firebase.firestore.FieldValue.serverTimestamp()
+            code,
+            remarks,
+            updatedby: this.authUser.uid,
+            timestamp: firebase.firestore.FieldValue.serverTimestamp()
         }
         this.usersRepository.updateUserStatus(isMorning, status, uid, this.branchid, this.users[uid].departmentid);
     }
@@ -36,11 +36,11 @@ export default class UserController extends BaseController {
     }
 
     userEventFound(type, user) {
-        if(type == 'added') {
-            if(this.authUser.uid == user.uid) {
-                this.mainView.welcomeText = user.fullname;
-                if(user.regular) {
-                    for(const id in this.mainView.departmentViews) {
+        if (type == 'added') {
+            if (this.authUser.uid == user.uid) {
+                this.mainView.setWelcomeText(user.fullname);
+                if (user.regular) {
+                    for (const id in this.mainView.departmentViews) {
                         this.mainView.departmentViews[id].isEditable = true;
                     }
                 }
@@ -48,41 +48,41 @@ export default class UserController extends BaseController {
             this.mainView.summaryView.addUser(user, 'am');
             this.mainView.summaryView.addUser(user, 'pm');
         }
-        if(type == 'modified') {
+        if (type == 'modified') {
             const checkIfStatusChanged = timeOfDay => {
                 let status = user.status[timeOfDay];
                 let prevStatus = this.users[user.uid].status[timeOfDay];
-                if(prevStatus.code != status.code) {
+                if (prevStatus.code != status.code) {
                     this.mainView.summaryView.removeUser(this.users[user.uid], timeOfDay);
                     this.mainView.summaryView.addUser(user, timeOfDay);
                 } else {
                     let prevRemarksLength = prevStatus.remarks.length;
                     let remarksLength = status.remarks.length;
                     let remarksChanged = 0;
-                    if(prevRemarksLength == 0 && remarksLength > 0) remarksChanged = 1;
-                    if(prevRemarksLength > 0 && remarksLength == 0) remarksChanged = -1;
+                    if (prevRemarksLength == 0 && remarksLength > 0) remarksChanged = 1;
+                    if (prevRemarksLength > 0 && remarksLength == 0) remarksChanged = -1;
                     this.mainView.summaryView.changeUser(user, timeOfDay, remarksChanged);
                 }
             }
             checkIfStatusChanged('am');
             checkIfStatusChanged('pm');
         }
-        if(type == 'removed') {
+        if (type == 'removed') {
             this.mainView.summaryView.removeUser(user, 'am');
             this.mainView.summaryView.removeUser(user, 'pm');
         }
     }
-    
+
     onDepartmentEvent(data) {
         let type = data.type;
         if (type == 'found') {
             let userDepartment;
             let departments = data.departments
-            .filter(department => {
-                let isDiffDepartment = department.uid != this.departmentid;
-                if(!isDiffDepartment) userDepartment = department;
-                return isDiffDepartment;
-            });
+                .filter(department => {
+                    let isDiffDepartment = department.uid != this.departmentid;
+                    if (!isDiffDepartment) userDepartment = department;
+                    return isDiffDepartment;
+                });
             departments.unshift(userDepartment);
             for (let department of departments) {
                 this.mainView.addDepartment(department);
@@ -94,13 +94,13 @@ export default class UserController extends BaseController {
 
     getSummaryData() {
         this.resortUsers();
-        this.summaryData = {am: [], pm: []};
+        this.summaryData = { am: [], pm: [] };
         const insertUserByStatus = (prefix, user) => {
             let userStatusCode = user.status[prefix].code;
             let category = STATUS[userStatusCode].category;
             this.summaryData[prefix][category].push(user);
         }
-        for(let user of this.usersSorted) {
+        for (let user of this.usersSorted) {
             insertUserByStatus('am', user);
             insertUserByStatus('pm', user);
         }

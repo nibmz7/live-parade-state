@@ -20,11 +20,13 @@ export default class LoginController {
       this.auth.login(email, password);
     });
     this.auth.on('error', this.onError);
-    this.viewSwitcher.showView('login', this.loginView);
+    this.viewSwitcher.addView(this.loginView);
   }
 
   deactivate() {
     this.auth.stop('error', this.onError);
+    this.viewSwitcher.removeView(this.loginView);
+    this.loginView = null;
   }
 
   onError(message) {

@@ -49,7 +49,6 @@ export default class UserView extends MainView {
     }
 
     connectedCallback() {
-        super.connectedCallback();
         let isMorning = new Date().getHours() <= 12;
         this.toggleTime(isMorning);
     }

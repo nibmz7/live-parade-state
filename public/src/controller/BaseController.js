@@ -24,6 +24,7 @@ export default class BaseController {
     }
 
     deactivate() {
+        this.viewSwitcher.removeView(this.mainView);
         this.mainView = null;
         this.usersRepository.stop('user-event', this.onUserEvent);
         this.usersRepository.stop('department-event', this.onDepartmentEvent);
@@ -47,7 +48,7 @@ export default class BaseController {
                 this.userEventFound('added', user);
                 this.users[user.uid] = user;
             }
-            this.viewSwitcher.showView(this.viewName, this.mainView);
+            this.viewSwitcher.addView(this.mainView);
             return;
         }
 

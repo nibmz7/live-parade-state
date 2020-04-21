@@ -46,12 +46,34 @@ const template = `
             padding: 5px 30px;
         }
         
+        #welcome-text {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            text-align: center;
+            font-weight: 500;
+            color: var(--color-primary-dark);
+            font-size: 1.1rem;
+            z-index: 95;
+            margin: 0;
+            padding: 10px;
+            cursor: pointer;
+            background: #faf5fab8;
+            box-shadow: none;
+            transition: all .5s;
+            backdrop-filter: blur(2px);
+          }
+          #welcome-text.elevation {
+            box-shadow: 0px 1px 2px 1px #928d8d4f;
+          }
     </style>
     
     <div id="root">
         <div id="list"></div>
         <p id="empty">Loading...</p>
         <wc-button id="float-button"></wc-button>
+        <h5 id="welcome-text"></h5>
     </div>
 
 `;
@@ -70,11 +92,7 @@ export default class MainView extends HTMLElement {
         this.floatButton.onclick = e => {
             this.onFloatButtonClick();
         }
-    }
-
-    showWelcomeText() {
-        Utils.addWelcomeText(this.welcomeText);
-        this.welcomeText = document.getElementById('welcome-text');
+        this.welcomeText = this.shadowRoot.getElementById('welcome-text');
         this.list.onscroll = e => {
             if (this.list.scrollTop > 0) {
                 this.welcomeText.classList.add('elevation');
@@ -82,14 +100,14 @@ export default class MainView extends HTMLElement {
                 this.welcomeText.classList.remove('elevation');
             }
         }
+        this.welcomeText.onclick = e => {
+            let signOutDialogue = document.createElement('sign-out');
+            document.body.appendChild(signOutDialogue);
+        }
     }
 
-    connectedCallback() {
-        this.showWelcomeText();
-    }
-
-    disconnectedCallback() {
-        this.welcomeText.remove();
+    setWelcomeText(name) {
+        this.welcomeText.textContent = `Hi, ${name}!`;
     }
 
     setController(controller) {
