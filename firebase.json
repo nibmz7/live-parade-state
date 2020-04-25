@@ -1,6 +1,6 @@
 {
   "hosting": {
-    "public": "public",
+    "public": "./",
     "ignore": [
       "firebase.json",
       "**/.*",
@@ -12,6 +12,9 @@
         "destination": "/index.html"
       }
     ]
+  },
+  "firestore": {
+    "rules": "firestore.rules"
   },
   "functions": {
     "predeploy": [

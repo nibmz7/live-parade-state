@@ -12,7 +12,15 @@ const App = () => {
   const getAdminManager = () => { return AdminManager.getInstance(); }
   const getAuth = () => { return Auth.getInstance(); }
   const auth = getAuth();
+
   let currentController = null;
+
+  if (location.hostname === "localhost") {
+    firebase.firestore().settings({
+      host: "localhost:8080",
+      ssl: false
+    });
+  }
 
   const swapControllers = (newController, data) => {
     if (currentController) currentController.deactivate();
@@ -36,6 +44,7 @@ const App = () => {
     UI.init();
     auth.init();
   }
+  
   return {
     init,
     getAuth,
@@ -46,6 +55,4 @@ const App = () => {
 
 window.ApplicationContext = App();
 ApplicationContext.init();
-
-//mock firebase.firestore.FieldValue.serverTimestamp()
 

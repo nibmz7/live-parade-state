@@ -31,12 +31,11 @@ service cloud.firestore {
       	allow read: if isAdmin() || isSameBranch();
         
         match /users/{uid} {
-
+          
           allow update: if isAdmin() || isSameBranch()  
           && request.resource.data.diff(resource.data).changedKeys().hasOnly(["status"]);
           
         	allow read: if isAdmin() || isSameBranch();
-          
         }
       }
     }  
