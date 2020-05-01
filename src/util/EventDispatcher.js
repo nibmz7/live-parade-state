@@ -1,6 +1,9 @@
-export default class EventDispatcher {
+import Singleton from "./Singleton.js";
+
+export default class EventDispatcher extends Singleton {
 
     constructor() {
+        super();
         this._listeners = {};
     }
     

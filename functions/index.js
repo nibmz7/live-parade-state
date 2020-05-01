@@ -10,7 +10,7 @@ const checkIsAdmin = async context => {
         throw new functions.https.HttpsError('failed-precondition', 'The function must be called ' +
             'while authenticated.');
     }
-    const admins = ["admin@sbw.plc"];
+    const admins = ["admin@sbw.plc", "admin@test.com"];
     const adminEmail = context.auth.token.email;
     if (!admins.includes(adminEmail)) {
         throw new functions.https.HttpsError('failed-precondition', 'You must be an admin to call this function');
@@ -22,7 +22,8 @@ exports.deleteDepartment = functions.region('asia-northeast1').https.onCall(asyn
     let isAdmin = await checkIsAdmin(context);
     if (isAdmin) {
         const adminid = context.auth.uid;
-        let users = await db.collection(`branches/${adminid}/departments/${data.departmentid}/users`).get();
+        let users = await db.collection(`branches/${adminid}/repository`)
+            .where("departmentid", "==", data.departmentid).get();
         if (!users.empty) {
             for (let user of users.docChanges()) {
                 await admin.auth().deleteUser(user.doc.id);
@@ -38,7 +39,7 @@ exports.deleteUser = functions.region('asia-northeast1').https.onCall(async (dat
     let isAdmin = await checkIsAdmin(context);
     if (isAdmin) {
         const adminid = context.auth.uid;
-        await db.doc(`branches/${adminid}/departments/${data.departmentid}/users/${data.uid}`).delete();
+        await db.doc(`branches/${adminid}/repository/${data.uid}`).delete();
         await admin.auth().deleteUser(data.uid);
         return { success: true };
     }
@@ -47,17 +48,20 @@ exports.deleteUser = functions.region('asia-northeast1').https.onCall(async (dat
 exports.updateUser = functions.region('asia-northeast1').https.onCall(async (data, context) => {
     let isAdmin = await checkIsAdmin(context);
     if (isAdmin) {
+        let { uid, name, rank, regular, emailPrefix } = data;
         const adminEmail = context.auth.token.email;
         const adminid = context.auth.uid;
         const domain = adminEmail.split('@')[1];
-        const email = `${data.emailPrefix}@${domain}`;
-        await db.doc(`branches/${adminid}/departments/${data.departmentid}/users/${data.uid}`).update({
-            name: data.name,
-            rank: data.rank,
-            regular: data.regular,
-            email,
+        const email = `${emailPrefix}@${domain}`;
+        await db.doc(`branches/${adminid}/repository/${uid}`).update({
+            "data.name": name,
+            "data.rank": rank,
+            "data.regular": regular,
+            "data.email": email
         });
         await admin.auth().updateUser(data.uid, { email });
+        let updatedUser = await db.doc(`branches/${adminid}/repository/${data.uid}`).get();
+        console.log(updatedUser.data());
         return { success: true };
     }
 });
@@ -75,23 +79,24 @@ exports.updatePassword = functions.region('asia-northeast1').https.onCall(async 
 exports.createUser = functions.region('asia-northeast1').https.onCall(async (data, context) => {
     let isAdmin = await checkIsAdmin(context);
     if (isAdmin) {
+        let { name, rank, regular, departmentid, emailPrefix, password } = data;
         const adminid = context.auth.uid;
         const adminEmail = context.auth.token.email;
         const domain = adminEmail.split('@')[1];
-        const email = `${data.emailPrefix}@${domain}`;
-        const usersRef = db.collection(`branches/${adminid}/departments/${data.departmentid}/users`);
+        const email = `${emailPrefix}@${domain}`;
+        const repoRef = db.collection(`branches/${adminid}/repository`);
         const userRecord = await admin.auth().createUser({
             email,
-            password: data.password
+            password
         });
         const newUid = userRecord.uid;
-        await admin.auth().setCustomUserClaims(newUid, { branchid: adminid, departmentid: data.departmentid });
-        await usersRef.doc(newUid).set({
+        await admin.auth().setCustomUserClaims(newUid, { branchid: adminid, departmentid });
+        await repoRef.doc(newUid).set({
             branchid: adminid,
-            departmentid: data.departmentid,
-            name: data.name,
-            rank: data.rank,
-            regular: data.regular,
+            departmentid,
+            name,
+            rank,
+            regular,
             email,
             status: {
                 am: {
@@ -109,6 +114,41 @@ exports.createUser = functions.region('asia-northeast1').https.onCall(async (dat
             }
         });
         return { success: true }
+    }
+});
+
+exports.migrateData = functions.region('asia-northeast1').https.onCall(async (data, context) => {
+    let isAdmin = await checkIsAdmin(context);
+    if (isAdmin) {
+        const adminid = context.auth.uid;
+        const departmentsRef = await db.collection(`branches/${adminid}/departments`).get();
+        let data = [];
+        for (let department of departmentsRef.docs) {
+            data.push({
+                uid: department.id,
+                data: {
+                    type: 'department',
+                    data: department.data()
+                }
+            });
+        }
+        const usersRef = await db.collectionGroup('users').where('branchid', '==', adminid).get();
+        for (let user of usersRef.docs) {
+            let departmentid = user.data().departmentid;
+            data.push({
+                uid: user.id,
+                data: {
+                    type: 'user',
+                    departmentid,
+                    data: user.data()
+                }
+            });
+        }
+        for (let item of data) {
+            await db.doc(`branches/${adminid}/repository/${item.uid}`).set(item.data);
+        }
+        let repoRef = await db.collection(`branches/${adminid}/repository`).get();
+        repoRef.forEach(doc => console.log(doc.data()));
     }
 });
 

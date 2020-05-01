@@ -1,41 +1,38 @@
 import User from "../model/User.js";
+import Singleton from "../util/Singleton.js";
 
-export default class BaseController {
+export default class BaseController extends Singleton {
 
     constructor() {
-        this.usersRepository = ApplicationContext.getUsersRepository();
+        super();
+        this.branchRepository = ApplicationContext.getBranchRepository();
         this.viewSwitcher = document.querySelector('view-switcher');
         this.onUserEvent = this.onUserEvent.bind(this);
         this.onDepartmentEvent = this.onDepartmentEvent.bind(this);
         this.users = {};
     }
 
-    static getInstance() {
-        if (!this.instance) this.instance = new this();
-        return this.instance;
-    }
-
     activate() {
         this.users = {};
         this.mainView = this.createMainView();
         this.mainView.setController(this);
-        this.usersRepository.on('user-event', this.onUserEvent);
-        this.usersRepository.on('department-event', this.onDepartmentEvent);
+        this.branchRepository.on('user-event', this.onUserEvent);
+        this.branchRepository.on('department-event', this.onDepartmentEvent);
     }
 
     deactivate() {
         this.viewSwitcher.removeView(this.mainView);
         this.mainView = null;
-        this.usersRepository.stop('user-event', this.onUserEvent);
-        this.usersRepository.stop('department-event', this.onDepartmentEvent);
-        this.usersRepository.unsubscribeUsers();
+        this.branchRepository.stop('user-event', this.onUserEvent);
+        this.branchRepository.stop('department-event', this.onDepartmentEvent);
+        this.branchRepository.unsubscribe();
     }
 
     getUser(uid) {
         return this.users[uid];
     }
 
-    userEventFound(type, user) {};
+    userEventFound(type, user) { };
 
     onUserEvent(data) {
         let type = data.type;
@@ -51,8 +48,6 @@ export default class BaseController {
             this.viewSwitcher.addView(this.mainView);
             return;
         }
-
-        if(type == 'empty') return;
 
         let departmentCard = this.mainView.getDepartmentCard(user.departmentid);
         if (type == 'added') {
@@ -79,7 +74,6 @@ export default class BaseController {
             for (let department of data.departments) {
                 this.mainView.addDepartment(department);
             }
-            this.usersRepository.subscribeUsers(this.branchid);
         }
         if (type == 'added') {
             this.mainView.addDepartment(department);

@@ -18,13 +18,8 @@ export default class AdminController extends BaseController {
     super.activate();
     this.mainView.setWelcomeText('admin user');
     this.branchid = user.uid;
+    this.branchRepository.subscribe(user.uid);
     this.adminManager.setAdminInfo(user.uid, user.email);
-    this.usersRepository.subscribeDepartments(this.adminManager.adminid);
-  }
-
-  deactivate() {
-    super.deactivate();
-    this.usersRepository.unsubscribeDepartments();
   }
 
   updatePassword(uid, password) {

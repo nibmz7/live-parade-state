@@ -2,15 +2,10 @@ rules_version = '2';
 service cloud.firestore {
   match /databases/{database}/documents {
   
-  	match /{path=**}/users/{uid} {
-      allow read: if request.auth.uid == resource.data.branchid ||
-      request.auth.token.branchid == resource.data.branchid;
-    }
-  
-    match /branches/{adminid} {
+    match /branches/{adminid}/repository/{uid} {
     
     	function getAdmins() {
-      	return ["admin@sbw.plc"];
+      	return ["admin@sbw.plc", "admin@test.com"];
       }
     
     	function isAdmin() {
@@ -21,23 +16,12 @@ service cloud.firestore {
       function isSameBranch() {
         return request.auth.token.branchid == adminid;
       }
-    
-      allow update: if isAdmin() && request.resource.data.size() == 1;
-      allow read: if isAdmin() || isSameBranch();
-      
-      match /departments/{departmentid} {
-      
-        allow create, update: if isAdmin() && request.resource.data.size() == 1;
-      	allow read: if isAdmin() || isSameBranch();
-        
-        match /users/{uid} {
+
+      allow update: if isSameBranch() || isAdmin() 
+                    && request.resource.data.diff(resource.data).changedKeys().hasOnly(["status"]);
           
-          allow update: if isAdmin() || isSameBranch()  
-          && request.resource.data.diff(resource.data).changedKeys().hasOnly(["status"]);
-          
-        	allow read: if isAdmin() || isSameBranch();
-        }
-      }
+      allow read: if isSameBranch() || isAdmin();
+
     }  
   }
 }

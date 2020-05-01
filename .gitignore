@@ -8,6 +8,7 @@ firebase-debug.log*
 
 dist
 firestore-database
+firestore-db
 
 # Firebase cache
 .firebase/

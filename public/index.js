@@ -2,13 +2,13 @@ import LoginController from '../src/controller/LoginController.js';
 import AdminController from '../src/controller/AdminController.js';
 import UserController from '../src/controller/UserController.js';
 import UI from '../src/ui/index.js';
-import UsersRepository from './data/UsersRepository.js';
+import BranchRepository from './data/BranchRepository.js';
 import AdminManager from './data/AdminManager.js';
 import Auth from './data/Auth.js';
 
 const App = () => {
 
-  const getUsersRepository = () => { return UsersRepository.getInstance(); }
+  const getBranchRepository = () => { return BranchRepository.getInstance(); }
   const getAdminManager = () => { return AdminManager.getInstance(); }
   const getAuth = () => { return Auth.getInstance(); }
   const auth = getAuth();
@@ -48,7 +48,7 @@ const App = () => {
   return {
     init,
     getAuth,
-    getUsersRepository,
+    getBranchRepository,
     getAdminManager
   }
 }

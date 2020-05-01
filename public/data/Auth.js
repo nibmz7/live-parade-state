@@ -6,11 +6,6 @@ export default class Auth extends EventDispatcher {
         super();
     }
 
-    static getInstance() {
-        if (!Auth.instance) Auth.instance = new Auth();
-        return Auth.instance;
-    }
-
     init() {
         firebase.auth().onAuthStateChanged(user => {
             if (user) {

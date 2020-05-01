@@ -1,5 +1,8 @@
-export default class AdminManager {
+import Singleton from "../../src/util/Singleton.js";
+
+export default class AdminManager extends Singleton {
     constructor() {
+        super();
         this.functions = firebase.app().functions('asia-northeast1');
         this.functions.useFunctionsEmulator('http://localhost:5001');
         this.db = firebase.firestore();
@@ -15,11 +18,11 @@ export default class AdminManager {
     }
 
     changeDepartmentName(departmentid, name) {
-        this.db.doc(`branches/${this.adminid}/departments/${departmentid}`).update({ name });
+        this.db.doc(`branches/${this.adminid}/repository/${departmentid}`).update({ name });
     }
 
     createDepartment(name) {
-        this.db.collection(`branches/${this.adminid}/departments`).add({ name });
+        this.db.collection(`branches/${this.adminid}/repository`).add({ name });
     }
 
     deleteDepartment(departmentid) {
@@ -49,3 +52,4 @@ export default class AdminManager {
         deleteUserFunc({ departmentid, uid });
     }
 }
+AdminManager.instance = null;

@@ -22,7 +22,7 @@ export default class UserController extends BaseController {
             updatedby: this.authUser.uid,
             timestamp: firebase.firestore.FieldValue.serverTimestamp()
         }
-        this.usersRepository.updateUserStatus(isMorning, status, uid, this.branchid, this.users[uid].departmentid);
+        this.branchRepository.updateUserStatus(isMorning, status, uid, this.branchid, this.users[uid].departmentid);
     }
 
     async activate(user) {
@@ -32,7 +32,7 @@ export default class UserController extends BaseController {
         let idTokenResult = await ApplicationContext.getAuth().getUserToken();
         this.branchid = idTokenResult.claims.branchid;
         this.departmentid = idTokenResult.claims.departmentid;
-        this.usersRepository.getDepartments(this.branchid);
+        this.branchRepository.subscribe(this.branchid);
     }
 
     userEventFound(type, user) {
@@ -88,7 +88,6 @@ export default class UserController extends BaseController {
                 this.mainView.addDepartment(department);
             }
             this.mainView.departmentViews[this.departmentid].isEditable = true;
-            this.usersRepository.subscribeUsers(this.branchid);
         }
     }
 
