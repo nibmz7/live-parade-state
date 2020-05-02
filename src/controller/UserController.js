@@ -19,7 +19,7 @@ export default class UserController extends BaseController {
         const status = {
             code,
             remarks,
-            updatedby: this.authUser.uid,
+            updatedby: this.userid,
             timestamp: firebase.firestore.FieldValue.serverTimestamp()
         }
         this.branchRepository.updateUserStatus(isMorning, status, uid, this.branchid, this.users[uid].departmentid);
@@ -28,16 +28,15 @@ export default class UserController extends BaseController {
     async activate(user) {
         super.activate();
         this.users = {};
-        this.authUser = user;
-        let idTokenResult = await ApplicationContext.getAuth().getUserToken();
-        this.branchid = idTokenResult.claims.branchid;
-        this.departmentid = idTokenResult.claims.departmentid;
-        this.branchRepository.subscribe(this.branchid);
+        this.userid = user.uid;
+        this.branchid = user.branchid;
+        this.departmentid = user.departmentid;
+        this.branchRepository.subscribe(user.branchid);
     }
 
     userEventFound(type, user) {
         if (type == 'added') {
-            if (this.authUser.uid === user.uid) {
+            if (this.userid === user.uid) {
                 this.mainView.setWelcomeText(user.fullname);
                 if (user.regular) {
                     for (const id in this.mainView.departmentViews) {

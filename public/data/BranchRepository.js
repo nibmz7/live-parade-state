@@ -5,6 +5,7 @@ export default class BranchRepository extends EventDispatcher {
     constructor() {
         super();
         this.db = firebase.firestore();
+        this.db.enablePersistence();
     }
 
     updateUserStatus(isMorning, status, uid, branchid) {
@@ -50,11 +51,11 @@ export default class BranchRepository extends EventDispatcher {
     subscribe(branchid) {
         let initialLoad = true;
         let repository = this.db.collection(`branches/${branchid}/repository`);
-        this.branchUnsubscribe = repository.onSnapshot(snapshot => {
+        this.branchUnsubscribe = repository.onSnapshot({ includeMetadataChanges: true }, snapshot => {
             if (snapshot.empty) {
                 if (initialLoad) {
                     initialLoad = false;
-                    this.emit('department-event', { type: 'found', departments: [] });
+                    this.emit('user-event', { type: 'found', users: [] });
                 }
                 this.emit('department-event', { type: 'empty' });
             }

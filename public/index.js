@@ -35,8 +35,7 @@ const App = () => {
   });
 
   auth.on('signed-in', user => {
-    let isAdmin = user.email.split('@')[0] == 'admin';
-    let newController = isAdmin ? AdminController.getInstance() : UserController.getInstance();
+    let newController = user.isAdmin ? AdminController.getInstance() : UserController.getInstance();
     swapControllers(newController, user);
   });
 
@@ -52,7 +51,6 @@ const App = () => {
     getAdminManager
   }
 }
-
 window.ApplicationContext = App();
 ApplicationContext.init();
 
