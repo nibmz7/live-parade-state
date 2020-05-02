@@ -30,7 +30,7 @@ exports.deleteDepartment = functions.region('asia-northeast1').https.onCall(asyn
                 await user.doc.ref.delete();
             }
         }
-        await db.doc(`branches/${adminid}/departments/${data.departmentid}`).delete();
+        await db.doc(`branches/${adminid}/repository/${data.departmentid}`).delete();
         return { success: true };
     }
 });
@@ -92,6 +92,7 @@ exports.createUser = functions.region('asia-northeast1').https.onCall(async (dat
         const newUid = userRecord.uid;
         await admin.auth().setCustomUserClaims(newUid, { branchid: adminid, departmentid });
         await repoRef.doc(newUid).set({
+            type: 'user', departmentid, data: {
             branchid: adminid,
             departmentid,
             name,
@@ -112,43 +113,43 @@ exports.createUser = functions.region('asia-northeast1').https.onCall(async (dat
                     timestamp: FieldValue.serverTimestamp()
                 }
             }
-        });
+        }});
         return { success: true }
     }
 });
 
-exports.migrateData = functions.region('asia-northeast1').https.onCall(async (data, context) => {
-    let isAdmin = await checkIsAdmin(context);
-    if (isAdmin) {
-        const adminid = context.auth.uid;
-        const departmentsRef = await db.collection(`branches/${adminid}/departments`).get();
-        let data = [];
-        for (let department of departmentsRef.docs) {
-            data.push({
-                uid: department.id,
-                data: {
-                    type: 'department',
-                    data: department.data()
-                }
-            });
-        }
-        const usersRef = await db.collectionGroup('users').where('branchid', '==', adminid).get();
-        for (let user of usersRef.docs) {
-            let departmentid = user.data().departmentid;
-            data.push({
-                uid: user.id,
-                data: {
-                    type: 'user',
-                    departmentid,
-                    data: user.data()
-                }
-            });
-        }
-        for (let item of data) {
-            await db.doc(`branches/${adminid}/repository/${item.uid}`).set(item.data);
-        }
-        let repoRef = await db.collection(`branches/${adminid}/repository`).get();
-        repoRef.forEach(doc => console.log(doc.data()));
-    }
-});
+// exports.migrateData = functions.region('asia-northeast1').https.onCall(async (data, context) => {
+//     let isAdmin = await checkIsAdmin(context);
+//     if (isAdmin) {
+//         const adminid = context.auth.uid;
+//         const departmentsRef = await db.collection(`branches/${adminid}/departments`).get();
+//         let data = [];
+//         for (let department of departmentsRef.docs) {
+//             data.push({
+//                 uid: department.id,
+//                 data: {
+//                     type: 'department',
+//                     data: department.data()
+//                 }
+//             });
+//         }
+//         const usersRef = await db.collectionGroup('users').where('branchid', '==', adminid).get();
+//         for (let user of usersRef.docs) {
+//             let departmentid = user.data().departmentid;
+//             data.push({
+//                 uid: user.id,
+//                 data: {
+//                     type: 'user',
+//                     departmentid,
+//                     data: user.data()
+//                 }
+//             });
+//         }
+//         for (let item of data) {
+//             await db.doc(`branches/${adminid}/repository/${item.uid}`).set(item.data);
+//         }
+//         let repoRef = await db.collection(`branches/${adminid}/repository`).get();
+//         repoRef.forEach(doc => console.log(doc.data()));
+//     }
+// });
 

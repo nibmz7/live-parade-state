@@ -89,6 +89,7 @@ export default class UserController extends BaseController {
             }
             this.mainView.departmentViews[this.departmentid].isEditable = true;
         }
+        else super.onDepartmentEvent(data);
     }
 
     getSummaryData() {

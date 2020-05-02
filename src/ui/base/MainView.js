@@ -127,7 +127,7 @@ export default class MainView extends HTMLElement {
         }
     }
 
-    modifyDepartment() {
+    modifyDepartment(department) {
         let departmentCard = this.departmentViews[department.uid];
         departmentCard.setDepartment(department);
     }

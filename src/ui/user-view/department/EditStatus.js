@@ -193,6 +193,7 @@ export default class EditStatus extends Dialogue {
                 let currentCode = this.status[this.timeOfDay].code;
                 if (currentCode === idx) return;
                 this.setStatus(idx);
+                this.remarksInput.value = "";
             };
             this.statusChooserContainer.appendChild(button);
             this.statusChooser.push(button);
