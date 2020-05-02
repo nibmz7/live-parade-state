@@ -104,7 +104,7 @@ const template = `
       
       <div class="remarks">
         <p>Remarks</p>
-        <input id="remarks-input" type="text" placeholder="${HINT}">
+        <input id="remarks-input" maxlength="20" type="text" placeholder="${HINT}">
       </div>
 
       <wc-button id="save">Verify</wc-button>
@@ -185,18 +185,18 @@ export default class EditStatus extends Dialogue {
     }
 
     populateStatusChooser() {
-        for (let idx in STATUS) {
+        STATUS.forEach((status, idx) => {
             let button = document.createElement('wc-button');
             button.setAttribute('type', 'outline');
-            button.textContent = STATUS[idx].name;
+            button.textContent = status.name;
             button.onclick = e => {
                 let currentCode = this.status[this.timeOfDay].code;
-                if (currentCode == idx) return;
+                if (currentCode === idx) return;
                 this.setStatus(idx);
             };
             this.statusChooserContainer.appendChild(button);
             this.statusChooser.push(button);
-        }
+        });
     }
 
     setUser(user, amUpdater, pmUpdater) {
@@ -218,7 +218,7 @@ export default class EditStatus extends Dialogue {
         let statusDate = this.status[timeOfDay].date;
         if (!statusDate || statusDate.getTime() != userDate.getTime()) {
             let status = {
-                code: userStatus.code,
+                code: Number(userStatus.code),
                 remarks: userStatus.remarks,
                 expired: userStatus.expired,
                 date: userDate,

@@ -4,7 +4,6 @@
   "description": "",
   "main": "index.js",
   "dependencies": {
-    "firebase-tools": "^8.2.0",
     "webpack": "^4.42.1",
     "webpack-cli": "^3.3.11"
   },
@@ -13,7 +12,7 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "build": "npx webpack --config webpack.config.js",
     "start-dev-server": "firebase serve --host 0.0.0.0",
-    "start-emulators": "firebase emulators:start --import=./firestore-database",
+    "start-emulators": "firebase emulators:start --import=./firestore-db",
     "deploy-hosting": "firebase deploy --only hosting"
   },
   "repository": {

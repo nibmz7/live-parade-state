@@ -17,8 +17,24 @@ service cloud.firestore {
         return request.auth.token.branchid == adminid;
       }
 
-      allow update: if isSameBranch() || isAdmin() 
-                    && request.resource.data.diff(resource.data).changedKeys().hasOnly(["status"]);
+      function validateStatus(data) {
+        return  data.size() == 4
+                && data.code > 0 && data.code < 30
+                && data.remarks is string && data.remarks.size() < 20
+                && data.updatedby == request.auth.uid
+                && data.timestamp == request.time;
+      }
+
+      function checkStatus(timeOfDay) {
+        return request.resource.data.data.status.diff(resource.data.data.status)
+               .changedKeys().hasOnly([timeOfDay])
+                && validateStatus(request.resource.data.data.status[timeOfDay]);
+      }
+
+      allow update: if resource.data.type == 'user' && isSameBranch()
+                    && request.resource.data.keys().hasOnly(['type','departmentid','data'])
+                    && request.resource.data.data.diff(resource.data.data).changedKeys().hasOnly(['status'])
+                    && (checkStatus('am') || checkStatus('pm'));
           
       allow read: if isSameBranch() || isAdmin();
 

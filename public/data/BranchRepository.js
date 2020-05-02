@@ -9,8 +9,8 @@ export default class BranchRepository extends EventDispatcher {
 
     updateUserStatus(isMorning, status, uid, branchid) {
         let userRef = this.db.doc(`branches/${branchid}/repository/${uid}`);
-        if (isMorning) userRef.update({ "status.am": { ...status } });
-        else userRef.update({ "status.pm": { ...status } });
+        if (isMorning) userRef.update({ "data.status.am": { ...status } });
+        else userRef.update({ "data.status.pm": { ...status } });
     }
 
     toDepartment(doc) {
@@ -80,7 +80,6 @@ export default class BranchRepository extends EventDispatcher {
             }
         }, error => {
             console.log(error);
-            alert('Please restart the page');
         });
     }
 
