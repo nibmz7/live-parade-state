@@ -3,14 +3,15 @@ import Singleton from "../../src/util/Singleton.js";
 export default class AdminManager extends Singleton {
     constructor() {
         super();
+    }
+
+    async init(uid, email) {
+        await import(/* webpackIgnore: true */ '/__/firebase/7.14.2/firebase-functions.js');
         this.functions = firebase.app().functions('asia-northeast1');
         // this.functions.useFunctionsEmulator('http://localhost:5001');
         this.db = firebase.firestore();
-    }
-    
-    setAdminInfo(uid, email) {
-      this.adminid = uid;
-      this.email = email;
+        this.adminid = uid;
+        this.email = email;
     }
 
     changeBranchName(name) {
@@ -22,7 +23,7 @@ export default class AdminManager extends Singleton {
     }
 
     createDepartment(name) {
-        this.db.collection(`branches/${this.adminid}/repository`).add({ type: 'department', data: {name} });
+        this.db.collection(`branches/${this.adminid}/repository`).add({ type: 'department', data: { name } });
     }
 
     deleteDepartment(departmentid) {

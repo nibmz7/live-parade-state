@@ -150,6 +150,7 @@ export default class SummaryView extends HTMLElement {
 
     constructor() {
         super();
+        this.loadExcelExport = false;
         this.attachShadow({ mode: 'open' });
         this.isExporting = false;
         this.timeOfDay = 'am';
@@ -193,7 +194,7 @@ export default class SummaryView extends HTMLElement {
     setTimeOfDay(isMorning) {
         this.timeOfDay = isMorning ? 'am' : 'pm';
         const hideOrShow = (view, timeOfDay) => {
-            if(this.timeOfDay == timeOfDay) view.removeAttribute('hidden');
+            if (this.timeOfDay == timeOfDay) view.removeAttribute('hidden');
             else view.setAttribute('hidden', '');
         }
         hideOrShow(this.containers[0], 'am');
@@ -289,9 +290,8 @@ export default class SummaryView extends HTMLElement {
     }
 
     exportToExcel() {
-        if(this.isExporting) return;
-        this.isExporting = true;
-        Utils.animate(this.loading, 'fade-in', () => {
+        const startScriptDownload = () => {
+            this.downloadSpreadsheet();
             this.loading.classList.remove('fade-in');
             setTimeout(() => {
                 Utils.animate(this.loading, 'fade-out', () => {
@@ -300,9 +300,21 @@ export default class SummaryView extends HTMLElement {
                     this.isExporting = false;
                 });
             }, 2000);
+        }
+        if (this.isExporting) return;
+        this.isExporting = true;
+        Utils.animate(this.loading, 'fade-in', () => {
+            if (!this.loadExcelExport) {
+                this.loadExcelExport = true;
+                let excelScript = document.createElement('script');
+                excelScript.src = 'https://cdn.jsdelivr.net/npm/xlsx-populate@1.19.1/browser/xlsx-populate.min.js';
+                excelScript.onload = function () {
+                    startScriptDownload();
+                };
+                document.head.appendChild(excelScript);
+            } else startScriptDownload();
         });
         document.body.appendChild(this.loading);
-        this.downloadSpreadsheet();  
     }
 
     async downloadSpreadsheet() {
@@ -379,7 +391,7 @@ export default class SummaryView extends HTMLElement {
         a.click();
         a.remove();
         window.URL.revokeObjectURL(url);
-        
+
     }
 
 }

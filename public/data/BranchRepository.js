@@ -51,7 +51,7 @@ export default class BranchRepository extends EventDispatcher {
     subscribe(branchid) {
         let initialLoad = true;
         let repository = this.db.collection(`branches/${branchid}/repository`);
-        this.branchUnsubscribe = repository.onSnapshot({ includeMetadataChanges: true }, snapshot => {
+        this.branchUnsubscribe = repository.onSnapshot(snapshot => {
             if (snapshot.empty) {
                 if (initialLoad) {
                     initialLoad = false;

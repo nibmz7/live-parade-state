@@ -14,12 +14,12 @@ export default class AdminController extends BaseController {
     return document.createElement('admin-view');
   }
 
-  activate(user) {
+  async activate(user) {
     super.activate();
+    await this.adminManager.init(user.uid, user.email);
     this.mainView.setWelcomeText('admin user');
     this.branchid = user.uid;
     this.branchRepository.subscribe(user.uid);
-    this.adminManager.setAdminInfo(user.uid, user.email);
   }
 
   updatePassword(uid, password) {
