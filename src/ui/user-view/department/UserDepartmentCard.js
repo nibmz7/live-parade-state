@@ -112,7 +112,7 @@ export default class UserDepartmentCard extends BasicDepartmentCard {
         this.showStrength();
     }   
 
-    addUser(user, animate) {
+    addUser(user, animate = true) {
         super.addUser(user, animate);
         const checkIsPresent = (timeOfDay, statusCode) => {
             if(statusCode == 1) {
@@ -125,7 +125,7 @@ export default class UserDepartmentCard extends BasicDepartmentCard {
         this.showStrength();
     }
 
-    removeUser(user, animate) {
+    removeUser(user, animate = true) {
         let userBefore = this.getUser(user.uid);
         const checkIsPresent = (timeOfDay, statusCode) => {
             if(statusCode == 1) {

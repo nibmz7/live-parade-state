@@ -89,11 +89,11 @@ const template = customStyle => `
         }
 
         .list-item.shrink {
-            animation: shrink .3s forwards;
+            animation: shrink .5s forwards;
         }
 
         .list-item.grow {
-            animation: grow .3s forwards;
+            animation: grow .5s forwards;
         }
 
         @keyframes flash {
@@ -111,10 +111,12 @@ const template = customStyle => `
         @keyframes shrink {
             0% {
                 max-height: 100px;
+                padding: 10px 15px;
                 opacity: 1;
             }
             100% {
                 max-height: 0px;
+                padding: 0 15px;
                 opacity: 0;
             }
         }
@@ -122,10 +124,12 @@ const template = customStyle => `
         @keyframes grow {
             0% {
                 max-height: 0px;
+                padding: 0 15px;
                 opacity: 0;
             }
             100% {
                 max-height: 100px;
+                padding: 10px 15px;
                 opacity: 1;
             }
         }       
@@ -228,7 +232,6 @@ export default class BasicDepartmentCard extends HTMLElement {
         let userItem = this.shadowRoot.getElementById(user.uid);
         this.setListItemData(userItem, user);
         if (animate && !userItem.classList.contains('flash')) {
-            console.log('animating');
             Utils.animate(userItem, 'flash', () => {
                 userItem.classList.remove('flash');
             });

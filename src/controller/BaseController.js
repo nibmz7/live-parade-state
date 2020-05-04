@@ -41,7 +41,7 @@ export default class BaseController extends Singleton {
             data.users.sort(User.compare);
             for (let user of data.users) {
                 let departmentCard = this.mainView.getDepartmentCard(user.departmentid);
-                departmentCard.addUser(user);
+                departmentCard.addUser(user, false);
                 this.userEventFound('added', user);
                 this.users[user.uid] = user;
             }

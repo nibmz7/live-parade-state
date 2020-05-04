@@ -10,13 +10,15 @@ const customStyle = `
         color: var(--color-primary);
         cursor: pointer;
         background: transparent;
+        border-bottom: 2px dashed var(--color-primary);
         transition: all .2s;
     }
     #sub-header:active {
         background: rgba(0,0,0,.1);
     }
-    .list-item:first-child {
-        border-top: 2px dashed var(--color-primary);
+    #sub-header.empty {
+        border-radius: 15px;
+        border-bottom: none;
     }
 `;
 
@@ -31,6 +33,7 @@ export default class AdminDepartmentCard extends BasicDepartmentCard {
         this.shadowRoot.querySelector('.header-holder').appendChild(editButton);
         Utils.onclick(this.subHeaderText, this.showAddUserDialogue.bind(this));
         this.subHeader = 'Add user';
+        this.subHeaderText.classList.add('empty');
     }
 
     getItemPrimaryText(user) {
@@ -64,6 +67,16 @@ export default class AdminDepartmentCard extends BasicDepartmentCard {
         dialogue.setDepartment(this.id, this.departmentName);
         dialogue.setUser(this.getUser(uid));
         document.body.appendChild(dialogue);
+    }
+
+    addUser(user, animate = true) {
+        super.addUser(user, animate);
+        if(this.uidArray.length > 0) this.subHeaderText.classList.remove('empty');
+    }
+
+    removeUser(user, animate = true) {
+        super.removeUser(user, animate);
+        if(this.uidArray.length == 0) this.subHeaderText.classList.add('empty');
     }
     
 }

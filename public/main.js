@@ -17,10 +17,10 @@ const App = () => {
 
   let currentController = null;
 
-  firebase.firestore().settings({
-    host: "192.168.0.139:8080",
-    ssl: false
-  });
+  // firebase.firestore().settings({
+  //   host: "192.168.0.139:8080",
+  //   ssl: false
+  // });
   
   const swapControllers = (newController, data) => {
     if (currentController) currentController.deactivate();
