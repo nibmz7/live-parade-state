@@ -125,17 +125,17 @@ export default class UserDepartmentCard extends BasicDepartmentCard {
         this.showStrength();
     }
 
-    removeUser(uid) {
+    removeUser(user) {
+        let userBefore = this.getUser(user.uid);
         const checkIsPresent = (timeOfDay, statusCode) => {
             if(statusCode == 1) {
-                let prefix = user.regular ? 'regular' : 'nsf';
+                let prefix = userBefore.regular ? 'regular' : 'nsf';
                 this.strength[timeOfDay][prefix] -= 1;
             }
         }
-        let user = this.getUser(uid);
-        checkIsPresent('am', user.status.am.code);
-        checkIsPresent('pm', user.status.pm.code);
-        super.removeUser(uid);
+        checkIsPresent('am', userBefore.status.am.code);
+        checkIsPresent('pm', userBefore.status.pm.code);
+        super.removeUser(user);
         this.showStrength();
     }   
 }

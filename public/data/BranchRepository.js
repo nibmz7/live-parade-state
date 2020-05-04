@@ -5,7 +5,7 @@ export default class BranchRepository extends EventDispatcher {
     constructor() {
         super();
         this.db = firebase.firestore();
-        this.db.enablePersistence();
+        this.db.enablePersistence({synchronizeTabs: true});
     }
 
     updateUserStatus(isMorning, status, uid, branchid) {

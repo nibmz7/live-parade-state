@@ -2,10 +2,10 @@ import './init.js';
 import LoginController from '../src/controller/LoginController.js';
 import AdminController from '../src/controller/AdminController.js';
 import UserController from '../src/controller/UserController.js';
-import UI from '../src/ui/index.js';
 import BranchRepository from './data/BranchRepository.js';
 import AdminManager from './data/AdminManager.js';
 import Auth from './data/Auth.js';
+import UI from '../src/ui/index.js';
 
 
 const App = () => {
@@ -17,12 +17,12 @@ const App = () => {
 
   let currentController = null;
 
-  // if (location.hostname === "localhost") {
-  //   firebase.firestore().settings({
-  //     host: "localhost:8080",
-  //     ssl: false
-  //   });
-  // }
+  if (location.hostname === "localhost") {
+    firebase.firestore().settings({
+      host: "localhost:8080",
+      ssl: false
+    });
+  }
 
   const swapControllers = (newController, data) => {
     if (currentController) currentController.deactivate();

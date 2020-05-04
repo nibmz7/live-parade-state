@@ -60,7 +60,7 @@ export default class SummaryCard extends BasicDepartmentCard {
     removeUser(user) {
         let prefix = user.regular ? 'regular' : 'nsf';
         this.strength[prefix] -= 1;
-        super.removeUser(user.uid);
+        super.removeUser(user);
         this.showStrength();
     }   
 

@@ -172,7 +172,7 @@ export default class BasicDepartmentCard extends HTMLElement {
     changeUser(user) {
         let currentUserRank = this.getUser(user.uid).rank;
         if(currentUserRank != user.rank) {
-            this.removeUser(user.uid);
+            this.removeUser(user);
             this.addUser(user);
         } else {
             let userItem = this.shadowRoot.getElementById(user.uid);
@@ -180,10 +180,10 @@ export default class BasicDepartmentCard extends HTMLElement {
         }
     }
 
-    removeUser(uid) {
-        let userItem = this.shadowRoot.getElementById(uid);
+    removeUser(user) {
+        let userItem = this.shadowRoot.getElementById(user.uid);
         userItem.remove();
-        var index = this.uidArray.indexOf(uid);
+        var index = this.uidArray.indexOf(user.uid);
         this.uidArray.splice(index, 1);
     }
     

@@ -61,7 +61,7 @@ export default class BaseController extends Singleton {
             this.users[user.uid] = user;
         }
         if (type == 'removed') {
-            departmentCard.removeUser(user.uid);
+            departmentCard.removeUser(user);
             this.userEventFound('removed', user);
             delete this.users[user.uid];
         }
