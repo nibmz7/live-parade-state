@@ -51,7 +51,7 @@ export default class SummaryCard extends BasicDepartmentCard {
     } 
 
     addUser(user) {
-        super.addUser(user);
+        super.addUser(user, false);
         let prefix = user.regular ? 'regular' : 'nsf';
         this.strength[prefix] += 1;
         this.showStrength();
@@ -60,9 +60,13 @@ export default class SummaryCard extends BasicDepartmentCard {
     removeUser(user) {
         let prefix = user.regular ? 'regular' : 'nsf';
         this.strength[prefix] -= 1;
-        super.removeUser(user);
+        super.removeUser(user, false);
         this.showStrength();
     }   
+
+    changeUser(user) {
+        super.changeUser(user, false);
+    }
 
     onUserSelected(uid) {
         let toast = document.createElement('wc-toast');

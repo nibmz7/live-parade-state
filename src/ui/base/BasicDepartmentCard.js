@@ -84,6 +84,52 @@ const template = customStyle => `
             margin: 0;
         }
 
+        .list-item.flash {
+            animation: flash 1s 2 none;
+        }
+
+        .list-item.shrink {
+            animation: shrink .3s forwards;
+        }
+
+        .list-item.grow {
+            animation: grow .3s forwards;
+        }
+
+        @keyframes flash {
+            0% {
+                background-color: white;
+            }
+            50% {
+                background-color: rgba(255, 56, 56, 0.18);
+            }
+            100% {
+                background-color: white;
+            }
+        }
+
+        @keyframes shrink {
+            0% {
+                max-height: 100px;
+                opacity: 1;
+            }
+            100% {
+                max-height: 0px;
+                opacity: 0;
+            }
+        }
+
+        @keyframes grow {
+            0% {
+                max-height: 0px;
+                opacity: 0;
+            }
+            100% {
+                max-height: 100px;
+                opacity: 1;
+            }
+        }       
+
         ${customStyle}
 
     </style>
@@ -95,7 +141,7 @@ const template = customStyle => `
         </div>
     </template>
 `;
-    
+
 
 export default class BasicDepartmentCard extends HTMLElement {
 
@@ -130,7 +176,7 @@ export default class BasicDepartmentCard extends HTMLElement {
         let secondaryTextItem = item.querySelector('#secondary-text');
         primaryTextItem.textContent = this.getItemPrimaryText(user);
         secondaryTextItem.innerHTML = this.getItemSecondaryText(user);
-        if(user.regular) primaryTextItem.classList.add('regular');
+        if (user.regular) primaryTextItem.classList.add('regular');
     }
 
     setDepartment(department) {
@@ -140,51 +186,65 @@ export default class BasicDepartmentCard extends HTMLElement {
     }
 
     getUserReferenceNode(user) {
-        if(this.uidArray.length == 0) {
+        if (this.uidArray.length == 0) {
             this.uidArray.push(user.uid);
             return null;
         }
         let i = this.uidArray.length - 1;
         let uid = null;
-        while(i >= 0) {
+        while (i >= 0) {
             let nextUserUid = this.uidArray[i];
             let nextUser = this.getUser(nextUserUid);
             let isHigher = User.compareLinear(user, nextUser);
-            if(!isHigher) break;
+            if (!isHigher) break;
             else uid = this.uidArray[i--];
         }
         this.uidArray.splice(++i, 0, user.uid);
         return uid ? this.shadowRoot.getElementById(uid) : null;
     }
 
-    addUser(user) {
+    addUser(user, animate = true) {
         let template = this.shadowRoot.getElementById('list-item');
         let clone = template.content.cloneNode(true);
         let item = clone.querySelector('.list-item');
         item.id = user.uid;
         this.setListItemData(item, user);
-        Utils.onclick(item, () => {this.onUserSelected(user.uid)});
-
+        Utils.onclick(item, () => { this.onUserSelected(user.uid) });
+        if (animate) {
+            Utils.animate(item, 'grow', () => {
+                item.classList.remove('grow');
+            });
+        }
         let referenceNode = this.getUserReferenceNode(user);
         this.list.insertBefore(item, referenceNode);
     }
 
-    changeUser(user) {
+    changeUser(user, animate = true) {
         let currentUserRank = this.getUser(user.uid).rank;
-        if(currentUserRank != user.rank) {
-            this.removeUser(user);
-            this.addUser(user);
-        } else {
-            let userItem = this.shadowRoot.getElementById(user.uid);
-            this.setListItemData(userItem, user);
+        if (currentUserRank != user.rank) {
+            this.removeUser(user, false);
+            this.addUser(user, false);
+        }
+        let userItem = this.shadowRoot.getElementById(user.uid);
+        this.setListItemData(userItem, user);
+        if (animate && !userItem.classList.contains('flash')) {
+            console.log('animating');
+            Utils.animate(userItem, 'flash', () => {
+                userItem.classList.remove('flash');
+            });
         }
     }
 
-    removeUser(user) {
+    removeUser(user, animate = true) {
         let userItem = this.shadowRoot.getElementById(user.uid);
-        userItem.remove();
+        userItem.id = `${user.uid}-deleted`;
         var index = this.uidArray.indexOf(user.uid);
         this.uidArray.splice(index, 1);
+        if (animate) {
+            Utils.animate(userItem, 'shrink', () => {
+                userItem.remove();
+            });
+        } else userItem.remove();
     }
-    
+
 }

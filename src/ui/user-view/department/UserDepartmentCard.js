@@ -112,8 +112,8 @@ export default class UserDepartmentCard extends BasicDepartmentCard {
         this.showStrength();
     }   
 
-    addUser(user) {
-        super.addUser(user);
+    addUser(user, animate) {
+        super.addUser(user, animate);
         const checkIsPresent = (timeOfDay, statusCode) => {
             if(statusCode == 1) {
                 let prefix = user.regular ? 'regular' : 'nsf';
@@ -125,7 +125,7 @@ export default class UserDepartmentCard extends BasicDepartmentCard {
         this.showStrength();
     }
 
-    removeUser(user) {
+    removeUser(user, animate) {
         let userBefore = this.getUser(user.uid);
         const checkIsPresent = (timeOfDay, statusCode) => {
             if(statusCode == 1) {
@@ -135,7 +135,7 @@ export default class UserDepartmentCard extends BasicDepartmentCard {
         }
         checkIsPresent('am', userBefore.status.am.code);
         checkIsPresent('pm', userBefore.status.pm.code);
-        super.removeUser(user);
+        super.removeUser(user, animate);
         this.showStrength();
     }   
 }
