@@ -36,6 +36,7 @@ const template = `
         .header {
             margin-bottom: 0;
             margin-top: 50px;
+            font-weight: 500;
         }
 
         .category:first-child .header {
@@ -119,7 +120,7 @@ const template = `
             padding: 10px 0;
             font-size: 1rem;
             text-transform: uppercase;
-            font-weight: 600;
+            font-weight: 700;
             color: var(--color-primary);
             background: #faf5fab8;
             transition: all .5s;
@@ -285,7 +286,7 @@ export default class SummaryView extends HTMLElement {
     updateStrengthCount(timeOfDay) {
         let idx = timeOfDay == 'am' ? 0 : 1;
         let strengthCount = this.strengthCount[timeOfDay];
-        let text = `Strength: ${strengthCount.total} ~ Present: ${strengthCount.present}  Current: ${strengthCount.current}`;
+        let text = `Strength: ${strengthCount.total} ~ Present: ${strengthCount.present}  Fall-in: ${strengthCount.current}`;
         this.strengths[idx].textContent = text;
     }
 

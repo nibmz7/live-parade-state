@@ -18,6 +18,8 @@ const template = customStyle => `
         #header {
             color: #828282;
             text-transform: capitalize;
+            font-weight: 500;
+            margin: 0;
         }
 
         .header-holder {
@@ -25,10 +27,12 @@ const template = customStyle => `
             flex-direction: row;
             justify-content: space-between;
             align-items: center;
+            padding: 18px 0;
         }
     
         #sub-header {
             border-radius: 15px 15px 0 0;
+            font-weight: 400;
         }
 
         #sub-header:only-child {
@@ -52,7 +56,7 @@ const template = customStyle => `
         #primary-text {
             text-transform: capitalize;
             color: #323232;
-            font-weight: 700;
+            font-weight: 500;
         }
 
         #primary-text.regular {
@@ -62,7 +66,7 @@ const template = customStyle => `
         #secondary-text {
             color: #878787;
             font-size: 0.8rem;
-            font-weight: 600;
+            font-weight: 400;
         }
 
         .list-item {

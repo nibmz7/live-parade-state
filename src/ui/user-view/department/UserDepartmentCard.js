@@ -20,7 +20,7 @@ const customStyle = `
 
     #secondary-text > span {
         color: var(--color-primary);
-        font-weight: 900;
+        font-weight: 500;
         text-transform: capitalize;
     }
 `;

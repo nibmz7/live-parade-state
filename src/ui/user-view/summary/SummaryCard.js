@@ -4,7 +4,6 @@ const customStyle = `
     #sub-header {
         padding: 10px;
         text-align: center;
-        font-weight: 300;
         background: #33475a;
         font-size: 0.9rem;
         color: white;
@@ -17,7 +16,7 @@ const customStyle = `
     }
     #secondary-text > .expired {
         color: var(--color-primary);
-        font-weight: 900;
+        font-weight: 700;
         text-transform: capitalize;
     }
 `;
