@@ -1,6 +1,13 @@
 import UI from '../ui/index.js';
 import BaseController from './BaseController.js';
 
+export const STATE = {
+  creating: 'creating',
+  updating: 'updating',
+  removing: 'removing',
+  completed: 'completed'
+}
+
 export default class AdminController extends BaseController {
 
   constructor() {
@@ -8,6 +15,7 @@ export default class AdminController extends BaseController {
     UI.adminScreen();
     this.adminManager = ApplicationContext.getAdminManager();
     this.viewName = 'admin';
+    this.pendingState = {};
   }
 
   createMainView() {
@@ -27,7 +35,7 @@ export default class AdminController extends BaseController {
   }
 
   getDomain() {
-    return this.adminManager.email.split('@')[1];
+    return this.adminManager.domain;
   }
 
   deleteDepartment(departmentId) {
@@ -43,15 +51,45 @@ export default class AdminController extends BaseController {
   }
 
   createUser(user) {
+    this.pendingState[user.email] = true;
     this.adminManager.createUser(user);
   }
 
   updateUser(user) {
-    this.adminManager.updateUser(user);
+    this.pendingState[user.email] = true;
+    let departmentCard = this.mainView.getDepartmentCard(user.departmentid);
+    user.state = STATE.updating;
+    user.fullname = user.rank + ' ' + user.name;
+    user.email = `${user.emailPrefix}${this.getDomain()}`;
+    departmentCard.changeUser(user);
+    this.adminManager.updateUser(user).catch(error => {
+      console.log(error);
+    });
   }
 
-  deleteUser(depId, uid) {
-    this.adminManager.deleteUser(depId, uid);
+  deleteUser(user) {
+    this.pendingState[user.email] = true;
+    let departmentCard = this.mainView.getDepartmentCard(user.departmentid);
+    user.state = STATE.removing;
+    departmentCard.changeUser(user);
+    this.adminManager.deleteUser(user.departmentid, user.uid).catch(error => {
+      console.log(error);
+    });
+  }
+
+  userEventFound(type, user) {
+    if (!this.pendingState[user.email]) return;
+
+    let departmentCard = this.mainView.getDepartmentCard(user.departmentid);
+    if (type == 'added') {
+      departmentCard.updatePendingUserId(user);
+      user.state = STATE.completed;
+      delete this.pendingState[user.email];
+    }
+    if (type == 'modified') {
+      user.state = STATE.completed;
+    }
+
   }
 
 }

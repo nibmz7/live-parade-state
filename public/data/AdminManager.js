@@ -8,10 +8,11 @@ export default class AdminManager extends Singleton {
     async init(uid, email) {
         await import(/* webpackIgnore: true */ '/__/firebase/7.14.2/firebase-functions.js');
         this.functions = firebase.app().functions('asia-northeast1');
-        // this.functions.useFunctionsEmulator('http://192.168.0.139:5001');
+        this.functions.useFunctionsEmulator('http://192.168.0.139:5001');
         this.db = firebase.firestore();
         this.adminid = uid;
         this.email = email;
+        this.domain = email.split('@')[1];
     }
 
     changeBranchName(name) {
@@ -34,13 +35,13 @@ export default class AdminManager extends Singleton {
     createUser(user) {
         //emailPrefix, password, name, rank, departmentid
         let createUserFunc = this.functions.httpsCallable('createUser');
-        createUserFunc({ ...user });
+        return createUserFunc({ ...user });
     }
 
     updateUser(user) {
         //emailPrefix, name, rank, departmentid
         let updateUserFunc = this.functions.httpsCallable('updateUser');
-        updateUserFunc({ ...user });
+        return updateUserFunc({ ...user });
     }
 
     updatePassword(uid, password) {
@@ -50,7 +51,7 @@ export default class AdminManager extends Singleton {
 
     deleteUser(departmentid, uid) {
         let deleteUserFunc = this.functions.httpsCallable('deleteUser');
-        deleteUserFunc({ departmentid, uid });
+        return deleteUserFunc({ departmentid, uid });
     }
 }
 AdminManager.instance = null;

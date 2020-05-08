@@ -153,7 +153,7 @@ export default class EditUser extends Dialogue {
     }
 
     onDelete(e) {
-        this.controller.deleteUser(this.departmentId, this.uid);
+        this.controller.deleteUser(this.user);
         this.showToast('User is being deleted...');
         this.close();
     }
@@ -213,6 +213,7 @@ export default class EditUser extends Dialogue {
     }
 
     setUser(user) {
+        this.user = user;
         this.uid = user.uid;
         this.emailPrefix.value = user.email.split('@')[0];
         this.rank.value = user.rank;

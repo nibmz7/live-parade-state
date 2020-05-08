@@ -56,7 +56,7 @@ export default class BaseController extends Singleton {
             this.users[user.uid] = user;
         }
         if (type == 'modified') {
-            departmentCard.changeUser(user);
+            // departmentCard.changeUser(user);
             this.userEventFound('modified', user);
             this.users[user.uid] = user;
         }

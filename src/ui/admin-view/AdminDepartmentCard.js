@@ -1,5 +1,8 @@
 import Utils from '../../util/Utils.js';
 import BasicDepartmentCard from '../base/BasicDepartmentCard.js';
+import { STATE } from '../../controller/AdminController.js';
+import { fadeAnim } from '../GlobalStyles.js';
+import STATUS from '../../model/Status.js';
 
 const customStyle = `
     #sub-header {
@@ -20,6 +23,26 @@ const customStyle = `
         border-radius: 15px;
         border-bottom: none;
     }
+    .list-item {
+        position: relative;
+    }
+    .list-item .loading {
+        position: absolute;
+        top: 0;
+        left: 0;
+        height: 100%;
+        width: 100%;
+        display: flex;
+        justify-content: flex-end;
+        align-items: center;
+        background: #f9ead5b5;
+        padding-right: 10%;
+        box-sizing: border-box;
+        color: var(--color-primary);
+        text-transform: capitalize;
+    }
+
+    ${fadeAnim()}
 `;
 
 export default class AdminDepartmentCard extends BasicDepartmentCard {
@@ -59,7 +82,7 @@ export default class AdminDepartmentCard extends BasicDepartmentCard {
         dialogue.setDepartment(this.id, this.departmentName);
         document.body.appendChild(dialogue);
     }
-    
+
     onUserSelected(uid) {
         let dialogue = document.createElement('edit-user');
         dialogue.setEditMode(true);
@@ -69,14 +92,38 @@ export default class AdminDepartmentCard extends BasicDepartmentCard {
         document.body.appendChild(dialogue);
     }
 
+    setListItemData(item, user) {
+        super.setListItemData(item, user);
+        if (user.state) {
+            let loadingText = document.createElement('p');
+            loadingText.classList.add('loading');
+            loadingText.textContent = `${STATE[user.state]} user...`;
+            Utils.animate(loadingText, 'show', () => {
+                loadingText.classList.remove('show');
+            });
+            item.appendChild(loadingText);
+            if (user.state === STATE.completed) {
+                let loadingText = item.querySelector('.loading-text');
+                Utils.animate(loadingText, 'hide', () => {
+                    loadingText.remove();
+                });
+            }
+        }
+    }
+
+    updatePendingUserId(user) {
+        let userItem = this.shadowRoot.getElementById(user.email);
+        userItem.id = user.uid;
+    }
+
     addUser(user, animate = true) {
         super.addUser(user, animate);
-        if(this.uidArray.length > 0) this.subHeaderText.classList.remove('empty');
+        if (this.uidArray.length > 0) this.subHeaderText.classList.remove('empty');
     }
 
     removeUser(user, animate = true) {
         super.removeUser(user, animate);
-        if(this.uidArray.length == 0) this.subHeaderText.classList.add('empty');
+        if (this.uidArray.length == 0) this.subHeaderText.classList.add('empty');
     }
-    
+
 }

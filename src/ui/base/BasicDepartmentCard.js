@@ -179,14 +179,6 @@ export default class BasicDepartmentCard extends HTMLElement {
         this.subHeaderText.textContent = title;
     }
 
-    setListItemData(item, user) {
-        let primaryTextItem = item.querySelector('#primary-text');
-        let secondaryTextItem = item.querySelector('#secondary-text');
-        primaryTextItem.textContent = this.getItemPrimaryText(user);
-        secondaryTextItem.innerHTML = this.getItemSecondaryText(user);
-        if (user.regular) primaryTextItem.classList.add('regular');
-    }
-
     setDepartment(department) {
         this.id = department.uid;
         this.departmentName = department.name;
@@ -211,10 +203,22 @@ export default class BasicDepartmentCard extends HTMLElement {
         return uid ? this.shadowRoot.getElementById(uid) : null;
     }
 
-    addUser(user, animate = true) {
+    setListItemData(item, user) {
+        let primaryTextItem = item.querySelector('#primary-text');
+        let secondaryTextItem = item.querySelector('#secondary-text');
+        primaryTextItem.textContent = this.getItemPrimaryText(user);
+        secondaryTextItem.innerHTML = this.getItemSecondaryText(user);
+        if (user.regular) primaryTextItem.classList.add('regular');
+    }
+
+    creatListItem() {
         let template = this.shadowRoot.getElementById('list-item');
         let clone = template.content.cloneNode(true);
-        let item = clone.querySelector('.list-item');
+        return clone.querySelector('.list-item')
+    }
+
+    addUser(user, animate = true) {
+        let item = this.creatListItem();
         item.id = user.uid;
         this.setListItemData(item, user);
         Utils.onclick(item, () => { this.onUserSelected(user.uid) });
@@ -228,13 +232,14 @@ export default class BasicDepartmentCard extends HTMLElement {
     }
 
     changeUser(user, animate = true) {
+        console.log("dadd");
         let currentUserRank = this.getUser(user.uid).rank;
-        if (currentUserRank != user.rank) {
+        if (currentUserRank !== user.rank) {
             this.removeUser(user, false);
             this.addUser(user, false);
         }
         let userItem = this.shadowRoot.getElementById(user.uid);
-        this.setListItemData(userItem, user);
+        if (currentUserRank === user.rank) this.setListItemData(userItem, user);
         if (animate && !userItem.classList.contains('flash')) {
             Utils.animate(userItem, 'flash', () => {
                 userItem.classList.remove('flash');

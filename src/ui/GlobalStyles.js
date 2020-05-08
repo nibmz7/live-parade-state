@@ -32,7 +32,29 @@ export const cardStyle = `
         flex-direction: column;
         justify-content: center;
     }
-`; 
+`;
+
+const parseTime = time => (`${(time/1000).toFixed(1)}s`);
+
+export const fadeAnim = (fadeInTime = 5000, fadeOutTime = 3000) => `
+    .fade-in {
+        animation: fade-in ${parseTime(fadeInTime)};
+    }
+
+    .fade-out {
+        animation: fade-out ${parseTime(fadeOutTime)};
+    }
+
+    @keyframes fade-in {
+        0% { opacity: 0; }
+        100% { opacity: 1; }
+    }
+
+    @keyframes fade-out {
+        0% { opacity: 1; }
+        100% { opacity: 0; }
+    }
+`;
 
 export const listItemStyle = `
       <style>
