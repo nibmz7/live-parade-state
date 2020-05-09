@@ -56,12 +56,12 @@ export default class AdminController extends BaseController {
   }
 
   updateUser(user) {
-    this.pendingState[user.email] = true;
     let departmentCard = this.mainView.getDepartmentCard(user.departmentid);
     user.state = STATE.updating;
     user.fullname = user.rank + ' ' + user.name;
-    user.email = `${user.emailPrefix}${this.getDomain()}`;
-    departmentCard.changeUser(user);
+    user.email = `${user.emailPrefix}@${this.getDomain()}`;
+    this.pendingState[user.email] = true;
+    departmentCard.changeUser(user, false);
     this.adminManager.updateUser(user).catch(error => {
       console.log(error);
     });
@@ -77,19 +77,17 @@ export default class AdminController extends BaseController {
     });
   }
 
-  userEventFound(type, user) {
-    if (!this.pendingState[user.email]) return;
-
-    let departmentCard = this.mainView.getDepartmentCard(user.departmentid);
-    if (type == 'added') {
-      departmentCard.updatePendingUserId(user);
+  onUserEvent(data) {
+    let type = data.type;
+    let user = data.user;
+    if (type !== 'found' && this.pendingState[user.email]) {
+      let departmentCard = this.mainView.getDepartmentCard(user.departmentid);
+      if (type == 'added') departmentCard.updatePendingUserId(user);
       user.state = STATE.completed;
       delete this.pendingState[user.email];
+      this.users[user.uid] = user;
     }
-    if (type == 'modified') {
-      user.state = STATE.completed;
-    }
-
+    super.onUserEvent(data);
   }
 
 }

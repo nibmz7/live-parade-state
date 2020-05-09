@@ -232,7 +232,6 @@ export default class BasicDepartmentCard extends HTMLElement {
     }
 
     changeUser(user, animate = true) {
-        console.log("dadd");
         let currentUserRank = this.getUser(user.uid).rank;
         if (currentUserRank !== user.rank) {
             this.removeUser(user, false);

@@ -154,7 +154,6 @@ export default class EditUser extends Dialogue {
 
     onDelete(e) {
         this.controller.deleteUser(this.user);
-        this.showToast('User is being deleted...');
         this.close();
     }
 
@@ -163,38 +162,31 @@ export default class EditUser extends Dialogue {
         let nameValid = this.name.checkValidity();
         let rankValid = Rank.isValid(this.rank.value.toUpperCase().trim());
         let passwordValid = this.password.checkValidity();
-        if(!rankValid) return {success: false, msg: 'Enter a valid rank'};
-        if(!nameValid) return {success: false, msg: 'Enter a valid name'};
-        if(!emailValid) return {success: false, msg: 'Enter a valid email'};
-        if(!isEdit && !passwordValid) return {success: false, msg: 'Enter a valid password'};
+        if (!rankValid) return { success: false, msg: 'Enter a valid rank' };
+        if (!nameValid) return { success: false, msg: 'Enter a valid name' };
+        if (!emailValid) return { success: false, msg: 'Enter a valid email' };
+        if (!isEdit && !passwordValid) return { success: false, msg: 'Enter a valid password' };
         //emailPrefix, password, name, rank, departmentid
         let user = {};
         user.departmentid = this.departmentId;
         user.emailPrefix = this.emailPrefix.value;
         user.name = this.name.value;
         user.rank = this.rank.value.toUpperCase().trim();
-        if(isEdit) user.uid = this.uid;
-        if(!isEdit) user.password = this.password.value;
+        if (isEdit) user.uid = this.uid;
+        if (!isEdit) user.password = this.password.value;
         user.regular = this.regular.checked;
-        return {success: true, user};
+        return { success: true, user };
     }
 
     onSubmit(e) {
         let formValidity = this.checkFormValidity(this.isEdit);
-        let message = '';
-        if(!formValidity.success) {
+        if (!formValidity.success) {
             message = formValidity.msg;
         } else {
-            if(this.isEdit) {
-                this.controller.updateUser(formValidity.user);
-                message = 'User update has been initiated.\n This may take a while...';
-            } else {
-                this.controller.createUser(formValidity.user);
-                message = 'User creation has been initiated.\n This may take a while...';
-            }
+            if (this.isEdit) this.controller.updateUser(formValidity.user);
+            else this.controller.createUser(formValidity.user);
             this.close();
         }
-        this.showToast(message);
     }
 
     changePassword(e) {

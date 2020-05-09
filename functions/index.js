@@ -60,8 +60,7 @@ exports.updateUser = functions.region('asia-northeast1').https.onCall(async (dat
             "data.email": email
         });
         await admin.auth().updateUser(data.uid, { email });
-        let updatedUser = await db.doc(`branches/${adminid}/repository/${data.uid}`).get();
-        console.log(updatedUser.data());
+        await db.doc(`branches/${adminid}/repository/${data.uid}`).get();
         return { success: true };
     }
 });

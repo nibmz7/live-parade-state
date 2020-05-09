@@ -42,7 +42,7 @@ const customStyle = `
         text-transform: capitalize;
     }
 
-    ${fadeAnim()}
+    ${fadeAnim(300, 500)}
 `;
 
 export default class AdminDepartmentCard extends BasicDepartmentCard {
@@ -95,20 +95,25 @@ export default class AdminDepartmentCard extends BasicDepartmentCard {
     setListItemData(item, user) {
         super.setListItemData(item, user);
         if (user.state) {
-            let loadingText = document.createElement('p');
-            loadingText.classList.add('loading');
-            loadingText.textContent = `${STATE[user.state]} user...`;
-            Utils.animate(loadingText, 'show', () => {
-                loadingText.classList.remove('show');
-            });
-            item.appendChild(loadingText);
             if (user.state === STATE.completed) {
-                let loadingText = item.querySelector('.loading-text');
-                Utils.animate(loadingText, 'hide', () => {
+                let loadingText = item.querySelector('.loading');
+                Utils.animate(loadingText, 'fade-out', () => {
                     loadingText.remove();
                 });
-            }
+            } else {
+                let loadingText = document.createElement('p');
+                loadingText.classList.add('loading');
+                loadingText.textContent = `${STATE[user.state]} user...`;
+                Utils.animate(loadingText, 'fade-in', () => {
+                    loadingText.classList.remove('fade-in');
+                });
+                item.appendChild(loadingText);
+            }  
         }
+    }
+
+    changeUser(user, animate = true) {
+        super.changeUser(user, !!!user.state);
     }
 
     updatePendingUserId(user) {
