@@ -17,27 +17,47 @@ const template = content => `
             opacity: 1;
             z-index: 98;
             backdrop-filter: blur(2px);
+            overflow: hidden;
         }
 
         ${fadeAnim()}
+
+        @keyframes scale-in {
+            0% { 
+                transform: scale(1.2);
+                opacity: 0;
+                filter: blur(4px); 
+            }
+            100% { 
+                transform: scale(1);
+                opacity: 1;
+                filter: blur(0px);
+            }
+        }
     
-        ${slideAnim()}
+        @keyframes scale-out {
+            100% { 
+                transform: scale(1.2);
+                opacity: 0;
+                filter: blur(4px);
+            }
+        }
 
         div#root.show{
             animation: fade-in .2s;
         }
 
         div#root.hide  {
-            animation: fade-out .2s forwards;
+            animation: fade-out .4s forwards;
         }
 
         .show > #dialogue {
             pointer-events: none;
-            animation: slide-in .2s;
+            animation: scale-in ease .4s;
         }
         
         .hide > #dialogue {
-            animation: slide-out .2s forwards;
+            animation: scale-out ease .3s forwards;
         }
         
         #scrim {
@@ -53,7 +73,6 @@ const template = content => `
             border-radius: 5px;
             box-shadow: 0px 4px 4px rgba(0,0,0,.25);
             padding: 15px 20px;
-            transform: translateY(0px);
             width: calc(100% - 30px);
             box-sizing: border-box;
         }
@@ -84,7 +103,6 @@ export default class Dialogue extends HTMLElement {
         let dialogue = this.shadowRoot.getElementById('dialogue');
 
         Utils.animate(this.root, 'show', () => {
-            this.root.classList.remove('show');
             scrim.onclick = e => {
                 if(this.isCancelleable) this.close();
             }
