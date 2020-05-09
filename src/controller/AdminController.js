@@ -50,31 +50,44 @@ export default class AdminController extends BaseController {
     this.adminManager.changeDepartmentName(uid, name);
   }
 
-  createUser(user) {
-    this.pendingState[user.email] = true;
-    this.adminManager.createUser(user);
-  }
-
-  updateUser(user) {
+  performUserRequest(user, state) {
     let departmentCard = this.mainView.getDepartmentCard(user.departmentid);
-    user.state = STATE.updating;
+    user.state = state;
     user.fullname = user.rank + ' ' + user.name;
     user.email = `${user.emailPrefix}@${this.getDomain()}`;
     this.pendingState[user.email] = true;
-    departmentCard.changeUser(user, false);
-    this.adminManager.updateUser(user).catch(error => {
+    try {
+      if(state === STATE.creating) {
+        user.uid = user.email;
+        departmentCard.addUser(user, false);
+        this.adminManager.createUser(user);
+      }
+      if(state === STATE.updating) {
+        departmentCard.changeUser(user, false);
+        this.adminManager.updateUser(user);
+      }
+      if(state === STATE.removing) {
+        departmentCard.changeUser(user, false);
+        this.adminManager.deleteUser(user.departmentid, user.uid);
+      }
+    } catch (error) {
       console.log(error);
-    });
+      let user = this.users[user.uid];
+      user.state = STATE.completed;
+      departmentCard.changeUser(user, false);
+    }
+  }
+
+  createUser(user) {
+    this.performUserRequest(user, STATE.creating);
+  }
+
+  updateUser(user) {
+    this.performUserRequest(user, STATE.updating);
   }
 
   deleteUser(user) {
-    this.pendingState[user.email] = true;
-    let departmentCard = this.mainView.getDepartmentCard(user.departmentid);
-    user.state = STATE.removing;
-    departmentCard.changeUser(user);
-    this.adminManager.deleteUser(user.departmentid, user.uid).catch(error => {
-      console.log(error);
-    });
+    this.performUserRequest(user, STATE.removing);
   }
 
   onUserEvent(data) {
@@ -82,7 +95,10 @@ export default class AdminController extends BaseController {
     let user = data.user;
     if (type !== 'found' && this.pendingState[user.email]) {
       let departmentCard = this.mainView.getDepartmentCard(user.departmentid);
-      if (type == 'added') departmentCard.updatePendingUserId(user);
+      if (type == 'added') {
+        data.type = 'modified';
+        departmentCard.updatePendingUserId(user);
+      }
       user.state = STATE.completed;
       delete this.pendingState[user.email];
       this.users[user.uid] = user;
