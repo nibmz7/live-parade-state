@@ -58,23 +58,26 @@ export default class AdminController extends BaseController {
     user.email = `${user.emailPrefix}@${this.getDomain()}`;
     this.pendingState[user.email] = true;
     try {
-      if(state === STATE.creating) {
+      if (state === STATE.creating) {
         user.uid = user.email;
         departmentCard.addUser(user, false);
         await this.adminManager.createUser(user);
       }
-      if(state === STATE.updating) {
+      if (state === STATE.updating) {
         departmentCard.changeUser(user, false);
         await this.adminManager.updateUser(user);
       }
-      if(state === STATE.removing) {
+      if (state === STATE.removing) {
         departmentCard.changeUser(user, false);
         await this.adminManager.deleteUser(user.departmentid, user.uid);
       }
     } catch (error) {
-      let userBefore = this.users[user.uid];
-      userBefore.state = STATE.completed;
-      departmentCard.changeUser(userBefore, false);
+      if (state === STATE.creating) departmentCard.removeUser(user);
+      else {
+        let userBefore = this.users[user.uid];
+        userBefore.state = STATE.completed;
+        departmentCard.changeUser(userBefore, false);
+      }
       Utils.showToast(`An error has occured whilst ${state} user:\n${user.fullname}`);
     }
   }
