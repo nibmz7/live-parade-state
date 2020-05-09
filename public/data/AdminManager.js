@@ -8,7 +8,7 @@ export default class AdminManager extends Singleton {
     async init(uid, email) {
         await import(/* webpackIgnore: true */ '/__/firebase/7.14.2/firebase-functions.js');
         this.functions = firebase.app().functions('asia-northeast1');
-        // this.functions.useFunctionsEmulator('http://192.168.0.139:5001');
+        this.functions.useFunctionsEmulator('http://192.168.0.139:5001');
         this.db = firebase.firestore();
         this.adminid = uid;
         this.email = email;

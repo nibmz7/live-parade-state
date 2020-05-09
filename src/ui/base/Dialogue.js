@@ -1,5 +1,5 @@
 import Utils from '../../util/Utils.js';
-import { fadeAnim, slideAnim, scaleAnim } from '../GlobalStyles.js';
+import { fadeAnim, scaleAnim } from '../GlobalStyles.js';
 
 const template = content => `
     <style>
@@ -78,7 +78,6 @@ export default class Dialogue extends HTMLElement {
             });
             Utils.onclick(dialogue, e => {
                 e.stopPropagation();
-                console.log('clicked');
             });
         });
     }

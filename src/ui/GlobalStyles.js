@@ -56,14 +56,27 @@ export const fadeAnim = (fadeInTime = 5000, fadeOutTime = 3000) => `
     }
 `;
 
-export const slideAnim = (offsetYIn = 100, offsetYOut = 100) => `
-    @keyframes slide-in {
+export const slideYAnim = (offsetYIn = '100%', offsetYOut = '100%') => `
+    @keyframes slide-in-y {
         0% { transform: translateY(${offsetYIn}px); }
         100% { transform: translateY(0px); }
     }
 
-    @keyframes slide-out {
+    @keyframes slide-out-y {
+        0% { transform: translateY(0px); }
         100% { transform: translateY(${offsetYOut}px); }
+    }
+`;
+
+export const slideXAnim = (offsetXIn = '100%', offsetXOut = '100%') => `
+    @keyframes slide-in-x {
+        0% { transform: translateX(${offsetXIn}); }
+        100% { transform: translateX(0px); }
+    }
+
+    @keyframes slide-out-x {
+        100% { transform: translateX(0px); }
+        100% { transform: translateX(${offsetXOut}); }
     }
 `;
 

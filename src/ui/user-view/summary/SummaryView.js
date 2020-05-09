@@ -1,6 +1,6 @@
 import STATUS, { STATUS_CATEGORY } from "../../../model/Status.js";
 import Utils from "../../../util/Utils.js";
-import { slideAnim, fadeAnim } from "../../GlobalStyles.js";
+import { slideXAnim } from "../../GlobalStyles.js";
 
 const loadingText = 'Using advanced AI algorithms coupled with state-of-the-art data analytics system assembled by world-renowned programmers, to construct and produce a freshly baked spreadsheet for our unit.';
 
@@ -17,6 +17,7 @@ const template = `
             background: #FAF5FA;
             top: 0;
             z-index: 98;
+            box-shadow: -1px 0px 3px 1px #00000040;
         }
         .container {
             max-height: 99.9%;
@@ -52,6 +53,7 @@ const template = `
             --button-padding: 7px 15px;
             --button-radius: 35px;
             transform: translateY(0px);
+            transition: .4s;
         }
 
         #export {
@@ -62,6 +64,7 @@ const template = `
             transform: translateX(-45%) translateY(0px);
             --button-padding: 15px;
             --button-radius: 35px;
+            transition: .5s;
         }
 
         wc-button {
@@ -69,11 +72,8 @@ const template = `
         }
 
         .show {
-            animation: fade-in .3s;
+            animation: slide-in-x ease-in-out .5s;
         } 
-        .show > .container {
-            animation: slide-in .3s;
-        }
         .show > #export {
             transform: translateX(-45%) translateY(150%);
         }
@@ -82,17 +82,10 @@ const template = `
         }
 
         .hide {
-            animation: slide-out 0.3s;
+            animation: slide-out-x ease-in-out .5s;
         } 
-        .hide > #export {
-            transform: translateX(-45%) translateY(150%);
-        }
-        .hide > #close {
-            transform: translateY(150%);
-        }
 
-        ${fadeAnim()}
-        ${slideAnim()}
+        ${slideXAnim()}
         
         .strength-count {
             position: fixed;

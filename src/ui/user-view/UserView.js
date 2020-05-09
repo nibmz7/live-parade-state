@@ -42,7 +42,7 @@ export default class UserView extends MainView {
         this.floatButton.textContent = 'View summary';
         let el = document.createElement('div');
         el.innerHTML = timeChooserTemplate;
-        this.shadowRoot.appendChild(el);
+        this.root.appendChild(el);
         this.timeSelectors = el.querySelectorAll('wc-button');
         this.timeSelectors.forEach((el, i) => el.onclick = e => this.toggleTime(i == 0));
         this.summaryView = document.createElement('summary-view');
@@ -77,7 +77,7 @@ export default class UserView extends MainView {
     }
 
     onFloatButtonClick() {
-        document.body.appendChild(this.summaryView);
+        this.root.appendChild(this.summaryView);
     }
 
 }
