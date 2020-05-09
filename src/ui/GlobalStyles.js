@@ -67,6 +67,26 @@ export const slideAnim = (offsetYIn = 100, offsetYOut = 100) => `
     }
 `;
 
+export const scaleAnim = (scaleIn = 1.1, scaleOut = 1.1) => `
+    @keyframes scale-in {
+        0% { 
+            transform: scale(${scaleIn});
+        }
+        100% { 
+            transform: scale(1);
+        }
+    }
+
+    @keyframes scale-out {
+        0% { 
+            transform: scale(1);
+        }
+        100% { 
+            transform: scale(${scaleOut});
+        }
+    }
+`
+
 export const shakeAnim = `
     #dialogue.shake {
         animation: shake 0.82s cubic-bezier(.36, .07, .19, .97) both;

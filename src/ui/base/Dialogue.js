@@ -1,5 +1,5 @@
 import Utils from '../../util/Utils.js';
-import { fadeAnim, slideAnim } from '../GlobalStyles.js';
+import { fadeAnim, slideAnim, scaleAnim } from '../GlobalStyles.js';
 
 const template = content => `
     <style>
@@ -7,81 +7,51 @@ const template = content => `
             position: absolute;
             top: 0;
             left: 0;
-            display: grid;
-            grid-template-columns: 1fr;
-            grid-template-areas: "content";
+            display: flex;
             justify-items: center;
             align-items: center;
             height: 100%;
             width: 100%;
-            opacity: 1;
-            z-index: 98;
             backdrop-filter: blur(2px);
             overflow: hidden;
-        }
-
-        ${fadeAnim()}
-
-        @keyframes scale-in {
-            0% { 
-                transform: scale(1.2);
-                opacity: 0;
-                filter: blur(4px); 
-            }
-            100% { 
-                transform: scale(1);
-                opacity: 1;
-                filter: blur(0px);
-            }
-        }
-    
-        @keyframes scale-out {
-            100% { 
-                transform: scale(1.2);
-                opacity: 0;
-                filter: blur(4px);
-            }
-        }
-
-        div#root.show{
-            animation: fade-in .2s;
-        }
-
-        div#root.hide  {
-            animation: fade-out .4s forwards;
-        }
-
-        .show > #dialogue {
-            pointer-events: none;
-            animation: scale-in ease .4s;
-        }
-        
-        .hide > #dialogue {
-            animation: scale-out ease .3s forwards;
-        }
-        
-        #scrim {
+            z-index: 98;
+            box-sizing: border-box;
+            padding: 0 15px;
             background: rgba(0,0,0,.2);
-            grid-area: content;
-            height: 100%;
-            width: 100%;
         }
 
         #dialogue {
-            grid-area: content;
             background: white;
             border-radius: 5px;
             box-shadow: 0px 4px 4px rgba(0,0,0,.25);
             padding: 15px 20px;
-            width: calc(100% - 30px);
             box-sizing: border-box;
+            width: 100%;
+        }
+
+        ${fadeAnim()}
+        ${scaleAnim()}
+
+        div#root.show{
+            animation: fade-in .5s;
+        }
+
+        div#root.hide  {
+            animation: fade-out .3s forwards;
+        }
+
+        .show > #dialogue {
+            pointer-events: none;
+            animation: scale-in .5s;
+        }
+        
+        .hide > #dialogue {
+            animation: scale-out .3s forwards;
         }
         
     </style>
 
     <div id="root">
-  
-        <div id="scrim"></div>
     
         <div id="dialogue">
             ${content}
@@ -99,13 +69,17 @@ export default class Dialogue extends HTMLElement {
         this.isCancelleable = true;
         this.disabled = true;
         this.root = this.shadowRoot.getElementById('root');
-        let scrim = this.shadowRoot.getElementById('scrim');
         let dialogue = this.shadowRoot.getElementById('dialogue');
 
         Utils.animate(this.root, 'show', () => {
-            scrim.onclick = e => {
+            this.root.classList.remove('show');
+            Utils.onclick(this.root, e => {
                 if(this.isCancelleable) this.close();
-            }
+            });
+            Utils.onclick(dialogue, e => {
+                e.stopPropagation();
+                console.log('clicked');
+            });
         });
     }
 
