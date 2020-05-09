@@ -1,5 +1,6 @@
 import UI from '../ui/index.js';
 import BaseController from './BaseController.js';
+import Utils from '../util/Utils.js';
 
 export const STATE = {
   creating: 'creating',
@@ -50,7 +51,7 @@ export default class AdminController extends BaseController {
     this.adminManager.changeDepartmentName(uid, name);
   }
 
-  performUserRequest(user, state) {
+  async performUserRequest(user, state) {
     let departmentCard = this.mainView.getDepartmentCard(user.departmentid);
     user.state = state;
     user.fullname = user.rank + ' ' + user.name;
@@ -60,21 +61,21 @@ export default class AdminController extends BaseController {
       if(state === STATE.creating) {
         user.uid = user.email;
         departmentCard.addUser(user, false);
-        this.adminManager.createUser(user);
+        await this.adminManager.createUser(user);
       }
       if(state === STATE.updating) {
         departmentCard.changeUser(user, false);
-        this.adminManager.updateUser(user);
+        await this.adminManager.updateUser(user);
       }
       if(state === STATE.removing) {
         departmentCard.changeUser(user, false);
-        this.adminManager.deleteUser(user.departmentid, user.uid);
+        await this.adminManager.deleteUser(user.departmentid, user.uid);
       }
     } catch (error) {
-      console.log(error);
-      let user = this.users[user.uid];
-      user.state = STATE.completed;
-      departmentCard.changeUser(user, false);
+      let userBefore = this.users[user.uid];
+      userBefore.state = STATE.completed;
+      departmentCard.changeUser(userBefore, false);
+      Utils.showToast(`An error has occured whilst ${state} user:\n${user.fullname}`);
     }
   }
 

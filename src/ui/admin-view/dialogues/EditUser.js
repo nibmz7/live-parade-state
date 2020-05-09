@@ -1,6 +1,7 @@
 import Dialogue from '../../base/Dialogue.js';
 import { inputStyle } from '../../GlobalStyles.js';
 import Rank from '../../../model/Rank.js';
+import Utils from '../../../util/Utils.js';
 
 const template = `
     <style>
@@ -195,13 +196,7 @@ export default class EditUser extends Dialogue {
             this.controller.updatePassword(this.uid, this.password.value);
             this.password.value = '';
         } else message = 'Please enter a valid password';
-        this.showToast(message);
-    }
-
-    showToast(message) {
-        let toast = document.createElement('wc-toast');
-        toast.textContent = message;
-        document.body.appendChild(toast);
+        Utils.showToast(message);
     }
 
     setUser(user) {

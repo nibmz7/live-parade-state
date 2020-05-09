@@ -1,7 +1,7 @@
 const hasPointerEvent = 'PointerEvent' in window;
 
 const Utils = {
-  onclick: function(target, callback) {
+  onclick: function (target, callback) {
     if (hasPointerEvent) {
       target.onpointerup = callback;
     } else {
@@ -9,13 +9,19 @@ const Utils = {
     }
   },
 
-  animate: function(element, animation, callback) {
+  animate: function (element, animation, callback) {
     const listener = (e) => {
       element.removeEventListener('animationend', listener);
       callback();
     }
     element.addEventListener('animationend', listener);
     element.classList.add(animation);
+  },
+
+  showToast: function (message) {
+    let toast = document.createElement('wc-toast');
+    toast.textContent = message;
+    document.body.appendChild(toast);
   }
 }
 

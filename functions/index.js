@@ -39,8 +39,8 @@ exports.deleteUser = functions.region('asia-northeast1').https.onCall(async (dat
     let isAdmin = await checkIsAdmin(context);
     if (isAdmin) {
         const adminid = context.auth.uid;
-        await db.doc(`branches/${adminid}/repository/${data.uid}`).delete();
         await admin.auth().deleteUser(data.uid);
+        await db.doc(`branches/${adminid}/repository/${data.uid}`).delete();
         return { success: true };
     }
 });
@@ -53,14 +53,13 @@ exports.updateUser = functions.region('asia-northeast1').https.onCall(async (dat
         const adminid = context.auth.uid;
         const domain = adminEmail.split('@')[1];
         const email = `${emailPrefix}@${domain}`;
+        await admin.auth().updateUser(data.uid, { email });
         await db.doc(`branches/${adminid}/repository/${uid}`).update({
             "data.name": name,
             "data.rank": rank,
             "data.regular": regular,
             "data.email": email
         });
-        await admin.auth().updateUser(data.uid, { email });
-        await db.doc(`branches/${adminid}/repository/${data.uid}`).get();
         return { success: true };
     }
 });
