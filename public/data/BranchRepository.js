@@ -23,9 +23,11 @@ export default class BranchRepository extends EventDispatcher {
 
     checkSameDay(statusDate) {
         let date = new Date();
+        let dayDifference = date.getDate() - statusDate.getDate();
+        let isPrevNight = dayDifference == 1 && statusDate.getHours() >= 17;
         return date.getFullYear() === statusDate.getFullYear() &&
             date.getMonth() === statusDate.getMonth() &&
-            date.getDate() === statusDate.getDate();
+            (dayDifference == 0 || isPrevNight);
     }
 
     toUser(doc) {
