@@ -1,4 +1,5 @@
 import Utils from "../util/Utils.js";
+import {fadeAnim} from './GlobalStyles.js';
 
 const template = `
 
@@ -45,23 +46,7 @@ const template = `
             }
         }
 
-        .fade-in {
-            animation: fade-in 0.5s;
-          }
-          
-          .fade-out {
-            animation: fade-out 0.3s;
-          }
-          
-          @keyframes fade-in {
-            0% { opacity: 0; }
-            100% { opacity: 1; }
-          }
-          
-          @keyframes fade-out {
-            0% { opacity: 1; }
-            100% { opacity: 0; }
-          }
+        ${fadeAnim(500, 500)}
 
         .container > * {
             grid-area: content;

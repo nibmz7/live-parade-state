@@ -1,5 +1,6 @@
 import STATUS, { STATUS_CATEGORY } from "../../../model/Status.js";
 import Utils from "../../../util/Utils.js";
+import { slideAnim, fadeAnim } from "../../GlobalStyles.js";
 
 const loadingText = 'Using advanced AI algorithms coupled with state-of-the-art data analytics system assembled by world-renowned programmers, to construct and produce a freshly baked spreadsheet for our unit.';
 
@@ -90,28 +91,9 @@ const template = `
             transform: translateY(150%);
         }
 
-
-        @keyframes fade-in {
-            0% { opacity: 0; }
-            100% { opacity: 1; }
-        }
-    
-        @keyframes fade-out {
-            0% { opacity: 1; }
-            100% { opacity: 0; }
-        }
-
-        @keyframes slide-in {
-            0% { transform: translateY(100px); }
-            100% { transform: translateY(0px); }
-        }
+        ${fadeAnim()}
+        ${slideAnim()}
         
-        @keyframes slide-out {
-            100% { 
-                transform: translateY(100px); 
-                opacity: 0;
-            }
-        }
         .strength-count {
             position: fixed;
             width: 100%;

@@ -55,7 +55,7 @@ export default class AdminController extends BaseController {
     let departmentCard = this.mainView.getDepartmentCard(user.departmentid);
     user.state = state;
     user.fullname = user.rank + ' ' + user.name;
-    user.email = `${user.emailPrefix}@${this.getDomain()}`;
+    user.email? '' : user.email = `${user.emailPrefix}@${this.getDomain()}`;
     this.pendingState[user.email] = true;
     try {
       if (state === STATE.creating) {
@@ -72,6 +72,8 @@ export default class AdminController extends BaseController {
         await this.adminManager.deleteUser(user.departmentid, user.uid);
       }
     } catch (error) {
+      console.log(error);
+      delete this.pendingState[user.email];
       if (state === STATE.creating) departmentCard.removeUser(user);
       else {
         let userBefore = this.users[user.uid];

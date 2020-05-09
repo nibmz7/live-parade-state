@@ -220,8 +220,8 @@ export default class BasicDepartmentCard extends HTMLElement {
     addUser(user, animate = true) {
         let item = this.creatListItem();
         item.id = user.uid;
-        this.setListItemData(item, user);
         Utils.onclick(item, () => { this.onUserSelected(user.uid) });
+        this.setListItemData(item, user);
         if (animate) {
             Utils.animate(item, 'grow', () => {
                 item.classList.remove('grow');

@@ -9,6 +9,14 @@ const Utils = {
     }
   },
 
+  removeonclick: function (target) {
+    if (hasPointerEvent) {
+      target.removeEventListener('pointerup');
+    } else {
+      target.removeEventListener('click');
+    }
+  },
+
   animate: function (element, animation, callback) {
     const listener = (e) => {
       element.removeEventListener('animationend', listener);

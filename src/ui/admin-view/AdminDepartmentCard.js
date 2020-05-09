@@ -100,7 +100,9 @@ export default class AdminDepartmentCard extends BasicDepartmentCard {
                 Utils.animate(loadingText, 'fade-out', () => {
                     loadingText.remove();
                 });
+                Utils.onclick(item, () => {this.onUserSelected(user.uid)});
             } else {
+                Utils.onclick(item, null);
                 let loadingText = document.createElement('p');
                 loadingText.classList.add('loading');
                 loadingText.textContent = `${STATE[user.state]} user...`;

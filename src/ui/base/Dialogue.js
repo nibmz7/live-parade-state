@@ -1,4 +1,5 @@
 import Utils from '../../util/Utils.js';
+import { fadeAnim, slideAnim } from '../GlobalStyles.js';
 
 const template = content => `
     <style>
@@ -18,24 +19,9 @@ const template = content => `
             backdrop-filter: blur(2px);
         }
 
-        @keyframes fade-in {
-            0% { opacity: 0; }
-            100% { opacity: 1; }
-        }
+        ${fadeAnim()}
     
-        @keyframes fade-out {
-            0% { opacity: 1; }
-            100% { opacity: 0; }
-        }
-    
-        @keyframes slide-in {
-            0% { transform: translateY(100px); }
-            100% { transform: translateY(0px); }
-        }
-        
-        @keyframes slide-out {
-            100% { transform: translateY(100px); }
-        }
+        ${slideAnim()}
 
         div#root.show{
             animation: fade-in .2s;
@@ -72,27 +58,6 @@ const template = content => `
             box-sizing: border-box;
         }
         
-        #dialogue.shake {
-            animation: shake 0.82s cubic-bezier(.36, .07, .19, .97) both;
-        }
-        
-        @keyframes shake {
-           10%, 90% {
-              transform: translateX(-1px);
-            }
-        
-           20%, 80% {
-              transform: translateX(2px);
-            }
-        
-            30%, 50%, 70% {
-              transform: translateX(-4px);
-            }
-        
-            40%, 60% {
-              transform: translateX(4px);
-            }
-          }
     </style>
 
     <div id="root">
