@@ -159,12 +159,15 @@ export default class SummaryView extends HTMLElement {
             this.root.classList.remove('show');
         });
     }
+    
+    onCloseView() {}
 
     closeView() {
         Utils.animate(this.root, 'hide', () => {
             this.remove();
             this.root.classList.remove('hide');
         });
+        this.onCloseView();
     }
 
     setTimeOfDay(isMorning) {

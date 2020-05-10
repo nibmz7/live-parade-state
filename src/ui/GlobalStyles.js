@@ -80,22 +80,22 @@ export const slideXAnim = (offsetXIn = '100%', offsetXOut = '100%') => `
     }
 `;
 
-export const scaleAnim = (scaleIn = 1.1, scaleOut = 1.1) => `
+export const scaleAnim = (scaleIn = 10, scaleOut = 10) => `
     @keyframes scale-in {
         0% { 
-            transform: scale(${scaleIn});
+            transform: perspective(100px) translateZ(${scaleIn}px);
         }
         100% { 
-            transform: scale(1);
+            transform: perspective(100px) translateZ(0px);
         }
     }
 
     @keyframes scale-out {
         0% { 
-            transform: scale(1);
+            transform: perspective(100px) translateZ(0px);
         }
         100% { 
-            transform: scale(${scaleOut});
+            transform: perspective(100px) translateZ(${scaleOut}px);
         }
     }
 `

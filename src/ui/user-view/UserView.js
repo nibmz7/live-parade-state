@@ -1,7 +1,7 @@
 import MainView from "../base/MainView.js";
 
 
-const timeChooserTemplate = `
+const template = `
 
     <style>
         #time-selector {
@@ -27,6 +27,12 @@ const timeChooserTemplate = `
             left: 15%;
             right: 35%;
         }
+        .content {
+          transition: .7s filter;
+        }
+        .blur {
+            filter: blur(2px);
+        }
     </style>
 
     <div id="time-selector">
@@ -38,14 +44,12 @@ const timeChooserTemplate = `
 export default class UserView extends MainView {
 
     constructor() {
-        super();
+        super(template);
         this.floatButton.textContent = 'View summary';
-        let el = document.createElement('div');
-        el.innerHTML = timeChooserTemplate;
-        this.root.appendChild(el);
-        this.timeSelectors = el.querySelectorAll('wc-button');
+        this.timeSelectors = this.shadowRoot.getElementById('time-selector').querySelectorAll('wc-button');
         this.timeSelectors.forEach((el, i) => el.onclick = e => this.toggleTime(i == 0));
         this.summaryView = document.createElement('summary-view');
+        this.summaryView.onCloseView = this.summaryViewOnClose.bind(this);
         this.isMorning = true;
     }
 
@@ -77,7 +81,12 @@ export default class UserView extends MainView {
     }
 
     onFloatButtonClick() {
+        this.content.classList.add('blur');
         this.root.appendChild(this.summaryView);
+    }
+
+    summaryViewOnClose() {
+        this.content.classList.remove('blur');
     }
 
 }

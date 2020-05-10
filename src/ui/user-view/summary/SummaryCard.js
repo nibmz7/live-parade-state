@@ -68,8 +68,7 @@ export default class SummaryCard extends BasicDepartmentCard {
     }
 
     onUserSelected(uid) {
-        let toast = document.createElement('wc-toast');
-        toast.textContent = 'Self destruct sequence initiated';
-        document.body.appendChild(toast);
+        
     }
+
 } 

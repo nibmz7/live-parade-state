@@ -99,3 +99,12 @@ body {
   0% { opacity: 1; }
   100% { opacity: 0; }
 }
+
+.light-mode {
+  --box-shadow: 0px 2px 50px 0px rgba(209, 202, 209, 1);
+  --color-primary: #FF3838;
+  --color-primary-dark: #E90000;
+  --color-primary-rgb: 255,56,56;
+  --color-bg: #FAF5FA;
+  --color-text: 
+}

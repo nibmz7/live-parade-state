@@ -27,6 +27,7 @@ const template = content => `
             padding: 15px 20px;
             box-sizing: border-box;
             width: 100%;
+            transform: perspective(100px) translateZ(0px);
         }
 
         ${fadeAnim()}

@@ -1,4 +1,4 @@
-const template = `
+const template = customTemplate => `
     <style>
         :host {
             width: inherit;
@@ -14,7 +14,7 @@ const template = `
             right: 25%;
         }
         
-        #root {
+        #root, .content {
           height: 100%;
           width: 100%;
           position: relative;
@@ -66,24 +66,29 @@ const template = `
           #welcome-text.elevation {
             box-shadow: 0px 1px 2px 1px #928d8d4f;
           }
+          
     </style>
     
     <div id="root">
-        <div id="list"></div>
-        <p id="empty">Loading...</p>
-        <wc-button id="float-button"></wc-button>
-        <h5 id="welcome-text"></h5>
+          <div class="content">
+            <div id="list"></div>
+            <p id="empty">Loading...</p>
+            <wc-button id="float-button"></wc-button>
+            <h5 id="welcome-text"></h5>
+          </div>
+          ${customTemplate? customTemplate : ''}
     </div>
 
 `;
 
 export default class MainView extends HTMLElement {
 
-    constructor() {
+    constructor(customTemplate) {
         super();
         this.attachShadow({ mode: 'open' });
-        this.shadowRoot.innerHTML = template;
+        this.shadowRoot.innerHTML = template(customTemplate);
         this.root = this.shadowRoot.getElementById('root');
+        this.content = this.shadowRoot.querySelector('.content');
         this.list = this.shadowRoot.getElementById('list');
         this.emptyText = this.shadowRoot.getElementById('empty');
         this.departmentViews = {};
