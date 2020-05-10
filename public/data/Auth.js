@@ -1,6 +1,6 @@
-import EventDispatcher from '../../src/util/EventDispatcher.js';
+import { SingletonEventDispatcher } from '../../src/util/EventDispatcher.js';
 
-export default class Auth extends EventDispatcher {
+export default class Auth extends SingletonEventDispatcher {
 
     constructor() {
         super();

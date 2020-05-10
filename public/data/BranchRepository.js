@@ -1,6 +1,6 @@
-import EventDispatcher from '../../src/util/EventDispatcher.js';
+import { SingletonEventDispatcher } from '../../src/util/EventDispatcher.js';
 
-export default class BranchRepository extends EventDispatcher {
+export default class BranchRepository extends SingletonEventDispatcher {
 
     constructor() {
         super();

@@ -1,9 +1,8 @@
 import Singleton from "./Singleton.js";
 
-export default class EventDispatcher extends Singleton {
+export default class EventDispatcher {
 
     constructor() {
-        super();
         this._listeners = {};
     }
     
@@ -30,3 +29,5 @@ export default class EventDispatcher extends Singleton {
         this._listeners = {};
     }
 }
+export class SingletonEventDispatcher extends EventDispatcher {constructor() {super()}}
+SingletonEventDispatcher.getInstance = Singleton.getInstance;

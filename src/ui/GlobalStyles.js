@@ -24,6 +24,32 @@ export const inputStyle = `
     }
 `;
 
+export const timeSelector = `
+    <style>
+        #time-selector {
+            display: flex;
+        }
+
+        #time-selector > wc-button {
+            --button-font-size: 1rem;
+            --button-padding: 5px;
+        }
+
+        #time-selector > wc-button:nth-of-type(1) {
+            --button-radius: 35px 0 0 35px;
+        }
+
+        #time-selector > wc-button:nth-of-type(2) {
+            --button-radius: 0 35px 35px 0;
+        }
+    </style>
+
+    <div id="time-selector">
+        <wc-button type="solid">AM</wc-button>
+        <wc-button type="outline">PM</wc-button>
+    </div>
+`;
+
 export const cardStyle = `
     .card {
         background: white;
@@ -63,7 +89,6 @@ export const slideYAnim = (offsetYIn = '100%', offsetYOut = '100%') => `
     }
 
     @keyframes slide-out-y {
-        0% { transform: translateY(0px); }
         100% { transform: translateY(${offsetYOut}px); }
     }
 `;
@@ -75,7 +100,6 @@ export const slideXAnim = (offsetXIn = '100%', offsetXOut = '100%') => `
     }
 
     @keyframes slide-out-x {
-        100% { transform: translateX(0px); }
         100% { transform: translateX(${offsetXOut}); }
     }
 `;

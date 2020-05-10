@@ -1,5 +1,6 @@
 import Dialogue from '../../base/Dialogue.js';
 import STATUS from '../../../model/Status.js';
+import {timeSelector} from '../../GlobalStyles.js';
 
 const HINT = 'Event, work, pooping etc.';
 const template = `
@@ -10,7 +11,7 @@ const template = `
     #status-chooser {
         display: flex;
         flex-wrap: wrap;
-        width: 90%;
+        width: 100%;
     }
     #status-chooser > wc-button {
         margin-right: 10px;
@@ -51,22 +52,6 @@ const template = `
         --button-padding: 15px;
     }
 
-    #time-selector {
-        display: flex;
-    }
-
-    #time-selector > wc-button {
-        --button-font-size: 1rem;
-        --button-padding: 5px;
-    }
-
-    #time-selector > wc-button:nth-of-type(1) {
-        --button-radius: 15px 0 0 15px;
-    }
-    #time-selector > wc-button:nth-of-type(2) {
-        --button-radius: 0 15px 15px 0;
-    }
-
     #comment {
         margin-top: 10px;
         font-size: 0.6rem;
@@ -94,10 +79,7 @@ const template = `
       <div id="expired">[Expired] - Please verify again</div>
       <div class="header">
         <h4 id="name"></h4>
-        <div id="time-selector">
-            <wc-button type="solid">AM</wc-button>
-            <wc-button type="outline">PM</wc-button>
-        </div>
+        ${timeSelector}
       </div>
       
       <div id="status-chooser"></div>

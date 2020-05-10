@@ -12,12 +12,13 @@ const template = content => `
             align-items: center;
             height: 100%;
             width: 100%;
-            backdrop-filter: blur(2px);
             overflow: hidden;
-            z-index: 98;
+            z-index: 99;
             box-sizing: border-box;
             padding: 0 15px;
             background: rgba(0,0,0,.2);
+            backdrop-filter: blur(2px);
+            webkit-backdrop-filter: blur(2px);
         }
 
         #dialogue {

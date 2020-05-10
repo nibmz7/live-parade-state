@@ -16,7 +16,7 @@ const template = `
             position: absolute;
             background: #FAF5FA;
             top: 0;
-            z-index: 98;
+            z-index: 97;
             box-shadow: -1px 0px 3px 1px #00000040;
         }
         .container {

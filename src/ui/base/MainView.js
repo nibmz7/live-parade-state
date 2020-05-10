@@ -24,6 +24,7 @@ const template = customTemplate => `
             overflow-x: hidden;
             overflow-y: scroll;
             height: 100%;
+            width: 100%;
             padding-bottom: 55px;
             box-sizing: border-box;
         }

@@ -1,44 +1,27 @@
 import MainView from "../base/MainView.js";
+import {timeSelector} from '../GlobalStyles.js';
 
 
 const template = `
 
     <style>
+
         #time-selector {
-            display: flex;
             position: fixed;
-            z-index: 99;
+            z-index: 98;
             right: 10px;
             bottom: 10px;
         }
-
-        #time-selector > wc-button {
-            --button-font-size: 1rem;
-            --button-padding: 5px;
-        }
-
-        #time-selector > wc-button:nth-of-type(1) {
-            --button-radius: 35px 0 0 35px;
-        }
-        #time-selector > wc-button:nth-of-type(2) {
-            --button-radius: 0 35px 35px 0;
-        }
+        
         #float-button {
             left: 15%;
             right: 35%;
         }
-        .content {
-          transition: .7s filter;
-        }
-        .blur {
-            filter: blur(2px);
-        }
+
     </style>
 
-    <div id="time-selector">
-        <wc-button type="solid">AM</wc-button>
-        <wc-button type="outline">PM</wc-button>
-    </div>
+    ${timeSelector}
+
 `;
 
 export default class UserView extends MainView {
@@ -81,12 +64,12 @@ export default class UserView extends MainView {
     }
 
     onFloatButtonClick() {
-        this.content.classList.add('blur');
+        this.root.classList.add('blur');
         this.root.appendChild(this.summaryView);
     }
 
     summaryViewOnClose() {
-        this.content.classList.remove('blur');
+        this.root.classList.remove('blur');
     }
 
 }
