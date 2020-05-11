@@ -16,17 +16,21 @@ const template = `
   
   <div>
     <h4>Are you sure you want sign out?</h4>
-    <wc-button type="solid" id="yes">Yes. I'm positive.</wc-button>
+    <wc-button type="solid" id="confirm">Yes. I'm positive.</wc-button>
   </div>
 `;
+
+let ids = ['confirm'];
 
 export default class SignOutDialogue extends Dialogue {
   
   constructor() {
-    super(template);
-    this.shadowRoot.getElementById('yes').onclick = e => {
+    super();
+    let views = this.views;
+    this.render(views.dialogue, template, ids);
+    this.onclick(views.confirm, e => {
       ApplicationContext.getAuth().logout();
       this.close();
-    }
+    });
   }
 };

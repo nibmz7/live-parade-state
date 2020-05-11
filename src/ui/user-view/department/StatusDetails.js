@@ -72,7 +72,9 @@ const template = `
 export default class StatusDetails extends Dialogue {
 
     constructor() {
-        super(template);
+        super();
+        let views = this.views;
+        this.render(views.dialogue, template);
         this.name = this.shadowRoot.querySelector('.name');
         this.status = this.shadowRoot.querySelectorAll('.status');
         this.updatedby = this.shadowRoot.querySelectorAll('.updatedby');

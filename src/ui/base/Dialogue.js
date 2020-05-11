@@ -1,7 +1,7 @@
-import Utils from '../../util/Utils.js';
 import { fadeAnim, scaleAnim } from '../GlobalStyles.js';
+import BaseElement from './BaseElement.js';
 
-const template = content => `
+const template = `
     <style>
         #root {
             position: absolute;
@@ -54,38 +54,33 @@ const template = content => `
     </style>
 
     <div id="root">
-    
-        <div id="dialogue">
-            ${content}
-        </div>
-        
+        <div id="dialogue"></div> 
     </div>
 `;
 
-export default class Dialogue extends HTMLElement {
+const ids = ['root', 'dialogue'];
 
-    constructor(content) {
+export default class Dialogue extends BaseElement {
+
+    constructor() {
         super();
-        this.attachShadow({ mode: 'open' });
-        this.shadowRoot.innerHTML = template(content);
         this.isCancelleable = true;
-        this.disabled = true;
-        this.root = this.shadowRoot.getElementById('root');
-        let dialogue = this.shadowRoot.getElementById('dialogue');
-
-        Utils.animate(this.root, 'show', () => {
-            this.root.classList.remove('show');
-            Utils.onclick(this.root, e => {
+        this.render(this.shadowRoot, template, ids);
+        let root = this.views.root;
+        let dialogue = this.views.dialogue;
+        this.animate(root, 'show', () => {
+            root.classList.remove('show');
+            this.onclick(root, e => {
                 if(this.isCancelleable) this.close();
             });
-            Utils.onclick(dialogue, e => {
+            this.onclick(dialogue, e => {
                 e.stopPropagation();
             });
         });
     }
 
     close() {
-        Utils.animate(this.root, 'hide', () => {
+        this.animate(this.views.root, 'hide', () => {
             this.remove();
         });
     }

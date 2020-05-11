@@ -104,7 +104,7 @@ const template = `
         <p id="department-name"></p>
         <div class="header-holder">
             <h3 id="header">Department</h3>
-            <wc-button type="plain" id="delete-user" hidden>delete</wc-button>
+            <wc-button type="plain" id="delete" hidden>delete</wc-button>
         </div>
         <input id="rank" type="text" placeholder="Rank" autocomplete="off" required/>
         <input id="name" type="text" placeholder="Name" autocomplete="off" required/>
@@ -127,30 +127,24 @@ const template = `
     </div>
 `;
 
+const ids = ['confirm','delete','change-password','domain','email','rank','name','password','regular','department-name', 'header'];
+
 export default class EditUser extends Dialogue {
 
     constructor() {
-        super(template);
-        this.shadowRoot.getElementById('confirm').onclick = this.onSubmit.bind(this);
-        this.deleteUser = this.shadowRoot.getElementById('delete-user');
-        this.changePasswordButton = this.shadowRoot.getElementById('change-password');
-        this.domain = this.shadowRoot.getElementById('domain');
-        this.emailPrefix = this.shadowRoot.getElementById('email');
-        this.rank = this.shadowRoot.getElementById('rank');
-        this.name = this.shadowRoot.getElementById('name');
-        this.password = this.shadowRoot.getElementById('password');
-        this.regular = this.shadowRoot.getElementById('regular');
-
-        this.deleteUser.onclick = this.onDelete.bind(this);
-        this.changePasswordButton.onclick = this.changePassword.bind(this);
-        this.emailPrefix.oninput = e => {
-            this.emailPrefix.value = this.emailPrefix.value.replace(/\W/g, '');
+        super();
+        this.render(this.views.dialogue, template, ids);
+        this.views.confirm.onclick = this.onSubmit.bind(this);
+        this.views.delete.onclick = this.onDelete.bind(this);
+        this.views['change-password'].onclick = this.changePassword.bind(this);
+        this.views.email.oninput = e => {
+            this.views.email.value = this.views.email.value.replace(/\W/g, '');
         }
     }
 
     setController(controller) {
         this.controller = controller;
-        this.domain.textContent = '@' + controller.getDomain();
+        this.views.domain.textContent = '@' + controller.getDomain();
     }
 
     onDelete(e) {
@@ -159,30 +153,30 @@ export default class EditUser extends Dialogue {
     }
 
     checkFormValidity(isEdit) {
-        let emailValid = this.emailPrefix.checkValidity();
-        let nameValid = this.name.checkValidity();
-        let rankValid = Rank.isValid(this.rank.value.toUpperCase().trim());
-        let passwordValid = this.password.checkValidity();
+        let emailValid = this.views.email.checkValidity();
+        let nameValid = this.views.name.checkValidity();
+        let rankValid = Rank.isValid(this.views.rank.value.toUpperCase().trim());
+        let passwordValid = this.views.password.checkValidity();
         if (!rankValid) return { success: false, msg: 'Enter a valid rank' };
         if (!nameValid) return { success: false, msg: 'Enter a valid name' };
         if (!emailValid) return { success: false, msg: 'Enter a valid email' };
         if (!isEdit && !passwordValid) return { success: false, msg: 'Enter a valid password' };
-        //emailPrefix, password, name, rank, departmentid
+        //emailPrefix, password, name, rank, departmentid, regular
         let user = {};
         user.departmentid = this.departmentId;
-        user.emailPrefix = this.emailPrefix.value;
-        user.name = this.name.value;
-        user.rank = this.rank.value.toUpperCase().trim();
+        user.emailPrefix = this.views.email.value;
+        user.name = this.views.name.value;
+        user.rank = this.views.rank.value.toUpperCase().trim();
+        user.regular = this.views.regular.checked;
         if (isEdit) user.uid = this.uid;
-        if (!isEdit) user.password = this.password.value;
-        user.regular = this.regular.checked;
+        else user.password = this.views.password.value;
         return { success: true, user };
     }
 
     onSubmit(e) {
         let formValidity = this.checkFormValidity(this.isEdit);
         if (!formValidity.success) {
-            message = formValidity.msg;
+            this.showToast(formValidity.msg);
         } else {
             if (this.isEdit) this.controller.updateUser(formValidity.user);
             else this.controller.createUser(formValidity.user);
@@ -192,9 +186,9 @@ export default class EditUser extends Dialogue {
 
     changePassword(e) {
         let message = 'Password has been changed successfully.';
-        if (this.password.checkValidity()) {
-            this.controller.updatePassword(this.uid, this.password.value);
-            this.password.value = '';
+        if (this.views.password.checkValidity()) {
+            this.controller.updatePassword(this.uid, this.views.password.value);
+            this.views.password.value = '';
         } else message = 'Please enter a valid password';
         Utils.showToast(message);
     }
@@ -202,25 +196,23 @@ export default class EditUser extends Dialogue {
     setUser(user) {
         this.user = user;
         this.uid = user.uid;
-        this.emailPrefix.value = user.email.split('@')[0];
-        this.rank.value = user.rank;
-        this.name.value = user.name;
-        this.regular.checked = user.regular;
+        this.views.email.value = user.email.split('@')[0];
+        this.views.rank.value = user.rank;
+        this.views.name.value = user.name;
+        this.views.regular.checked = user.regular;
     }
 
     setDepartment(depId, depName) {
         this.departmentId = depId;
-        let depText = this.shadowRoot.getElementById('department-name');
-        depText.textContent = depName;
+        this.views['department-name'].textContent = depName;
     }
 
     setEditMode(isEdit) {
         this.isEdit = isEdit;
-        let header = this.shadowRoot.getElementById('header');
         if (isEdit) {
-            this.deleteUser.hidden = false;
-            this.changePasswordButton.hidden = false;
-            header.textContent = 'Edit user';
-        } else header.textContent = 'Add user';
+            this.views.delete.hidden = false;
+            this.views['change-password'].hidden = false;
+            this.views.header.textContent = 'Edit user';
+        } else this.views.header.textContent = 'Add user';
     }
 }

@@ -33,22 +33,22 @@ const template = `
     <div class="container">
         <div class="header-holder">
             <h3 id="header">Department</h3>
-            <wc-button type="plain" id="delete-dep" hidden>delete</wc-button>
+            <wc-button type="plain" id="delete" hidden>delete</wc-button>
         </div>
         <input id="name" type="name" placeholder="e.g. Log branch" autocomplete="off" required/>
         <wc-button id="confirm">Confirm</wc-button>
     </div>
 `;
 
+const ids = ['name','confirm','delete','header'];
+
 export default class EditDepartment extends Dialogue {
 
     constructor() {
-        super(template);
-        this.input = this.shadowRoot.getElementById('name');
-        let confirm = this.shadowRoot.getElementById('confirm');
-        confirm.onclick = this.onSubmit.bind(this);
-        this.deleteDep = this.shadowRoot.getElementById('delete-dep');
-        this.deleteDep.onclick = this.onDelete.bind(this);
+        super();
+        this.render(this.views.dialogue, template, ids);
+        this.views.confirm.onclick = this.onSubmit.bind(this);
+        this.views.delete.onclick = this.onDelete.bind(this);
     }
 
     setController(controller) {
@@ -57,31 +57,27 @@ export default class EditDepartment extends Dialogue {
 
     onDelete(e) {
         this.controller.deleteDepartment(this.uid);
-        let toast = document.createElement('wc-toast');
-        toast.textContent = 'Deleting department and its users.\nThis may take a while...';
-        document.body.appendChild(toast);
+        this.showToast('Deleting department and its users.\nThis may take a while...')
         this.close();
     }
 
     onSubmit(e) {
-        if(this.input.validity.valid) {
-            if(this.isEdit) this.controller.editDepartment(this.uid, this.input.value);
-            else this.controller.createDepartment(this.input.value);
+        let input = this.views.name;
+        if(input.validity.valid) {
+            if(this.isEdit) this.controller.editDepartment(this.uid, input.value);
+            else this.controller.createDepartment(input.value);
             this.close();
         }
     }
 
     setEditMode(isEdit) {
         this.isEdit = isEdit;
-        let header = this.shadowRoot.getElementById('header');
-        if(isEdit) {
-            this.deleteDep.hidden = false;
-            header.textContent = 'Edit department';
-        } else header.textContent = 'Add department';
+        this.views.delete.hidden = false;
+        this.views.header.textContent = isEdit? 'Edit department' : 'Add department';
     }
 
     setDepartment(uid, name) {
         this.uid = uid;
-        this.input.value = name;
+        this.views.name.value = name;
     }
 }

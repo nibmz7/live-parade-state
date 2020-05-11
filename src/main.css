@@ -45,6 +45,20 @@ body {
     background: #FAF5FA;
 }
 
+.light-mode {
+  --color-topbar-bg: rgba(250, 245, 250, 0.72);
+  --color-shadow: rgba(146, 141, 141, 0.3);
+  --color-card-shadow: rgba(209, 202, 209, 1);
+  --color-card-bg: #ffffff;
+  --color-primary: #FF3838;
+  --color-primary-dark: #E90000;
+  --color-primary-rgb: 255,56,56;
+  --color-bg: #FAF5FA;
+  --color-text-primary: #323232;
+  --color-text-header: #828282;
+  --color-text-header-dark: #000000;
+}
+
 ::-webkit-scrollbar {
   display: none;
 }
@@ -98,13 +112,4 @@ body {
 @keyframes fade-out {
   0% { opacity: 1; }
   100% { opacity: 0; }
-}
-
-.light-mode {
-  --box-shadow: 0px 2px 50px 0px rgba(209, 202, 209, 1);
-  --color-primary: #FF3838;
-  --color-primary-dark: #E90000;
-  --color-primary-rgb: 255,56,56;
-  --color-bg: #FAF5FA;
-  --color-text: 
 }
