@@ -1,5 +1,7 @@
 import Dialogue from '../base/Dialogue.js';
-const template = `
+import { html } from '../base/BaseElement.js';
+
+const template = html`
   <style>
     
     h4 {
@@ -20,14 +22,12 @@ const template = `
   </div>
 `;
 
-const ids = ['confirm'];
-
 export default class SignOutDialogue extends Dialogue {
   
   constructor() {
     super();
     let views = this.views;
-    this.render(views.dialogue, template, ids);
+    this.render(views.dialogue, template, ['confirm']);
     this.onclick(views.confirm, e => {
       ApplicationContext.getAuth().logout();
       this.close();

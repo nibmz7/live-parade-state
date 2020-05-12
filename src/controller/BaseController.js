@@ -23,8 +23,8 @@ export default class BaseController extends Singleton {
         this.users = {};
         this.viewSwitcher.removeView(this.mainView);
         this.mainView = null;
-        this.branchRepository.stop('user-event', this.onUserEvent);
-        this.branchRepository.stop('department-event', this.onDepartmentEvent);
+        this.branchRepository.stop('user-event', this.subscribeUserEvent);
+        this.branchRepository.stop('department-event', this.subscribeDepartmentEvent);
         this.branchRepository.unsubscribe();
     }
 
@@ -32,9 +32,11 @@ export default class BaseController extends Singleton {
         return this.users[uid];
     }
 
-    userEventFound(type, user) { };
+    onUserEvent(type, user) { 
 
-    onUserEvent(data) {
+    };
+
+    subscribeUserEvent(data) {
         let type = data.type;
         let user = data.user;
         if (type == 'found') {
@@ -42,32 +44,31 @@ export default class BaseController extends Singleton {
             for (let user of data.users) {
                 let departmentCard = this.mainView.getDepartmentCard(user.departmentid);
                 departmentCard.addUser(user, false);
-                this.userEventFound('added', user);
+                this.onUserEvent('added', user);
                 this.users[user.uid] = user;
             }
             this.viewSwitcher.addView(this.mainView);
             return;
         }
-
         let departmentCard = this.mainView.getDepartmentCard(user.departmentid);
         if (type == 'added') {
             departmentCard.addUser(user);
-            this.userEventFound('added', user);
+            this.onUserEvent(type, user);
             this.users[user.uid] = user;
         }
         if (type == 'modified') {
             departmentCard.changeUser(user);
-            this.userEventFound('modified', user);
+            this.onUserEvent(type, user);
             this.users[user.uid] = user;
         }
         if (type == 'removed') {
             departmentCard.removeUser(user);
-            this.userEventFound('removed', user);
+            this.onUserEvent(type, user);
             delete this.users[user.uid];
         }
     }
 
-    onDepartmentEvent(data) {
+    subscribeDepartmentEvent(data) {
         let type = data.type;
         let department = data.department;
         if (type == 'found') {

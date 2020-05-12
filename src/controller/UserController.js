@@ -34,45 +34,24 @@ export default class UserController extends BaseController {
         this.branchRepository.subscribe(user.branchid);
     }
 
-    userEventFound(type, user) {
+    onUserEvent(type, user) {
         if (type == 'added') {
             if (this.userid === user.uid) {
                 this.mainView.setWelcomeText(user.fullname);
                 if (user.regular) {
-                    for (const id in this.mainView.departmentViews) {
-                        this.mainView.departmentViews[id].isEditable = true;
+                    for (const uid in this.mainView.views.departments) {
+                        this.mainView.views.departments[uid].isEditable = true;
                     }
                 }
             }
-            this.mainView.summaryView.addUser(user, 'am');
-            this.mainView.summaryView.addUser(user, 'pm');
+            this.mainView.views.summary.addUser(user);
         }
-        if (type == 'modified') {
-            const checkIfStatusChanged = timeOfDay => {
-                let status = user.status[timeOfDay];
-                let prevStatus = this.users[user.uid].status[timeOfDay];
-                if (prevStatus.code != status.code) {
-                    this.mainView.summaryView.removeUser(this.users[user.uid], timeOfDay);
-                    this.mainView.summaryView.addUser(user, timeOfDay);
-                } else {
-                    let prevRemarksLength = prevStatus.remarks.length;
-                    let remarksLength = status.remarks.length;
-                    let remarksChanged = 0;
-                    if (prevRemarksLength == 0 && remarksLength > 0) remarksChanged = -1;
-                    if (prevRemarksLength > 0 && remarksLength == 0) remarksChanged = 1;
-                    this.mainView.summaryView.changeUser(user, timeOfDay, remarksChanged);
-                }
-            }
-            checkIfStatusChanged('am');
-            checkIfStatusChanged('pm');
-        }
-        if (type == 'removed') {
-            this.mainView.summaryView.removeUser(user, 'am');
-            this.mainView.summaryView.removeUser(user, 'pm');
-        }
+        if (type == 'modified') this.mainView.views.summary.changeUser(user);
+        if (type == 'removed') this.mainView.views.summary.removeUser(user);
+        
     }
 
-    onDepartmentEvent(data) {
+    subscribeDepartmentEvent(data) {
         let type = data.type;
         if (type == 'found') {
             let userDepartment;
@@ -88,7 +67,7 @@ export default class UserController extends BaseController {
             }
             this.mainView.departmentViews[this.departmentid].isEditable = true;
         }
-        else super.onDepartmentEvent(data);
+        else super.subscribeDepartmentEvent(data);
     }
 
     getSummaryData() {

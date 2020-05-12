@@ -96,12 +96,12 @@ export default class AdminController extends BaseController {
     this.performUserRequest(user, STATE.removing);
   }
 
-  onUserEvent(data) {
+  subscribeUserEvent(data) {
     let type = data.type;
     let user = data.user;
     if (type !== 'found' && this.pendingState[user.email]) {
       let departmentCard = this.mainView.getDepartmentCard(user.departmentid);
-      if (type == 'added') {
+      if (type === 'added') {
         data.type = 'modified';
         departmentCard.updatePendingUserId(user);
       }
@@ -109,7 +109,7 @@ export default class AdminController extends BaseController {
       delete this.pendingState[user.email];
       this.users[user.uid] = user;
     }
-    super.onUserEvent(data);
+    super.subscribeUserEvent(data);
   }
 
 }

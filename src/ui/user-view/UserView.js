@@ -1,8 +1,8 @@
 import MainView from "../base/MainView.js";
 import {timeSelector} from '../GlobalStyles.js';
+import { html } from "../base/BaseElement.js";
 
-
-const template = `
+const template = html`
 
     <style>
 
@@ -32,8 +32,8 @@ export default class UserView extends MainView {
         this.views['float-button'].textContent = 'View summary';
         this.views.timeSelectors = this.views['time-selector'].querySelectorAll('wc-button');
         this.views.timeSelectors.forEach((el, i) => el.onclick = e => this.toggleTime(i == 0));
-        this.views.summary = document.createElement('summary-view');
-        this.views.summary.onCloseView = this.views.summaryOnClose.bind(this);
+        this.views.summary = document.createElement('summary-screen');
+        this.views.root.appendChild(this.views.summary);
         this.isMorning = true;
     }
 
