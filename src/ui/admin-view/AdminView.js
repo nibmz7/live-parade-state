@@ -4,7 +4,7 @@ export default class AdminView extends MainView {
 
     constructor() {
         super();
-        this.floatButton.textContent = 'Create department';
+        this.views['float-button'].textContent = 'Create department';
     }
 
     createDepartmentCard() {

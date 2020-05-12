@@ -1,6 +1,22 @@
 const hasPointerEvent = 'PointerEvent' in window;
 
-export default class BaseElement extends HTMLElement {
+export function html(strings, ...args) {
+    let template = null;
+    const get = () => {
+        if (!template) {
+            let result = [strings[0]];
+            args.forEach((arg, i) => {
+                result.push(arg, strings[i + 1]);
+            });
+            template = document.createElement('template');
+            template.innerHTML = result.join('');
+        }
+        return template;
+    }
+    return { get };
+}
+
+export class BaseElement extends HTMLElement {
 
     constructor() {
         super();
@@ -8,10 +24,8 @@ export default class BaseElement extends HTMLElement {
         this.views = {};
     }
 
-    render(view, content, ids) {
-        let tmpl = document.createElement('template');
-        tmpl.innerHTML = content;
-        view.appendChild(tmpl.content.cloneNode(true));
+    render(view, template, ids) {
+        view.appendChild(template.get().content.cloneNode(true));
         if (ids) {
             ids.forEach(id => {
                 this.views[id] = this.shadowRoot.getElementById(id);

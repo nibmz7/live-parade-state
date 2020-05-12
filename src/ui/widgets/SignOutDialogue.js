@@ -20,7 +20,7 @@ const template = `
   </div>
 `;
 
-let ids = ['confirm'];
+const ids = ['confirm'];
 
 export default class SignOutDialogue extends Dialogue {
   

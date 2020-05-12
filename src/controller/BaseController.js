@@ -13,7 +13,6 @@ export default class BaseController extends Singleton {
     }
 
     activate() {
-        this.users = {};
         this.mainView = this.createMainView();
         this.mainView.setController(this);
         this.branchRepository.on('user-event', this.onUserEvent);
@@ -21,6 +20,7 @@ export default class BaseController extends Singleton {
     }
 
     deactivate() {
+        this.users = {};
         this.viewSwitcher.removeView(this.mainView);
         this.mainView = null;
         this.branchRepository.stop('user-event', this.onUserEvent);

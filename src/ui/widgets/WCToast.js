@@ -1,6 +1,6 @@
-import Utils from "../../util/Utils.js";
+import {BaseElement, html} from '../base/BaseElement.js';
 
-const template = `
+const template = html`
     <style>
         #root {
             position: absolute;
@@ -46,15 +46,12 @@ const template = `
     <div id="root"><slot></slot></div>
 `;
 
-export default class WCToast extends HTMLElement {
+export default class WCToast extends BaseElement {
 
     constructor() {
         super();
-        this.attachShadow({ mode: 'open' });
-        this.shadowRoot.innerHTML = template;
-        this.root = this.shadowRoot.getElementById('root');
-
-        Utils.animate(this.root, 'slide-up', e => {
+        this.render(this.shadowRoot, template, ['root']);
+        this.animate(this.views.root, 'slide-up', e => {
             this.remove();
         });
     }

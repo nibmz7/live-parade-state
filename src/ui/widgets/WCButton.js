@@ -1,6 +1,6 @@
-import Utils from '../../util/Utils.js';
+import {BaseElement, html} from '../base/BaseElement.js';
 
-const template = `
+const template = html`
   <style>
     :host {
         --button-font-size: 1.3rem;
@@ -66,17 +66,14 @@ const template = `
     }
   </style>
   
-  <button><slot></slot></button>
+  <button id="button"><slot></slot></button>
 `;
 
-export default class WCButton extends HTMLElement {
+export default class WCButton extends BaseElement {
     constructor() {
         super();
-        this.attachShadow({mode: 'open'});
-        this.shadowRoot.innerHTML = template;
-        let button = this.shadowRoot.querySelector('button');
-        
-        Utils.onclick(button, e => {
+        this.render(this.shadowRoot, template, ['button']);
+        super.onclick(this.views.button, e => {
           this.dispatchEvent(new Event("onclick"));
         });
     }

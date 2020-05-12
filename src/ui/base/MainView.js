@@ -1,4 +1,6 @@
-const template = customTemplate => `
+import {BaseElement, html} from './BaseElement.js';
+
+const template = html`
     <style>
         :host {
             width: inherit;
@@ -14,7 +16,7 @@ const template = customTemplate => `
             right: 25%;
         }
         
-        #root, .content {
+        #root, #content {
           height: 100%;
           width: 100%;
           position: relative;
@@ -71,48 +73,41 @@ const template = customTemplate => `
     </style>
     
     <div id="root">
-          <div class="content">
+          <div id="content">
             <div id="list"></div>
             <p id="empty">Loading...</p>
             <wc-button id="float-button"></wc-button>
             <h5 id="welcome-text"></h5>
           </div>
-          ${customTemplate? customTemplate : ''}
     </div>
 
 `;
 
-export default class MainView extends HTMLElement {
+const ids = ['root','list','empty','float-button','welcome-text','content']
 
-    constructor(customTemplate) {
+export default class MainView extends BaseElement {
+
+    constructor() {
         super();
         this.attachShadow({ mode: 'open' });
         this.shadowRoot.innerHTML = template(customTemplate);
-        this.root = this.shadowRoot.getElementById('root');
-        this.content = this.shadowRoot.querySelector('.content');
-        this.list = this.shadowRoot.getElementById('list');
-        this.emptyText = this.shadowRoot.getElementById('empty');
-        this.departmentViews = {};
-        this.floatButton = this.shadowRoot.getElementById('float-button');
-        this.floatButton.onclick = e => {
-            this.onFloatButtonClick();
-        }
-        this.welcomeText = this.shadowRoot.getElementById('welcome-text');
-        this.list.onscroll = e => {
-            if (this.list.scrollTop > 0) {
-                this.welcomeText.classList.add('elevation');
+        this.views.departments = {};
+        this.views['float-button'].onclick = this.onFloatButtonClick.bind(this);
+        this.views.list.onscroll = e => {
+            if (this.views.list.scrollTop > 0) {
+                this.views['welcome-text'].classList.add('elevation');
             } else {
-                this.welcomeText.classList.remove('elevation');
+                this.views['welcome-text'].classList.remove('elevation');
             }
         }
-        this.welcomeText.onclick = e => {
+        this.views['welcome-text'].onclick = e => {
             let signOutDialogue = document.createElement('sign-out');
             document.body.appendChild(signOutDialogue);
         }
     }
 
     setWelcomeText(name) {
-        this.welcomeText.textContent = `Hi, ${name}!`;
+        this.views['welcome-text'].textContent = `Hi, ${name}!`;
     }
 
     setController(controller) {
@@ -120,33 +115,33 @@ export default class MainView extends HTMLElement {
     }
 
     getDepartmentCard(uid) {
-        return this.departmentViews[uid];
+        return this.views.departments[uid];
     }
 
     addDepartment(department) {
         let uid = department.uid;
-        if (!this.departmentViews[uid]) {
+        if (!this.views.departments[uid]) {
             let departmentCard = this.createDepartmentCard();
-            this.departmentViews[uid] = departmentCard;
+            this.views.departments[uid] = departmentCard;
             departmentCard.setDepartment(department);
             departmentCard.setController(this.controller);
-            this.list.appendChild(departmentCard);
+            this.views.list.appendChild(departmentCard);
         }
     }
 
     modifyDepartment(department) {
-        let departmentCard = this.departmentViews[department.uid];
+        let departmentCard = this.views.departments[department.uid];
         departmentCard.setDepartment(department);
     }
 
     removeDepartment(uid) {
-        let departmentCard = this.departmentViews[uid];
+        let departmentCard = this.views.departments[uid];
         departmentCard.remove();
-        delete this.departmentViews[uid];
+        delete this.views.departments[uid];
     }
 
     showEmpty() {
-        this.emptyText.textContent = "No departments found";
+        this.views.empty.textContent = "No departments found";
     }
 
 }

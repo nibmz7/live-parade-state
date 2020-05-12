@@ -1,6 +1,7 @@
 import {inputStyle, cardStyle} from './GlobalStyles.js';
+import {BaseElement, html} from './base/BaseElement.js';
 
-const template = `
+const template = html`
     <style>
         :host {
             width: 70%;
@@ -58,55 +59,50 @@ const template = `
     </div>
 `;
 
-export default class LoginView extends HTMLElement {
+const ids = ['error','email','password','login'];
+
+export default class LoginView extends BaseElement {
 
     constructor() {
         super();
-        this.attachShadow({mode: 'open'});
-        this.shadowRoot.innerHTML = template;
-        this.error = this.shadowRoot.getElementById('error');
-        this.email = this.shadowRoot.getElementById('email');
-        this.password = this.shadowRoot.getElementById('password');
-        this.login = this.shadowRoot.getElementById('login');
-
-        this.email.onclick = e => {
+        this.render(this.shadowRoot, template, ids);
+        this.views.email.onclick = e => {
             this.hideError();
         }
-
-        this.password.onclick = e => {
+        this.views.password.onclick = e => {
             this.hideError();
         }
  
     }
 
-    bindSignIn(listener) {
-        this.login.onclick = e => {
-            let emailInput = this.email.validity.valid ? this.email.value : false;
-            let passwordInput = this.password.validity.valid ? this.password.value : false;
+    onSignIn(listener) {
+        this.views.login.onclick = e => {
+            let emailInput = this.views.email.validity.valid ? this.views.email.value : false;
+            let passwordInput = this.views.password.validity.valid ? this.views.password.value : false;
             if(!emailInput) this.showError("Please enter a valid email!");
             else if(!passwordInput) this.showError("Please enter a valid password!");
             else {
               if(this.isLoading) return;
               this.isLoading = false;
-              this.login.textContent = "Loading...";
+              this.views.login.textContent = "Loading...";
               listener(emailInput, passwordInput);
             }
         }
     }
     
     reset() {
-      this.login.textContent = "Continue";
-      this.password.value = '';
+      this.views.login.textContent = "Continue";
+      this.views.password.value = '';
       this.isLoading = false;
     }
 
     showError(message) {
-        this.error.textContent = message;
-        this.error.classList.add('show');
+        this.views.error.textContent = message;
+        this.views.error.classList.add('show');
     }
 
     hideError() {
-        this.error.classList.remove('show');
+        this.views.error.classList.remove('show');
     }
 
 }

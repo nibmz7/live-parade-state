@@ -16,7 +16,7 @@ export default class LoginController {
 
   activate() {
     this.loginView = document.createElement('login-view');
-    this.loginView.bindSignIn((email, password) => {
+    this.loginView.onSignIn((email, password) => {
       this.auth.login(email, password);
     });
     this.auth.on('error', this.onError);

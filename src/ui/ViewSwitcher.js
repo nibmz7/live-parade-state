@@ -1,14 +1,14 @@
-import Utils from "../util/Utils.js";
 import {fadeAnim} from './GlobalStyles.js';
+import {BaseElement, html} from "./base/BaseElement.js";
 
-const template = `
+const template = html`
 
     <style>
         #root {
             height: 100%;
             width: 100%;
         }
-        .container {
+        #container {
             height: 100%;
             width: 100%;
             display: grid;
@@ -18,8 +18,13 @@ const template = `
             align-items: center;
         }
 
-        .container:empty + .loading {
+        #container:empty + .loading {
             display: block;
+        }
+
+        #container > * {
+            grid-area: content;
+            justify-self: center;
         }
 
         .loading {
@@ -47,26 +52,20 @@ const template = `
         }
 
         ${fadeAnim(500, 500)}
-
-        .container > * {
-            grid-area: content;
-            justify-self: center;
-        }
     </style>
 
     <div id="root">
-        <div class="container"></div>
+        <div id="container"></div>
     </div>
 `;
 
-export default class ViewSwitcher extends HTMLElement {
+const ids = ['root','container'];
+
+export default class ViewSwitcher extends BaseElement {
 
     constructor() {
         super();
-        this.attachShadow({ mode: 'open' });
-        this.shadowRoot.innerHTML = template;
-        this.root = this.shadowRoot.getElementById('root');
-        this.container = this.shadowRoot.querySelector('.container');
+        this.render(this.shadowRoot, template, ids);
         this.hasShownFirstScreen = false;
     }
 
@@ -80,21 +79,21 @@ export default class ViewSwitcher extends HTMLElement {
         if (!this.hasShownFirstScreen) {
             this.hasShownFirstScreen = true;
             let splashscreen = document.getElementById('splashscreen');
-            Utils.animate(splashscreen, 'fade-out', () => {
+            this.animate(splashscreen, 'fade-out', () => {
                 splashscreen.remove();
             });
             let div = document.createElement('div');
             div.className = 'loading';
-            Utils.animate(view, 'fade-in', () => {
+            this.animate(view, 'fade-in', () => {
                 view.classList.remove('fade-in');
-                this.root.appendChild(div);
+                this.views.root.appendChild(div);
             });
-            this.container.appendChild(view);
+            this.views.container.appendChild(view);
         } else {
-            Utils.animate(view, 'fade-in', () => {
+            this.animate(view, 'fade-in', () => {
                 view.classList.remove('fade-in');
             });
-            this.container.appendChild(view);
+            this.views.container.appendChild(view);
         }
     }
 

@@ -27,12 +27,13 @@ const template = `
 export default class UserView extends MainView {
 
     constructor() {
-        super(template);
-        this.floatButton.textContent = 'View summary';
-        this.timeSelectors = this.shadowRoot.getElementById('time-selector').querySelectorAll('wc-button');
-        this.timeSelectors.forEach((el, i) => el.onclick = e => this.toggleTime(i == 0));
-        this.summaryView = document.createElement('summary-view');
-        this.summaryView.onCloseView = this.summaryViewOnClose.bind(this);
+        super();
+        this.render(this.root, template, ['time-selector']);
+        this.views['float-button'].textContent = 'View summary';
+        this.views.timeSelectors = this.views['time-selector'].querySelectorAll('wc-button');
+        this.views.timeSelectors.forEach((el, i) => el.onclick = e => this.toggleTime(i == 0));
+        this.views.summary = document.createElement('summary-view');
+        this.views.summary.onCloseView = this.views.summaryOnClose.bind(this);
         this.isMorning = true;
     }
 
@@ -43,18 +44,18 @@ export default class UserView extends MainView {
 
     setController(controller) {
         super.setController(controller);
-        this.summaryView.setController(controller);
+        this.views.summary.setController(controller);
     }
 
     toggleTime(isMorning) {
-        if(this.isMorning == isMorning) return;
+        if(this.isMorning === isMorning) return;
         this.isMorning = isMorning;
-        this.summaryView.setTimeOfDay(isMorning);
+        this.views.summary.setTimeOfDay(isMorning);
         let morningType = isMorning ? 'solid' : 'outline';
         let afternoonType = isMorning ? 'outline' : 'solid';
-        this.timeSelectors[0].setAttribute('type', morningType);
-        this.timeSelectors[1].setAttribute('type', afternoonType);
-        for(let departmentCard of Object.values(this.departmentViews)) {
+        this.views.timeSelectors[0].setAttribute('type', morningType);
+        this.views.timeSelectors[1].setAttribute('type', afternoonType);
+        for(let departmentCard of Object.values(this.views.departments)) {
             departmentCard.setTimeOfDay(isMorning);
         }
     }
@@ -64,12 +65,12 @@ export default class UserView extends MainView {
     }
 
     onFloatButtonClick() {
-        this.root.classList.add('blur');
-        this.root.appendChild(this.summaryView);
+        this.views.root.classList.add('blur');
+        this.views.root.appendChild(this.views.summary);
     }
 
     summaryViewOnClose() {
-        this.root.classList.remove('blur');
+        this/views.root.classList.remove('blur');
     }
 
 }

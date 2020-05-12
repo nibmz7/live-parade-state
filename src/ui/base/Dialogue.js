@@ -1,7 +1,7 @@
 import { fadeAnim, scaleAnim } from '../GlobalStyles.js';
-import BaseElement from './BaseElement.js';
+import {BaseElement, html} from './BaseElement.js';
 
-const template = `
+const template = html`
     <style>
         #root {
             position: absolute;
