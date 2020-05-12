@@ -24,10 +24,11 @@ export default class BranchRepository extends SingletonEventDispatcher {
     checkSameDay(statusDate) {
         let date = new Date();
         let dayDifference = date.getDate() - statusDate.getDate();
-        let isPrevNight = dayDifference == 1 && statusDate.getHours() >= 17;
+        let isBeforeEvening = dayDifference === 0 && date.getHours() <= 17 && statusDate.getHours() <= 17;
+        let isAfterEvening = (dayDifference === 0 || dayDifference === 1) && date.getHours() >= 17 && statusDate.getHours() >= 17
         return date.getFullYear() === statusDate.getFullYear() &&
             date.getMonth() === statusDate.getMonth() &&
-            (dayDifference == 0 || isPrevNight);
+            (isBeforeEvening || isAfterEvening);
     }
 
     toUser(doc) {

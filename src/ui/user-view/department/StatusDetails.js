@@ -1,7 +1,8 @@
 import Dialogue from '../../base/Dialogue.js';
 import STATUS from '../../../model/Status.js';
+import { html } from '../../base/BaseElement.js';
 
-const template = `
+const template = html`
 
     <style>
         .container {

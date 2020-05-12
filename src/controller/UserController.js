@@ -48,7 +48,6 @@ export default class UserController extends BaseController {
         }
         if (type == 'modified') this.mainView.views.summary.changeUser(user);
         if (type == 'removed') this.mainView.views.summary.removeUser(user);
-        
     }
 
     subscribeDepartmentEvent(data) {
@@ -65,7 +64,7 @@ export default class UserController extends BaseController {
             for (let department of departments) {
                 this.mainView.addDepartment(department);
             }
-            this.mainView.departmentViews[this.departmentid].isEditable = true;
+            this.mainView.views.departments[this.departmentid].isEditable = true;
         }
         else super.subscribeDepartmentEvent(data);
     }

@@ -89,8 +89,7 @@ export default class MainView extends BaseElement {
 
     constructor() {
         super();
-        this.attachShadow({ mode: 'open' });
-        this.shadowRoot.innerHTML = template(customTemplate);
+        this.render(this.shadowRoot, template, ids);
         this.views.departments = {};
         this.views['float-button'].onclick = this.onFloatButtonClick.bind(this);
         this.views.list.onscroll = e => {

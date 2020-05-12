@@ -70,7 +70,7 @@ export default class ViewSwitcher extends BaseElement {
     }
 
     removeView(view) {
-        Utils.animate(view, 'fade-out', () => {
+        this.animate(view, 'fade-out', () => {
             view.remove();
         });
     }

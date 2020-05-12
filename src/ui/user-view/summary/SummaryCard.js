@@ -1,36 +1,40 @@
 import BasicDepartmentCard from "../../base/BasicDepartmentCard.js";
+import { html } from "../../base/BaseElement.js";
 
-const customStyle = `
-    #sub-header {
-        padding: 10px;
-        text-align: center;
-        background: #33475a;
-        font-size: 0.9rem;
-        color: white;
-    }
-    #secondary-text {
-        text-transform: lowercase;
-    }
-    #secondary-text > .remarks {
-        text-transform: uppercase;
-    }
-    #secondary-text > .expired {
-        color: var(--color-primary);
-        font-weight: 700;
-        text-transform: capitalize;
-    }
+const template = html`
+    <style>
+        #sub-header {
+            padding: 10px;
+            text-align: center;
+            background: #33475a;
+            font-size: 0.9rem;
+            color: white;
+        }
+        #secondary-text {
+            text-transform: lowercase;
+        }
+        #secondary-text > .remarks {
+            text-transform: uppercase;
+        }
+        #secondary-text > .expired {
+            color: var(--color-primary);
+            font-weight: 700;
+            text-transform: capitalize;
+        }
+    </style>
 `;
 
 export default class SummaryCard extends BasicDepartmentCard {
 
     constructor() {
-        super(customStyle);
+        super();
+        this.render(this.shadowRoot, template);
         this.strength = {regular: 0, nsf: 0};
         this.timeOfDay = 'am';
     }
 
     setStatusName(name) {
-        this.header = name;
+        this.views.header.textContent = name;
     }
 
     getItemPrimaryText(user) {
@@ -45,8 +49,8 @@ export default class SummaryCard extends BasicDepartmentCard {
     }
 
     showStrength() {
-        let totol = this.strength.regular + this.strength.nsf;
-        this.subHeader = `${totol} Total ~ ${this.strength.regular} Regular + ${this.strength.nsf} Nsf`;
+        let total = this.strength.regular + this.strength.nsf;
+        this.views['sub-header'].textContent = `${total} Total ~ ${this.strength.regular} Regular + ${this.strength.nsf} Nsf`;
     } 
 
     addUser(user) {
@@ -67,8 +71,6 @@ export default class SummaryCard extends BasicDepartmentCard {
         super.changeUser(user, false);
     }
 
-    onUserSelected(uid) {
-        
-    }
+    onUserSelected(uid) {}
 
 } 

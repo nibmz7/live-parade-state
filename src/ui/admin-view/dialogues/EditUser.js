@@ -1,8 +1,9 @@
 import Dialogue from '../../base/Dialogue.js';
 import { inputStyle } from '../../GlobalStyles.js';
 import Rank from '../../../model/Rank.js';
+import { html } from '../../base/BaseElement.js';
 
-const template = `
+const template = html`
     <style>
 
         ${inputStyle}

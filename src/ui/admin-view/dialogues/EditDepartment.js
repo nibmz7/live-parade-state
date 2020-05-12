@@ -1,7 +1,8 @@
 import {inputStyle} from '../../GlobalStyles.js';
 import Dialogue from '../../base/Dialogue.js';
+import { html } from '../../base/BaseElement.js';
 
-const template = `
+const template = html`
     <style>
         ${inputStyle}
 

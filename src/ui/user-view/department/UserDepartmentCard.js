@@ -1,34 +1,38 @@
 import BasicDepartmentCard from '../../base/BasicDepartmentCard.js';
 import STATUS from '../../../model/Status.js';
+import { html } from '../../base/BaseElement.js';
 
-const customStyle = `
-    #sub-header {
-        padding: 10px;
-        text-align: center;
-        font-weight: 300;
-        background: #33475a;
-        font-size: 0.9rem;
-        color: white;
-    }
-    #secondary-text {
-        white-space: pre-line;
-        font-size: 0.7rem;
-        margin-top: 3px;
-        letter-spacing: 0.1em;
-        text-transform: uppercase;
-    }
+const template = html`
+    <style>
+        #sub-header {
+            padding: 10px;
+            text-align: center;
+            font-weight: 300;
+            background: #33475a;
+            font-size: 0.9rem;
+            color: white;
+        }
+        #secondary-text {
+            white-space: pre-line;
+            font-size: 0.7rem;
+            margin-top: 3px;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+        }
 
-    #secondary-text > span {
-        color: var(--color-primary);
-        font-weight: 500;
-        text-transform: capitalize;
-    }
+        #secondary-text > span {
+            color: var(--color-primary);
+            font-weight: 500;
+            text-transform: capitalize;
+        }
+    </style>
 `;
 
 export default class UserDepartmentCard extends BasicDepartmentCard {
 
     constructor() {
-        super(customStyle);
+        super();
+        this.render(this.shadowRoot, template);
         this.isEditable = false;
         this.dialogue = {isopen: false, uid: null, view: null};
         this.strength = {am: {regular: 0, nsf: 0}, pm:  {regular: 0, nsf: 0}};
@@ -91,7 +95,7 @@ export default class UserDepartmentCard extends BasicDepartmentCard {
     showStrength() {
         let strength = this.strength[this.timeOfDay];
         let totol = strength.regular + strength.nsf;
-        this.subHeader = `${totol} Present ~ ${strength.regular} Regular + ${strength.nsf} Nsf`;
+        this.views['sub-header'].textContent = `${totol} Present ~ ${strength.regular} Regular + ${strength.nsf} Nsf`;
     }
 
     changeUser(user) {

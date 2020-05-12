@@ -7,16 +7,16 @@ export default class BaseController extends Singleton {
         super();
         this.branchRepository = ApplicationContext.getBranchRepository();
         this.viewSwitcher = document.querySelector('view-switcher');
-        this.onUserEvent = this.onUserEvent.bind(this);
-        this.onDepartmentEvent = this.onDepartmentEvent.bind(this);
+        this.subscribeUserEvent = this.subscribeUserEvent.bind(this);
+        this.subscribeDepartmentEvent = this.subscribeDepartmentEvent.bind(this);
         this.users = {};
     }
 
     activate() {
         this.mainView = this.createMainView();
         this.mainView.setController(this);
-        this.branchRepository.on('user-event', this.onUserEvent);
-        this.branchRepository.on('department-event', this.onDepartmentEvent);
+        this.branchRepository.on('user-event', this.subscribeUserEvent);
+        this.branchRepository.on('department-event', this.subscribeDepartmentEvent);
     }
 
     deactivate() {

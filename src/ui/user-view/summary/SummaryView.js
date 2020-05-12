@@ -4,9 +4,6 @@ import { html, BaseElement } from "../../base/BaseElement.js";
 const template = html`
 
     <style>
-        :host([hidden]) #root{
-            background: blue;
-        }
         #root {
             max-height: 99.9%;
             overflow-y: auto;
@@ -69,7 +66,6 @@ export default class SummaryView extends BaseElement {
 
     constructor() {
         super();
-        this.timeOfDay = this.id;
         this.render(this.shadowRoot, template, ids);
         this.strengthCount = { total: 0, present: 0, current: 0 };
         this.views.categories = {};
@@ -98,14 +94,14 @@ export default class SummaryView extends BaseElement {
         let code = status.code;
         let category = STATUS[code].category;
         if (!this.views.categories[category]) {
-            this.createCategory(timeOfDay, category);
+            this.createCategory(category);
         }
         let categoryView = this.views.categories[category];
         if (!categoryView.cards[code]) {
             let summaryCard = document.createElement('summary-card');
             summaryCard.setController(this.controller);
             summaryCard.setStatusName(STATUS[code].fullName);
-            summaryCard.timeOfDay = timeOfDay;
+            summaryCard.timeOfDay = this.timeOfDay;
             categoryView.cards[code] = summaryCard;
             categoryView.list.appendChild(summaryCard);
         } 

@@ -1,9 +1,10 @@
 import Dialogue from '../../base/Dialogue.js';
 import STATUS from '../../../model/Status.js';
 import { timeSelector } from '../../GlobalStyles.js';
+import { html } from '../../base/BaseElement.js';
 
 const HINT = 'Event, work, pooping etc.';
-const template = `
+const template = html`
   <style>
     .container {
         position: relative;
@@ -95,7 +96,7 @@ const template = `
   
 `;
 
-const ids = ['remarks-input', 'status-chooser', 'comment', 'name', 'save', 'time-selector']
+const ids = ['remarks-input', 'status-chooser', 'comment', 'name', 'save', 'time-selector'];
 
 export default class EditStatus extends Dialogue {
 
