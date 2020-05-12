@@ -23,12 +23,13 @@ export default class BranchRepository extends SingletonEventDispatcher {
 
     checkSameDay(statusDate) {
         let date = new Date();
-        let dayDifference = date.getDate() - statusDate.getDate();
-        let isBeforeEvening = dayDifference === 0 && date.getHours() <= 17 && statusDate.getHours() <= 17;
-        let isAfterEvening = (dayDifference === 0 || dayDifference === 1) && date.getHours() >= 17 && statusDate.getHours() >= 17
+        let dayDifference = statusDate.getDate() - date.getDate();
+        let isSameDayBeforeSix = dayDifference === 0 && statusDate.getHours() < 17 && date.getHours() < 17;
+        let isSameDayAfterSix = dayDifference === 0 && statusDate.getHours() > 17 && date.getHours() > 17;
+        let isPrevDayAfterSix = dayDifference === -1 && statusDate.getHours() > 17;
         return date.getFullYear() === statusDate.getFullYear() &&
             date.getMonth() === statusDate.getMonth() &&
-            (isBeforeEvening || isAfterEvening);
+            (isSameDayBeforeSix || isSameDayAfterSix || isPrevDayAfterSix);
     }
 
     toUser(doc) {

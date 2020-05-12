@@ -33,6 +33,10 @@ const template = html`
         #content {
             width: 50%;
         }
+        
+        #float-button {
+            position: absolute;
+        }
 
         summary-screen {
             width: 50%;
@@ -74,7 +78,7 @@ export default class UserView extends MainView {
     toggleTime(isMorning) {
         if (this.isMorning === isMorning) return;
         this.isMorning = isMorning;
-        // this.views.summary.setTimeOfDay(isMorning);
+        this.views.summary.setTimeOfDay(isMorning);
         let morningType = isMorning ? 'solid' : 'outline';
         let afternoonType = isMorning ? 'outline' : 'solid';
         this.views.timeSelectors[0].setAttribute('type', morningType);
