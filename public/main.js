@@ -9,7 +9,6 @@ import UI from '../src/ui/UI.js';
 
 
 const App = () => {
-  console.log(new Date() - window.startTime);
 
   const getBranchRepository = () => { return BranchRepository.getInstance(); }
   const getAdminManager = () => { return AdminManager.getInstance(); }

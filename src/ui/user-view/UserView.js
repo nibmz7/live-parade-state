@@ -20,7 +20,7 @@ const template = html`
         }
 
         #root {
-            width: 200%;
+            width: 200vw;
             display: flex;
             transition: margin-left 800ms cubic-bezier(0.770, 0.000, 0.175, 1.000);
             margin-left: 0;

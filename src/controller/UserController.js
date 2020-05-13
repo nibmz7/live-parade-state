@@ -9,7 +9,6 @@ export default class UserController extends BaseController {
         super();
         UI.UserScreen();
         this.viewName = 'user';
-        this.users = {};
     }
 
     createMainView() {

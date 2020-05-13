@@ -14,7 +14,7 @@ export default class AdminController extends BaseController {
 
   constructor() {
     super();
-    UI.adminScreen();
+    UI.AdminScreen();
     this.adminManager = ApplicationContext.getAdminManager();
     this.viewName = 'admin';
     this.pendingState = {};

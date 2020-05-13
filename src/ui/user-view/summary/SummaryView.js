@@ -150,7 +150,7 @@ export default class SummaryView extends BaseElement {
         this.strengthCount.total--;
         if (code == 1) {
             this.strengthCount.present--;
-            if (!user.regular && user.status[timeOfDay].remarks.length == 0) this.strengthCount.current--;
+            if (!user.regular && user.status[this.timeOfDay].remarks.length == 0) this.strengthCount.current--;
         }
         this.updateStrengthCount();
     }
