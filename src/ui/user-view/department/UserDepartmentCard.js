@@ -25,6 +25,27 @@ const template = html`
             font-weight: 500;
             text-transform: capitalize;
         }
+        .card {
+            counter-reset: am-total am-reg am-nsf pm-total pm-reg pm-nsf;
+        }
+        .am > #sub-header::before {
+            content: counter(am-total) " Total ~ " counter(am-reg) " Regular + " counter(am-nsf) " Nsf";
+        }
+        .pm > #sub-header::before {
+            content: counter(pm-total) " Total ~ " counter(pm-reg) " Regular + " counter(pm-nsf) " Nsf";
+        }
+        .am > #list > .list-item[am-reg] {
+            counter-increment: am-total am-reg;
+        }
+        .am > #list > .list-item[am-nsf] {
+            counter-increment: am-total am-nsf;
+        }
+        .pm > #list > .list-item[pm-reg] {
+            counter-increment: pm-total pm-reg;
+        }
+        .pm > #list > .list-item[pm-nsf] {
+            counter-increment: pm-total pm-nsf;
+        }
     </style>
 `;
 
@@ -35,8 +56,9 @@ export default class UserDepartmentCard extends BasicDepartmentCard {
         this.render(this.shadowRoot, template);
         this.isEditable = false;
         this.dialogue = {isopen: false, uid: null, view: null};
-        this.strength = {am: {regular: 0, nsf: 0}, pm:  {regular: 0, nsf: 0}};
         this.timeOfDay = 'am';
+        this.views.card = this.shadowRoot.querySelector('.card');
+        this.views.card.classList.add('am');
     }
 
     getItemPrimaryText(user) {
@@ -88,58 +110,28 @@ export default class UserDepartmentCard extends BasicDepartmentCard {
     }
 
     setTimeOfDay(isMorning) {
-        this.timeOfDay = isMorning ? 'am' : 'pm';
-        this.showStrength();
+        let timeOfDay = isMorning ? 'am' : 'pm';
+        this.views.card.classList.replace(this.timeOfDay, timeOfDay);
+        this.timeOfDay = timeOfDay;
     }
-
-    showStrength() {
-        let strength = this.strength[this.timeOfDay];
-        let totol = strength.regular + strength.nsf;
-        this.views['sub-header'].textContent = `${totol} Present ~ ${strength.regular} Regular + ${strength.nsf} Nsf`;
-    }
-
-    changeUser(user) {
+    
+    setListItemData(item, user) {
+        super.setListItemData(item, user);
         const checkIsPresent = (timeOfDay, statusCode) => {
-            let prevStatus = this.getUser(user.uid).status[timeOfDay].code;
-            if(prevStatus == statusCode) return;
-            let prefix = user.regular ? 'regular' : 'nsf';
-            if(statusCode == 1) this.strength[timeOfDay][prefix] += 1;
-            else if(prevStatus == 1) this.strength[timeOfDay][prefix] -= 1;     
+            let attr = user.regular ? `${timeOfDay}-reg` : `${timeOfDay}-nsf`
+            if(statusCode === 1) item.div.setAttribute(attr, '');
+            else item.div.removeAttribute(attr);
         }
         checkIsPresent('am', user.status.am.code);
         checkIsPresent('pm', user.status.pm.code);
-        super.changeUser(user);
+    }
+
+    changeUser(user, animate = true) {
+        super.changeUser(user, animate);
         if(this.dialogue.isopen && this.dialogue.uid == user.uid) {
             if(user.status.am.timestamp && user.status.pm.timestamp)
                 this.updateDialogue(user);
         }
-        this.showStrength();
     }   
 
-    addUser(user, animate = true) {
-        super.addUser(user, animate);
-        const checkIsPresent = (timeOfDay, statusCode) => {
-            if(statusCode == 1) {
-                let prefix = user.regular ? 'regular' : 'nsf';
-                this.strength[timeOfDay][prefix] += 1;
-            }
-        }
-        checkIsPresent('am', user.status.am.code);
-        checkIsPresent('pm', user.status.pm.code);
-        this.showStrength();
-    }
-
-    removeUser(user, animate = true) {
-        let userBefore = this.getUser(user.uid);
-        const checkIsPresent = (timeOfDay, statusCode) => {
-            if(statusCode == 1) {
-                let prefix = userBefore.regular ? 'regular' : 'nsf';
-                this.strength[timeOfDay][prefix] -= 1;
-            }
-        }
-        checkIsPresent('am', userBefore.status.am.code);
-        checkIsPresent('pm', userBefore.status.pm.code);
-        super.removeUser(user, animate);
-        this.showStrength();
-    }   
 }

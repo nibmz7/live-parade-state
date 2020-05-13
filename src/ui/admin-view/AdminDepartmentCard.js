@@ -99,10 +99,9 @@ export default class AdminDepartmentCard extends BasicDepartmentCard {
         document.body.appendChild(dialogue);
     }
 
-    setListItemData(user) {
-        super.setListItemData(user);
+    setListItemData(item, user) {
+        super.setListItemData(item, user);
         if (user.state) {
-            let item = this.items[user.uid].item;
             if (user.state === STATE.completed) {
                 let loadingText = item.querySelector('.loading');
                 this.animate(loadingText, 'fade-out', () => {

@@ -21,6 +21,18 @@ const template = html`
             font-weight: 700;
             text-transform: capitalize;
         }
+        .card {
+            counter-reset: total reg nsf;
+        }
+        #sub-header::before {
+            content: counter(total) " Total ~ " counter(reg) " Regular + " counter(nsf) " Nsf";
+        }
+        #list > .list-item[reg] {
+            counter-increment: total reg;
+        }
+        #list > .list-item[nsf] {
+            counter-increment: total nsf;
+        }
     </style>
 `;
 
@@ -29,7 +41,6 @@ export default class SummaryCard extends BasicDepartmentCard {
     constructor() {
         super();
         this.render(this.shadowRoot, template);
-        this.strength = {regular: 0, nsf: 0};
         this.timeOfDay = 'am';
     }
 
@@ -48,29 +59,26 @@ export default class SummaryCard extends BasicDepartmentCard {
         return remarksText + expiredText;
     }
 
-    showStrength() {
-        let total = this.strength.regular + this.strength.nsf;
-        this.views['sub-header'].textContent = `${total} Total ~ ${this.strength.regular} Regular + ${this.strength.nsf} Nsf`;
-    } 
+    setListItemData(item, user) {
+        super.setListItemData(item, user);
+        let attrSet = user.regular ? `reg` : `nsf`;
+        let attrRemove = user.regular ? `nsf` : `reg`;
+        item.div.setAttribute(attrSet, '');
+        item.div.removeAttribute(attrRemove);
+    }
 
     addUser(user) {
         super.addUser(user, false);
-        let prefix = user.regular ? 'regular' : 'nsf';
-        this.strength[prefix] += 1;
-        this.showStrength();
     }
 
     removeUser(user) {
-        let prefix = user.regular ? 'regular' : 'nsf';
-        this.strength[prefix] -= 1;
         super.removeUser(user, false);
-        this.showStrength();
-    }   
+    }
 
     changeUser(user) {
         super.changeUser(user, false);
     }
 
-    onUserSelected(uid) {}
+    onUserSelected(uid) { }
 
 } 

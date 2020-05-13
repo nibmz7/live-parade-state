@@ -13,6 +13,7 @@ const template = html`
 
         .card {
             border-radius: 15px;
+            flex-direction: column-reverse;
         }
 
         #header-holder {
@@ -65,6 +66,7 @@ const template = html`
         }
 
         .list-item #primary-text.regular {
+            counter-increment: regular present;
             color: var(--color-primary);
         }
 
@@ -131,8 +133,8 @@ const template = html`
             <h3 id="header"></h3>
         </div>
         <div class="card">
-            <div id="sub-header"></div>
             <div id="list"></div>
+            <div id="sub-header"></div>
         </div>
     </div>
           
@@ -186,32 +188,31 @@ export default class BasicDepartmentCard extends BaseElement {
             else uid = this.uidArray[i--];
         }
         this.uidArray.splice(++i, 0, user.uid);
-        return uid ? this.items[uid].item : null;
-    }
-
-    setListItemData(user) {
-        let item = this.items[user.uid];
-        item.primaryText.textContent = this.getItemPrimaryText(user);
-        item.secondaryText.innerHTML = this.getItemSecondaryText(user);
-        if (user.regular) item.primaryText.classList.add('regular');
+        return uid ? this.items[uid].div : null;
     }
 
     addUser(user, animate = true) {
         let clone = item_template.get().content.cloneNode(true);
-        let item = clone.querySelector('.list-item');
+        let div = clone.querySelector('.list-item');
         let primaryText = clone.getElementById('primary-text');
         let secondaryText = clone.getElementById('secondary-text');
-        item.id = user.uid;
-        this.items[user.uid] = {item, primaryText, secondaryText};
-        this.onclick(item, () => { this.onUserSelected(user.uid) });
-        this.setListItemData(user);
+        div.id = user.uid;
+        this.items[user.uid] = {div, primaryText, secondaryText};
+        this.onclick(div, () => { this.onUserSelected(user.uid) });
+        this.setListItemData(this.items[user.uid], user);
         if (animate) {
-            this.animate(item, 'grow', () => {
-                item.classList.remove('grow');
+            this.animate(div, 'grow', () => {
+                div.classList.remove('grow');
             });
         }
         let referenceNode = this.getUserReferenceNode(user);
-        this.views.list.insertBefore(item, referenceNode);
+        this.views.list.insertBefore(div, referenceNode);
+    }
+
+    setListItemData(item, user) {
+        item.primaryText.textContent = this.getItemPrimaryText(user);
+        item.secondaryText.innerHTML = this.getItemSecondaryText(user);
+        if (user.regular) item.primaryText.classList.add('regular');
     }
 
     changeUser(user, animate = true) {
@@ -220,25 +221,25 @@ export default class BasicDepartmentCard extends BaseElement {
             this.removeUser(user, false);
             this.addUser(user, false);
         }
-        if (currentUserRank === user.rank) this.setListItemData(user);
-        let userItem = this.items[user.uid].item;
-        if (animate && !userItem.classList.contains('flash')) {
-            this.animate(userItem, 'flash', () => {
-                userItem.classList.remove('flash');
+        let item = this.items[user.uid];
+        if (currentUserRank === user.rank) this.setListItemData(item, user);
+        if (animate && !item.div.classList.contains('flash')) {
+            this.animate(item.div, 'flash', () => {
+                item.div.classList.remove('flash');
             });
         }
     }
 
     removeUser(user, animate = true) {
-        let userItem = this.items[user.uid].item;
-        userItem.id = `${user.uid}-deleted`;
+        let item = this.items[user.uid].div;
+        item.id = `${user.uid}-deleted`;
         var index = this.uidArray.indexOf(user.uid);
         this.uidArray.splice(index, 1);
         if (animate) {
-            this.animate(userItem, 'shrink', () => {
-                userItem.remove();
+            this.animate(item, 'shrink', () => {
+                item.remove();
             });
-        } else userItem.remove();
+        } else item.remove();
     }
 
 }

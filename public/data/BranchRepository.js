@@ -53,11 +53,9 @@ export default class BranchRepository extends SingletonEventDispatcher {
     }
 
     subscribe(branchid) {
-        console.log(new Date() - window.startTime);
         let initialLoad = true;
         let repository = this.db.collection(`branches/${branchid}/repository`);
         this.branchUnsubscribe = repository.onSnapshot(snapshot => {
-        console.log(new Date() - window.startTime);
             if (snapshot.empty) {
                 if (initialLoad) {
                     initialLoad = false;
