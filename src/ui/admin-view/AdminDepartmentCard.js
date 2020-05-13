@@ -127,8 +127,10 @@ export default class AdminDepartmentCard extends BasicDepartmentCard {
     }
 
     updatePendingUserId(user) {
-        let userItem = this.items[user.email];
-        userItem.id = user.uid;
+        var index = this.uidArray.indexOf(user.email);
+        this.uidArray[index] = user.uid;
+        this.items[user.uid] = this.items[user.email];
+        delete this.items[user.email];
     }
 
     addUser(user, animate = true) {

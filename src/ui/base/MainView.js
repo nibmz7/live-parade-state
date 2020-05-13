@@ -30,6 +30,10 @@ const template = html`
             padding-bottom: 55px;
             box-sizing: border-box;
         }
+
+        #list::-webkit-scrollbar {
+            display: none;
+          }
         
         #empty {
           position: absolute;

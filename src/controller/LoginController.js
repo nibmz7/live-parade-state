@@ -1,21 +1,19 @@
-import UI from '../ui/index.js';
+import UI from '../ui/UI.js';
+import LoginView from '../ui/LoginView.js';
+import Singleton from '../util/Singleton.js';
 
-export default class LoginController {
+export default class LoginController extends Singleton {
 
   constructor() {
-    UI.loginScreen();
+    super();
+    UI.LoginScreen();
     this.auth = ApplicationContext.getAuth();
     this.viewSwitcher = document.querySelector('view-switcher');
     this.onError = this.onError.bind(this);
   }
 
-  static getInstance() {
-    if (!LoginController.instance) LoginController.instance = new LoginController();
-    return LoginController.instance;
-  }
-
   activate() {
-    this.loginView = document.createElement('login-view');
+    this.loginView = new LoginView();
     this.loginView.onSignIn((email, password) => {
       this.auth.login(email, password);
     });

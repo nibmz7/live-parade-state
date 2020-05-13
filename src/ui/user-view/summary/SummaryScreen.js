@@ -48,13 +48,15 @@ const template = html`
     </style>
 
     <div id="root">
+        <summary-view id="am"></summary-view>
+        <summary-view id="pm"></summary-view>
         <wc-button id="close">X</wc-button>
         <wc-button id="export">Download file</wc-button>
     </div>
 
 `;
 
-const ids = ['root','close','export'];
+const ids = ['root','close','export','am','pm'];
 
 const loadingText = 'Using advanced AI algorithms coupled with state-of-the-art data analytics system assembled by world-renowned programmers, to construct and produce a freshly baked spreadsheet for our unit.';
 
@@ -64,19 +66,13 @@ export default class SummaryScreen extends BaseElement {
         super();
         this.currentTime = 'am';
         this.render(this.shadowRoot, template, ids);
-        let amSummaryView = new SummaryView();
-        let pmSummaryView = new SummaryView();
-        amSummaryView.timeOfDay = 'am';
-        pmSummaryView.timeOfDay = 'pm';
-        this.views.root.appendChild(amSummaryView);
-        this.views.root.appendChild(pmSummaryView);
-        this.summaryView = {am: amSummaryView, pm: pmSummaryView};
         this.views.export.onclick = () => {
             this.prepareDownload();
         }
         this.loading = document.createElement('div');
         this.loading.id = 'export-loading';
         this.loading.innerHTML = loadingText;
+        this.setTimeOfDay('am');
     }
 
     show() {
@@ -89,20 +85,20 @@ export default class SummaryScreen extends BaseElement {
 
     setController(controller) {
         this.controller = controller;
-        this.summaryView.am.setController(controller);
-        this.summaryView.pm.setController(controller);
+        this.views.am.setController(controller);
+        this.views.pm.setController(controller);
     }
 
     setTimeOfDay(isMorning) {
         this.currentTime = isMorning ? 'am' : 'pm';
         this.hiddenTime = isMorning ? 'pm' : 'am';
-        this.summaryView[this.currentTime].removeAttribute('hidden');
-        this.summaryView[this.hiddenTime].setAttribute('hidden', '');
+        this.views[this.currentTime].removeAttribute('hidden');
+        this.views[this.hiddenTime].setAttribute('hidden', '');
     }
 
     addUser(user) {
-        this.summaryView.am.addUser(user);
-        this.summaryView.pm.addUser(user);
+        this.views.am.addUser(user);
+        this.views.pm.addUser(user);
     }
 
     changeUser(user) {
@@ -111,15 +107,15 @@ export default class SummaryScreen extends BaseElement {
             let status = user.status[timeOfDay];
             let prevStatus = userBefore.status[timeOfDay];
             if (prevStatus.code != status.code) {
-                this.summaryView[timeOfDay].removeUser(userBefore);
-                this.summaryView[timeOfDay].addUser(user);
+                this.views[timeOfDay].removeUser(userBefore);
+                this.views[timeOfDay].addUser(user);
             } else {
                 let prevRemarksLength = prevStatus.remarks.length;
                 let remarksLength = status.remarks.length;
                 let remarksChanged = 0;
                 if (prevRemarksLength == 0 && remarksLength > 0) remarksChanged = -1;
                 if (prevRemarksLength > 0 && remarksLength == 0) remarksChanged = 1;
-                this.summaryView[timeOfDay].changeUser(user, remarksChanged);
+                this.views[timeOfDay].changeUser(user, remarksChanged);
             }
         }
         checkIfStatusChanged('am');
@@ -127,8 +123,8 @@ export default class SummaryScreen extends BaseElement {
     }
 
     removeUser(user) {
-        this.summaryView.am.removeUser(user);
-        this.summaryView.pm.removeUser(user);
+        this.views.am.removeUser(user);
+        this.views.pm.removeUser(user);
     }
 
     prepareDownload() {
@@ -183,13 +179,13 @@ export default class SummaryScreen extends BaseElement {
         const addRow = args => data.push(args);
 
         let date = getDate();
-        let strength = this.summaryView[this.currentTime].strengthCount;
+        let strength = this.views[this.currentTime].strengthCount;
         addRow(['SBW PLC Strength', '', '', '']);
         addRow([]);
         addRow(['Date', date]);
         addRow(['Total Strength', `${strength.present}/${strength.total}`]);
 
-        this.summaryView[this.currentTime].views.categories.forEach(
+        this.views[this.currentTime].views.categories.forEach(
             (categoryView, category) => {
                 if (categoryView.count > 0) {
                     for (let [code, card] of Object.entries(categoryView.cards)) {

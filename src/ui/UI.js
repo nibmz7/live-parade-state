@@ -13,16 +13,9 @@ const UI = {
         customElements.define('sign-out', SignOutDialogue);
         customElements.define('view-switcher', ViewSwitcher);
     },
-
-    adminScreen: () => {
-      AdminScreen();
-    },
-
-    userScreen: () => {
-      UserScreen();
-    },
-    
-    loginScreen: () => {
+    AdminScreen,
+    UserScreen,
+    LoginScreen: () => {
       customElements.define('login-view', LoginView);
     }
 }

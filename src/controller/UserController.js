@@ -1,18 +1,19 @@
-import UI from '../ui/index.js';
+import UI from '../ui/UI.js';
 import BaseController from './BaseController.js';
 import STATUS from '../model/Status.js';
+import UserView from '../ui/user-view/UserView.js';
 
 export default class UserController extends BaseController {
 
     constructor() {
         super();
-        UI.userScreen();
+        UI.UserScreen();
         this.viewName = 'user';
         this.users = {};
     }
 
     createMainView() {
-        return document.createElement('user-view');
+        return new UserView();
     }
 
     updateUserStatus(isMorning, code, remarks, uid) {
@@ -25,7 +26,7 @@ export default class UserController extends BaseController {
         this.branchRepository.updateUserStatus(isMorning, status, uid, this.branchid, this.users[uid].departmentid);
     }
 
-    async activate(user) {
+    activate(user) {
         super.activate();
         this.users = {};
         this.userid = user.uid;

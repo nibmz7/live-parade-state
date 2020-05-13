@@ -9,7 +9,7 @@ const template = html`
       color: #313131;
       margin-top: 15px;
     }
-    #yes{
+    #confirm{
       --button-font-size: 1rem;
       --button-padding: 10px;
       --button-radius: 3px;

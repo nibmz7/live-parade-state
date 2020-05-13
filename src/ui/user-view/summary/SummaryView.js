@@ -70,6 +70,7 @@ export default class SummaryView extends BaseElement {
     constructor() {
         super();
         this.render(this.shadowRoot, template, ids);
+        this.timeOfDay = this.id;
         this.strengthCount = { total: 0, present: 0, current: 0 };
         this.views.categories = [];
         this.views.list.onscroll = e => {

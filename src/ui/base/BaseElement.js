@@ -30,6 +30,9 @@ export class BaseElement extends HTMLElement {
             ids.forEach(id => {
                 this.views[id] = this.shadowRoot.getElementById(id);
             });
+            const undefinedElements = this.shadowRoot.querySelectorAll(':not(:defined)');
+            [...undefinedElements].map(el => customElements.upgrade(el));
+
         }
     }
 

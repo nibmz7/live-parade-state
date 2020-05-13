@@ -1,6 +1,7 @@
-import UI from '../ui/index.js';
+import UI from '../ui/UI.js';
 import BaseController from './BaseController.js';
 import Utils from '../util/Utils.js';
+import AdminView from '../ui/admin-view/AdminView.js';
 
 export const STATE = {
   creating: 'creating',
@@ -20,7 +21,7 @@ export default class AdminController extends BaseController {
   }
 
   createMainView() {
-    return document.createElement('admin-view');
+    return new AdminView();
   }
 
   async activate(user) {

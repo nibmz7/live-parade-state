@@ -5,8 +5,8 @@ export default class BaseController extends Singleton {
 
     constructor() {
         super();
-        this.branchRepository = ApplicationContext.getBranchRepository();
         this.viewSwitcher = document.querySelector('view-switcher');
+        this.branchRepository = ApplicationContext.getBranchRepository();
         this.subscribeUserEvent = this.subscribeUserEvent.bind(this);
         this.subscribeDepartmentEvent = this.subscribeDepartmentEvent.bind(this);
         this.users = {};

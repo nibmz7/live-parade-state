@@ -5,10 +5,11 @@ import UserController from '../src/controller/UserController.js';
 import BranchRepository from './data/BranchRepository.js';
 import AdminManager from './data/AdminManager.js';
 import Auth from './data/Auth.js';
-import UI from '../src/ui/index.js';
+import UI from '../src/ui/UI.js';
 
 
 const App = () => {
+  console.log(new Date() - window.startTime);
 
   const getBranchRepository = () => { return BranchRepository.getInstance(); }
   const getAdminManager = () => { return AdminManager.getInstance(); }
@@ -51,6 +52,7 @@ const App = () => {
     getAdminManager
   }
 }
+
 window.ApplicationContext = App();
 ApplicationContext.init();
 
