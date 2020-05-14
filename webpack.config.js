@@ -6,12 +6,13 @@ module.exports = {
   mode: 'production',
   output: {
     filename: 'main.js',
+    chunkFilename: '[name].js',
     path: path.resolve(__dirname, 'dist')
   },
   plugins: [
     new ReplaceInFileWebpackPlugin([{
       dir: 'dist',
-      files: ['main.js'],
+      files: ['main.js','login-screen.js','user-screen.js','admin-screen.js','admin-screen~user-screen.js'],
       rules: [{
         search: /`(.*?)`/gms,
         replace: function (match) {

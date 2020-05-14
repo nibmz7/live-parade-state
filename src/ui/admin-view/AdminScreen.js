@@ -10,16 +10,19 @@ import AdminController from '../../controller/AdminController.js';
 import BranchRepository from '../../../public/data/BranchRepository.js';
 import AdminManager from '../../../public/data/AdminManager.js';
 
+const define = (localName, elementClass) => {
+    customElements.get(localName) || customElements.define(localName, elementClass);
+}
 
 const AdminScreen = () => {
-    customElements.define('view-switcher', ViewSwitcher);
-    customElements.define('wc-button', WCButton);
-    customElements.define('wc-toast', WCToast);
-    customElements.define('sign-out', SignOutDialogue);
-    customElements.define('edit-department', EditDepartment);
-    customElements.define('edit-user', EditUser);
-    customElements.define('admin-department-card', AdminDepartmentCard);
-    customElements.define('admin-view', AdminView);
+    define('view-switcher', ViewSwitcher);
+    define('wc-button', WCButton);
+    define('wc-toast', WCToast);
+    define('sign-out', SignOutDialogue);
+    define('edit-department', EditDepartment);
+    define('edit-user', EditUser);
+    define('admin-department-card', AdminDepartmentCard);
+    define('admin-view', AdminView);
     const getController = () => {
         return AdminController.getInstance();
     }

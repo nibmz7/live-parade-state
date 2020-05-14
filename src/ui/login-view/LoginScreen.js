@@ -3,10 +3,14 @@ import ViewSwitcher from "../ViewSwitcher.js";
 import LoginView from "./LoginView.js";
 import LoginController from "../../controller/LoginController.js";
 
+const define = (localName, elementClass) => {
+    customElements.get(localName) || customElements.define(localName, elementClass);
+}
+
 const LoginScreen = () => {
-    customElements.define('wc-button', WCButton);
-    customElements.define('view-switcher', ViewSwitcher);
-    customElements.define('login-view', LoginView);
+    define('wc-button', WCButton);
+    define('view-switcher', ViewSwitcher);
+    define('login-view', LoginView);
     const getController = () => {
         return LoginController.getInstance();
     }

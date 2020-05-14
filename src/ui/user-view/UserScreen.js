@@ -12,19 +12,22 @@ import WCButton from "../widgets/WCButton.js";
 import UserController from "../../controller/UserController.js";
 import BranchRepository from "../../../public/data/BranchRepository.js";
 
+const define = (localName, elementClass) => {
+    customElements.get(localName) || customElements.define(localName, elementClass);
+}
 
 const UserScreen = () => {
-    customElements.define('view-switcher', ViewSwitcher);
-    customElements.define('wc-button', WCButton);
-    customElements.define('wc-toast', WCToast);
-    customElements.define('sign-out', SignOutDialogue);
-    customElements.define('edit-status', EditStatus);
-    customElements.define('status-details', StatusDetails);
-    customElements.define('user-department-card', UserDepartmentCard);
-    customElements.define('summary-card', SummaryCard);
-    customElements.define('summary-view', SummaryView);
-    customElements.define('summary-screen', SummaryScreen);
-    customElements.define('user-view', UserView);
+    define('view-switcher', ViewSwitcher);
+    define('wc-button', WCButton);
+    define('wc-toast', WCToast);
+    define('sign-out', SignOutDialogue);
+    define('edit-status', EditStatus);
+    define('status-details', StatusDetails);
+    define('user-department-card', UserDepartmentCard);
+    define('summary-card', SummaryCard);
+    define('summary-view', SummaryView);
+    define('summary-screen', SummaryScreen);
+    define('user-view', UserView);
     const getController = () => {
         return UserController.getInstance();
     }

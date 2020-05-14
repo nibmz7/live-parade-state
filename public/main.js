@@ -3,17 +3,17 @@ import Auth from './data/Auth.js';
 
 class App {
   constructor() {
-    console.log(new Date() - window.startTime);
+    // console.log(new Date() - window.startTime);
     this.auth = this.getAuth();
     this.auth.on('signed-out', this.onSignedOut.bind(this));
     this.auth.on('signed-in', this.onSignedIn.bind(this));  
   }
 
   init() {
-    firebase.firestore().settings({
-      host: "192.168.0.139:8080",
-      ssl: false
-    });
+    // firebase.firestore().settings({
+    //   host: "192.168.0.139:8080",
+    //   ssl: false
+    // });
     this.auth.init();
   }
 
@@ -34,7 +34,7 @@ class App {
 
   async showLogicScreen() {
     if(!this.loginScreen) {
-      let {default: LoginScreen} = await import('../src/ui/login-view/LoginScreen.js');
+      let {default: LoginScreen} = await import(/* webpackChunkName: "login-screen" */'../src/ui/login-view/LoginScreen.js');
       this.loginScreen = LoginScreen();
     }
     this.swapControllers(this.loginScreen.getController());
@@ -42,7 +42,7 @@ class App {
 
   async showAdminScreen(user) {
     if(!this.adminScreen) {
-      let {default: AdminScreen} = await import('../src/ui/admin-view/AdminScreen.js');
+      let {default: AdminScreen} = await import(/* webpackChunkName: "admin-screen" */'../src/ui/admin-view/AdminScreen.js');
       this.adminScreen = AdminScreen();
     }
     this.currentScreen = this.adminScreen;
@@ -51,7 +51,7 @@ class App {
 
   async showUserScreen(user) {
     if(!this.userScreen) {
-      let {default: UserScreen} = await import('../src/ui/user-view/UserScreen.js');
+      let {default: UserScreen} = await import(/* webpackChunkName: "user-screen" */'../src/ui/user-view/UserScreen.js');
       this.userScreen = UserScreen();
     }
     this.currentScreen = this.userScreen;
