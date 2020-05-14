@@ -1,4 +1,3 @@
-import UI from '../ui/UI.js';
 import BaseController from './BaseController.js';
 import STATUS from '../model/Status.js';
 import UserView from '../ui/user-view/UserView.js';
@@ -7,7 +6,6 @@ export default class UserController extends BaseController {
 
     constructor() {
         super();
-        UI.UserScreen();
         this.viewName = 'user';
     }
 

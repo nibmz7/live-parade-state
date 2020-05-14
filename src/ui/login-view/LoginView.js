@@ -1,5 +1,5 @@
-import {inputStyle, cardStyle} from './GlobalStyles.js';
-import {BaseElement, html} from './base/BaseElement.js';
+import {inputStyle, cardStyle} from '../GlobalStyles.js';
+import {BaseElement, html} from '../base/BaseElement.js';
 
 const template = html`
     <style>

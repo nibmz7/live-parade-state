@@ -1,4 +1,3 @@
-import UI from '../ui/UI.js';
 import BaseController from './BaseController.js';
 import Utils from '../util/Utils.js';
 import AdminView from '../ui/admin-view/AdminView.js';
@@ -14,7 +13,6 @@ export default class AdminController extends BaseController {
 
   constructor() {
     super();
-    UI.AdminScreen();
     this.adminManager = ApplicationContext.getAdminManager();
     this.viewName = 'admin';
     this.pendingState = {};

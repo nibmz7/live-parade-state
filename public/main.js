@@ -1,58 +1,74 @@
 import './init.js';
-import LoginController from '../src/controller/LoginController.js';
-import AdminController from '../src/controller/AdminController.js';
-import UserController from '../src/controller/UserController.js';
-import BranchRepository from './data/BranchRepository.js';
-import AdminManager from './data/AdminManager.js';
 import Auth from './data/Auth.js';
-import UI from '../src/ui/UI.js';
 
+class App {
+  constructor() {
+    console.log(new Date() - window.startTime);
+    this.auth = this.getAuth();
+    this.auth.on('signed-out', this.onSignedOut.bind(this));
+    this.auth.on('signed-in', this.onSignedIn.bind(this));  
+  }
 
-const App = () => {
-  console.log(new Date() - window.startTime);
+  init() {
+    firebase.firestore().settings({
+      host: "192.168.0.139:8080",
+      ssl: false
+    });
+    this.auth.init();
+  }
 
-  const getBranchRepository = () => { return BranchRepository.getInstance(); }
-  const getAdminManager = () => { return AdminManager.getInstance(); }
-  const getAuth = () => { return Auth.getInstance(); }
-  const auth = getAuth();
-
-  let currentController = null;
-
-  firebase.firestore().settings({
-    host: "192.168.0.139:8080",
-    ssl: false
-  });
-  
-  const swapControllers = (newController, data) => {
-    if (currentController) currentController.deactivate();
+  swapControllers(newController, data) {
+    if (this.currentController) this.currentController.deactivate();
     if (data) newController.activate(data);
     else newController.activate();
-    currentController = newController;
+    this.currentController = newController;
   }
 
-  auth.on('signed-out', () => {
-    let newController = LoginController.getInstance();
-    swapControllers(newController);
-  });
-
-  auth.on('signed-in', user => {
-    let newController = user.isAdmin ? AdminController.getInstance() : UserController.getInstance();
-    swapControllers(newController, user);
-  });
-
-  const init = () => {
-    UI.init();
-    auth.init();
+  onSignedOut() {
+    this.showLogicScreen();
   }
-  
-  return {
-    init,
-    getAuth,
-    getBranchRepository,
-    getAdminManager
+
+  onSignedIn(user) {
+    user.isAdmin ? this.showAdminScreen(user) : this.showUserScreen(user);
+  }
+
+  async showLogicScreen() {
+    if(!this.loginScreen) {
+      let {default: LoginScreen} = await import('../src/ui/login-view/LoginScreen.js');
+      this.loginScreen = LoginScreen();
+    }
+    this.swapControllers(this.loginScreen.getController());
+  }
+
+  async showAdminScreen(user) {
+    if(!this.adminScreen) {
+      let {default: AdminScreen} = await import('../src/ui/admin-view/AdminScreen.js');
+      this.adminScreen = AdminScreen();
+    }
+    this.currentScreen = this.adminScreen;
+    this.swapControllers(this.adminScreen.getController(), user);
+  }
+
+  async showUserScreen(user) {
+    if(!this.userScreen) {
+      let {default: UserScreen} = await import('../src/ui/user-view/UserScreen.js');
+      this.userScreen = UserScreen();
+    }
+    this.currentScreen = this.userScreen;
+    this.swapControllers(this.userScreen.getController(), user);
+  }
+
+  getAuth() {
+    return Auth.getInstance();
+  }
+  getBranchRepository() { 
+    return this.currentScreen.getBranchRepository();
+  }
+  getAdminManager() { 
+    return this.currentScreen.getAdminManager(); 
   }
 }
 
-window.ApplicationContext = App();
+window.ApplicationContext = new App();
 ApplicationContext.init();
 
