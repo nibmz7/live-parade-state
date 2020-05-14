@@ -73,8 +73,8 @@ export default class SummaryView extends BaseElement {
         this.timeOfDay = this.id;
         this.strengthCount = { total: 0, present: 0, current: 0 };
         this.views.categories = [];
-        this.views.list.onscroll = e => {
-            if (el.scrollTop > 0) this.views.strength.classList.add('elevate');
+        this.views.root.onscroll = e => {
+            if (this.views.root.scrollTop > 0) this.views.strength.classList.add('elevate');
             else this.views.strength.classList.remove('elevate');
         }
     }

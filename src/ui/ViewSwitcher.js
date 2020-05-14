@@ -10,7 +10,7 @@ const template = html`
         }
         #container {
             height: 100%;
-            width: 100%;
+            width: 100vw;
             display: grid;
             grid-template-columns: 1fr;
             grid-template-rows: 100%;
