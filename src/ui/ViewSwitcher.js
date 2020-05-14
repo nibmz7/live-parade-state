@@ -1,7 +1,7 @@
 import {fadeAnim} from './GlobalStyles.js';
 import {BaseElement, html} from "./base/BaseElement.js";
 
-const template = html`
+const template = html`/*minify-html*/
 
     <style>
         #root {
@@ -57,7 +57,7 @@ const template = html`
     <div id="root">
         <div id="container"></div>
     </div>
-`;
+/*end*/`;
 
 const ids = ['root','container'];
 

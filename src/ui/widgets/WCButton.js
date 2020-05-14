@@ -1,6 +1,6 @@
 import {BaseElement, html} from '../base/BaseElement.js';
 
-const template = html`
+const template = html`/*minify-html*/
   <style>
     :host {
         --button-font-size: 1.3rem;
@@ -67,7 +67,7 @@ const template = html`
   </style>
   
   <button id="button"><slot></slot></button>
-`;
+/*end*/`;
 
 export default class WCButton extends BaseElement {
     constructor() {

@@ -2,7 +2,7 @@ import { cardStyle } from '../GlobalStyles.js';
 import User from '../../model/User.js';
 import { html, BaseElement } from './BaseElement.js';
 
-const template = html`
+const template = html`/*minify-html*/
 
     <style>
         ${cardStyle}
@@ -138,11 +138,11 @@ const template = html`
         </div>
     </div>
           
-`;
+/*end*/`;
 
 const ids = ['list', 'header', 'sub-header','header-holder'];
 
-const item_template = html`
+const item_template = html`/*minify-html*/
     <div class="list-item">
         <p id="primary-text"></p>
         <p id="secondary-text"></p>

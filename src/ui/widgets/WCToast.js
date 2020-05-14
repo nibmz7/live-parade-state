@@ -1,6 +1,6 @@
 import {BaseElement, html} from '../base/BaseElement.js';
 
-const template = html`
+const template = html`/*minify-html*/
     <style>
         #root {
             position: absolute;
@@ -44,7 +44,7 @@ const template = html`
     </style>
 
     <div id="root"><slot></slot></div>
-`;
+/*end*/`;
 
 export default class WCToast extends BaseElement {
 

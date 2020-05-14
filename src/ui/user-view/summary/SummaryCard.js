@@ -1,7 +1,7 @@
 import BasicDepartmentCard from "../../base/BasicDepartmentCard.js";
 import { html } from "../../base/BaseElement.js";
 
-const template = html`
+const template = html`/*minify-html*/
     <style>
         #sub-header {
             padding: 10px;
@@ -34,7 +34,7 @@ const template = html`
             counter-increment: total nsf;
         }
     </style>
-`;
+/*end*/`;
 
 export default class SummaryCard extends BasicDepartmentCard {
 

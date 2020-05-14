@@ -3,7 +3,7 @@ import { inputStyle } from '../../GlobalStyles.js';
 import Rank from '../../../model/Rank.js';
 import { html } from '../../base/BaseElement.js';
 
-const template = html`
+const template = html`/*minify-html*/
     <style>
 
         ${inputStyle}
@@ -125,7 +125,7 @@ const template = html`
         <wc-button id="confirm">Confirm</wc-button>
         
     </div>
-`;
+/*end*/`;
 
 const ids = ['confirm','delete','change-password','domain','email','rank','name','password','regular','department-name', 'header'];
 

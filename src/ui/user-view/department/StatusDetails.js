@@ -2,7 +2,7 @@ import Dialogue from '../../base/Dialogue.js';
 import STATUS from '../../../model/Status.js';
 import { html } from '../../base/BaseElement.js';
 
-const template = html`
+const template = html`/*minify-html*/
 
     <style>
         .container {
@@ -68,7 +68,7 @@ const template = html`
         <div class="remarks"></div>
         <div class="updatedby"></div>
     </div>  
-`;
+/*end*/`;
 
 export default class StatusDetails extends Dialogue {
 

@@ -3,7 +3,7 @@ import { STATE } from '../../controller/AdminController.js';
 import { fadeAnim } from '../GlobalStyles.js';
 import { html } from '../base/BaseElement.js';
 
-const template = html`
+const template = html`/*minify-html*/
     <style>
         #sub-header {
             font-size: 1.3rem;
@@ -44,15 +44,11 @@ const template = html`
 
         ${fadeAnim(300, 500)}
     </style>
-`;
+/*end*/`;
 
-const edit_button = html`
-        <wc-button type="plain" id="edit">edit</wc-button>
-`;
+const edit_button = html`<wc-button type="plain" id="edit">edit</wc-button>`;
 
-const loading_template = html`
-        <p class="loading"></p>
-`;
+const loading_template = html`<p class="loading"></p>`;
 
 export default class AdminDepartmentCard extends BasicDepartmentCard {
 

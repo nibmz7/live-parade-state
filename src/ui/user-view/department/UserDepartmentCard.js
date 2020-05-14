@@ -2,7 +2,7 @@ import BasicDepartmentCard from '../../base/BasicDepartmentCard.js';
 import STATUS from '../../../model/Status.js';
 import { html } from '../../base/BaseElement.js';
 
-const template = html`
+const template = html`/*minify-html*/
     <style>
         #sub-header {
             padding: 10px;
@@ -47,7 +47,7 @@ const template = html`
             counter-increment: pm-total pm-nsf;
         }
     </style>
-`;
+/*end*/`;
 
 export default class UserDepartmentCard extends BasicDepartmentCard {
 

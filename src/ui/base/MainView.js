@@ -1,6 +1,6 @@
 import {BaseElement, html} from './BaseElement.js';
 
-const template = html`
+const template = html`/*minify-html*/
     <style>
         :host {
             width: inherit;
@@ -85,7 +85,7 @@ const template = html`
           </div>
     </div>
 
-`;
+/*end*/`;
 
 const ids = ['root','list','empty','float-button','welcome-text','content']
 
