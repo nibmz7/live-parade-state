@@ -1,9 +1,10 @@
 import './init.js';
 import Auth from './data/Auth.js';
+import LoginScreen from '../src/ui/login-view/LoginScreen.js';
 
 class App {
   constructor() {
-    // console.log(new Date() - window.startTime);
+    console.log(new Date() - window.startTime);
     this.auth = this.getAuth();
     this.auth.on('signed-out', this.onSignedOut.bind(this));
     this.auth.on('signed-in', this.onSignedIn.bind(this));  
@@ -34,7 +35,6 @@ class App {
 
   async showLogicScreen() {
     if(!this.loginScreen) {
-      let {default: LoginScreen} = await import(/* webpackChunkName: "login-screen" */'../src/ui/login-view/LoginScreen.js');
       this.loginScreen = LoginScreen();
     }
     this.swapControllers(this.loginScreen.getController());

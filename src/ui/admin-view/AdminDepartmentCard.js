@@ -99,11 +99,11 @@ export default class AdminDepartmentCard extends BasicDepartmentCard {
         super.setListItemData(item, user);
         if (user.state) {
             if (user.state === STATE.completed) {
-                let loadingText = item.querySelector('.loading');
+                let loadingText = item.div.querySelector('.loading');
                 this.animate(loadingText, 'fade-out', () => {
                     loadingText.remove();
                 });
-                this.onclick(item, () => {this.onUserSelected(user.uid)});
+                this.onclick(item.div, () => {this.onUserSelected(user.uid)});
             } else {
                 this.onclick(item, null);
                 let clone = loading_template.get().content.cloneNode(true);
@@ -112,7 +112,7 @@ export default class AdminDepartmentCard extends BasicDepartmentCard {
                 this.animate(loadingText, 'fade-in', () => {
                     loadingText.classList.remove('fade-in');
                 });
-                item.appendChild(loadingText);
+                item.div.appendChild(loadingText);
             }  
         }
     }

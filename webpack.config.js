@@ -12,7 +12,7 @@ module.exports = {
   plugins: [
     new ReplaceInFileWebpackPlugin([{
       dir: 'dist',
-      files: ['main.js','login-screen.js','user-screen.js','admin-screen.js','admin-screen~user-screen.js'],
+      files: ['main.js','user-screen.js','admin-screen.js'],
       rules: [{
         search: /`(.*?)`/gms,
         replace: function (match) {
