@@ -1,7 +1,7 @@
 import STATUS, { STATUS_CATEGORY } from "../../../model/Status.js";
 import { html, BaseElement } from "../../base/BaseElement.js";
 
-const template = html`/*minify-html*/
+const template = html`
 
     <style>
         #root {
@@ -54,14 +54,14 @@ const template = html`/*minify-html*/
         <div id="list"></div>
     </div>
 
-/*end*/`;
+`;
 
-const category_template = html`/*minify-html*/
+const category_template = html`
     <div class="category">
         <h2 id="header"></h2>
         <div id="cards"></div>
     </div>
-/*end*/`;
+`;
 
 const ids = ['root', 'strength', 'list'];
 

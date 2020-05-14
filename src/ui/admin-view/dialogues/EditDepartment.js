@@ -2,7 +2,7 @@ import {inputStyle} from '../../GlobalStyles.js';
 import Dialogue from '../../base/Dialogue.js';
 import { html } from '../../base/BaseElement.js';
 
-const template = html`/*minify-html*/
+const template = html`
     <style>
         ${inputStyle}
 
@@ -39,7 +39,7 @@ const template = html`/*minify-html*/
         <input id="name" type="name" placeholder="e.g. Log branch" autocomplete="off" required/>
         <wc-button id="confirm">Confirm</wc-button>
     </div>
-/*end*/`;
+`;
 
 const ids = ['name','confirm','delete','header'];
 

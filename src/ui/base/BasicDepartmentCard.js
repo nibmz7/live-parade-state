@@ -2,7 +2,7 @@ import { cardStyle } from '../GlobalStyles.js';
 import User from '../../model/User.js';
 import { html, BaseElement } from './BaseElement.js';
 
-const template = html`/*minify-html*/
+const template = html`
 
     <style>
         ${cardStyle}
@@ -138,16 +138,16 @@ const template = html`/*minify-html*/
         </div>
     </div>
           
-/*end*/`;
+`;
 
 const ids = ['list', 'header', 'sub-header','header-holder'];
 
-const item_template = html`/*minify-html*/
+const item_template = /*minify-html*/html`
     <div class="list-item">
         <p id="primary-text"></p>
         <p id="secondary-text"></p>
     </div>
-`;
+`;/*end*/
 
 
 export default class BasicDepartmentCard extends BaseElement {

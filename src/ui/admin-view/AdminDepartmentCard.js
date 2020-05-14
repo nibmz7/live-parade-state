@@ -3,7 +3,7 @@ import { STATE } from '../../controller/AdminController.js';
 import { fadeAnim } from '../GlobalStyles.js';
 import { html } from '../base/BaseElement.js';
 
-const template = html`/*minify-html*/
+const template = html`
     <style>
         #sub-header {
             font-size: 1.3rem;
@@ -44,7 +44,7 @@ const template = html`/*minify-html*/
 
         ${fadeAnim(300, 500)}
     </style>
-/*end*/`;
+`;
 
 const edit_button = html`<wc-button type="plain" id="edit">edit</wc-button>`;
 

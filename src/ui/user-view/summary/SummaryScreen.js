@@ -2,7 +2,7 @@ import { BaseElement, html } from "../../base/BaseElement.js";
 import SummaryView from "./SummaryView.js";
 import STATUS from "../../../model/Status.js";
 
-const template = html`/*minify-html*/
+const template = html`
 
     <style>
         #root {
@@ -54,7 +54,7 @@ const template = html`/*minify-html*/
         <wc-button id="export">Download file</wc-button>
     </div>
 
-/*end*/`;
+`;
 
 const ids = ['root','close','export','am','pm'];
 

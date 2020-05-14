@@ -13,7 +13,7 @@ module.exports = {
       dir: 'dist',
       files: ['main.js'],
       rules: [{
-        search: /\/\*minify-html\*\/(.*?)\/\*end\*\//gms,
+        search: /`(.*?)`/gms,
         replace: function (match) {
           let htmlString = match.replace(/^\s+/gm, '');
           htmlString = htmlString.replace(/\s\s*$/gm, '');

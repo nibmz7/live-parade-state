@@ -4,7 +4,7 @@ import { timeSelector } from '../../GlobalStyles.js';
 import { html } from '../../base/BaseElement.js';
 
 const HINT = 'Event, work, pooping etc.';
-const template = html`/*minify-html*/
+const template = html`
   <style>
     .container {
         position: relative;
@@ -94,7 +94,7 @@ const template = html`/*minify-html*/
       <div id="comment"></div>
   </div>
   
-/*end*/`;
+`;
 
 const ids = ['remarks-input', 'status-chooser', 'comment', 'name', 'save', 'time-selector'];
 

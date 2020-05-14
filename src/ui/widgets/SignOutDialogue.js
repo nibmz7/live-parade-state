@@ -1,7 +1,7 @@
 import Dialogue from '../base/Dialogue.js';
 import { html } from '../base/BaseElement.js';
 
-const template = html`/*minify-html*/
+const template = html`
   <style>
     
     h4 {
@@ -20,7 +20,7 @@ const template = html`/*minify-html*/
     <h4>Are you sure you want sign out?</h4>
     <wc-button type="solid" id="confirm">Yes. I'm positive.</wc-button>
   </div>
-/*end*/`;
+`;
 
 export default class SignOutDialogue extends Dialogue {
   

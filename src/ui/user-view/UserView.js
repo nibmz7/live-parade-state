@@ -3,7 +3,7 @@ import { timeSelector } from '../GlobalStyles.js';
 import { html } from "../base/BaseElement.js";
 import SummaryScreen from "./summary/SummaryScreen.js";
 
-const template = html`/*minify-html*/
+const template = html`
 
     <style>
 
@@ -47,7 +47,7 @@ const template = html`/*minify-html*/
 
     ${timeSelector}
 
-/*end*/`;
+`;
 
 const ids = ['time-selector'];
 

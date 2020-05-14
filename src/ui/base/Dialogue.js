@@ -1,7 +1,7 @@
 import { fadeAnim, scaleAnim } from '../GlobalStyles.js';
 import {BaseElement, html} from './BaseElement.js';
 
-const template = html`/*minify-html*/
+const template = html`
     <style>
         #root {
             position: absolute;
@@ -56,7 +56,7 @@ const template = html`/*minify-html*/
     <div id="root">
         <div id="dialogue"></div> 
     </div>
-/*end*/`;
+`;
 
 const ids = ['root', 'dialogue'];
 

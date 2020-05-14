@@ -1,7 +1,7 @@
 import {inputStyle, cardStyle} from './GlobalStyles.js';
 import {BaseElement, html} from './base/BaseElement.js';
 
-const template = html`/*minify-html*/
+const template = html`
     <style>
         :host {
             width: 70%;
@@ -57,7 +57,7 @@ const template = html`/*minify-html*/
 
         <p id="error"></p>
     </div>
-/*end*/`;
+`;
 
 const ids = ['error','email','password','login'];
 
