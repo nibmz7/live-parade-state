@@ -28,13 +28,17 @@ const UserScreen = () => {
     define('summary-view', SummaryView);
     define('summary-screen', SummaryScreen);
     define('user-view', UserView);
-    const getController = () => {
-        return UserController.getInstance();
+    let controller = UserController.getInstance();
+    const activate = (user) => {
+        return controller.activate(user);
+    }
+    const deactivate = () => {
+      return controller.deactivate();
     }
     const getBranchRepository = () => {
         return BranchRepository.getInstance();
     }
-    return { getController, getBranchRepository };
+    return { activate, deactivate, getBranchRepository };
 }
 
 export default UserScreen;

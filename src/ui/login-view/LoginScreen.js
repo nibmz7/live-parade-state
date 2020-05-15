@@ -11,10 +11,14 @@ const LoginScreen = () => {
     define('wc-button', WCButton);
     define('view-switcher', ViewSwitcher);
     define('login-view', LoginView);
-    const getController = () => {
-        return LoginController.getInstance();
+    let controller = LoginController.getInstance();
+    const activate = (user) => {
+      return controller.activate(user);
     }
-    return { getController };
+    const deactivate = () => {
+      return controller.deactivate();
+    }
+    return { activate, deactivate, getController };
 }
 
 export default LoginScreen;

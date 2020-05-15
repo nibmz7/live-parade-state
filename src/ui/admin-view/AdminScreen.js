@@ -23,8 +23,13 @@ const AdminScreen = () => {
     define('edit-user', EditUser);
     define('admin-department-card', AdminDepartmentCard);
     define('admin-view', AdminView);
-    const getController = () => {
-        return AdminController.getInstance();
+    
+    let controller = AdminController.getInstance();
+    const activate = (user) => {
+      return controller.activate(user);
+    }
+    const deactivate = () => {
+      return controller.deactivate();
     }
     const getBranchRepository = () => {
         return BranchRepository.getInstance();
@@ -32,7 +37,7 @@ const AdminScreen = () => {
     const getAdminManager = () => {
         return AdminManager.getInstance();
     }
-    return { getController, getBranchRepository, getAdminManager };
+    return { activate, deactivate, getBranchRepository, getAdminManager };
 }
 
 export default AdminScreen;
