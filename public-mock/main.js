@@ -1,6 +1,6 @@
-import Auth from './data/Auth.js';
-import BranchRepository from './data/BranchRepository.js';
-import AdminManager from './data/AdminManager.js';
+import FakeAuth from './data/FakeAuth.js';
+import FakeBranchRepository from './data/FakeBranchRepository.js';
+// import AdminManager from './data/AdminManager.js';
 import App from '../src/app.js';
 
 class Application extends App {
@@ -9,15 +9,15 @@ class Application extends App {
   }
 
   getAuth() {
-    return Auth.getInstance();
+    return FakeAuth.getInstance();
   }
 
   getBranchRepository() {
-    return BranchRepository.getInstance();
+    return FakeBranchRepository.getInstance();
   }
 
   getAdminManager() {
-    return AdminManager.getInstance();
+    return FakeAdminManager.getInstance();
   }
 }
 
