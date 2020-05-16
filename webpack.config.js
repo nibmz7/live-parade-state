@@ -12,14 +12,13 @@ module.exports = {
   plugins: [
     new ReplaceInFileWebpackPlugin([{
       dir: 'dist',
-      files: ['main.js','user-screen.js','admin-screen.js'],
+      files: ['main.js','admin-screen.js'],
       rules: [{
         search: /`(.*?)`/gms,
         replace: function (match) {
           let htmlString = match.replace(/^\s+/gm, '');
           htmlString = htmlString.replace(/\s\s*$/gm, '');
           htmlString = htmlString.replace(/\r?\n|\r/g, '');
-          htmlString = htmlString.replace(/\/\*(minify-html|end)\*\//gms, '');
           return htmlString;
         }
       }]

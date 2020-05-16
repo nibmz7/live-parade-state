@@ -10,7 +10,6 @@ import SignOutDialogue from "../widgets/SignOutDialogue.js";
 import ViewSwitcher from "../ViewSwitcher.js";
 import WCButton from "../widgets/WCButton.js";
 import UserController from "../../controller/UserController.js";
-import BranchRepository from "../../../public/data/BranchRepository.js";
 
 const define = (localName, elementClass) => {
     customElements.get(localName) || customElements.define(localName, elementClass);
@@ -28,17 +27,21 @@ const UserScreen = () => {
     define('summary-view', SummaryView);
     define('summary-screen', SummaryScreen);
     define('user-view', UserView);
-    let controller = UserController.getInstance();
+
+
+    const getController = () => {
+        return UserController.getInstance();
+    }
+
     const activate = (user) => {
-        return controller.activate(user);
+        return getController().activate(user);
     }
+
     const deactivate = () => {
-      return controller.deactivate();
+      return getController().deactivate();
     }
-    const getBranchRepository = () => {
-        return BranchRepository.getInstance();
-    }
-    return { activate, deactivate, getBranchRepository };
+    
+    return { activate, deactivate };
 }
 
 export default UserScreen;

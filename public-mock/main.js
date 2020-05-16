@@ -1,4 +1,3 @@
-import './init.js';
 import Auth from './data/Auth.js';
 import BranchRepository from './data/BranchRepository.js';
 import AdminManager from './data/AdminManager.js';

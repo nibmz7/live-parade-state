@@ -54,9 +54,9 @@ export default class UserController extends BaseController {
             let userDepartment;
             let departments = data.departments
                 .filter(department => {
-                    let isDiffDepartment = department.uid != this.departmentid;
-                    if (!isDiffDepartment) userDepartment = department;
-                    return isDiffDepartment;
+                    let isUserDepartment = department.uid === this.departmentid;
+                    if (!isUserDepartment) userDepartment = department;
+                    return isUserDepartment;
                 });
             departments.unshift(userDepartment);
             for (let department of departments) {
