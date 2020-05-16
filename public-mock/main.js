@@ -1,7 +1,7 @@
 import FakeAuth from './data/FakeAuth.js';
 import FakeBranchRepository from './data/FakeBranchRepository.js';
-// import AdminManager from './data/AdminManager.js';
 import App from '../src/app.js';
+import FakeAdminManager from './data/FakeAdminManager.js';
 
 window.firebase = {
   firestore: {

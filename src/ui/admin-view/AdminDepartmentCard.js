@@ -125,6 +125,7 @@ export default class AdminDepartmentCard extends BasicDepartmentCard {
         var index = this.uidArray.indexOf(user.email);
         this.uidArray[index] = user.uid;
         this.items[user.uid] = this.items[user.email];
+        this.items[user.uid].div.id = user.uid;
         delete this.items[user.email];
     }
 

@@ -6,9 +6,11 @@ export default class FakeBranchRepository extends SingletonEventDispatcher {
     constructor() {
         super();
         this.uniqueId = 0;
+        this.depCount = 1;
         this.users = {};
         this.departments = {};
         FakeDb.departments.forEach(department => {
+            this.depCount++;
             this.departments[department.uid] = department
         });
         let users = FakeDb.users;
@@ -21,10 +23,37 @@ export default class FakeBranchRepository extends SingletonEventDispatcher {
         });
     }
 
+    addDepartment(name) {
+        this.departments[this.depCount] = { uid: this.depCount, name };
+        this.emit('department-event', {
+            type: 'added',
+            department: this.cloneDepartment(this.departments[this.depCount++])
+        });
+    }
+
+    updateDepartment(uid, name) {
+        this.departments[uid].name = name;
+        this.emit('department-event', {
+            type: 'modified',
+            department: this.cloneDepartment(this.departments[uid])
+        });
+    }
+
+    deleteDepartment(departmentid) {
+        for (let [uid, user] of Object.entries(this.users)) {
+            if(user.departmentid === departmentid) {
+                this.emit('user-event', { type: 'removed', user });
+                delete this.users[uid];
+            }
+        }
+        this.emit('department-event', { type: 'removed', department: {uid: departmentid} });
+        delete this.departments[departmentid];
+    }
+
     //emailPrefix, password, name, rank, departmentid, regular
     async createUser(userInfo) {
         await new Promise(res => setTimeout(res, 1000));
-        let {emailPrefix, name, rank, departmentid, regular} = userInfo;
+        let { emailPrefix, name, rank, departmentid, regular } = userInfo;
         let user = this.toUser(CreateUser(1, departmentid, `${emailPrefix}@test.com`, name, rank, regular));
         this.users[user.uid] = user;
         this.emit('user-event', { type: 'added', user: this.cloneUser(user) });
@@ -33,7 +62,7 @@ export default class FakeBranchRepository extends SingletonEventDispatcher {
     //uid, emailPrefix, name, rank, departmentid, regular
     async updateUser(userInfo) {
         await new Promise(res => setTimeout(res, 1000));
-        let {uid, emailPrefix, name, rank, departmentid, regular} = userInfo;
+        let { uid, emailPrefix, name, rank, departmentid, regular } = userInfo;
         let user = this.users[uid];
         user.email = `${emailPrefix}@test.com`;
         user.name = name;
@@ -41,7 +70,7 @@ export default class FakeBranchRepository extends SingletonEventDispatcher {
         user.departmentid = departmentid;
         user.regular = regular;
         user.fullname = user.rank + ' ' + user.name,
-        this.emit('user-event', { type: 'added', user: this.cloneUser(this.users[uid]) });
+            this.emit('user-event', { type: 'modified', user: this.cloneUser(this.users[uid]) });
     }
 
     async deleteUser(uid) {
@@ -95,7 +124,7 @@ export default class FakeBranchRepository extends SingletonEventDispatcher {
         user.status.pm.expired = pmIsExpired;
 
         return {
-            uid: this.uniqueId++,
+            uid: `user-${this.uniqueId++}`,
             fullname: user.rank + ' ' + user.name,
             ...user
         }
