@@ -11,14 +11,26 @@ export default class FakeBranchRepository extends SingletonEventDispatcher {
         this.changeDate(users[2]);
         this.changeDate(users[5]);
         this.uniqueId = 0;
-        this.users = users.map(user => this.toUser(user));
+        this.users = {};
+        this.usersList = users.map(item => {
+            let user = this.toUser(item);
+            this.users[user.uid] = user;
+            return user;
+        });
     }
 
-    updateUserStatus(isMorning, status, uid, branchid) {
+    async updateUserStatus(isMorning, status, uid, branchid) {
+        await new Promise(res => setTimeout(res, 1000));
+        let user =  JSON.parse(JSON.stringify(this.users[uid]));
         let timeOfDay = isMorning ? 'am' : 'pm';
-        this.users[uid].status[timeOfDay] = { ...status };
-        this.emit('user-event', { type: 'modified', user: this.users[uid] });
-    }
+        user.status.am.timestamp = new Date(user.status.am.timestamp);
+        user.status.pm.timestamp = new Date(user.status.pm.timestamp);
+        user.status[timeOfDay] = { ...status };
+        user.status[timeOfDay].updatedby = this.users[uid].fullname;
+        user.status[timeOfDay].expired = false;
+        this.emit('user-event', { type: 'modified', user });
+        this.users[uid] = user;
+   }
 
     checkSameDay(statusDate) {
         let date = new Date();
@@ -58,7 +70,7 @@ export default class FakeBranchRepository extends SingletonEventDispatcher {
     async subscribe(branchid) {
         await new Promise(res => setTimeout(res, 700));
         this.emit('department-event', { type: 'found', departments: this.departments });
-        this.emit('user-event', { type: 'found', users: this.users });
+        this.emit('user-event', { type: 'found', users: this.usersList });
     }
 
     unsubscribe() { }

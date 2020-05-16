@@ -38,13 +38,15 @@ export default class BranchRepository extends SingletonEventDispatcher {
 
     toUser(doc) {
         let user = doc.data().data;
+        user.status.am.timestamp = user.status.am.timestamp.toDate();
+        user.status.pm.timestamp = user.status.am.timestamp.toDate();
         let amTimestamp = user.status.am.timestamp;
         let pmTimestamp = user.status.pm.timestamp;
         let amIsExpired = false;
         let pmIsExpired = false;
         if (amTimestamp && pmTimestamp) {
-            amIsExpired = !this.checkSameDay(amTimestamp.toDate());
-            pmIsExpired = !this.checkSameDay(pmTimestamp.toDate());
+            amIsExpired = !this.checkSameDay(amTimestamp);
+            pmIsExpired = !this.checkSameDay(pmTimestamp);
         }
         user.status.am.expired = amIsExpired;
         user.status.pm.expired = pmIsExpired;

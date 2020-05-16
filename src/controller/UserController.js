@@ -44,8 +44,8 @@ export default class UserController extends BaseController {
             }
             this.mainView.views.summary.addUser(user);
         }
-        if (type == 'modified') this.mainView.views.summary.changeUser(user);
-        if (type == 'removed') this.mainView.views.summary.removeUser(user);
+        else if (type == 'modified') this.mainView.views.summary.changeUser(user);
+        else if (type == 'removed') this.mainView.views.summary.removeUser(user);
     }
 
     subscribeDepartmentEvent(data) {

@@ -86,10 +86,10 @@ export default class StatusDetails extends Dialogue {
         this.name.textContent = user.fullname + ' Status';
         this.setInfo(user.status.am, 0, 'am', amupdater);
         this.setInfo(user.status.pm, 1, 'pm', pmupdater);
-    }
+    } 
 
     setInfo(status, idx, prefix, updater) {
-        let updatedTime = status.timestamp.toDate();
+        let updatedTime = status.timestamp;
         let hasRemark = status.remarks.length > 0;
         let statusName = `${prefix}: ${STATUS[status.code].fullName}`;
         if(status.expired) statusName = ' <span>[Expired]</span>\n' + statusName;

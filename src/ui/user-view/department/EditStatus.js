@@ -190,7 +190,7 @@ export default class EditStatus extends Dialogue {
 
     compareStatusDate(timeOfDay, updater) {
         let userStatus = this.user.status[timeOfDay];
-        let userDate = userStatus.timestamp.toDate();
+        let userDate = userStatus.timestamp;
         let statusDate = this.status[timeOfDay].date;
         if (!statusDate || statusDate.getTime() != userDate.getTime()) {
             let status = {
@@ -210,6 +210,6 @@ export default class EditStatus extends Dialogue {
     updateAfternoonStatus() {
         this.pmStatus = this.user.status.pm.code;
         this.pmRemarks = this.user.status.pm.remarks;
-        this.pmDate = this.user.status.pm.timestamp.toDate();
+        this.pmDate = this.user.status.pm.timestamp;
     }
 }
