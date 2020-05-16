@@ -42,3 +42,4 @@ const users = [
 const FakeDb = {departments, users};
 
 export default FakeDb;
+export {User as CreateUser};

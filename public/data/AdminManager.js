@@ -33,13 +33,13 @@ export default class AdminManager extends Singleton {
     }
 
     createUser(user) {
-        //emailPrefix, password, name, rank, departmentid
+        //emailPrefix, password, name, rank, departmentid, regular
         let createUserFunc = this.functions.httpsCallable('createUser');
         return createUserFunc({ ...user });
     }
 
     updateUser(user) {
-        //emailPrefix, name, rank, departmentid
+        //emailPrefix, name, rank, departmentid, regular
         let updateUserFunc = this.functions.httpsCallable('updateUser');
         return updateUserFunc({ ...user });
     }
