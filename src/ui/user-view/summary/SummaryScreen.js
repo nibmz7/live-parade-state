@@ -56,7 +56,7 @@ const template = html`
 
 `;
 
-const ids = ['root','close','export','am','pm'];
+const ids = ['root', 'close', 'export', 'am', 'pm'];
 
 const loadingText = 'Using advanced AI algorithms coupled with state-of-the-art data analytics system assembled by world-renowned programmers, to construct and produce a freshly baked spreadsheet for our unit.';
 
@@ -127,12 +127,26 @@ export default class SummaryScreen extends BaseElement {
         this.views.pm.removeUser(user);
     }
 
+    loadXlsxLibrary() {
+        return new Promise(resolve => {
+            if (!this.xlsxLibraryLoaded) {
+                this.xlsxLibraryLoaded = true;
+                let script = document.createElement('script');
+                script.src = 'https://cdn.jsdelivr.net/npm/xlsx-populate@1.19.1/browser/xlsx-populate.min.js';
+                script.onload = function () {
+                    resolve();
+                };
+                document.head.appendChild(script);
+            } else resolve();
+        });
+    }
+
     prepareDownload() {
         if (this.isExporting) return;
         this.isExporting = true;
-        const start = () => {
-            this.downloadSpreadsheet();
+        this.animate(this.loading, 'fade-in', async () => {
             this.loading.classList.remove('fade-in');
+            await this.loadXlsxLibrary();
             setTimeout(() => {
                 this.animate(this.loading, 'fade-out', () => {
                     this.loading.remove();
@@ -140,17 +154,7 @@ export default class SummaryScreen extends BaseElement {
                     this.isExporting = false;
                 });
             }, 3000);
-        }
-        this.animate(this.loading, 'fade-in', () => {
-            if (!this.loadExcelExport) {
-                this.loadExcelExport = true;
-                let excelScript = document.createElement('script');
-                excelScript.src = 'https://cdn.jsdelivr.net/npm/xlsx-populate@1.19.1/browser/xlsx-populate.min.js';
-                excelScript.onload = function () {
-                    start();
-                };
-                document.head.appendChild(excelScript);
-            } else start();
+            this.downloadSpreadsheet();
         });
         document.body.appendChild(this.loading);
     }

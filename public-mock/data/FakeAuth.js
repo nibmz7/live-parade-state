@@ -24,6 +24,7 @@ export default class FakeAuth extends SingletonEventDispatcher {
         if (isAdmin) userInfo = { isAdmin, email: 'admin@test.com', uid: 1 };
         else {
             userInfo = FakeDb.users[5];
+            userInfo.uid = 'user-5';
         }
         localStorage.setItem('user', JSON.stringify(userInfo));
         if (!this.isSignedIn) {

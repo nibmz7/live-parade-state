@@ -1,4 +1,5 @@
 import Singleton from "../../src/util/Singleton.js";
+import User from "../../src/model/User.js";
 
 export default class FakeAdminManager extends Singleton {
     constructor() {
@@ -27,15 +28,23 @@ export default class FakeAdminManager extends Singleton {
         this.branchRepository.deleteDepartment(departmentid);
     }
 
-    createUser(user) {
+    async createUser(user) {
         //emailPrefix, password, name, rank, departmentid, regular
-        this.branchRepository.createUser(user);
+        await new Promise(res => setTimeout(res, 1000));
+        let email = `${user.emailPrefix}@${this.domain}`;
+        let userByEmail = this.branchRepository.getUserByEmail(email);
+        if(!userByEmail) this.branchRepository.createUser(user);
+        else throw Error();
     }
 
-    updateUser(user) {
+    async updateUser(user) {
         //emailPrefix, name, rank, departmentid, regular
-        this.branchRepository.updateUser(user);
-
+        await new Promise(res => setTimeout(res, 1000));
+        let email = `${user.emailPrefix}@${this.domain}`;
+        let userByEmail = this.branchRepository.getUserByEmail(email);
+        if(!userByEmail || userByEmail && userByEmail.uid === user.uid) {
+            this.branchRepository.updateUser(user);
+        } else throw Error();
     }
 
     updatePassword(uid, password) {}

@@ -90,9 +90,7 @@ export default class ViewSwitcher extends BaseElement {
             });
             this.views.container.appendChild(view);
         } else {
-            this.animate(view, 'fade-in', () => {
-                view.classList.remove('fade-in');
-            });
+            this.animate(view, 'fade-in');
             this.views.container.appendChild(view);
         }
     }

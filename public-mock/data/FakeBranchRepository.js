@@ -23,6 +23,13 @@ export default class FakeBranchRepository extends SingletonEventDispatcher {
         });
     }
 
+    getUserByEmail(email) {
+        for(let user of Object.values(this.users)) {
+            if(user.email === email) return user;
+        }
+        return null;
+    }
+
     addDepartment(name) {
         this.departments[this.depCount] = { uid: this.depCount, name };
         this.emit('department-event', {
