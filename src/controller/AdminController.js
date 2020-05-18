@@ -38,8 +38,9 @@ export default class AdminController extends BaseController {
     return this.adminManager.domain;
   }
 
-  deleteDepartment(departmentId) {
-    this.adminManager.deleteDepartment(departmentId);
+  deleteDepartment(departmentid) {
+    this.mainView.getDepartmentCard(departmentid).showRemoving();
+    this.adminManager.deleteDepartment(departmentid);
   }
 
   createDepartment(name) {

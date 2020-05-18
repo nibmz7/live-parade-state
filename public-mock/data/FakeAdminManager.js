@@ -1,5 +1,4 @@
 import Singleton from "../../src/util/Singleton.js";
-import User from "../../src/model/User.js";
 
 export default class FakeAdminManager extends Singleton {
     constructor() {
@@ -24,8 +23,9 @@ export default class FakeAdminManager extends Singleton {
         this.branchRepository.addDepartment(name);
     }
 
-    deleteDepartment(departmentid) {
-        this.branchRepository.deleteDepartment(departmentid);
+    async deleteDepartment(departmentid) {
+        await new Promise(res => setTimeout(res, 2000));
+        await this.branchRepository.deleteDepartment(departmentid);
     }
 
     async createUser(user) {

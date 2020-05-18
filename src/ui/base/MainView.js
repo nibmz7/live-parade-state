@@ -27,7 +27,8 @@ const template = html`
             overflow-y: scroll;
             height: 100%;
             width: 100%;
-            padding-bottom: 55px;
+            padding-bottom: 70px;
+            padding-top: 10px;
             box-sizing: border-box;
         }
 
@@ -46,10 +47,6 @@ const template = html`
         
         #list:empty + #empty {
           display: block;
-        }
-
-        #list > * {
-            padding: 5px 30px;
         }
         
         #welcome-text {
@@ -139,7 +136,7 @@ export default class MainView extends BaseElement {
 
     removeDepartment(uid) {
         let departmentCard = this.views.departments[uid];
-        departmentCard.remove();
+        departmentCard.shrink();
         delete this.views.departments[uid];
     }
 

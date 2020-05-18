@@ -46,9 +46,10 @@ export default class FakeBranchRepository extends SingletonEventDispatcher {
         });
     }
 
-    deleteDepartment(departmentid) {
+    async deleteDepartment(departmentid) {
         for (let [uid, user] of Object.entries(this.users)) {
-            if(user.departmentid === departmentid) {
+            if(user.departmentid == departmentid) {
+                await new Promise(res => setTimeout(res, 500));
                 this.emit('user-event', { type: 'removed', user });
                 delete this.users[uid];
             }

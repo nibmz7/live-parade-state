@@ -5,6 +5,9 @@ import { html } from '../base/BaseElement.js';
 
 const template = html`
     <style>
+        #root {
+            position: relative;
+        }
         #sub-header {
             font-size: 1.3rem;
             padding: 10px;
@@ -40,6 +43,19 @@ const template = html`
             box-sizing: border-box;
             color: var(--color-primary);
             text-transform: capitalize;
+        }
+        #removing {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background: linear-gradient(#a0929236, #ccc7c7d9, #a0929236);
+            font-size: 1.5rem;
+            color: #614343;
         }
 
         ${fadeAnim(300, 500)}
@@ -103,7 +119,7 @@ export default class AdminDepartmentCard extends BasicDepartmentCard {
                 this.animate(loadingText, 'fade-out', () => {
                     loadingText.remove();
                 });
-                this.onclick(item.div, () => {this.onUserSelected(user.uid)});
+                this.onclick(item.div, () => { this.onUserSelected(user.uid) });
             } else {
                 this.onclick(item, null);
                 let clone = loading_template.get().content.cloneNode(true);
@@ -113,7 +129,7 @@ export default class AdminDepartmentCard extends BasicDepartmentCard {
                     loadingText.classList.remove('fade-in');
                 });
                 item.div.appendChild(loadingText);
-            }  
+            }
         }
     }
 
@@ -135,8 +151,18 @@ export default class AdminDepartmentCard extends BasicDepartmentCard {
     }
 
     removeUser(user, animate = true) {
+        if(this.isRemoving) return;
         super.removeUser(user, animate);
         if (this.uidArray.length == 0) this.views['sub-header'].classList.add('empty');
+    }
+
+    showRemoving() {
+        this.isRemoving = true;
+        let div = document.createElement('div');
+        div.id = 'removing';
+        div.style.animation = 'fade-in 1s';
+        div.textContent = 'Removing...';
+        this.views.root.appendChild(div);
     }
 
 }

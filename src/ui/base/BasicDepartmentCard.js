@@ -8,7 +8,7 @@ const template = html`
         ${cardStyle}
 
         #root {
-            padding: inherit;
+            padding: 15px 30px;
         }
 
         .card {
@@ -126,6 +126,23 @@ const template = html`
             }
         }       
 
+        #root.shrink-dep {
+            animation: shrink-dep 1s forwards;
+        }
+
+        @keyframes shrink-dep {
+            0% {
+                max-height: 1000px;
+                padding: 15px 30px;
+                opacity: 1;
+            }
+            100% {
+                max-height: 0;
+                padding: 0px 30px;
+                opacity: 0;
+            }
+        }
+
     </style>
 
     <div id="root">
@@ -140,7 +157,7 @@ const template = html`
           
 `;
 
-const ids = ['list', 'header', 'sub-header','header-holder'];
+const ids = ['list', 'header', 'sub-header','header-holder','root'];
 
 const item_template = /*minify-html*/html`
     <div class="list-item">
@@ -235,11 +252,16 @@ export default class BasicDepartmentCard extends BaseElement {
         item.id = `${user.uid}-deleted`;
         var index = this.uidArray.indexOf(user.uid);
         this.uidArray.splice(index, 1);
-        if (animate) {
+        if (animate && !this.isRemoving) {
             this.animate(item, 'shrink', () => {
                 item.remove();
             });
         } else item.remove();
     }
 
+    shrink() {
+        this.animate(this.views.root, 'shrink-dep', () => {
+            this.remove();
+        });
+    }
 }
