@@ -16,7 +16,7 @@ export default class FakeBranchRepository extends SingletonEventDispatcher {
         let users = FakeDb.users;
         this.changeDate(users[1]);
         this.changeDate(users[2]);
-        this.changeDate(users[5]);
+        this.changeDate(users[3]);
         users.forEach(item => {
             let user = this.toUser(item);
             this.users[user.uid] = user;
@@ -56,6 +56,9 @@ export default class FakeBranchRepository extends SingletonEventDispatcher {
         }
         this.emit('department-event', { type: 'removed', department: {uid: departmentid} });
         delete this.departments[departmentid];
+        if(Object.keys(this.departments).length === 0) {
+            this.emit('department-event', { type: 'empty' });
+        }
     }
 
     //emailPrefix, password, name, rank, departmentid, regular
@@ -113,7 +116,7 @@ export default class FakeBranchRepository extends SingletonEventDispatcher {
         let dayDifference = statusDate.getDate() - date.getDate();
         let isSameDayBeforeSix = dayDifference === 0 && statusDate.getHours() < 17 && date.getHours() < 17;
         let isSameDayAfterSix = dayDifference === 0 && statusDate.getHours() > 17 && date.getHours() > 17;
-        let isPrevDayAfterSix = dayDifference === -1 && statusDate.getHours() > 17;
+        let isPrevDayAfterSix = dayDifference === -1 && statusDate.getHours() > 17 && date.getHours() < 17;
         return date.getFullYear() === statusDate.getFullYear() &&
             date.getMonth() === statusDate.getMonth() &&
             (isSameDayBeforeSix || isSameDayAfterSix || isPrevDayAfterSix);
@@ -139,12 +142,12 @@ export default class FakeBranchRepository extends SingletonEventDispatcher {
     }
 
     changeDate(user) {
-        user.status.am.timestamp = new Date("April 21, 2020 01:15:00");
-        user.status.pm.timestamp = new Date("April 21, 2020 01:15:00");
+        user.status.am.timestamp = new Date("May 17, 2020 21:15:00");
+        user.status.pm.timestamp = new Date("May 17, 2020 21:15:00");
     }
 
     async subscribe(branchid) {
-        await new Promise(res => setTimeout(res, 700));
+        await new Promise(res => setTimeout(res, 1500));
         let users = Object.values(this.users).map(user => this.cloneUser(user));
         let departments = Object.values(this.departments).map(department => this.cloneDepartment(department));
         this.emit('department-event', { type: 'found', departments });

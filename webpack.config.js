@@ -2,12 +2,12 @@ const path = require('path');
 const ReplaceInFileWebpackPlugin = require('replace-in-file-webpack-plugin');
 
 module.exports = {
-  entry: './public/main.js',
+  entry: './public-mock/main.js',
   mode: 'production',
   output: {
     filename: 'main.js',
     chunkFilename: '[name].js',
-    path: path.resolve(__dirname, 'dist')
+    path: path.resolve(__dirname, 'docs')
   },
   plugins: [
     new ReplaceInFileWebpackPlugin([{

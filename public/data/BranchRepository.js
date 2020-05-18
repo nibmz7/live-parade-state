@@ -4,10 +4,10 @@ export default class BranchRepository extends SingletonEventDispatcher {
 
     constructor() {
         super();
-        firebase.firestore().settings({
-            host: "192.168.0.139:8080",
-            ssl: false
-        });
+        // firebase.firestore().settings({
+        //     host: "192.168.0.139:8080",
+        //     ssl: false
+        // });
         this.db = firebase.firestore();
         this.db.enablePersistence({ synchronizeTabs: true });
     }
@@ -30,7 +30,7 @@ export default class BranchRepository extends SingletonEventDispatcher {
         let dayDifference = statusDate.getDate() - date.getDate();
         let isSameDayBeforeSix = dayDifference === 0 && statusDate.getHours() < 17 && date.getHours() < 17;
         let isSameDayAfterSix = dayDifference === 0 && statusDate.getHours() > 17 && date.getHours() > 17;
-        let isPrevDayAfterSix = dayDifference === -1 && statusDate.getHours() > 17;
+        let isPrevDayAfterSix = dayDifference === -1 && statusDate.getHours() > 17 && date.getHours() < 17;
         return date.getFullYear() === statusDate.getFullYear() &&
             date.getMonth() === statusDate.getMonth() &&
             (isSameDayBeforeSix || isSameDayAfterSix || isPrevDayAfterSix);
@@ -38,15 +38,19 @@ export default class BranchRepository extends SingletonEventDispatcher {
 
     toUser(doc) {
         let user = doc.data().data;
-        user.status.am.timestamp = user.status.am.timestamp.toDate();
-        user.status.pm.timestamp = user.status.am.timestamp.toDate();
         let amTimestamp = user.status.am.timestamp;
         let pmTimestamp = user.status.pm.timestamp;
         let amIsExpired = false;
         let pmIsExpired = false;
-        if (amTimestamp && pmTimestamp) {
-            amIsExpired = !this.checkSameDay(amTimestamp);
+        if (pmTimestamp) {
+            pmTimestamp = pmTimestamp.toDate();
+            user.status.pm.timestamp = pmTimestamp;
             pmIsExpired = !this.checkSameDay(pmTimestamp);
+        }
+        if (amTimestamp) {
+            amTimestamp = amTimestamp.toDate();
+            user.status.am.timestamp = amTimestamp;
+            amIsExpired = !this.checkSameDay(amTimestamp);
         }
         user.status.am.expired = amIsExpired;
         user.status.pm.expired = pmIsExpired;
