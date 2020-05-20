@@ -44,9 +44,6 @@ const template = html`
         #strength.elevate {
             box-shadow: 0px 1px 2px 1px #928d8d4f;
         }
-        #list > * {
-            padding: 5px 30px;
-        }
     </style>
 
     <div id="root">

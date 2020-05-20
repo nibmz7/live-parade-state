@@ -95,7 +95,6 @@ export default class FakeBranchRepository extends SingletonEventDispatcher {
         let user = this.users[uid];
         let timeOfDay = isMorning ? 'am' : 'pm';
         user.status[timeOfDay] = { ...status };
-        user.status[timeOfDay].updatedby = this.users[uid].fullname;
         user.status[timeOfDay].expired = false;
         this.emit('user-event', { type: 'modified', user: this.cloneUser(user) });
     }
