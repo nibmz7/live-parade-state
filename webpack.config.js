@@ -1,17 +1,19 @@
 const path = require('path');
 const ReplaceInFileWebpackPlugin = require('replace-in-file-webpack-plugin');
 
+const MAIN_DIR = 'dist'
+
 module.exports = {
-  entry: './public-mock/main.js',
+  entry: './public/main.js',
   mode: 'production',
   output: {
     filename: 'main.js',
     chunkFilename: '[name].js',
-    path: path.resolve(__dirname, 'docs')
+    path: path.resolve(__dirname, MAIN_DIR)
   },
   plugins: [
     new ReplaceInFileWebpackPlugin([{
-      dir: 'dist',
+      dir: MAIN_DIR,
       files: ['main.js','admin-screen.js'],
       rules: [{
         search: /`(.*?)`/gms,
