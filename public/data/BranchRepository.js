@@ -5,10 +5,10 @@ export default class BranchRepository extends SingletonEventDispatcher {
 
     constructor() {
         super();
-        firebase.firestore().settings({
-            host: "192.168.0.139:8080",
-            ssl: false
-        });
+        // firebase.firestore().settings({
+        //     host: "192.168.0.139:8080",
+        //     ssl: false
+        // });
         this.db = firebase.firestore();
         this.db.enablePersistence({ synchronizeTabs: true });
     }
