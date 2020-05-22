@@ -11,19 +11,14 @@ const template = html`
             padding-bottom: 70px;
             padding-top: 50px;
         }
-
-        #root > .list {
-            padding: 0 30px 30px 30px;
-        }
     
         .category > #header {
-            margin-bottom: 0;
-            margin-top: 50px;
+            margin: 50px 0 0 30px;
             font-weight: 500;
         }
 
         .category:first-child #header {
-            margin: 0;
+            margin-top: 20px;
         }
         
         #strength {

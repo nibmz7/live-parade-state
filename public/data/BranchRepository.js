@@ -1,64 +1,35 @@
 import { SingletonEventDispatcher } from '../../src/util/EventDispatcher.js';
+import User from '../../src/model/User.js';
 
 export default class BranchRepository extends SingletonEventDispatcher {
 
     constructor() {
         super();
-        // firebase.firestore().settings({
-        //     host: "192.168.0.139:8080",
-        //     ssl: false
-        // });
+        firebase.firestore().settings({
+            host: "192.168.0.139:8080",
+            ssl: false
+        });
         this.db = firebase.firestore();
         this.db.enablePersistence({ synchronizeTabs: true });
     }
 
-    updateUserStatus(isMorning, status, uid, branchid) {
+    updateUserStatus(morningOnlyUpdate, status, uid, branchid) {
         let userRef = this.db.doc(`branches/${branchid}/repository/${uid}`);
-        if (isMorning) userRef.update({ "data.status.am": { ...status } });
-        else userRef.update({ "data.status.pm": { ...status } });
+        if (morningOnlyUpdate === null) {
+            userRef.update({
+                "data.status": {
+                    am: status, pm: status
+                }
+            });
+        }
+        else if (morningOnlyUpdate === true) userRef.update({ "data.status.am": { ...status } });
+        else if (morningOnlyUpdate === false) userRef.update({ "data.status.pm": { ...status } });
     }
 
     toDepartment(doc) {
         return {
             uid: doc.id,
             ...doc.data().data
-        }
-    }
-
-    checkSameDay(statusDate) {
-        let date = new Date();
-        let dayDifference = statusDate.getDate() - date.getDate();
-        let isSameDayBeforeSix = dayDifference === 0 && statusDate.getHours() < 17 && date.getHours() < 17;
-        let isSameDayAfterSix = dayDifference === 0 && statusDate.getHours() > 17 && date.getHours() > 17;
-        let isPrevDayAfterSix = dayDifference === -1 && statusDate.getHours() > 17 && date.getHours() < 17;
-        return date.getFullYear() === statusDate.getFullYear() &&
-            date.getMonth() === statusDate.getMonth() &&
-            (isSameDayBeforeSix || isSameDayAfterSix || isPrevDayAfterSix);
-    }
-
-    toUser(doc) {
-        let user = doc.data().data;
-        let amTimestamp = user.status.am.timestamp;
-        let pmTimestamp = user.status.pm.timestamp;
-        let amIsExpired = false;
-        let pmIsExpired = false;
-        if (pmTimestamp) {
-            pmTimestamp = pmTimestamp.toDate();
-            user.status.pm.timestamp = pmTimestamp;
-            pmIsExpired = !this.checkSameDay(pmTimestamp);
-        }
-        if (amTimestamp) {
-            amTimestamp = amTimestamp.toDate();
-            user.status.am.timestamp = amTimestamp;
-            amIsExpired = !this.checkSameDay(amTimestamp);
-        }
-        user.status.am.expired = amIsExpired;
-        user.status.pm.expired = pmIsExpired;
-
-        return {
-            uid: doc.id,
-            fullname: user.rank + ' ' + user.name,
-            ...user
         }
     }
 
@@ -80,7 +51,7 @@ export default class BranchRepository extends SingletonEventDispatcher {
                     let users = [];
                     for (let change of snapshot.docChanges()) {
                         let type = change.doc.data().type;
-                        if (type == 'user') users.push(this.toUser(change.doc));
+                        if (type == 'user') users.push(User.fromDoc(change.doc));
                         else departments.push(this.toDepartment(change.doc));
                     }
                     this.emit('department-event', { type: 'found', departments });
@@ -88,7 +59,7 @@ export default class BranchRepository extends SingletonEventDispatcher {
                 } else {
                     for (let change of snapshot.docChanges()) {
                         let type = change.doc.data().type;
-                        let data = type === 'user' ? this.toUser(change.doc) : this.toDepartment(change.doc);
+                        let data = type === 'user' ? User.fromDoc(change.doc) : this.toDepartment(change.doc);
                         this.emit(`${type}-event`, { type: change.type, [type]: data });
                     }
                 }

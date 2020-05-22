@@ -1,5 +1,6 @@
 import { SingletonEventDispatcher } from '../../src/util/EventDispatcher.js';
 import FakeDb, { CreateUser } from './FakeDb.js';
+import User from '../../src/model/User.js';
 
 export default class FakeBranchRepository extends SingletonEventDispatcher {
 
@@ -90,12 +91,19 @@ export default class FakeBranchRepository extends SingletonEventDispatcher {
         delete this.users[uid];
     }
 
-    async updateUserStatus(isMorning, status, uid, branchid) {
+    async updateUserStatus(morningOnlyUpdate, status, uid, branchid) {
         await new Promise(res => setTimeout(res, 1000));
         let user = this.users[uid];
-        let timeOfDay = isMorning ? 'am' : 'pm';
-        user.status[timeOfDay] = { ...status };
-        user.status[timeOfDay].expired = false;
+        if (morningOnlyUpdate === null) {
+            user.status.am = { ...status };
+            user.status.am.expired = false;
+            user.status.pm = { ...status };
+            user.status.pm.expired = false;
+        } else {
+            let timeOfDay = morningOnlyUpdate ? 'am' : 'pm';
+            user.status[timeOfDay] = { ...status };
+            user.status[timeOfDay].expired = false;
+        }
         this.emit('user-event', { type: 'modified', user: this.cloneUser(user) });
     }
 
@@ -110,25 +118,14 @@ export default class FakeBranchRepository extends SingletonEventDispatcher {
         return JSON.parse(JSON.stringify(department));
     }
 
-    checkSameDay(statusDate) {
-        let date = new Date();
-        let dayDifference = statusDate.getDate() - date.getDate();
-        let isSameDayBeforeSix = dayDifference === 0 && statusDate.getHours() < 17 && date.getHours() < 17;
-        let isSameDayAfterSix = dayDifference === 0 && statusDate.getHours() > 17 && date.getHours() > 17;
-        let isPrevDayAfterSix = dayDifference === -1 && statusDate.getHours() > 17 && date.getHours() < 17;
-        return date.getFullYear() === statusDate.getFullYear() &&
-            date.getMonth() === statusDate.getMonth() &&
-            (isSameDayBeforeSix || isSameDayAfterSix || isPrevDayAfterSix);
-    }
-
     toUser(user) {
         let amTimestamp = user.status.am.timestamp;
         let pmTimestamp = user.status.pm.timestamp;
         let amIsExpired = false;
         let pmIsExpired = false;
         if (amTimestamp && pmTimestamp) {
-            amIsExpired = !this.checkSameDay(amTimestamp);
-            pmIsExpired = !this.checkSameDay(pmTimestamp);
+            amIsExpired = !User.checkSameDay(amTimestamp);
+            pmIsExpired = !User.checkSameDay(pmTimestamp);
         }
         user.status.am.expired = amIsExpired;
         user.status.pm.expired = pmIsExpired;

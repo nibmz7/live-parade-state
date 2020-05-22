@@ -11,9 +11,9 @@ export default class User {
         this.email = email;
     }
 
-    static createStatus(code, remarks, user) {
+    static createStatus(code, remarks, uid) {
         return {
-            code, remarks, updatedby: user.uid, timestamp: firebase.firestore.FieldValue.serverTimestamp()
+            code, remarks, updatedby: uid, timestamp: firebase.firestore.FieldValue.serverTimestamp()
         }
     }
     
@@ -30,17 +30,41 @@ export default class User {
         return 0;
     }
 
-    static compareLinear(a,b) {
-        let aRank = Rank.rankToInt(a.rank);
-        let bRank = Rank.rankToInt(b.rank);
+    static fromDoc(doc) {
+        let user = doc.data().data;
+        let amTimestamp = user.status.am.timestamp;
+        let pmTimestamp = user.status.pm.timestamp;
+        let amIsExpired = false;
+        let pmIsExpired = false;
+        if (pmTimestamp) {
+            pmTimestamp = pmTimestamp.toDate();
+            user.status.pm.timestamp = pmTimestamp;
+            pmIsExpired = !this.checkSameDay(pmTimestamp);
+        }
+        if (amTimestamp) {
+            amTimestamp = amTimestamp.toDate();
+            user.status.am.timestamp = amTimestamp;
+            amIsExpired = !this.checkSameDay(amTimestamp);
+        }
+        user.status.am.expired = amIsExpired;
+        user.status.pm.expired = pmIsExpired;
 
-        if (aRank < bRank) return true;
-        if (bRank < aRank) return false;
+        return {
+            uid: doc.id,
+            fullname: user.rank + ' ' + user.name,
+            ...user
+        }
+    }
 
-        if (a.name < b.name) return true;
-        if (b.name < a.name) return false;
-
-        return false;
+    static checkSameDay(statusDate){
+        let date = new Date();
+        let dayDifference = statusDate.getDate() - date.getDate();
+        let isSameDayBeforeSix = dayDifference === 0 && statusDate.getHours() < 17 && date.getHours() < 17;
+        let isSameDayAfterSix = dayDifference === 0 && statusDate.getHours() > 17 && date.getHours() > 17;
+        let isPrevDayAfterSix = dayDifference === -1 && statusDate.getHours() > 17 && date.getHours() < 17;
+        return date.getFullYear() === statusDate.getFullYear() &&
+            date.getMonth() === statusDate.getMonth() &&
+            (isSameDayBeforeSix || isSameDayAfterSix || isPrevDayAfterSix);
     }
 
 }

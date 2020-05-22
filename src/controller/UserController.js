@@ -1,6 +1,7 @@
 import BaseController from './BaseController.js';
 import STATUS from '../model/Status.js';
 import UserView from '../ui/user-view/UserView.js';
+import User from '../model/User.js';
 
 export default class UserController extends BaseController {
 
@@ -13,14 +14,9 @@ export default class UserController extends BaseController {
         return new UserView();
     }
 
-    updateUserStatus(isMorning, code, remarks, uid) {
-        const status = {
-            code,
-            remarks,
-            updatedby: this.userid,
-            timestamp: firebase.firestore.FieldValue.serverTimestamp()
-        }
-        this.branchRepository.updateUserStatus(isMorning, status, uid, this.branchid, this.users[uid].departmentid);
+    updateUserStatus(morningOnlyUpdate, code, remarks, uid) {
+        let status = User.createStatus(code, remarks, this.userid);
+        this.branchRepository.updateUserStatus(morningOnlyUpdate, status, uid, this.branchid);
     }
 
     activate(user) {

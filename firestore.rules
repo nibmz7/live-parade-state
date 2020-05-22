@@ -27,7 +27,7 @@ service cloud.firestore {
 
       function checkStatus(timeOfDay) {
         return request.resource.data.data.status.diff(resource.data.data.status)
-               .changedKeys().hasOnly([timeOfDay])
+               .changedKeys().hasAny(['am','pm'])
                 && validateStatus(request.resource.data.data.status[timeOfDay]);
       }
 

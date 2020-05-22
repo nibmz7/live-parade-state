@@ -183,17 +183,17 @@ export default class EditStatus extends Dialogue {
         this.status[this.timeOfDay].remarks = this.views['remarks-input'].value;
     }
 
-    sendUserUpdates(timeOfDay) {
-        let inputStatusCode = this.status[timeOfDay].code;
+    sendUserUpdates(morningOnlyUpdate) {
+        let inputStatusCode = this.status[this.timeOfDay].code;
         let inputRemarks = this.views['remarks-input'].value.trim();
-        this.controller.updateUserStatus(timeOfDay === 'am', inputStatusCode, inputRemarks, this.user.uid);
+        this.controller.updateUserStatus(morningOnlyUpdate, inputStatusCode, inputRemarks, this.user.uid);
     }
 
     verifyOnly(e) {
         if (this.isProcessing) return;
         this.isProcessing = true;
         this.views.processing.classList.add('show');
-        this.sendUserUpdates(this.timeOfDay);
+        this.sendUserUpdates(this.timeOfDay === 'am');
     }
 
     verifyAll(e) {
@@ -202,8 +202,7 @@ export default class EditStatus extends Dialogue {
         let oppositeTime = this.timeOfDay === 'am' ? 'pm' : 'am';
         this.status[oppositeTime].code = this.status[this.timeOfDay].code;
         this.views.processing.classList.add('show');
-        this.sendUserUpdates('am');
-        this.sendUserUpdates('pm');
+        this.sendUserUpdates(null);
     }
 
     setStatus(code) {

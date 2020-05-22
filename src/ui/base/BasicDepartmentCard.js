@@ -159,12 +159,12 @@ const template = html`
 
 const ids = ['list', 'header', 'sub-header','header-holder','root'];
 
-const item_template = /*minify-html*/html`
+const item_template = html`
     <div class="list-item">
         <p id="primary-text"></p>
         <p id="secondary-text"></p>
     </div>
-`;/*end*/
+`;
 
 
 export default class BasicDepartmentCard extends BaseElement {
@@ -200,8 +200,8 @@ export default class BasicDepartmentCard extends BaseElement {
         while (i >= 0) {
             let nextUserUid = this.uidArray[i];
             let nextUser = this.getUser(nextUserUid);
-            let isHigher = User.compareLinear(user, nextUser);
-            if (!isHigher) break;
+            let isHigher = User.compare(user, nextUser);
+            if (isHigher !== -1) break;
             else uid = this.uidArray[i--];
         }
         this.uidArray.splice(++i, 0, user.uid);
