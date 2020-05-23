@@ -1,10 +1,10 @@
 const path = require('path');
 const ReplaceInFileWebpackPlugin = require('replace-in-file-webpack-plugin');
 
-const MAIN_DIR = 'docs'
+const MAIN_DIR = 'dist'
 
 module.exports = {
-  entry: './public-mock/main.js',
+  entry: './public/main.js',
   mode: 'production',
   output: {
     filename: 'main.js',

@@ -17,6 +17,11 @@ class Application extends App {
     super();
   }
 
+  async showUserScreen(user) {
+    if(this.currentScreen) await new Promise(res => setTimeout(res, 700));
+    super.showUserScreen(user);
+  }
+
   getAuth() {
     return FakeAuth.getInstance();
   }

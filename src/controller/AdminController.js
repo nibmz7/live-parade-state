@@ -1,6 +1,4 @@
 import BaseController from './BaseController.js';
-import Utils from '../util/Utils.js';
-import AdminView from '../ui/admin-view/AdminView.js';
 
 export const STATE = {
   creating: 'creating',
@@ -19,7 +17,7 @@ export default class AdminController extends BaseController {
   }
 
   createMainView() {
-    return new AdminView();
+    return document.createElement('admin-view');
   }
 
   async activate(user) {
@@ -55,7 +53,7 @@ export default class AdminController extends BaseController {
     let departmentCard = this.mainView.getDepartmentCard(user.departmentid);
     user.state = state;
     user.fullname = user.rank + ' ' + user.name;
-    user.email? '' : user.email = `${user.emailPrefix}@${this.getDomain()}`;
+    if(!user.email) user.email = `${user.emailPrefix}@${this.getDomain()}`;
     this.pendingState[user.email] = true;
     try {
       if (state === STATE.creating) {
@@ -80,7 +78,7 @@ export default class AdminController extends BaseController {
         userBefore.state = STATE.completed;
         departmentCard.changeUser(userBefore, false);
       }
-      Utils.showToast(`An error has occured whilst ${state} user:\n${user.fullname}`);
+      departmentCard.showToast(`An error has occured whilst ${state} user:\n${user.fullname}`);
     }
   }
 

@@ -32,38 +32,33 @@ export default class BaseController extends Singleton {
         return this.users[uid];
     }
 
-    onUserEvent(type, user) { 
-
-    };
+    onViewReady() {
+        this.viewSwitcher.addView(this.mainView);
+    }
 
     subscribeUserEvent(data) {
         let type = data.type;
         let user = data.user;
-        if (type == 'found') {
+        if (type === 'found') {
             data.users.sort(User.compare);
             for (let user of data.users) {
-                let departmentCard = this.mainView.getDepartmentCard(user.departmentid);
-                departmentCard.addUser(user, false);
-                this.onUserEvent('added', user);
-                this.users[user.uid] = user;
+                let data = {type: 'added', found: true, user};
+                this.subscribeUserEvent(data);
             }
-            this.viewSwitcher.addView(this.mainView);
+            this.onViewReady();
             return;
         }
         let departmentCard = this.mainView.getDepartmentCard(user.departmentid);
-        if (type == 'added') {
-            departmentCard.addUser(user);
-            this.onUserEvent(type, user);
+        if (type === 'added') {
+            departmentCard.addUser(user, !!!data.found);
             this.users[user.uid] = user;
         }
-        if (type == 'modified') {
+        else if (type === 'modified') {
             departmentCard.changeUser(user);
-            this.onUserEvent(type, user);
             this.users[user.uid] = user;
         }
-        if (type == 'removed') {
+        else if (type === 'removed') {
             departmentCard.removeUser(user);
-            this.onUserEvent(type, user);
             delete this.users[user.uid];
         }
     }
@@ -71,21 +66,21 @@ export default class BaseController extends Singleton {
     subscribeDepartmentEvent(data) {
         let type = data.type;
         let department = data.department;
-        if (type == 'found') {
+        if (type === 'found') {
             for (let department of data.departments) {
                 this.mainView.addDepartment(department);
             }
         }
-        if (type == 'added') {
+        else if (type === 'added') {
             this.mainView.addDepartment(department);
         }
-        if (type == 'modified') {
+        else if (type === 'modified') {
             this.mainView.modifyDepartment(department);
         }
-        if (type == 'removed') {
+        else if (type === 'removed') {
             this.mainView.removeDepartment(department.uid);
         }
-        if (type == 'empty') {
+        else if (type === 'empty') {
             this.mainView.showEmpty();
         }
     }

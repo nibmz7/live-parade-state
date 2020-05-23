@@ -143,7 +143,7 @@ export default class FakeBranchRepository extends SingletonEventDispatcher {
     }
 
     async subscribe(branchid) {
-        await new Promise(res => setTimeout(res, 1500));
+        await new Promise(res => setTimeout(res, 700));
         let users = Object.values(this.users).map(user => this.cloneUser(user));
         let departments = Object.values(this.departments).map(department => this.cloneDepartment(department));
         this.emit('department-event', { type: 'found', departments });

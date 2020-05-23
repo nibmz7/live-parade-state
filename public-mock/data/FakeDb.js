@@ -32,12 +32,15 @@ const users = [
     User(1, 1, 'sean@test.com', 'Sean', 'LCP', false),
     User(1, 1, 'john@test.com', 'John', 'PTE', false),
     User(1, 1, 'albert@test.com', 'Albert', 'MAJ', false),
+    User(1, 1, 'lucy@test.com', 'Lucy', 'MAJ', false),
     User(1, 3, 'jim@test.com', 'Jim', 'LTC', false),
     User(1, 3, 'billy@test.com', 'Billy', 'CFC', false),
     User(1, 3, 'paul@test.com', 'Paul', 'CPL', false),
+    User(1, 3, 'rebecca@test.com', 'Rebecca', 'SWO', false),
     User(1, 4, 'bob@test.com', 'Bob', 'BG', false),
     User(1, 4, 'mike@test.com', 'Mike', 'CPL', false),
-    User(1, 4, 'harry@test.com', 'Harry', 'REC', false)
+    User(1, 4, 'harry@test.com', 'Harry', 'REC', false),
+    User(1, 4, 'anne@test.com', 'Anne', 'CFC', false)
 ];
 
 const FakeDb = {departments, users};

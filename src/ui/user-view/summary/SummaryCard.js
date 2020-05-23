@@ -54,7 +54,7 @@ export default class SummaryCard extends BasicDepartmentCard {
 
     getItemSecondaryText(user) {
         let remarks = user.status[this.timeOfDay].remarks;
-        let expiredText = user.status[this.timeOfDay].expired ? '<span class="remarks"> -- Expired</span>' : '';
+        let expiredText = user.status[this.timeOfDay].expired ? '<span class="expired"> -- Expired</span>' : '';
         let remarksText = remarks.length > 0 ? `Remarks: <span class="remarks">${remarks}</span>` : '';
         return remarksText + expiredText;
     }
