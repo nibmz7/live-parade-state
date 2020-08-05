@@ -13,7 +13,7 @@ Digital attendance taking system built on top of Firestore, Firebase Authenticat
 
 # Brief description
 Actual website is hosted on Firebase. The mock website is hosted on github pages. https://nibmz7.github.io/live-parade-state/  
-To use try out the mock website, login as admin@domain.com to view the admin page and name@domain.com for the user page. Password can be any random combination.
+To try out the mock website, login as admin@domain.com to view the admin page and name@domain.com for the user page. Password can be any random combination.
 
 # License
 ```
