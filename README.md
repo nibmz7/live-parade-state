@@ -3,13 +3,13 @@ Digital attendance taking system built on top of Firestore, Firebase Authenticat
 <br>
 <br>
 <br>
-<img src="https://raw.githubusercontent.com/nibmz7/portfolio/main/website/assets/live_parade_state/webp/screenshot_1.webp" width="15%" hspace="15"/>
-<img src="https://raw.githubusercontent.com/nibmz7/portfolio/main/website/assets/live_parade_state/webp/screenshot_2.webp" width="15%" width="15%" hspace="15"/>
-<img src="https://raw.githubusercontent.com/nibmz7/portfolio/main/website/assets/live_parade_state/webp/screenshot_3.webp" width="15%" hspace="15"/>
+<img src="https://raw.githubusercontent.com/nibmz7/portfolio/main/website/assets/live_parade_state/screenshot_1.webp" width="15%" hspace="15"/>
+<img src="https://raw.githubusercontent.com/nibmz7/portfolio/main/website/assets/live_parade_state/screenshot_2.webp" width="15%" width="15%" hspace="15"/>
+<img src="https://raw.githubusercontent.com/nibmz7/portfolio/main/website/assets/live_parade_state/screenshot_3.webp" width="15%" hspace="15"/>
 <br><br>
-<img src="https://raw.githubusercontent.com/nibmz7/portfolio/main/website/assets/live_parade_state/webp/screenshot_4.webp" width="15%" hspace="15"/>
-<img src="https://raw.githubusercontent.com/nibmz7/portfolio/main/website/assets/live_parade_state/webp/screenshot_5.webp" width="15%" hspace="15"/>
-<img src="https://raw.githubusercontent.com/nibmz7/portfolio/main/website/assets/live_parade_state/webp/screenshot_6.webp" width="15%" hspace="15"/>
+<img src="https://raw.githubusercontent.com/nibmz7/portfolio/main/website/assets/live_parade_state/screenshot_4.webp" width="15%" hspace="15"/>
+<img src="https://raw.githubusercontent.com/nibmz7/portfolio/main/website/assets/live_parade_state/screenshot_5.webp" width="15%" hspace="15"/>
+<img src="https://raw.githubusercontent.com/nibmz7/portfolio/main/website/assets/live_parade_state/screenshot_6.webp" width="15%" hspace="15"/>
 
 # Brief description
 Actual website is hosted on Firebase. The mock website is hosted on github pages. https://nibmz7.github.io/live-parade-state/  
