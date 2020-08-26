@@ -16,14 +16,15 @@
     "strict": true,
     "experimentalDecorators": true,
     "moduleResolution": "node",
+    "rootDir": ".",
     "outDir": "./",
     "baseUrl": "./",
     "paths": {
-      "@ui/*": [".ui/*"],
-      "@model/*": [".model/*"],
-      "@data/*": [".data/*"],
-      "@data-firebase/*": [".data-firebase/*"],
-      "@data-mock/*": [".data-mock/*"]
+      "ui/*": ["ui/*"],
+      "model/*": ["model/*"],
+      "data/*": ["data/*"],
+      "data-firebase/*": ["data-firebase/*"],
+      "data-mock/*": ["data-mock/*"]
     }
   },
   "include": ["*.ts"],

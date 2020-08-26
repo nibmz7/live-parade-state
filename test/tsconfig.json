@@ -1,17 +1,17 @@
 {
   "extends": "../tsconfig.json",
   "compilerOptions": {
+    "module": "commonjs",
     "composite": true,
-    "outDir": "./lib",
     "tsBuildInfoFile": ".tsbuildinfo",
     "rootDir": "../",
+    "outDir": "./",
     "sourceMap": false,
-    "inlineSources": false
+    "inlineSources": false,
+    "esModuleInterop": true,
   },
   "include": [
-    "src/custom_typings/*.d.ts",
-    "src/**/*.ts",
-    "../packages/**/*.ts"
+    "../ui/**/*.ts"
   ],
-  "exclude": ["src/benchmark/cli.ts"]
+  "exclude": [""]
 }
