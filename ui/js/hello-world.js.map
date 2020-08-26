@@ -1,1 +1,0 @@
-{"version":3,"file":"hello-world.js","sourceRoot":"","sources":["../hello-world.ts"],"names":[],"mappings":"AAAA,MAAM,UAAU,QAAQ;IACpB,OAAO,cAAc,CAAC;AAC1B,CAAC","sourcesContent":["export function sayHello(): string {\n    return \"Hello world!\";\n}"]}
