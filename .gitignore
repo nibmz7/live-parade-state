@@ -1,4 +1,10 @@
+.tsbuildinfo
+js/
+test/**/*.js
+test/**/*.ts
+
 # Logs
+
 logs
 *.log
 npm-debug.log*
