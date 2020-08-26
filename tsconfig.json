@@ -1,0 +1,28 @@
+{
+  "compilerOptions": {
+    "composite": true,
+    "declaration": true,
+    "rootDir": ".",
+    "target": "ES2019",
+    "module": "ESNext",
+    "lib": ["ES2019", "DOM"],
+    "outDir": "./",
+    "baseUrl": "./",
+    "sourceMap": true,
+    "inlineSources": true,
+    "paths": {
+      "@material/mwc-*": ["./*"]
+    },
+    "skipLibCheck": true,
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
+    "noImplicitReturns": true,
+    "noFallthroughCasesInSwitch": true,
+    "noImplicitAny": false,
+    "strict": true,
+    "experimentalDecorators": true,
+    "moduleResolution": "node"
+  },
+  "include": ["src/**/*", "tests/**/*"],
+  "exclude": ["node_modules"]
+}
