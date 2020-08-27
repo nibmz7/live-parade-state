@@ -3,7 +3,7 @@ import Status from './status';
 import Department from './department';
 import Branch from './branch';
 
-export interface UserProperties {
+export interface User {
   uid: String;
   email: string;
   name: string;
@@ -11,18 +11,13 @@ export interface UserProperties {
   rank: Rank;
   branch: Branch;
   department: Department;
-  morningStatus: Status;
-  afternoonStatus: Status;
-  isUpdating: boolean;
+  isUpdating?: boolean;
   updatingStatus?: string;
 }
 
-export class User {
-  readonly user: UserProperties;
-
-  constructor(user: UserProperties) {
-    this.user = user;
-  }
+export interface UserByStatus extends User {
+  morning: Status;
+  afternoon: Status;
 }
 
 export default User;
