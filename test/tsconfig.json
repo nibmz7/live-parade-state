@@ -11,7 +11,8 @@
     "esModuleInterop": true,
   },
   "include": [
-    "../ui/**/*.ts"
+    "../ui/**/*.ts",
+    "../model/**/*.ts"
   ],
   "exclude": [""]
 }

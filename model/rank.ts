@@ -40,7 +40,8 @@ export default class Rank {
   static isValid(rank: string): boolean {
     if (rank in ranks) return true;
     if (rank.toUpperCase().includes('DX') && rank.length <= 4) {
-      return true;
+      let suffix = Number(rank.substring(2));
+      return suffix < 20;
     }
     return false;
   }
