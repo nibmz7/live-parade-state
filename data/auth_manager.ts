@@ -23,12 +23,9 @@ export default abstract class AuthManager {
     });
   }
 
-  protected abstract async signInAsUser(
+  protected abstract signInWithCredentials(
     credentials: SignInCredentials
-  ): Promise<User>;
-  protected abstract async signInAsAdmin(
-    credentials: SignInCredentials
-  ): Promise<Admin>;
+  ): Promise<void>;
 
   protected signOut() {
     let auth: Auth = {
@@ -37,28 +34,20 @@ export default abstract class AuthManager {
     dispatch(updateAuthState(AuthState.SIGNED_OUT, auth));
   }
 
-  private signIn(auth: Auth) {
+  protected signIn(user: User | Admin) {
+    let auth: Auth = {
+      state: AuthState.SIGNED_IN,
+      isAdmin: this.isAdmin(user.email),
+      user
+    };
     dispatch(updateAuthState(AuthState.SIGNED_IN, auth));
   }
 
-  private async signInWithCredentials(credentials: SignInCredentials) {
-    try {
-      let isAdmin = credentials.email.split('@')[0] === 'admin';
-      let currentUser = isAdmin
-        ? await this.signInAsAdmin(credentials)
-        : await this.signInAsUser(credentials);
-      let auth: Auth = {
-        state: AuthState.SIGNED_IN,
-        isAdmin,
-        currentUser
-      };
-      this.signIn(auth);
-    } catch (error) {
-      let signInError: SignInError = {
-        type: error.type,
-        message: error.message
-      };
-      dispatch(updateAuthState(AuthState.REQUEST_SIGN_IN_FAILED, signInError));
-    }
+  protected isAdmin(email): boolean {
+    return email.split('@')[0] === 'admin';
+  }
+
+  protected signInError(error: SignInError) {
+    dispatch(updateAuthState(AuthState.REQUEST_SIGN_IN_FAILED, error));
   }
 }

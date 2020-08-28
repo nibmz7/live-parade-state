@@ -31,6 +31,6 @@ export interface AuthAction extends Action {
 export interface Auth {
   state: AuthState;
   isAdmin?: boolean;
-  currentUser?: Admin | User;
+  user?: Admin | User;
   payload?: SignInCredentials | SignInError;
 }
