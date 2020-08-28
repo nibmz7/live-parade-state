@@ -1,4 +1,4 @@
-import { Action } from '../../data/actions/actions';
+import { Action, ACTION_ROOT } from '../../data/actions/actions';
 
 import Admin from '../../model/admin';
 import User from '../../model/user';
@@ -23,6 +23,7 @@ export interface SignInError {
 }
 
 export interface AuthAction extends Action {
+  root: ACTION_ROOT.AUTH,
   type: AuthState;
   payload?: SignInCredentials | SignInError | Auth;
 }

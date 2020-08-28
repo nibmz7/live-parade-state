@@ -5,7 +5,7 @@ import {
   AuthState,
   AuthAction,
   SignInCredentials
-} from 'data/states/auth_state';
+} from '../../data/states/auth_state';
 
 const initialState: Auth = {
   state: AuthState.INITIALIZED,
@@ -20,7 +20,6 @@ export const auth = (state: Auth = initialState, rootAction: Action): Auth => {
   switch (action.type) {
     case AuthState.REQUEST_SIGN_IN:
       return {
-        ...state,
         state: AuthState.REQUEST_SIGN_IN,
         payload: action.payload as SignInCredentials,
         isProcessing: true
@@ -30,6 +29,6 @@ export const auth = (state: Auth = initialState, rootAction: Action): Auth => {
       return { state: AuthState.REQUEST_SIGN_OUT, isProcessing: true };
 
     default:
-      return action.payload as Auth;
+      return action.payload as Auth || state;
   }
 };
