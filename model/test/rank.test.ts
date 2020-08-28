@@ -1,5 +1,5 @@
 import { expect } from 'chai';
-import Rank from '../rank';
+import Rank from 'model/rank';
 
 const validRanks = [
   'LG',

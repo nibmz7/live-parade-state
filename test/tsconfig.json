@@ -9,9 +9,13 @@
     "sourceMap": false,
     "inlineSources": false,
     "esModuleInterop": true,
+    "moduleResolution": "Node",
+    "baseUrl": ".",
+    "paths": {
+      "model/*": ["../model/*"] // This mapping is relative to "baseUrl"
+    }
   },
   "include": [
-    "../ui/**/*.ts",
     "../model/**/*.ts"
   ],
   "exclude": [""]

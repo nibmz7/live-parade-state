@@ -1,20 +1,21 @@
-import Auth, {
+import { Action, ACTION_ROOT } from 'data/actions/actions';
+
+import {
+  Auth,
   AuthState,
   AuthAction,
   SignInCredentials
 } from 'data/states/auth_state';
-import { ACTION_ROOT } from 'data/store';
 
 const initialState: Auth = {
   state: AuthState.INITIALIZED,
   isProcessing: false
 };
 
-export default function auth(
-  state: Auth = initialState,
-  action: AuthAction
-): Auth {
-  if (action.root !== ACTION_ROOT.AUTH) return state;
+export const auth = (state: Auth = initialState, rootAction: Action): Auth => {
+  if (rootAction.root !== ACTION_ROOT.AUTH) return state;
+
+  const action = rootAction as AuthAction;
 
   switch (action.type) {
     case AuthState.REQUEST_SIGN_IN:
@@ -31,4 +32,4 @@ export default function auth(
     default:
       return action.payload as Auth;
   }
-}
+};

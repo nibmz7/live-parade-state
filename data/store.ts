@@ -1,15 +1,14 @@
 import { createStore, combineReducers } from 'redux';
+import { Action } from './actions/actions';
+import { auth } from 'data/reducers/auth_reducer';
 
-export enum ACTION_ROOT {
-    AUTH,
-    DEPARTMENTS,
-    USERS
-}
 
-export interface Action {
-    root: ACTION_ROOT;
-}
+export const store = createStore(
+  combineReducers({
+    auth
+  })
+);
 
-const store = createStore();
-
-export default store;
+export const dispatch = (action: Action) => {
+  store.dispatch(action);
+};

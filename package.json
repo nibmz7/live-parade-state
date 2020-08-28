@@ -25,7 +25,7 @@
     "start-dev-server": "firebase serve --host 0.0.0.0",
     "start-emulators": "firebase emulators:start --import=./firestore-db",
     "deploy-hosting": "firebase deploy --only hosting",
-    "test": "mocha test/**/*.test.js",
+    "test": "mocha test/model/**/*.test.js",
     "build": "tsc --build",
     "build:tests": "tsc --build test/tsconfig.json",
     "watch": ""
