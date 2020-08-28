@@ -1,7 +1,6 @@
 .tsbuildinfo
 js/
-test/**/*.js
-test/**/*.ts
+test/js
 
 # Logs
 
