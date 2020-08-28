@@ -1,5 +1,6 @@
 import User from 'model/user';
 import Admin from 'model/admin';
+import store from './store';
 
 export interface SignInCredentials {
     email: string; 
@@ -7,6 +8,14 @@ export interface SignInCredentials {
 }
 
 abstract class Auth {
+
+
+    constructor() {
+        store.subscribe(() => {
+            console.log(store.getState().lastAction);
+          });
+          
+    }
 
     abstract async signInAsUser(credentials: SignInCredentials): Promise<User>;
     abstract async signInAsAdmin(credentials: SignInCredentials): Promise<Admin>;

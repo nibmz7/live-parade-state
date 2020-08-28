@@ -6,6 +6,6 @@
     "outDir": "./js",
     "tsBuildInfoFile": ".tsbuildinfo"
   },
-  "include": ["*.ts", "../model/**/*.ts"],
+  "include": ["./**/*.ts", "../model/**/*.ts"],
   "exclude": ["test/*.ts"]
 }

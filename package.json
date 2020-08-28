@@ -4,7 +4,8 @@
   "description": "",
   "main": "index.js",
   "dependencies": {
-    "firebase-functions": "^3.6.1"
+    "firebase-functions": "^3.6.1",
+    "redux": "^4.0.5"
   },
   "devDependencies": {
     "@types/chai": "^4.2.12",

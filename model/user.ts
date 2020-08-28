@@ -11,8 +11,6 @@ export interface User {
   rank: Rank;
   branch: Branch;
   department: Department;
-  isUpdating?: boolean;
-  updatingStatus?: string;
 }
 
 export interface UserByStatus extends User {
