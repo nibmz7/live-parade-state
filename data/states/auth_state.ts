@@ -1,18 +1,33 @@
 import Admin from 'model/admin';
 import User from 'model/user';
-import { SignInCredentials } from 'data/auth_manager';
 
 export enum AuthState {
     INITIALIZED,
     SIGNED_IN,
     SIGNED_OUT,
     REQUEST_SIGN_IN,
-    REQUEST_SIGN_OUT,
-    LOADING
+    REQUEST_SIGN_IN_FAILED,
+    REQUEST_SIGN_OUT
+}
+
+export interface SignInCredentials {
+    email: string; 
+    password: string;
+}
+
+export interface SignInError {
+    type: string;
+    message: string;
+}
+
+export interface AuthAction {
+    type: AuthState;
+    payload?: SignInCredentials | SignInError | Auth;
 }
 
 export default interface Auth {
+    state: AuthState;
     currentUser?: Admin | User;
-    state: AuthState
-    payload?: SignInCredentials
+    payload?: SignInCredentials | SignInError;
+    isProcessing: boolean;
 }

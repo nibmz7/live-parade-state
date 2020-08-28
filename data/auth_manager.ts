@@ -1,11 +1,7 @@
 import User from 'model/user';
 import Admin from 'model/admin';
 import store from './store';
-
-export interface SignInCredentials {
-    email: string; 
-    password: string;
-}
+import { SignInCredentials } from './states/auth_state';
 
 abstract class Auth {
 
