@@ -4,7 +4,8 @@ import {
   Auth,
   SignInCredentials,
   AuthState,
-  AuthAction
+  AuthAction,
+  SignInError
 } from '../../data/states/auth_state';
 
 export const signIn = (credentials: SignInCredentials): AuthAction => ({
@@ -20,5 +21,5 @@ export const signOut = (): AuthAction => ({
 
 export const updateAuthState = (
   type: AuthState,
-  payload: Auth
+  payload: SignInCredentials | SignInError | Auth
 ): AuthAction => ({ root: ACTION_ROOT.AUTH, type, payload });

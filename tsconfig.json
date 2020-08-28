@@ -20,6 +20,6 @@
     "outDir": "./dist",
     "baseUrl": "./"
   },
-  "include": ["./model/**/*.ts", "./data/**/*.ts"],
+  "include": ["./model/**/*.ts", "./data/**/*.ts", "./data-mock/**/*.ts"],
   "exclude": []
 }
