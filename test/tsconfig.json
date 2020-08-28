@@ -12,6 +12,6 @@
     "esModuleInterop": true,
     "tsBuildInfoFile": ".tsbuildinfo"
   },
-  "include": ["./**/*.ts", "../model/**/*.ts", "../data/**/*.ts"],
-  "exclude": []
+  "include": ["./**/*.ts", "../model/**/*.ts", "../data/**/*.ts", "../data-mock/**/*.ts"],
+  "exclude": ["./js"]
 }

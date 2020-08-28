@@ -21,12 +21,11 @@ export const auth = (state: Auth = initialState, rootAction: Action): Auth => {
     case AuthState.REQUEST_SIGN_IN:
       return {
         state: AuthState.REQUEST_SIGN_IN,
-        payload: action.payload as SignInCredentials,
-        isProcessing: true
+        payload: action.payload as SignInCredentials
       };
 
     case AuthState.REQUEST_SIGN_OUT:
-      return { state: AuthState.REQUEST_SIGN_OUT, isProcessing: true };
+      return { state: AuthState.REQUEST_SIGN_OUT};
 
     default:
       return action.payload as Auth || state;

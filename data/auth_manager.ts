@@ -5,16 +5,28 @@ import { SignInCredentials, AuthState, Auth } from '../data/states/auth_state';
 import { updateAuthState } from './actions/auth_action';
 
 export default abstract class AuthManager {
+  private currentState = AuthState.INITIALIZED;
+
   constructor() {
     store.subscribe(() => {
-      console.log(store.getState());
+      let auth = store.getState().auth;
+      if (auth.state === this.currentState) return;
+      else if (auth.state === AuthState.REQUEST_SIGN_IN)
+        this.signIn(auth.payload as SignInCredentials);
+      else if (auth.state === AuthState.REQUEST_SIGN_OUT) this.signOut();
+      this.currentState = auth.state;
     });
   }
 
-  abstract async signInAsUser(credentials: SignInCredentials): Promise<User>;
-  abstract async signInAsAdmin(credentials: SignInCredentials): Promise<Admin>;
+  protected abstract async signInAsUser(
+    credentials: SignInCredentials
+  ): Promise<User>;
+  protected abstract async signInAsAdmin(
+    credentials: SignInCredentials
+  ): Promise<Admin>;
+  protected abstract async signOut(): Promise<void>;
 
-  async signIn(credentials: SignInCredentials) {
+  private async signIn(credentials: SignInCredentials) {
     let isAdmin = credentials.email.split('@')[0] === 'admin';
     let currentUser = isAdmin
       ? await this.signInAsAdmin(credentials)
@@ -22,8 +34,7 @@ export default abstract class AuthManager {
     let auth: Auth = {
       state: AuthState.SIGNED_IN,
       isAdmin,
-      currentUser,
-      isProcessing: false
+      currentUser
     };
     dispatch(updateAuthState(AuthState.SIGNED_IN, auth));
   }

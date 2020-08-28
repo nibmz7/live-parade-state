@@ -33,5 +33,4 @@ export interface Auth {
   isAdmin?: boolean;
   currentUser?: Admin | User;
   payload?: SignInCredentials | SignInError;
-  isProcessing: boolean;
 }
