@@ -5,7 +5,7 @@ import {
   SignInCredentials,
   AuthState,
   AuthAction
-} from 'data/states/auth_state';
+} from '../../data/states/auth_state';
 
 export const signIn = (credentials: SignInCredentials): AuthAction => ({
   root: ACTION_ROOT.AUTH,

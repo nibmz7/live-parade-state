@@ -5,7 +5,6 @@
   "main": "index.js",
   "dependencies": {
     "firebase-functions": "^3.6.1",
-    "module-alias": "^2.2.2",
     "redux": "^4.0.5"
   },
   "devDependencies": {
@@ -28,8 +27,9 @@
     "deploy-hosting": "firebase deploy --only hosting",
     "test": "mocha test/**/*.test.js",
     "build": "tsc --build",
-    "build:clean": "tsc --build",
+    "build:clean": "tsc --build --clean",
     "build:tests": "tsc --build test/tsconfig.json",
+    "build:tests:clean": "tsc --build --clean test/tsconfig.json",
     "watch": ""
   },
   "repository": {
@@ -42,8 +42,5 @@
   "bugs": {
     "url": "https://github.com/nurilyas7/live-parade-state/issues"
   },
-  "homepage": "https://github.com/nurilyas7/live-parade-state#readme",
-  "_moduleAliases": {
-  "model"      : "test/js/model"
-}
+  "homepage": "https://github.com/nurilyas7/live-parade-state#readme"
 }

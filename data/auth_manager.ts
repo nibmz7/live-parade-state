@@ -1,7 +1,7 @@
-import User from 'model/user';
-import Admin from 'model/admin';
-import { store, dispatch } from 'data/store';
-import { SignInCredentials, AuthState, Auth } from 'data/states/auth_state';
+import User from '../model/user';
+import Admin from '../model/admin';
+import { store, dispatch } from '../data/store';
+import { SignInCredentials, AuthState, Auth } from '../data/states/auth_state';
 import { updateAuthState } from './actions/auth_action';
 
 export default abstract class AuthManager {

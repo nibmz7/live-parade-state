@@ -1,4 +1,4 @@
-import { Action, ACTION_ROOT } from 'data/actions/actions';
+import { Action, ACTION_ROOT } from '../../data/actions/actions';
 
 import {
   Auth,

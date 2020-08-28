@@ -18,15 +18,8 @@
     "moduleResolution": "node",
     "rootDir": ".",
     "outDir": "./dist",
-    "baseUrl": "./",
-    "paths": {
-      "ui/*": ["ui/*"],
-      "model/*": ["model/*"],
-      "data/*": ["data/*"],
-      "data-firebase/*": ["data-firebase/*"],
-      "data-mock/*": ["data-mock/*"]
-    }
+    "baseUrl": "./"
   },
-  "include": ["./model/**/*.ts","./test/**/*.ts"],
-  "exclude": [],
+  "include": ["./model/**/*.ts", "./data/**/*.ts"],
+  "exclude": []
 }

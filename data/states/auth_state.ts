@@ -1,7 +1,7 @@
-import { Action } from 'data/actions/actions';
+import { Action } from '../../data/actions/actions';
 
-import Admin from 'model/admin';
-import User from 'model/user';
+import Admin from '../../model/admin';
+import User from '../../model/user';
 
 export enum AuthState {
   INITIALIZED,
