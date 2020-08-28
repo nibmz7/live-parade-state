@@ -3,6 +3,7 @@ import Auth, {
   AuthAction,
   SignInCredentials
 } from 'data/states/auth_state';
+import { ACTION_ROOT } from 'data/store';
 
 const initialState: Auth = {
   state: AuthState.INITIALIZED,
@@ -13,6 +14,8 @@ export default function auth(
   state: Auth = initialState,
   action: AuthAction
 ): Auth {
+  if (action.root !== ACTION_ROOT.AUTH) return state;
+
   switch (action.type) {
     case AuthState.REQUEST_SIGN_IN:
       return {

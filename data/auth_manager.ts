@@ -1,7 +1,7 @@
 import User from 'model/user';
 import Admin from 'model/admin';
-import store from './store';
-import { SignInCredentials } from './states/auth_state';
+import store from 'data/store';
+import { SignInCredentials } from 'data/states/auth_state';
 
 abstract class Auth {
 

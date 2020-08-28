@@ -1,5 +1,6 @@
 import Admin from 'model/admin';
 import User from 'model/user';
+import { Action } from 'data/store';
 
 export enum AuthState {
   INITIALIZED,
@@ -20,7 +21,7 @@ export interface SignInError {
   message: string;
 }
 
-export interface AuthAction {
+export interface AuthAction extends Action {
   type: AuthState;
   payload?: SignInCredentials | SignInError | Auth;
 }
