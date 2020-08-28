@@ -17,7 +17,7 @@
     "experimentalDecorators": true,
     "moduleResolution": "node",
     "rootDir": ".",
-    "outDir": "./",
+    "outDir": "./dist",
     "baseUrl": "./",
     "paths": {
       "ui/*": ["ui/*"],
@@ -27,14 +27,6 @@
       "data-mock/*": ["data-mock/*"]
     }
   },
-  "include": ["*.ts"],
+  "include": ["./model/**/*.ts","./test/**/*.ts"],
   "exclude": [],
-  "references": [
-    { "path": "ui" },
-    { "path": "model" },
-    { "path": "data" },
-    { "path": "data-firebase" },
-    { "path": "data-mock" },
-    { "path": "backend/functions" }
-  ]
 }

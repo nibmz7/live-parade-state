@@ -3,20 +3,14 @@
   "compilerOptions": {
     "module": "commonjs",
     "composite": true,
-    "tsBuildInfoFile": ".tsbuildinfo",
     "rootDir": "../",
-    "outDir": "./",
+    "outDir": "./js",
+    "baseUrl": "../",
     "sourceMap": false,
     "inlineSources": false,
     "esModuleInterop": true,
-    "moduleResolution": "Node",
-    "baseUrl": ".",
-    "paths": {
-      "model/*": ["../model/*"] // This mapping is relative to "baseUrl"
-    }
+    "tsBuildInfoFile": ".tsbuildinfo"
   },
-  "include": [
-    "../model/**/*.ts"
-  ],
-  "exclude": [""]
+  "include": ["./**/*.ts", "../model/**/*.ts"],
+  "exclude": []
 }

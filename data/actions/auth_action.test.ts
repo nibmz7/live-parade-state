@@ -1,12 +1,12 @@
 import { expect } from 'chai';
-import { signIn, signOut, updateAuthState } from '../auth_action';
+import { signIn, signOut, updateAuthState } from '../../../data/actions/auth_action';
 import {
   SignInCredentials,
   AuthAction,
   AuthState,
   Auth
 } from 'data/states/auth_state';
-import { ACTION_ROOT } from '../actions';
+import { ACTION_ROOT } from '../../../data/actions/actions';
 
 describe('Auth Actions', () => {
   it('Sign in', () => {
