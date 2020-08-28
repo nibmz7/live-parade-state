@@ -25,12 +25,10 @@ export interface SignInError {
 export interface AuthAction extends Action {
   root: ACTION_ROOT.AUTH,
   type: AuthState;
-  payload?: SignInCredentials | SignInError | Auth;
+  payload?: SignInCredentials | SignInError | User | Admin;
 }
 
 export interface Auth {
   state: AuthState;
-  isAdmin?: boolean;
-  user?: Admin | User;
-  payload?: SignInCredentials | SignInError;
+  payload?: SignInCredentials | SignInError | User | Admin | undefined;
 }

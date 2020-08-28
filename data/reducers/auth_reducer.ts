@@ -8,8 +8,7 @@ import {
 } from '../../data/states/auth_state';
 
 const initialState: Auth = {
-  state: AuthState.INITIALIZED,
-  isProcessing: false
+  state: AuthState.INITIALIZED
 };
 
 export const auth = (state: Auth = initialState, rootAction: Action): Auth => {
@@ -25,9 +24,11 @@ export const auth = (state: Auth = initialState, rootAction: Action): Auth => {
       };
 
     case AuthState.REQUEST_SIGN_OUT:
-      return { state: AuthState.REQUEST_SIGN_OUT};
+      return { state: AuthState.REQUEST_SIGN_OUT };
 
     default:
-      return action.payload as Auth || state;
+      return action.payload
+        ? { state: action.type, payload: action.payload }
+        : state;
   }
 };

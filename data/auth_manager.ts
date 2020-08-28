@@ -4,7 +4,6 @@ import { store, dispatch } from '../data/store';
 import {
   SignInCredentials,
   AuthState,
-  Auth,
   SignInError
 } from '../data/states/auth_state';
 import { updateAuthState } from './actions/auth_action';
@@ -23,24 +22,16 @@ export default abstract class AuthManager {
     });
   }
 
-  protected abstract signInWithCredentials(
+  protected abstract async signInWithCredentials(
     credentials: SignInCredentials
-  ): Promise<void>;
+  );
 
   protected signOut() {
-    let auth: Auth = {
-      state: AuthState.SIGNED_OUT
-    };
-    dispatch(updateAuthState(AuthState.SIGNED_OUT, auth));
+    dispatch(updateAuthState(AuthState.SIGNED_OUT, undefined));
   }
 
   protected signIn(user: User | Admin) {
-    let auth: Auth = {
-      state: AuthState.SIGNED_IN,
-      isAdmin: this.isAdmin(user.email),
-      user
-    };
-    dispatch(updateAuthState(AuthState.SIGNED_IN, auth));
+    dispatch(updateAuthState(AuthState.SIGNED_IN, user));
   }
 
   protected isAdmin(email): boolean {

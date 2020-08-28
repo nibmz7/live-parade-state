@@ -1,7 +1,5 @@
 import AuthManager from '../data/auth_manager';
 import { SignInCredentials } from '../data/states/auth_state';
-import User from '../model/user';
-import Admin from '../model/admin';
 import { user as MockUser, admin as MockAdmin } from './mock_data';
 
 export default class MockAuthManager extends AuthManager {
@@ -9,13 +7,18 @@ export default class MockAuthManager extends AuthManager {
     super();
   }
 
-  protected async signInAsUser(credentials: SignInCredentials): Promise<User> {
-    return Promise.resolve(MockUser);
-  }
-
-  protected async signInAsAdmin(
-    credentials: SignInCredentials
-  ): Promise<Admin> {
-    return Promise.resolve(MockAdmin);
+  protected async signInWithCredentials(credentials: SignInCredentials) {
+    if (credentials.email.includes('error')) {
+      this.signInError({
+        type: 'Wrong password',
+        message: "Please check that you've entered the correct password!"
+      });
+      return;
+    }
+    if (this.isAdmin(credentials.email)) {
+      this.signIn(MockAdmin);
+    } else {
+      this.signIn(MockUser);
+    }
   }
 }

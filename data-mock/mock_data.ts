@@ -3,7 +3,7 @@ import Branch from '../model/branch';
 import { SignInCredentials } from '../data/states/auth_state';
 import Department from '../model/department';
 import User from '../model/user';
-import Admin from 'model/admin';
+import Admin from '../model/admin';
 
 export const credentials: SignInCredentials = {
   email: 'john@lol.com',
