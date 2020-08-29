@@ -1,6 +1,6 @@
 import { createStore, combineReducers, Unsubscribe } from 'redux';
 import { auth } from '../data/reducers/auth_reducer';
-import { Auth } from './states/auth_state';
+import { AuthStoreState } from './states/auth_state';
 
 export enum ACTION_ROOT {
   AUTH,
@@ -52,7 +52,7 @@ class DataStoreImpl implements DataStore {
     let getState = (data): DataStoreState | undefined => {
       switch (listener.actionType) {
         case ACTION_ROOT.AUTH:
-          return data.auth as Auth;
+          return data.auth as AuthStoreState;
         default:
           return undefined;
       }

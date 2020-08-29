@@ -3,7 +3,7 @@ import { auth } from '../../../data/reducers/auth_reducer';
 import {
   AuthAction,
   AuthState,
-  Auth
+  AuthStoreState
 } from '../../../data/states/auth_state';
 import { MockUserCredentials} from '../../../data-mock/mock_data';
 import { ACTION_ROOT } from '../../../data/store';
@@ -16,7 +16,7 @@ describe('Auth Reducer', () => {
       type: AuthState.REQUEST_SIGN_IN,
       payload: MockUserCredentials
     };
-    const expectedState: Auth = {
+    const expectedState: AuthStoreState = {
       state: AuthState.REQUEST_SIGN_IN,
       payload: MockUserCredentials
     };
@@ -28,7 +28,7 @@ describe('Auth Reducer', () => {
       root: ACTION_ROOT.AUTH,
       type: AuthState.REQUEST_SIGN_OUT
     };
-    const expectedState: Auth = {
+    const expectedState: AuthStoreState = {
       state: AuthState.REQUEST_SIGN_OUT,
       payload: undefined
     };

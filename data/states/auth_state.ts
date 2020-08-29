@@ -31,7 +31,7 @@ export interface AuthAction extends Action {
   payload?: AuthPayload;
 }
 
-export interface Auth extends DataStoreState{
+export interface AuthStoreState extends DataStoreState{
   state: AuthState;
   payload?: AuthPayload;
 }

@@ -1,6 +1,6 @@
 import { expect } from 'chai';
 import { ApplicationStore, ACTION_ROOT } from '../../data/store';
-import { AuthState, Auth } from '../../data/states/auth_state';
+import { AuthState, AuthStoreState } from '../../data/states/auth_state';
 import ACTION_AUTH from '../../data/actions/auth_action';
 import MockAuthManager from '../../data-mock/mock_auth_manager';
 import {
@@ -23,9 +23,9 @@ describe('Mock Auth Manager', () => {
   });
 
   it('Sign In with Error', (done) => {
-    let callback = (auth: Auth, unsubscribe: Unsubscribe) => {
+    let callback = (auth: AuthStoreState, unsubscribe: Unsubscribe) => {
       if (auth.state !== AuthState.REQUEST_SIGN_IN_FAILED) return;
-      let expectedState: Auth = {
+      let expectedState: AuthStoreState = {
         state: AuthState.REQUEST_SIGN_IN_FAILED,
         payload: MockSignInError
       };
@@ -44,9 +44,9 @@ describe('Mock Auth Manager', () => {
   });
 
   it('Sign In with User', (done) => {
-    let callback = (auth: Auth, unsubscribe: Unsubscribe) => {
+    let callback = (auth: AuthStoreState, unsubscribe: Unsubscribe) => {
       if (auth.state !== AuthState.SIGNED_IN) return;
-      let expectedState: Auth = {
+      let expectedState: AuthStoreState = {
         state: AuthState.SIGNED_IN,
         payload: MockUser
       };
@@ -65,9 +65,9 @@ describe('Mock Auth Manager', () => {
   });
 
   it('Sign In with Admin', (done) => {
-    let callback = (auth: Auth, unsubscribe: Unsubscribe) => {
+    let callback = (auth: AuthStoreState, unsubscribe: Unsubscribe) => {
       if (auth.state !== AuthState.SIGNED_IN) return;
-      let expectedState: Auth = {
+      let expectedState: AuthStoreState = {
         state: AuthState.SIGNED_IN,
         payload: MockAdmin
       };
@@ -86,11 +86,9 @@ describe('Mock Auth Manager', () => {
   });
 
   it('Sign Out', (done) => {
-    let callback = (auth: Auth, unsubscribe: Unsubscribe) => {
-      console.log(auth.state);
+    let callback = (auth: AuthStoreState, unsubscribe: Unsubscribe) => {
       if (auth.state !== AuthState.SIGNED_OUT) return;
-      console.log('asddssd');
-      let expectedState: Auth = {
+      let expectedState: AuthStoreState = {
         state: AuthState.SIGNED_OUT,
         payload: undefined
       };

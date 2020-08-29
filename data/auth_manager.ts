@@ -5,13 +5,13 @@ import {
   SignInCredentials,
   AuthState,
   SignInError,
-  Auth
+  AuthStoreState
 } from '../data/states/auth_state';
 import ACTION_AUTH from './actions/auth_action';
 
 export default abstract class AuthManager {
   constructor() {
-    const callback = (auth: Auth) => {
+    const callback = (auth: AuthStoreState) => {
       if (auth.state === AuthState.REQUEST_SIGN_IN)
         this.signInWithCredentials(auth.payload as SignInCredentials);
       else if (auth.state === AuthState.REQUEST_SIGN_OUT) this.signOut();
