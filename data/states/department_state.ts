@@ -7,20 +7,28 @@ export enum ACTION_TYPE {
   MODIFIED,
   REQUEST_ADD,
   REQUEST_REMOVE,
-  REQUEST_MODIFY
+  REQUEST_MODIFY,
+  REQUEST_ERROR
 }
 
-export type ACTION_ID = string;
+export type ACTION_ID = string | number;
 
 export interface DepartmentAction extends Action {
   root: ACTION_ROOT.DEPARTMENTS;
   state: ACTION_ID,
   type: ACTION_TYPE;
-  payload: Department;
+  department: Department;
+}
+
+export interface DepartmentActionError {
+    actionID: ACTION_ID;
+    type: string;
+    message: string;
 }
 
 export interface DepartmentStoreState extends DataStoreState {
   state: ACTION_ID;
-  type: ACTION_TYPE;
-  payload: Department;
+  items: {}; 
+  type?: ACTION_TYPE;
+  department?: Department;
 }
