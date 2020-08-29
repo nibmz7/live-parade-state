@@ -1,6 +1,6 @@
 import User from '../model/user';
 import Admin from '../model/admin';
-import { ApplicationStore } from '../data/store';
+import { ApplicationStore, ACTION_ROOT } from '../data/store';
 import {
   SignInCredentials,
   AuthState,
@@ -11,15 +11,13 @@ import { updateAuthState } from './actions/auth_action';
 
 export default abstract class AuthManager {
   constructor() {
-    const getState = (data) => data.auth as Auth;
-
     const callback = (auth: Auth) => {
       if (auth.state === AuthState.REQUEST_SIGN_IN)
         this.signInWithCredentials(auth.payload as SignInCredentials);
       else if (auth.state === AuthState.REQUEST_SIGN_OUT) this.signOut();
     };
 
-    ApplicationStore.listen({ getState, callback, diffing: true });
+    ApplicationStore.listen({ actionType: ACTION_ROOT.AUTH, callback });
   }
 
   protected abstract async signInWithCredentials(

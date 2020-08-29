@@ -1,15 +1,15 @@
 import { expect } from 'chai';
-import {
-  ApplicationStore
-} from '../../data/store';
+import { ApplicationStore, ACTION_ROOT } from '../../data/store';
 import { AuthState, Auth } from '../../data/states/auth_state';
-import { signIn } from '../../data/actions/auth_action';
+import { signIn, signOut } from '../../data/actions/auth_action';
 import MockAuthManager from '../../data-mock/mock_auth_manager';
 import {
   MockErrorCredentials,
   MockSignInError,
   MockUserCredentials,
-  MockUser
+  MockAdminCredentials,
+  MockUser,
+  MockAdmin
 } from '../../data-mock/mock_data';
 import { Unsubscribe } from 'redux';
 
@@ -18,7 +18,9 @@ describe('Mock Auth Manager', () => {
     new MockAuthManager();
   });
 
-  const getState = (data) => data.auth as Auth;
+  afterEach(() => {
+    ApplicationStore.reset();
+  });
 
   it('Sign In with Error', (done) => {
     let callback = (auth: Auth, unsubscribe: Unsubscribe) => {
@@ -33,9 +35,8 @@ describe('Mock Auth Manager', () => {
     };
 
     ApplicationStore.listen({
-      getState,
-      callback,
-      diffing: true
+      actionType: ACTION_ROOT.AUTH,
+      callback
     });
 
     ApplicationStore.dispatch(signIn(MockErrorCredentials));
@@ -54,11 +55,53 @@ describe('Mock Auth Manager', () => {
     };
 
     ApplicationStore.listen({
-      getState,
-      callback,
-      diffing: true
+      actionType: ACTION_ROOT.AUTH,
+      callback
     });
 
     ApplicationStore.dispatch(signIn(MockUserCredentials));
   });
+
+  it('Sign In with Admin', (done) => {
+    let callback = (auth: Auth, unsubscribe: Unsubscribe) => {
+      if (auth.state !== AuthState.SIGNED_IN) return;
+      let expectedState: Auth = {
+        state: AuthState.SIGNED_IN,
+        payload: MockAdmin
+      };
+      expect(auth).deep.equal(expectedState);
+      unsubscribe();
+      done();
+    };
+
+    ApplicationStore.listen({
+      actionType: ACTION_ROOT.AUTH,
+      callback
+    });
+
+    ApplicationStore.dispatch(signIn(MockAdminCredentials));
+  });
+
+  it('Sign Out', (done) => {
+    let callback = (auth: Auth, unsubscribe: Unsubscribe) => {
+      console.log(auth.state);
+      if (auth.state !== AuthState.SIGNED_OUT) return;
+      console.log('asddssd');
+      let expectedState: Auth = {
+        state: AuthState.SIGNED_OUT,
+        payload: undefined
+      };
+      expect(auth).deep.equal(expectedState);
+      unsubscribe();
+      done();
+    };
+
+    ApplicationStore.listen({
+      actionType: ACTION_ROOT.AUTH,
+      callback
+    });
+
+    ApplicationStore.dispatch(signOut());
+  });
+  
 });
