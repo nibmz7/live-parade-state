@@ -1,7 +1,7 @@
 import { expect } from 'chai';
 import { ApplicationStore, ACTION_ROOT } from '../../data/store';
 import { AuthState, Auth } from '../../data/states/auth_state';
-import { signIn, signOut } from '../../data/actions/auth_action';
+import ACTION_AUTH from '../../data/actions/auth_action';
 import MockAuthManager from '../../data-mock/mock_auth_manager';
 import {
   MockErrorCredentials,
@@ -39,7 +39,8 @@ describe('Mock Auth Manager', () => {
       callback
     });
 
-    ApplicationStore.dispatch(signIn(MockErrorCredentials));
+    let action = ACTION_AUTH.requestSignIn(MockErrorCredentials);
+    ApplicationStore.dispatch(action);
   });
 
   it('Sign In with User', (done) => {
@@ -59,7 +60,8 @@ describe('Mock Auth Manager', () => {
       callback
     });
 
-    ApplicationStore.dispatch(signIn(MockUserCredentials));
+    let action = ACTION_AUTH.requestSignIn(MockUserCredentials);
+    ApplicationStore.dispatch(action);
   });
 
   it('Sign In with Admin', (done) => {
@@ -79,7 +81,8 @@ describe('Mock Auth Manager', () => {
       callback
     });
 
-    ApplicationStore.dispatch(signIn(MockAdminCredentials));
+    let action = ACTION_AUTH.requestSignIn(MockAdminCredentials);
+    ApplicationStore.dispatch(action);
   });
 
   it('Sign Out', (done) => {
@@ -101,7 +104,7 @@ describe('Mock Auth Manager', () => {
       callback
     });
 
-    ApplicationStore.dispatch(signOut());
+    let action = ACTION_AUTH.requestSignOut();
+    ApplicationStore.dispatch(action);
   });
-  
 });

@@ -1,15 +1,8 @@
 import { expect } from 'chai';
-import {
-  signIn,
-  signOut,
-  updateAuthState
-} from '../../../data/actions/auth_action';
-import {
-  AuthAction,
-  AuthState,
-} from '../../../data/states/auth_state';
+import ACTION_AUTH from '../../../data/actions/auth_action';
+import { AuthAction, AuthState } from '../../../data/states/auth_state';
 import { ACTION_ROOT } from '../../../data/store';
-import { MockUserCredentials} from '../../../data-mock/mock_data';
+import { MockUserCredentials, MockUser } from '../../../data-mock/mock_data';
 
 describe('Auth Actions', () => {
   it('Sign in', () => {
@@ -18,7 +11,8 @@ describe('Auth Actions', () => {
       type: AuthState.REQUEST_SIGN_IN,
       payload: MockUserCredentials
     };
-    expect(signIn(MockUserCredentials)).to.deep.equal(expectedAction);
+    const action = ACTION_AUTH.requestSignIn(MockUserCredentials);
+    expect(action).to.deep.equal(expectedAction);
   });
 
   it('Sign out', () => {
@@ -26,17 +20,17 @@ describe('Auth Actions', () => {
       root: ACTION_ROOT.AUTH,
       type: AuthState.REQUEST_SIGN_OUT
     };
-    expect(signOut()).to.deep.equal(expectedAction);
+    const action = ACTION_AUTH.requestSignOut();
+    expect(action).to.deep.equal(expectedAction);
   });
 
   it('Update Auth State', () => {
     const expectedAction: AuthAction = {
       root: ACTION_ROOT.AUTH,
       type: AuthState.SIGNED_IN,
-      payload: undefined
+      payload: MockUser
     };
-    expect(updateAuthState(AuthState.SIGNED_IN, undefined)).to.deep.equal(
-      expectedAction
-    );
+    const action = ACTION_AUTH.userSignedIn(MockUser);
+    expect(action).to.deep.equal(expectedAction);
   });
 });

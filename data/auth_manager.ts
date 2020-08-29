@@ -7,7 +7,7 @@ import {
   SignInError,
   Auth
 } from '../data/states/auth_state';
-import { updateAuthState } from './actions/auth_action';
+import ACTION_AUTH from './actions/auth_action';
 
 export default abstract class AuthManager {
   constructor() {
@@ -25,11 +25,13 @@ export default abstract class AuthManager {
   );
 
   protected signOut() {
-    ApplicationStore.dispatch(updateAuthState(AuthState.SIGNED_OUT, undefined));
+    let action = ACTION_AUTH.userSignedOut();
+    ApplicationStore.dispatch(action);
   }
 
   protected signIn(user: User | Admin) {
-    ApplicationStore.dispatch(updateAuthState(AuthState.SIGNED_IN, user));
+    let action = ACTION_AUTH.userSignedIn(user);
+    ApplicationStore.dispatch(action);
   }
 
   protected isAdmin(email): boolean {
@@ -37,8 +39,7 @@ export default abstract class AuthManager {
   }
 
   protected signInError(error: SignInError) {
-    ApplicationStore.dispatch(
-      updateAuthState(AuthState.REQUEST_SIGN_IN_FAILED, error)
-    );
+    let action = ACTION_AUTH.signInFailed(error);
+    ApplicationStore.dispatch(action);
   }
 }

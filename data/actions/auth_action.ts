@@ -3,21 +3,35 @@ import {
   SignInCredentials,
   AuthState,
   AuthAction,
-  AuthPayload
+  SignInError
 } from '../../data/states/auth_state';
+import Admin from 'model/admin';
+import User from 'model/user';
 
-export const signIn = (credentials: SignInCredentials): AuthAction => ({
-  root: ACTION_ROOT.AUTH,
-  type: AuthState.REQUEST_SIGN_IN,
-  payload: credentials
-});
+const ACTION_AUTH = {
+  requestSignIn: (credentials: SignInCredentials): AuthAction => ({
+    root: ACTION_ROOT.AUTH,
+    type: AuthState.REQUEST_SIGN_IN,
+    payload: credentials
+  }),
+  requestSignOut: (): AuthAction => ({
+    root: ACTION_ROOT.AUTH,
+    type: AuthState.REQUEST_SIGN_OUT
+  }),
+  userSignedIn: (user: User | Admin): AuthAction => ({
+    root: ACTION_ROOT.AUTH,
+    type: AuthState.SIGNED_IN,
+    payload: user
+  }),
+  userSignedOut: (): AuthAction => ({
+    root: ACTION_ROOT.AUTH,
+    type: AuthState.SIGNED_OUT
+  }),
+  signInFailed: (error: SignInError): AuthAction => ({
+    root: ACTION_ROOT.AUTH,
+    type: AuthState.REQUEST_SIGN_IN_FAILED,
+    payload: error
+  })
+};
 
-export const signOut = (): AuthAction => ({
-  root: ACTION_ROOT.AUTH,
-  type: AuthState.REQUEST_SIGN_OUT
-});
-
-export const updateAuthState = (
-  type: AuthState,
-  payload: AuthPayload
-): AuthAction => ({ root: ACTION_ROOT.AUTH, type, payload });
+export default ACTION_AUTH;
