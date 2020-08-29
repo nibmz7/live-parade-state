@@ -5,8 +5,8 @@ import {
   AuthState,
   Auth
 } from '../../../data/states/auth_state';
-import { ACTION_ROOT, Action } from '../../../data/actions/actions';
-import { credentials as MockCredentials} from '../../../data-mock/mock_data';
+import { MockUserCredentials} from '../../../data-mock/mock_data';
+import { Action, ACTION_ROOT } from '../../../data/store';
 
 describe('Auth Reducer', () => {
   it('Undefined', () => {
@@ -35,11 +35,11 @@ describe('Auth Reducer', () => {
     const action: AuthAction = {
       root: ACTION_ROOT.AUTH,
       type: AuthState.REQUEST_SIGN_IN,
-      payload: MockCredentials
+      payload: MockUserCredentials
     };
     const expectedState: Auth = {
       state: AuthState.REQUEST_SIGN_IN,
-      payload: MockCredentials
+      payload: MockUserCredentials
     };
     expect(auth(undefined, action)).to.deep.equal(expectedState);
   });

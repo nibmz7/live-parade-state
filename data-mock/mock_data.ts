@@ -1,36 +1,51 @@
 import Rank from '../model/rank';
 import Branch from '../model/branch';
-import { SignInCredentials } from '../data/states/auth_state';
+import { SignInCredentials, SignInError } from '../data/states/auth_state';
 import Department from '../model/department';
 import User from '../model/user';
 import Admin from '../model/admin';
 
-export const credentials: SignInCredentials = {
+export const MockUserCredentials: SignInCredentials = {
   email: 'john@lol.com',
   password: 'pass123'
 };
 
-export const rank = new Rank('SGT');
-
-export const branch: Branch = {
-  id: '123',
-  name: 'Pasir Laba',
-  domain: credentials.email.split('@')[1]
+export const MockAdminCredentials: SignInCredentials = {
+  email: 'admin@lol.com',
+  password: 'pass123'
 };
 
-export const department: Department = {
+export const MockErrorCredentials: SignInCredentials = {
+  email: 'error@lol.com',
+  password: 'pass123'
+};
+
+export const MockSignInError: SignInError = {
+  type: 'Wrong password',
+  message: "Please check that you've entered the correct password!"
+};
+
+export const MockRank = new Rank('SGT');
+
+export const MockBranch: Branch = {
+  id: '123',
+  name: 'Pasir Laba',
+  domain: MockUserCredentials.email.split('@')[1]
+};
+
+export const MockDepartment: Department = {
   id: '456',
   name: 'Manpower Branch'
 };
 
-export const user: User = {
+export const MockUser: User = {
   uid: '101',
   name: 'John',
   email: 'john@lol.com',
   regular: true,
-  rank,
-  branch,
-  department
+  rank: MockRank,
+  branch: MockBranch,
+  department: MockDepartment
 };
 
-export const admin = new Admin('321', 'admin@lol.com');
+export const MockAdmin = new Admin('321', 'admin@lol.com');

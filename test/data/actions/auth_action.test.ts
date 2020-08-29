@@ -8,17 +8,17 @@ import {
   AuthAction,
   AuthState,
 } from '../../../data/states/auth_state';
-import { ACTION_ROOT } from '../../../data/actions/actions';
-import { credentials as MockCredentials} from '../../../data-mock/mock_data';
+import { ACTION_ROOT } from '../../../data/store';
+import { MockUserCredentials} from '../../../data-mock/mock_data';
 
 describe('Auth Actions', () => {
   it('Sign in', () => {
     const expectedAction: AuthAction = {
       root: ACTION_ROOT.AUTH,
       type: AuthState.REQUEST_SIGN_IN,
-      payload: MockCredentials
+      payload: MockUserCredentials
     };
-    expect(signIn(MockCredentials)).to.deep.equal(expectedAction);
+    expect(signIn(MockUserCredentials)).to.deep.equal(expectedAction);
   });
 
   it('Sign out', () => {

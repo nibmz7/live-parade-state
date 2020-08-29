@@ -1,7 +1,8 @@
-import { Action, ACTION_ROOT } from '../../data/actions/actions';
+import { Action, ACTION_ROOT } from '../../data/store';
 
 import Admin from '../../model/admin';
 import User from '../../model/user';
+import { DataStoreState } from '../../data/store';
 
 export enum AuthState {
   INITIALIZED,
@@ -22,13 +23,15 @@ export interface SignInError {
   message: string;
 }
 
+export type AuthPayload = SignInCredentials | SignInError | User | Admin | undefined;
+
 export interface AuthAction extends Action {
   root: ACTION_ROOT.AUTH,
   type: AuthState;
-  payload?: SignInCredentials | SignInError | User | Admin;
+  payload?: AuthPayload;
 }
 
-export interface Auth {
+export interface Auth extends DataStoreState{
   state: AuthState;
-  payload?: SignInCredentials | SignInError | User | Admin | undefined;
+  payload?: AuthPayload;
 }
