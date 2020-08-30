@@ -11,7 +11,7 @@ const makeAction = (
   department: Department
 ): DepartmentAction => ({
   root: ACTION_ROOT.DEPARTMENTS,
-  state: Date.now(),
+  id: Date.now(),
   type,
   department
 });
@@ -34,3 +34,5 @@ const ACTION_DEPARTMENT = {
     error: actionError
   })
 };
+
+export default ACTION_DEPARTMENT;

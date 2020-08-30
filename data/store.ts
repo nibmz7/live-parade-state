@@ -3,27 +3,34 @@ import { auth } from '../data/reducers/auth_reducer';
 import { AuthStoreState } from './states/auth_state';
 
 export enum ACTION_ROOT {
+  RESET,
   AUTH,
   DEPARTMENTS,
-  USERS,
-  RESET
+  USERS
 }
 
+export type ACTION_ID = string | number;
+
 export interface Action {
+  id: ACTION_ID;
   root: ACTION_ROOT;
   type: any;
 }
 
+export interface ActionError {
+  action: Action;
+  type: string;
+  message: string;
+}
+
 export interface DataStoreState {
-  state: any;
-  payload?: any;
+  action: Action;
 }
 
 export interface DataStoreListener {
   actionType: ACTION_ROOT;
   callback(data: DataStoreState, unsubscribe?: Unsubscribe): void;
   predicate?(data: DataStoreState): boolean;
-  disableDiffing?: boolean;
 }
 
 export interface DataStore {
@@ -40,7 +47,11 @@ class DataStoreImpl implements DataStore {
   );
 
   reset(): void {
-    this.store.dispatch({ root: ACTION_ROOT.RESET, type: ACTION_ROOT.RESET });
+    this.store.dispatch({
+      id: 0,
+      root: ACTION_ROOT.RESET,
+      type: ACTION_ROOT.RESET
+    });
   }
 
   dispatch(action: Action): void {
@@ -48,7 +59,7 @@ class DataStoreImpl implements DataStore {
   }
 
   listen(listener: DataStoreListener): Unsubscribe {
-    let currentState = null;
+    let currentActionId: ACTION_ID = 0;
     let getState = (data): DataStoreState | undefined => {
       switch (listener.actionType) {
         case ACTION_ROOT.AUTH:
@@ -59,10 +70,10 @@ class DataStoreImpl implements DataStore {
     };
     let unsubscribe = this.store.subscribe(() => {
       let data = getState(this.store.getState());
-      if(!data) return;
-      if (!listener.disableDiffing && currentState === data.state) return;
+      if (!data) return;
+      if (currentActionId === data.action.id) return;
       if (listener.predicate?.(data)) return;
-      currentState = data.state;
+      currentActionId = data.action.id;
       listener.callback(data, unsubscribe);
     });
     return unsubscribe;

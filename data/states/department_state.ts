@@ -1,4 +1,4 @@
-import { Action, ACTION_ROOT, DataStoreState } from '../../data/store';
+import { Action, ACTION_ROOT, DataStoreState, ActionError, ACTION_ID } from '../../data/store';
 import Department from '../../model/department';
 
 export enum ACTION_TYPE {
@@ -11,24 +11,18 @@ export enum ACTION_TYPE {
   REQUEST_ERROR
 }
 
-export type ACTION_ID = string | number;
-
 export interface DepartmentAction extends Action {
   root: ACTION_ROOT.DEPARTMENTS;
-  state: ACTION_ID,
+  id: ACTION_ID,
   type: ACTION_TYPE;
   department: Department;
 }
 
-export interface DepartmentActionError {
-    actionID: ACTION_ID;
-    type: string;
-    message: string;
+export interface DepartmentActionError extends ActionError{
+    action: DepartmentAction
 }
 
 export interface DepartmentStoreState extends DataStoreState {
-  state: ACTION_ID;
-  items: {}; 
-  type?: ACTION_TYPE;
-  department?: Department;
+  action: DepartmentAction,
+  items: {}
 }

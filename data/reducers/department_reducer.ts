@@ -6,7 +6,15 @@ import {
 } from 'data/states/department_state';
 
 const initialState: DepartmentStoreState = {
-  state: 0,
+  action: {
+    root: ACTION_ROOT.DEPARTMENTS,
+    type: 0,
+    id: 0,
+    department: {
+      name: '',
+      id: '0'
+    }
+  },
   items: {}
 };
 
@@ -29,8 +37,5 @@ export const department = (
     delete items[department.id];
   }
 
-  return {
-    items,
-    ...action
-  };
+  return { items, action };
 };

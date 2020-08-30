@@ -1,4 +1,4 @@
-import { Action, ACTION_ROOT } from '../../data/store';
+import { Action, ACTION_ROOT, ACTION_ID, ActionError } from '../../data/store';
 
 import Admin from '../../model/admin';
 import User from '../../model/user';
@@ -18,20 +18,19 @@ export interface SignInCredentials {
   password: string;
 }
 
-export interface SignInError {
-  type: string;
-  message: string;
+export interface SignInError extends ActionError{
+  action: AuthAction
 }
 
 export type AuthPayload = SignInCredentials | SignInError | User | Admin | undefined;
 
 export interface AuthAction extends Action {
-  root: ACTION_ROOT.AUTH,
+  root: ACTION_ROOT.AUTH;
+  id: ACTION_ID;
   type: AuthState;
   payload?: AuthPayload;
 }
 
 export interface AuthStoreState extends DataStoreState{
-  state: AuthState;
-  payload?: AuthPayload;
+  action: AuthAction
 }

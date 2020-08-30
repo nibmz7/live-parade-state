@@ -2,27 +2,25 @@ import User from '../model/user';
 import Admin from '../model/admin';
 import { ApplicationStore, ACTION_ROOT } from '../data/store';
 import {
-  SignInCredentials,
   AuthState,
   SignInError,
-  AuthStoreState
+  AuthStoreState,
+  AuthAction
 } from '../data/states/auth_state';
 import ACTION_AUTH from './actions/auth_action';
 
 export default abstract class AuthManager {
   constructor() {
     const callback = (auth: AuthStoreState) => {
-      if (auth.state === AuthState.REQUEST_SIGN_IN)
-        this.signInWithCredentials(auth.payload as SignInCredentials);
-      else if (auth.state === AuthState.REQUEST_SIGN_OUT) this.signOut();
+      if (auth.action.type === AuthState.REQUEST_SIGN_IN)
+        this.signInWithCredentials(auth.action);
+      else if (auth.action.type === AuthState.REQUEST_SIGN_OUT) this.signOut();
     };
 
     ApplicationStore.listen({ actionType: ACTION_ROOT.AUTH, callback });
   }
 
-  protected abstract async signInWithCredentials(
-    credentials: SignInCredentials
-  );
+  protected abstract async signInWithCredentials(auth: AuthAction);
 
   protected signOut() {
     let action = ACTION_AUTH.userSignedOut();

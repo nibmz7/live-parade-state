@@ -8,8 +8,8 @@ import {
   MockSignInError,
   MockUserCredentials,
   MockAdminCredentials,
-  MockUser,
-  MockAdmin
+  MockAdmin,
+  MockUser
 } from '../../data-mock/mock_data';
 import { Unsubscribe } from 'redux';
 
@@ -23,11 +23,17 @@ describe('Mock Auth Manager', () => {
   });
 
   it('Sign In with Error', (done) => {
+    let action = ACTION_AUTH.requestSignIn(MockErrorCredentials);
     let callback = (auth: AuthStoreState, unsubscribe: Unsubscribe) => {
-      if (auth.state !== AuthState.REQUEST_SIGN_IN_FAILED) return;
+      if (auth.action.type !== AuthState.REQUEST_SIGN_IN_FAILED) return;
+
       let expectedState: AuthStoreState = {
-        state: AuthState.REQUEST_SIGN_IN_FAILED,
-        payload: MockSignInError
+        action: {
+          id: auth.action.id,
+          root: ACTION_ROOT.AUTH,
+          type: AuthState.REQUEST_SIGN_IN_FAILED,
+          payload: MockSignInError(action)
+        }
       };
       expect(auth).deep.equal(expectedState);
       unsubscribe();
@@ -39,16 +45,21 @@ describe('Mock Auth Manager', () => {
       callback
     });
 
-    let action = ACTION_AUTH.requestSignIn(MockErrorCredentials);
     ApplicationStore.dispatch(action);
   });
 
   it('Sign In with User', (done) => {
+    let action = ACTION_AUTH.requestSignIn(MockUserCredentials);
+
     let callback = (auth: AuthStoreState, unsubscribe: Unsubscribe) => {
-      if (auth.state !== AuthState.SIGNED_IN) return;
+      if (auth.action.type !== AuthState.SIGNED_IN) return;
       let expectedState: AuthStoreState = {
-        state: AuthState.SIGNED_IN,
-        payload: MockUser
+        action: {
+          id: auth.action.id,
+          root: ACTION_ROOT.AUTH,
+          type: AuthState.SIGNED_IN,
+          payload: MockUser
+        }
       };
       expect(auth).deep.equal(expectedState);
       unsubscribe();
@@ -60,16 +71,19 @@ describe('Mock Auth Manager', () => {
       callback
     });
 
-    let action = ACTION_AUTH.requestSignIn(MockUserCredentials);
     ApplicationStore.dispatch(action);
   });
 
   it('Sign In with Admin', (done) => {
     let callback = (auth: AuthStoreState, unsubscribe: Unsubscribe) => {
-      if (auth.state !== AuthState.SIGNED_IN) return;
+      if (auth.action.type !== AuthState.SIGNED_IN) return;
       let expectedState: AuthStoreState = {
-        state: AuthState.SIGNED_IN,
-        payload: MockAdmin
+        action: {
+          id: auth.action.id,
+          root: ACTION_ROOT.AUTH,
+          type: AuthState.SIGNED_IN,
+          payload: MockAdmin
+        }
       };
       expect(auth).deep.equal(expectedState);
       unsubscribe();
@@ -87,10 +101,14 @@ describe('Mock Auth Manager', () => {
 
   it('Sign Out', (done) => {
     let callback = (auth: AuthStoreState, unsubscribe: Unsubscribe) => {
-      if (auth.state !== AuthState.SIGNED_OUT) return;
+      if (auth.action.type !== AuthState.SIGNED_OUT) return;
       let expectedState: AuthStoreState = {
-        state: AuthState.SIGNED_OUT,
-        payload: undefined
+        action: {
+          id: auth.action.id,
+          root: ACTION_ROOT.AUTH,
+          type: AuthState.SIGNED_OUT,
+          payload: undefined
+        }
       };
       expect(auth).deep.equal(expectedState);
       unsubscribe();

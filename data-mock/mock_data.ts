@@ -1,6 +1,10 @@
 import Rank from '../model/rank';
 import Branch from '../model/branch';
-import { SignInCredentials, SignInError } from '../data/states/auth_state';
+import {
+  SignInCredentials,
+  SignInError,
+  AuthAction
+} from '../data/states/auth_state';
 import Department from '../model/department';
 import User from '../model/user';
 import Admin from '../model/admin';
@@ -20,10 +24,11 @@ export const MockErrorCredentials: SignInCredentials = {
   password: 'pass123'
 };
 
-export const MockSignInError: SignInError = {
+export const MockSignInError = (action: AuthAction): SignInError => ({
+  action,
   type: 'Wrong password',
   message: "Please check that you've entered the correct password!"
-};
+});
 
 export const MockRank = new Rank('SGT');
 

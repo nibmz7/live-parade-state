@@ -3,35 +3,29 @@ import {
   SignInCredentials,
   AuthState,
   AuthAction,
-  SignInError
+  SignInError,
+  AuthPayload
 } from '../../data/states/auth_state';
 import Admin from 'model/admin';
 import User from 'model/user';
 
+const makeAction = (type: AuthState, payload: AuthPayload): AuthAction => ({
+  id: Date.now(),
+  root: ACTION_ROOT.AUTH,
+  type,
+  payload
+});
+
 const ACTION_AUTH = {
-  requestSignIn: (credentials: SignInCredentials): AuthAction => ({
-    root: ACTION_ROOT.AUTH,
-    type: AuthState.REQUEST_SIGN_IN,
-    payload: credentials
-  }),
-  requestSignOut: (): AuthAction => ({
-    root: ACTION_ROOT.AUTH,
-    type: AuthState.REQUEST_SIGN_OUT
-  }),
-  userSignedIn: (user: User | Admin): AuthAction => ({
-    root: ACTION_ROOT.AUTH,
-    type: AuthState.SIGNED_IN,
-    payload: user
-  }),
-  userSignedOut: (): AuthAction => ({
-    root: ACTION_ROOT.AUTH,
-    type: AuthState.SIGNED_OUT
-  }),
-  signInFailed: (error: SignInError): AuthAction => ({
-    root: ACTION_ROOT.AUTH,
-    type: AuthState.REQUEST_SIGN_IN_FAILED,
-    payload: error
-  })
+  requestSignIn: (credentials: SignInCredentials): AuthAction =>
+    makeAction(AuthState.REQUEST_SIGN_IN, credentials),
+  requestSignOut: (): AuthAction =>
+    makeAction(AuthState.REQUEST_SIGN_OUT, undefined),
+  userSignedIn: (user: User | Admin): AuthAction =>
+    makeAction(AuthState.SIGNED_IN, user),
+  userSignedOut: (): AuthAction => makeAction(AuthState.SIGNED_OUT, undefined),
+  signInFailed: (error: SignInError): AuthAction =>
+    makeAction(AuthState.REQUEST_SIGN_IN_FAILED, error)
 };
 
 export default ACTION_AUTH;
