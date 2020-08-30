@@ -89,3 +89,6 @@ class DataStoreImpl implements DataStore {
 }
 
 export const ApplicationStore = new DataStoreImpl();
+
+let action_uuid: number = 1;
+export const generateActionId = (): number => action_uuid++;

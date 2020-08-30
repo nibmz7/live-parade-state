@@ -1,4 +1,4 @@
-import { ACTION_ROOT } from '../store';
+import { ACTION_ROOT, generateActionId } from '../store';
 import {
   SignInCredentials,
   AuthState,
@@ -6,11 +6,11 @@ import {
   SignInError,
   AuthPayload
 } from '../states/auth_state';
-import Admin from 'model/admin';
-import User from 'model/user';
+import Admin from '../../model/admin';
+import User from '../../model/user';
 
 const makeAction = (type: AuthState, payload: AuthPayload): AuthAction => ({
-  id: Date.now(),
+  id: generateActionId(),
   root: ACTION_ROOT.AUTH,
   type,
   payload

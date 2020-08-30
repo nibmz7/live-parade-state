@@ -5,14 +5,14 @@ import {
   DepartmentActionError,
   DepartmentPayload
 } from '../states/department_state';
-import { ACTION_ROOT } from '../store';
+import { ACTION_ROOT, generateActionId } from '../store';
 
 const makeAction = (
   type: ACTION_TYPE,
   payload: DepartmentPayload
 ): DepartmentAction => ({
   root: ACTION_ROOT.DEPARTMENTS,
-  id: Date.now(),
+  id: generateActionId(),
   type,
   payload
 });
