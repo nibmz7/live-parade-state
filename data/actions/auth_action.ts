@@ -5,7 +5,7 @@ import {
   AuthAction,
   SignInError,
   AuthPayload
-} from '../../data/states/auth_state';
+} from '../states/auth_state';
 import Admin from 'model/admin';
 import User from 'model/user';
 

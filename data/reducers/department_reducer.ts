@@ -2,8 +2,8 @@ import { ACTION_ROOT, Action } from '../../data/store';
 import {
   DepartmentStoreState,
   DepartmentAction,
-  ACTION_TYPE
-} from 'data/states/department_state';
+  DEPARTMENT_ACTION_TYPE as ACTION_TYPE
+} from '../states/department_state';
 
 const initialState: DepartmentStoreState = {
   action: {

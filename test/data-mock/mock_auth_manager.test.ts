@@ -3,14 +3,7 @@ import { ApplicationStore, ACTION_ROOT } from '../../data/store';
 import { AuthState, AuthStoreState } from '../../data/states/auth_state';
 import ACTION_AUTH from '../../data/actions/auth_action';
 import MockAuthManager from '../../data-mock/mock_auth_manager';
-import {
-  MockErrorCredentials,
-  MockSignInError,
-  MockUserCredentials,
-  MockAdminCredentials,
-  MockAdmin,
-  MockUser
-} from '../../data-mock/mock_data';
+import { MockAuth, MockModel } from '../../data-mock/mock_data';
 import { Unsubscribe } from 'redux';
 
 describe('Mock Auth Manager', () => {
@@ -23,7 +16,7 @@ describe('Mock Auth Manager', () => {
   });
 
   it('Sign In with Error', (done) => {
-    let action = ACTION_AUTH.requestSignIn(MockErrorCredentials);
+    let action = ACTION_AUTH.requestSignIn(MockAuth.ErrorCredentials);
     let callback = (auth: AuthStoreState, unsubscribe: Unsubscribe) => {
       if (auth.action.type !== AuthState.REQUEST_SIGN_IN_FAILED) return;
 
@@ -32,7 +25,7 @@ describe('Mock Auth Manager', () => {
           id: auth.action.id,
           root: ACTION_ROOT.AUTH,
           type: AuthState.REQUEST_SIGN_IN_FAILED,
-          payload: MockSignInError(action)
+          payload: MockAuth.SignInError(action)
         }
       };
       expect(auth).deep.equal(expectedState);
@@ -49,7 +42,7 @@ describe('Mock Auth Manager', () => {
   });
 
   it('Sign In with User', (done) => {
-    let action = ACTION_AUTH.requestSignIn(MockUserCredentials);
+    let action = ACTION_AUTH.requestSignIn(MockAuth.UserCredentials);
 
     let callback = (auth: AuthStoreState, unsubscribe: Unsubscribe) => {
       if (auth.action.type !== AuthState.SIGNED_IN) return;
@@ -58,7 +51,7 @@ describe('Mock Auth Manager', () => {
           id: auth.action.id,
           root: ACTION_ROOT.AUTH,
           type: AuthState.SIGNED_IN,
-          payload: MockUser
+          payload: MockModel.User
         }
       };
       expect(auth).deep.equal(expectedState);
@@ -82,7 +75,7 @@ describe('Mock Auth Manager', () => {
           id: auth.action.id,
           root: ACTION_ROOT.AUTH,
           type: AuthState.SIGNED_IN,
-          payload: MockAdmin
+          payload: MockModel.Admin
         }
       };
       expect(auth).deep.equal(expectedState);
@@ -95,7 +88,7 @@ describe('Mock Auth Manager', () => {
       callback
     });
 
-    let action = ACTION_AUTH.requestSignIn(MockAdminCredentials);
+    let action = ACTION_AUTH.requestSignIn(MockAuth.AdminCredentials);
     ApplicationStore.dispatch(action);
   });
 

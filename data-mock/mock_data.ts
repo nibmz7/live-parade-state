@@ -9,48 +9,46 @@ import Department from '../model/department';
 import User from '../model/user';
 import Admin from '../model/admin';
 
-export const MockUserCredentials: SignInCredentials = {
-  email: 'john@lol.com',
-  password: 'pass123'
+export const MockAuth = {
+  UserCredentials: {
+    email: 'john@lol.com',
+    password: 'pass123'
+  } as SignInCredentials,
+  AdminCredentials: {
+    email: 'admin@lol.com',
+    password: 'pass123'
+  } as SignInCredentials,
+  ErrorCredentials: {
+    email: 'error@lol.com',
+    password: 'pass123'
+  } as SignInCredentials,
+  SignInError: (action: AuthAction): SignInError => ({
+    action,
+    type: 'Wrong password',
+    message: "Please check that you've entered the correct password!"
+  })
 };
 
-export const MockAdminCredentials: SignInCredentials = {
-  email: 'admin@lol.com',
-  password: 'pass123'
-};
-
-export const MockErrorCredentials: SignInCredentials = {
-  email: 'error@lol.com',
-  password: 'pass123'
-};
-
-export const MockSignInError = (action: AuthAction): SignInError => ({
-  action,
-  type: 'Wrong password',
-  message: "Please check that you've entered the correct password!"
-});
-
-export const MockRank = new Rank('SGT');
-
-export const MockBranch: Branch = {
+const ModelRank = new Rank('SSG');
+const ModelBranch: Branch = {
   id: '123',
   name: 'Pasir Laba',
-  domain: MockUserCredentials.email.split('@')[1]
+  domain: MockAuth.UserCredentials.email.split('@')[1]
 };
+const ModelDepartment: Department = { id: '456', name: 'Manpower Branch' };
 
-export const MockDepartment: Department = {
-  id: '456',
-  name: 'Manpower Branch'
+export const MockModel = {
+  Rank: ModelRank,
+  Branch: ModelBranch,
+  Department: ModelDepartment,
+  User: {
+    uid: '101',
+    name: 'John',
+    email: 'john@lol.com',
+    regular: true,
+    rank: ModelRank,
+    branch: ModelBranch,
+    department: ModelDepartment
+  } as User,
+  Admin: new Admin('321', 'admin@lol.com')
 };
-
-export const MockUser: User = {
-  uid: '101',
-  name: 'John',
-  email: 'john@lol.com',
-  regular: true,
-  rank: MockRank,
-  branch: MockBranch,
-  department: MockDepartment
-};
-
-export const MockAdmin = new Admin('321', 'admin@lol.com');

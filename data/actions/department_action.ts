@@ -1,10 +1,10 @@
 import Department from '../../model/department';
 import {
   DepartmentAction,
-  ACTION_TYPE,
+  DEPARTMENT_ACTION_TYPE as ACTION_TYPE,
   DepartmentActionError
-} from '../../data/states/department_state';
-import { ACTION_ROOT } from '../../data/store';
+} from '../states/department_state';
+import { ACTION_ROOT } from '../store';
 
 const makeAction = (
   type: ACTION_TYPE,

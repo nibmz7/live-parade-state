@@ -1,15 +1,14 @@
 import {
   AuthStoreState,
-  AuthState,
   AuthAction
-} from '../../data/states/auth_state';
+} from '../states/auth_state';
 import { ACTION_ROOT, Action } from '../../data/store';
 
 const initialState: AuthStoreState = {
   action: {
     id: 0,
     root: 0,
-    type: AuthState.INITIALIZED
+    type: 0
   }
 };
 

@@ -5,7 +5,7 @@ import {
   AuthState,
   AuthStoreState
 } from '../../../data/states/auth_state';
-import { MockUserCredentials } from '../../../data-mock/mock_data';
+import { MockAuth } from '../../../data-mock/mock_data';
 import { ACTION_ROOT } from '../../../data/store';
 
 describe('Auth Reducer', () => {
@@ -14,7 +14,7 @@ describe('Auth Reducer', () => {
       id: Date.now(),
       root: ACTION_ROOT.AUTH,
       type: AuthState.REQUEST_SIGN_IN,
-      payload: MockUserCredentials
+      payload: MockAuth.UserCredentials
     };
     const expectedState: AuthStoreState = {
       action
