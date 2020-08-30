@@ -11,13 +11,15 @@ import ACTION_AUTH from './actions/auth_action';
 
 export default abstract class AuthManager {
   constructor() {
-    const callback = (auth: AuthStoreState) => {
-      if (auth.action.type === AuthState.REQUEST_SIGN_IN)
-        this.signInWithCredentials(auth.action);
-      else if (auth.action.type === AuthState.REQUEST_SIGN_OUT) this.signOut();
-    };
+    ApplicationStore.listen(ACTION_ROOT.AUTH, (state) =>
+      this.authStateChanged(state)
+    );
+  }
 
-    ApplicationStore.listen({ actionType: ACTION_ROOT.AUTH, callback });
+  authStateChanged(state: AuthStoreState) {
+    if (state.action.type === AuthState.REQUEST_SIGN_IN)
+      this.signInWithCredentials(state.action);
+    else if (state.action.type === AuthState.REQUEST_SIGN_OUT) this.signOut();
   }
 
   protected abstract async signInWithCredentials(auth: AuthAction);

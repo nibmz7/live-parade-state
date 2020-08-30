@@ -27,16 +27,21 @@ export interface DataStoreState {
   action: Action;
 }
 
-export interface DataStoreListener {
-  actionType: ACTION_ROOT;
-  callback(data: DataStoreState, unsubscribe?: Unsubscribe): void;
-  predicate?(data: DataStoreState): boolean;
-}
+export type Predicate = (data: DataStoreState) => boolean;
+
+export type DataStoreListener = (
+  data: any,
+  unsubscribe: Unsubscribe
+) => void;
 
 export interface DataStore {
   reset(): void;
   dispatch(action: Action): void;
-  listen(listener: DataStoreListener): Unsubscribe;
+  listen(
+    actionType: ACTION_ROOT,
+    listener: DataStoreListener,
+    predicate?: Predicate
+  ): Unsubscribe;
 }
 
 class DataStoreImpl implements DataStore {
@@ -58,10 +63,14 @@ class DataStoreImpl implements DataStore {
     this.store.dispatch(action);
   }
 
-  listen(listener: DataStoreListener): Unsubscribe {
+  listen(
+    actionType: ACTION_ROOT,
+    listener: DataStoreListener,
+    predicate?: Predicate
+  ): Unsubscribe {
     let currentActionId: ACTION_ID = 0;
     let getState = (data): DataStoreState | undefined => {
-      switch (listener.actionType) {
+      switch (actionType) {
         case ACTION_ROOT.AUTH:
           return data.auth as AuthStoreState;
         default:
@@ -70,11 +79,10 @@ class DataStoreImpl implements DataStore {
     };
     let unsubscribe = this.store.subscribe(() => {
       let data = getState(this.store.getState());
-      if (!data) return;
-      if (currentActionId === data.action.id) return;
-      if (listener.predicate?.(data)) return;
+      if (!data || currentActionId === data.action.id) return;
+      if (predicate?.(data)) return;
       currentActionId = data.action.id;
-      listener.callback(data, unsubscribe);
+      listener(data, unsubscribe);
     });
     return unsubscribe;
   }

@@ -33,10 +33,7 @@ describe('Mock Auth Manager', () => {
       done();
     };
 
-    ApplicationStore.listen({
-      actionType: ACTION_ROOT.AUTH,
-      callback
-    });
+    ApplicationStore.listen(ACTION_ROOT.AUTH, callback);
 
     ApplicationStore.dispatch(action);
   });
@@ -59,10 +56,7 @@ describe('Mock Auth Manager', () => {
       done();
     };
 
-    ApplicationStore.listen({
-      actionType: ACTION_ROOT.AUTH,
-      callback
-    });
+    ApplicationStore.listen(ACTION_ROOT.AUTH, callback);
 
     ApplicationStore.dispatch(action);
   });
@@ -83,10 +77,7 @@ describe('Mock Auth Manager', () => {
       done();
     };
 
-    ApplicationStore.listen({
-      actionType: ACTION_ROOT.AUTH,
-      callback
-    });
+    ApplicationStore.listen(ACTION_ROOT.AUTH, callback);
 
     let action = ACTION_AUTH.requestSignIn(MockAuth.AdminCredentials);
     ApplicationStore.dispatch(action);
@@ -108,10 +99,7 @@ describe('Mock Auth Manager', () => {
       done();
     };
 
-    ApplicationStore.listen({
-      actionType: ACTION_ROOT.AUTH,
-      callback
-    });
+    ApplicationStore.listen(ACTION_ROOT.AUTH, callback);
 
     let action = ACTION_AUTH.requestSignOut();
     ApplicationStore.dispatch(action);
