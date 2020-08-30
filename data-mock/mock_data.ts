@@ -8,6 +8,7 @@ import {
 import Department from '../model/department';
 import User from '../model/user';
 import Admin from '../model/admin';
+import { DepartmentAction, DepartmentActionError } from 'data/states/department_state';
 
 export const MockAuth = {
   UserCredentials: {
@@ -21,13 +22,21 @@ export const MockAuth = {
   ErrorCredentials: {
     email: 'error@lol.com',
     password: 'pass123'
-  } as SignInCredentials,
-  SignInError: (action: AuthAction): SignInError => ({
+  } as SignInCredentials
+};
+
+export const MockError = {
+  SignIn: (action: AuthAction): SignInError => ({
     action,
     type: 'Wrong password',
     message: "Please check that you've entered the correct password!"
+  }),
+  DepartmentRequest: (action: DepartmentAction): DepartmentActionError => ({
+    action,
+    type: 'Error adding departmnet',
+    message: "Department name is too long"
   })
-};
+}
 
 const ModelRank = new Rank('SSG');
 const ModelBranch: Branch = {

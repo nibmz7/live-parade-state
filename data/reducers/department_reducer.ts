@@ -4,13 +4,14 @@ import {
   DepartmentAction,
   DEPARTMENT_ACTION_TYPE as ACTION_TYPE
 } from '../states/department_state';
+import Department from 'model/department';
 
 const initialState: DepartmentStoreState = {
   action: {
-    root: ACTION_ROOT.DEPARTMENTS,
+    root: 0,
     type: 0,
     id: 0,
-    department: {
+    payload: {
       name: '',
       id: '0'
     }
@@ -26,7 +27,7 @@ export const department = (
   if (rootAction.root !== ACTION_ROOT.DEPARTMENTS) return state;
 
   const action = rootAction as DepartmentAction;
-  const department = action.department;
+  const department = action.payload as Department;
   const items = state.items;
   if (
     action.type === ACTION_TYPE.ADDED ||

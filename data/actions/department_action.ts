@@ -2,18 +2,19 @@ import Department from '../../model/department';
 import {
   DepartmentAction,
   DEPARTMENT_ACTION_TYPE as ACTION_TYPE,
-  DepartmentActionError
+  DepartmentActionError,
+  DepartmentPayload
 } from '../states/department_state';
 import { ACTION_ROOT } from '../store';
 
 const makeAction = (
   type: ACTION_TYPE,
-  department: Department
+  payload: DepartmentPayload
 ): DepartmentAction => ({
   root: ACTION_ROOT.DEPARTMENTS,
   id: Date.now(),
   type,
-  department
+  payload
 });
 
 const ACTION_DEPARTMENT = {
@@ -29,10 +30,8 @@ const ACTION_DEPARTMENT = {
     makeAction(ACTION_TYPE.REQUEST_MODIFY, department),
   requestRemove: (department: Department): DepartmentAction =>
     makeAction(ACTION_TYPE.REQUEST_REMOVE, department),
-  error: (department: Department, actionError: DepartmentActionError) => ({
-    ...makeAction(ACTION_TYPE.REQUEST_ERROR, department),
-    error: actionError
-  })
+  error: (actionError: DepartmentActionError) =>
+    makeAction(ACTION_TYPE.REQUEST_ERROR, actionError)
 };
 
 export default ACTION_DEPARTMENT;

@@ -6,7 +6,7 @@ import {
   SignInError
 } from '../../../data/states/auth_state';
 import { ACTION_ROOT } from '../../../data/store';
-import { MockAuth, MockModel } from '../../../data-mock/mock_data';
+import { MockAuth, MockModel, MockError } from '../../../data-mock/mock_data';
 
 describe('Auth Actions', () => {
   it('Sign in', () => {
@@ -44,7 +44,7 @@ describe('Auth Actions', () => {
 
   it('Sign in error', () => {
     const addAction = ACTION_AUTH.userSignedIn(MockModel.User);
-    const error: SignInError = MockAuth.SignInError(addAction);
+    const error: SignInError = MockError.SignIn(addAction);
     const action = ACTION_AUTH.signInFailed(error);
     const expectedAction: AuthAction = {
       id: action.id,
