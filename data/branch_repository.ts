@@ -1,18 +1,19 @@
-import {
-  DepartmentStoreState
-} from './states/department_state';
+import { DepartmentStoreState } from './states/department_state';
 import { ApplicationStore, ACTION_ROOT } from './store';
 import Department from '../model/department';
 import ACTION_DEPARTMENT from './actions/department_action';
 
-enum CHANGE_TYPE {
+export enum CHANGE_TYPE {
   ADDED,
   MODIFIED,
   REMOVED
 }
-type DepartmentChange = (department: Department, type: CHANGE_TYPE) => void;
+export type DepartmentChange = (
+  department: Department,
+  type: CHANGE_TYPE
+) => void;
 
-export default abstract class BranchRepository {
+export abstract class BranchRepository {
   constructor() {
     ApplicationStore.listen(ACTION_ROOT.DEPARTMENTS, (state) =>
       this.departmentStateChanged(state)
