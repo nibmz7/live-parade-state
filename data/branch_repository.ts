@@ -1,8 +1,16 @@
 import {
-  DepartmentAction,
   DepartmentStoreState
 } from './states/department_state';
 import { ApplicationStore, ACTION_ROOT } from './store';
+import Department from '../model/department';
+import ACTION_DEPARTMENT from './actions/department_action';
+
+enum CHANGE_TYPE {
+  ADDED,
+  MODIFIED,
+  REMOVED
+}
+type DepartmentChange = (department: Department, type: CHANGE_TYPE) => void;
 
 export default abstract class BranchRepository {
   constructor() {
@@ -15,9 +23,17 @@ export default abstract class BranchRepository {
     console.log(state);
   }
 
-  async initialize() {}
+  protected abstract connectToDB(departmentChange: DepartmentChange): void;
 
-  protected abstract async addDepartment(action: DepartmentAction);
-  protected abstract async removeDepartment(action: DepartmentAction);
-  protected abstract async modifyDepartment(action: DepartmentAction);
+  async initialize() {
+    const departmentChange: DepartmentChange = (department, type) => {
+      if (type === CHANGE_TYPE.ADDED)
+        ApplicationStore.dispatch(ACTION_DEPARTMENT.added(department));
+      else if (type === CHANGE_TYPE.MODIFIED)
+        ApplicationStore.dispatch(ACTION_DEPARTMENT.modified(department));
+      else if (type === CHANGE_TYPE.REMOVED)
+        ApplicationStore.dispatch(ACTION_DEPARTMENT.removed(department));
+    };
+    this.connectToDB(departmentChange);
+  }
 }
