@@ -29,10 +29,7 @@ export interface DataStoreState {
 
 export type Predicate = (data: DataStoreState) => boolean;
 
-export type DataStoreListener = (
-  data: any,
-  unsubscribe: Unsubscribe
-) => void;
+export type DataStoreListener = (data: any, unsubscribe: Unsubscribe) => void;
 
 export interface DataStore {
   reset(): void;
@@ -43,6 +40,9 @@ export interface DataStore {
     predicate?: Predicate
   ): Unsubscribe;
 }
+
+let action_uuid: number = 1000;
+export const generateActionId = (): number => action_uuid++;
 
 class DataStoreImpl implements DataStore {
   private store = createStore(
@@ -57,6 +57,7 @@ class DataStoreImpl implements DataStore {
       root: ACTION_ROOT.RESET,
       type: ACTION_ROOT.RESET
     });
+    action_uuid = 1000;
   }
 
   dispatch(action: Action): void {
@@ -86,9 +87,10 @@ class DataStoreImpl implements DataStore {
     });
     return unsubscribe;
   }
+
+  getState() {
+    return this.store.getState();
+  }
 }
 
 export const ApplicationStore = new DataStoreImpl();
-
-let action_uuid: number = 1;
-export const generateActionId = (): number => action_uuid++;

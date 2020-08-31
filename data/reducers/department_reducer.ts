@@ -4,7 +4,7 @@ import {
   DepartmentAction,
   DEPARTMENT_ACTION_TYPE as ACTION_TYPE
 } from '../states/department_state';
-import Department from 'model/department';
+import Department from '../../model/department';
 
 const initialState: DepartmentStoreState = {
   action: {

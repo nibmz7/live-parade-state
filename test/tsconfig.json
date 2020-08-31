@@ -5,7 +5,6 @@
     "composite": true,
     "rootDir": "../",
     "outDir": "./js",
-    "baseUrl": "../",
     "allowJs": true,
     "sourceMap": false,
     "inlineSources": false,

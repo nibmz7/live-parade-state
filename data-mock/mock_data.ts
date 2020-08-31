@@ -8,7 +8,7 @@ import {
 import Department from '../model/department';
 import User from '../model/user';
 import Admin from '../model/admin';
-import { DepartmentAction, DepartmentActionError } from 'data/states/department_state';
+import { DepartmentAction, DepartmentActionError } from '../data/states/department_state';
 
 export const MockAuth = {
   UserCredentials: {
