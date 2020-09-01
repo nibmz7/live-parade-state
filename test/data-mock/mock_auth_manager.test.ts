@@ -17,8 +17,8 @@ describe('Mock Auth Manager', () => {
 
   it('Sign In with Error', (done) => {
     let action = ACTION_AUTH.requestSignIn(MockAuth.ErrorCredentials);
+
     let callback = (auth: AuthStoreState, unsubscribe: Unsubscribe) => {
-      unsubscribe();
       if (auth.action.type !== AuthState.REQUEST_SIGN_IN_FAILED) return;
 
       let expectedState: AuthStoreState = {
@@ -30,11 +30,11 @@ describe('Mock Auth Manager', () => {
         }
       };
       expect(auth).deep.equal(expectedState);
+      unsubscribe();
       done();
     };
 
     ApplicationStore.listen(ACTION_ROOT.AUTH, callback);
-
     ApplicationStore.dispatch(action);
   });
 
@@ -57,11 +57,12 @@ describe('Mock Auth Manager', () => {
     };
 
     ApplicationStore.listen(ACTION_ROOT.AUTH, callback);
-
     ApplicationStore.dispatch(action);
   });
 
   it('Sign In with Admin', (done) => {
+    let action = ACTION_AUTH.requestSignIn(MockAuth.AdminCredentials);
+
     let callback = (auth: AuthStoreState, unsubscribe: Unsubscribe) => {
       if (auth.action.type !== AuthState.SIGNED_IN) return;
       let expectedState: AuthStoreState = {
@@ -78,12 +79,12 @@ describe('Mock Auth Manager', () => {
     };
 
     ApplicationStore.listen(ACTION_ROOT.AUTH, callback);
-
-    let action = ACTION_AUTH.requestSignIn(MockAuth.AdminCredentials);
     ApplicationStore.dispatch(action);
   });
 
   it('Sign Out', (done) => {
+    let action = ACTION_AUTH.requestSignOut();
+
     let callback = (auth: AuthStoreState, unsubscribe: Unsubscribe) => {
       if (auth.action.type !== AuthState.SIGNED_OUT) return;
       let expectedState: AuthStoreState = {
@@ -100,8 +101,6 @@ describe('Mock Auth Manager', () => {
     };
 
     ApplicationStore.listen(ACTION_ROOT.AUTH, callback);
-
-    let action = ACTION_AUTH.requestSignOut();
     ApplicationStore.dispatch(action);
   });
 });

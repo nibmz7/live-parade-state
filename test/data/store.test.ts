@@ -28,7 +28,6 @@ describe('Store', () => {
     ApplicationStore.listen(
       ACTION_ROOT.AUTH,
       (auth: AuthStoreState, unsubscribe: Unsubscribe) => {
-        console.log('lslsllsls');
         unsubscribe();
         ApplicationStore.dispatch(action);
         let expectedResult = { action };

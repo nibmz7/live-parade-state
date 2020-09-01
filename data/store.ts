@@ -82,12 +82,14 @@ class DataStoreImpl implements DataStore {
           return data;
       }
     };
-    let unsubscribe = this.store.subscribe(() => {
+    const handleChange = () => {
       let data = getState(this.store.getState());
       if (!data || currentActionId === data?.action?.id) return;
       if (predicate?.(data)) return;
+      currentActionId = data?.action?.id;
       listener(data, unsubscribe);
-    });
+    };
+    let unsubscribe = this.store.subscribe(handleChange);
     return unsubscribe;
   }
 
