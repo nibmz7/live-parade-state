@@ -13,7 +13,7 @@ export type DepartmentChange = (
   type: CHANGE_TYPE
 ) => void;
 
-export abstract class BranchRepository {
+export abstract class DataManager {
   constructor() {
     ApplicationStore.listen(ACTION_ROOT.DEPARTMENTS, (state) =>
       this.departmentStateChanged(state)

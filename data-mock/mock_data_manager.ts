@@ -1,11 +1,11 @@
 import {
-  BranchRepository,
+  DataManager,
   DepartmentChange,
   CHANGE_TYPE
-} from '../data/branch_repository';
+} from '../data/data_manager';
 import { MockModel } from './mock_data';
 
-export default class MockBranchRepository extends BranchRepository {
+export default class MockBranchRepository extends DataManager {
   constructor() {
     super();
   }
