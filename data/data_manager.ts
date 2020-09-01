@@ -24,7 +24,7 @@ export abstract class DataManager {
     );
   }
 
-  protected abstract connectToDB(departmentChange: DepartmentChange): void;
+  protected abstract async connectToDB(departmentChange: DepartmentChange): Promise<void>;
   protected abstract requestAddDepartment(state: DepartmentStoreState): void;
   protected abstract requestModifyDepartment(state: DepartmentStoreState): void;
   protected abstract requestRemoveDepartment(state: DepartmentStoreState): void;
@@ -57,6 +57,6 @@ export abstract class DataManager {
           break;
       }
     };
-    this.connectToDB(departmentChange);
+    await this.connectToDB(departmentChange);
   }
 }

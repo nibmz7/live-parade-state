@@ -1,12 +1,13 @@
 import { createStore, combineReducers, Unsubscribe } from 'redux';
 import { auth } from '../data/reducers/auth_reducer';
-import { AuthStoreState } from './states/auth_state';
+import { department } from '../data/reducers/department_reducer';
 
 export enum ACTION_ROOT {
   RESET,
   AUTH,
   DEPARTMENTS,
-  USERS
+  USERS,
+  ALL
 }
 
 export type ACTION_ID = string | number;
@@ -47,7 +48,8 @@ export const generateActionId = (): number => action_uuid++;
 class DataStoreImpl implements DataStore {
   private store = createStore(
     combineReducers({
-      auth
+      auth,
+      department
     })
   );
 
@@ -70,19 +72,20 @@ class DataStoreImpl implements DataStore {
     predicate?: Predicate
   ): Unsubscribe {
     let currentActionId: ACTION_ID = 0;
-    let getState = (data): DataStoreState | undefined => {
+    let getState = (data) => {
       switch (actionType) {
         case ACTION_ROOT.AUTH:
-          return data.auth as AuthStoreState;
+          return data.auth;
+        case ACTION_ROOT.DEPARTMENTS:
+          return data.department;
         default:
-          return undefined;
+          return data;
       }
     };
     let unsubscribe = this.store.subscribe(() => {
       let data = getState(this.store.getState());
-      if (!data || currentActionId === data.action.id) return;
+      if (!data || currentActionId === data?.action?.id) return;
       if (predicate?.(data)) return;
-      currentActionId = data.action.id;
       listener(data, unsubscribe);
     });
     return unsubscribe;

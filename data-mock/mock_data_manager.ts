@@ -30,7 +30,7 @@ export default class MockDataManager extends DataManager {
       ACTION_TYPE.REMOVED
     );
   }
-  protected connectToDB(departmentChange: DepartmentChange): void {
+  protected async connectToDB(departmentChange: DepartmentChange): Promise<void> {
     this.departmentChange = departmentChange;
   }
 }

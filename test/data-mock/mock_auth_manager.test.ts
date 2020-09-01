@@ -18,6 +18,7 @@ describe('Mock Auth Manager', () => {
   it('Sign In with Error', (done) => {
     let action = ACTION_AUTH.requestSignIn(MockAuth.ErrorCredentials);
     let callback = (auth: AuthStoreState, unsubscribe: Unsubscribe) => {
+      unsubscribe();
       if (auth.action.type !== AuthState.REQUEST_SIGN_IN_FAILED) return;
 
       let expectedState: AuthStoreState = {
@@ -29,7 +30,6 @@ describe('Mock Auth Manager', () => {
         }
       };
       expect(auth).deep.equal(expectedState);
-      unsubscribe();
       done();
     };
 

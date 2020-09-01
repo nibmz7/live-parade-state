@@ -28,6 +28,7 @@ describe('Store', () => {
     ApplicationStore.listen(
       ACTION_ROOT.AUTH,
       (auth: AuthStoreState, unsubscribe: Unsubscribe) => {
+        console.log('lslsllsls');
         unsubscribe();
         ApplicationStore.dispatch(action);
         let expectedResult = { action };
@@ -36,16 +37,24 @@ describe('Store', () => {
     );
   });
 
-  it('Reset', () => {
-    ApplicationStore.reset();
+  it('Reset', (done) => {
     let action: Action = {
       id: 0,
       root: ACTION_ROOT.RESET,
       type: ACTION_ROOT.RESET
     };
     let expectedState = {
-      auth: { action }
+      auth: { action },
+      department: {
+        action,
+        items: {}
+      }
     };
-    expect(ApplicationStore.getState()).to.eql(expectedState);
+    ApplicationStore.listen(ACTION_ROOT.ALL, (data, unsubscribe) => {
+      expect(data).to.eql(expectedState);
+      unsubscribe();
+      done();
+    });
+    ApplicationStore.reset();
   });
 });

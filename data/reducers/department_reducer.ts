@@ -10,11 +10,7 @@ const initialState: DepartmentStoreState = {
   action: {
     root: 0,
     type: 0,
-    id: 0,
-    payload: {
-      name: '',
-      id: '0'
-    }
+    id: 0
   },
   items: {}
 };
@@ -23,7 +19,8 @@ export const department = (
   state: DepartmentStoreState = initialState,
   rootAction: Action
 ): DepartmentStoreState => {
-  if (rootAction.root === ACTION_ROOT.RESET) return initialState;
+  if (rootAction.root === ACTION_ROOT.RESET)
+    return { ...initialState, items: {} };
   if (rootAction.root !== ACTION_ROOT.DEPARTMENTS) return state;
 
   const action = rootAction as DepartmentAction;

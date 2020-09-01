@@ -12,13 +12,13 @@ export interface DepartmentActionError extends ActionError {
   action: DepartmentAction;
 }
 
-export type DepartmentPayload = Department | DepartmentActionError;
+export type DepartmentPayload = Department | DepartmentActionError | undefined;
 
 export interface DepartmentAction extends Action {
   root: ACTION_ROOT.DEPARTMENTS;
   id: ACTION_ID;
   type: ACTION_TYPE;
-  payload: DepartmentPayload;
+  payload?: DepartmentPayload;
 }
 
 export interface DepartmentStoreState extends DataStoreState {
