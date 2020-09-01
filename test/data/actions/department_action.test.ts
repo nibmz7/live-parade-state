@@ -1,11 +1,11 @@
 import ACTION_DEPARTMENT from '../../../data/actions/department_action';
 import { MockModel, MockError } from '../../../data-mock/mock_data';
 import {
-  DepartmentAction,
-  DEPARTMENT_ACTION_TYPE
+  DepartmentAction
 } from '../../../data/states/department_state';
 import { ACTION_ROOT } from '../../../data/store';
 import { expect } from 'chai';
+import { ACTION_TYPE } from '../../../data/data_manager';
 
 describe('Department actions', () => {
   it('Add department', () => {
@@ -13,7 +13,7 @@ describe('Department actions', () => {
     let expectedAction: DepartmentAction = {
       id: action.id,
       root: ACTION_ROOT.DEPARTMENTS,
-      type: DEPARTMENT_ACTION_TYPE.REQUEST_ADD,
+      type: ACTION_TYPE.REQUEST_ADD,
       payload: MockModel.Department
     };
     expect(action).deep.equal(expectedAction);
@@ -23,7 +23,7 @@ describe('Department actions', () => {
     let expectedAction: DepartmentAction = {
       id: action.id,
       root: ACTION_ROOT.DEPARTMENTS,
-      type: DEPARTMENT_ACTION_TYPE.ADDED,
+      type: ACTION_TYPE.ADDED,
       payload: MockModel.Department
     };
     expect(action).deep.equal(expectedAction);
@@ -35,7 +35,7 @@ describe('Department actions', () => {
     let expectedAction: DepartmentAction = {
       id: errorAction.id,
       root: ACTION_ROOT.DEPARTMENTS,
-      type: DEPARTMENT_ACTION_TYPE.REQUEST_ERROR,
+      type: ACTION_TYPE.REQUEST_ERROR,
       payload: error
     };
     expect(errorAction).deep.equal(expectedAction);

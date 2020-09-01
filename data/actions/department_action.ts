@@ -1,11 +1,11 @@
 import Department from '../../model/department';
 import {
   DepartmentAction,
-  DEPARTMENT_ACTION_TYPE as ACTION_TYPE,
   DepartmentActionError,
   DepartmentPayload
 } from '../states/department_state';
 import { ACTION_ROOT, generateActionId } from '../store';
+import { ACTION_TYPE } from '../data_manager';
 
 const makeAction = (
   type: ACTION_TYPE,
