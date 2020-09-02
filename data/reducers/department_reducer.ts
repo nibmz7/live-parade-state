@@ -12,7 +12,7 @@ const initialState: DepartmentStoreState = {
     type: 0,
     id: 0
   },
-  items: {}
+  items: []
 };
 
 export const department = (
@@ -20,19 +20,30 @@ export const department = (
   rootAction: Action
 ): DepartmentStoreState => {
   if (rootAction.root === ACTION_ROOT.RESET)
-    return { ...initialState, items: {} };
+    return { ...initialState, items: [] };
   if (rootAction.root !== ACTION_ROOT.DEPARTMENTS) return state;
 
   const action = rootAction as DepartmentAction;
+  const type = action.type;
+
+  if (type === ACTION_TYPE.INITIALIZED) {
+    return { items: action.payload as Array<Department>, action };
+  }
+  
   const department = action.payload as Department;
   const items = state.items;
-  if (
-    action.type === ACTION_TYPE.ADDED ||
-    action.type === ACTION_TYPE.MODIFIED
-  ) {
-    items[department.id] = department;
-  } else if (action.type === ACTION_TYPE.REMOVED) {
-    delete items[department.id];
+
+  switch (type) {
+    case ACTION_TYPE.ADDED:
+      items.push(department);
+      break;
+    case ACTION_TYPE.MODIFIED:
+      items.push(department);
+      break;
+    case ACTION_TYPE.REMOVED:
+      let index = items.findIndex((item) => item.id === department.id);
+      items.splice(index, 1);
+      break;
   }
 
   return { items, action };

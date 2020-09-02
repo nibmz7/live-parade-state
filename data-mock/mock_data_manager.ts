@@ -1,6 +1,5 @@
 import {
   DataManager,
-  DepartmentChange,
   ACTION_TYPE,
   DataResults
 } from '../data/data_manager';

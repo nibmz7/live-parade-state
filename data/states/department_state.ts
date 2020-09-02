@@ -23,5 +23,5 @@ export interface DepartmentAction extends Action {
 
 export interface DepartmentStoreState extends DataStoreState {
   action: DepartmentAction;
-  items: {};
+  items: Array<Department>;
 }
