@@ -8,7 +8,10 @@ import {
 import Department from '../model/department';
 import User from '../model/user';
 import Admin from '../model/admin';
-import { DepartmentAction, DepartmentActionError } from '../data/states/department_state';
+import {
+  DepartmentAction,
+  DepartmentActionError
+} from '../data/states/department_state';
 
 export const MockAuth = {
   UserCredentials: {
@@ -34,9 +37,9 @@ export const MockError = {
   DepartmentRequest: (action: DepartmentAction): DepartmentActionError => ({
     action,
     type: 'Error adding departmnet',
-    message: "Department name is too long"
+    message: 'Department name is too long'
   })
-}
+};
 
 const ModelRank = new Rank('SSG');
 const ModelBranch: Branch = {
@@ -45,19 +48,26 @@ const ModelBranch: Branch = {
   domain: MockAuth.UserCredentials.email.split('@')[1]
 };
 const ModelDepartment: Department = { id: '456', name: 'Manpower Branch' };
+const ModelUser: User = {
+  uid: '101',
+  name: 'John',
+  email: 'john@lol.com',
+  regular: true,
+  rank: ModelRank,
+  branch: ModelBranch,
+  department: ModelDepartment
+};
+const ModelDepartmentArray: Array<Department> = [
+  { id: '123', name: 'Manpower Branch' },
+  { id: '456', name: 'Logistics Branch' },
+  { id: '789', name: 'Accounting Branch' }
+];
 
 export const MockModel = {
   Rank: ModelRank,
   Branch: ModelBranch,
   Department: ModelDepartment,
-  User: {
-    uid: '101',
-    name: 'John',
-    email: 'john@lol.com',
-    regular: true,
-    rank: ModelRank,
-    branch: ModelBranch,
-    department: ModelDepartment
-  } as User,
+  DepartmentArray: ModelDepartmentArray,
+  User: ModelUser,
   Admin: new Admin('321', 'admin@lol.com')
 };

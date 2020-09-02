@@ -25,18 +25,16 @@ export interface DataResults {
 export abstract class DataManager {
   constructor() {
     ApplicationStore.listen(ACTION_ROOT.DEPARTMENTS, (state) =>
-      this.departmentStateChanged(state)
+      this.departmentOnRequest(state)
     );
   }
 
-  protected abstract async connectToDB(
-    departmentChange: DepartmentChange
-  ): Promise<DataResults>;
+  protected abstract async connectToDB(): Promise<DataResults>;
   protected abstract requestAddDepartment(state: DepartmentStoreState): void;
   protected abstract requestModifyDepartment(state: DepartmentStoreState): void;
   protected abstract requestRemoveDepartment(state: DepartmentStoreState): void;
 
-  departmentStateChanged(state: DepartmentStoreState) {
+  departmentOnRequest(state: DepartmentStoreState) {
     switch (state.action.type) {
       case ACTION_TYPE.REQUEST_ADD:
         this.requestAddDepartment(state);
@@ -50,21 +48,22 @@ export abstract class DataManager {
     }
   }
 
+  departmentOnChange(department: Department, type: ACTION_TYPE) {
+    switch (type) {
+      case ACTION_TYPE.ADDED:
+        ApplicationStore.dispatch(ACTION_DEPARTMENT.added(department));
+        break;
+      case ACTION_TYPE.MODIFIED:
+        ApplicationStore.dispatch(ACTION_DEPARTMENT.modified(department));
+        break;
+      case ACTION_TYPE.REMOVED:
+        ApplicationStore.dispatch(ACTION_DEPARTMENT.removed(department));
+        break;
+    }
+  }
+
   async initialize() {
-    const departmentChange: DepartmentChange = (department, type) => {
-      switch (type) {
-        case ACTION_TYPE.ADDED:
-          ApplicationStore.dispatch(ACTION_DEPARTMENT.added(department));
-          break;
-        case ACTION_TYPE.MODIFIED:
-          ApplicationStore.dispatch(ACTION_DEPARTMENT.modified(department));
-          break;
-        case ACTION_TYPE.REMOVED:
-          ApplicationStore.dispatch(ACTION_DEPARTMENT.removed(department));
-          break;
-      }
-    };
-    let results = await this.connectToDB(departmentChange);
+    let results = await this.connectToDB();
     ApplicationStore.dispatch(
       ACTION_DEPARTMENT.initialized(results.departments)
     );
