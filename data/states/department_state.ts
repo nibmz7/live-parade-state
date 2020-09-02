@@ -12,7 +12,7 @@ export interface DepartmentActionError extends ActionError {
   action: DepartmentAction;
 }
 
-export type DepartmentPayload = Department | DepartmentActionError | undefined;
+export type DepartmentPayload = Department | Array<Department> | DepartmentActionError | undefined;
 
 export interface DepartmentAction extends Action {
   root: ACTION_ROOT.DEPARTMENTS;

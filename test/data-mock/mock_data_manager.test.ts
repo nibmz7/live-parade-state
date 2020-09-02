@@ -12,19 +12,17 @@ describe('Mock Data Manager', async () => {
   mockDataManager.initialize();
 
   it('Request add data', (done) => {
-    ApplicationStore.listen(
-      ACTION_ROOT.DEPARTMENTS,
-      (data: DepartmentStoreState, unsubscribe: Unsubscribe) => {
-        if (data.action.type === ACTION_TYPE.ADDED) {
-          let expectedResult = {
-            [MockModel.Department.id]: MockModel.Department
-          };
-          expect(data.items).to.eql(expectedResult);
-          unsubscribe();
-          done();
-        }
+    let callback = (data: DepartmentStoreState, unsubscribe: Unsubscribe) => {
+      if (data.action.type === ACTION_TYPE.ADDED) {
+        let expectedResult = {
+          [MockModel.Department.id]: MockModel.Department
+        };
+        expect(data.items).to.eql(expectedResult);
+        unsubscribe();
+        done();
       }
-    );
+    };
+    ApplicationStore.listen(ACTION_ROOT.DEPARTMENTS, callback);
     ApplicationStore.dispatch(
       ACTION_DEPARTMENT.requestAdd(MockModel.Department)
     );

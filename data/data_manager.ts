@@ -4,6 +4,7 @@ import Department from '../model/department';
 import ACTION_DEPARTMENT from './actions/department_action';
 
 export enum ACTION_TYPE {
+  INITIALIZED,
   ADDED,
   MODIFIED,
   REMOVED,
@@ -17,6 +18,10 @@ export type DepartmentChange = (
   type: ACTION_TYPE
 ) => void;
 
+export interface DataResults {
+  departments: Array<Department>;
+}
+
 export abstract class DataManager {
   constructor() {
     ApplicationStore.listen(ACTION_ROOT.DEPARTMENTS, (state) =>
@@ -24,7 +29,9 @@ export abstract class DataManager {
     );
   }
 
-  protected abstract async connectToDB(departmentChange: DepartmentChange): Promise<void>;
+  protected abstract async connectToDB(
+    departmentChange: DepartmentChange
+  ): Promise<DataResults>;
   protected abstract requestAddDepartment(state: DepartmentStoreState): void;
   protected abstract requestModifyDepartment(state: DepartmentStoreState): void;
   protected abstract requestRemoveDepartment(state: DepartmentStoreState): void;
@@ -57,6 +64,9 @@ export abstract class DataManager {
           break;
       }
     };
-    await this.connectToDB(departmentChange);
+    let results = await this.connectToDB(departmentChange);
+    ApplicationStore.dispatch(
+      ACTION_DEPARTMENT.initialized(results.departments)
+    );
   }
 }

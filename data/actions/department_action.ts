@@ -18,6 +18,8 @@ const makeAction = (
 });
 
 const ACTION_DEPARTMENT = {
+  initialized: (departments: Array<Department>): DepartmentAction =>
+    makeAction(ACTION_TYPE.INITIALIZED, departments),
   added: (department: Department): DepartmentAction =>
     makeAction(ACTION_TYPE.ADDED, department),
   modified: (department: Department): DepartmentAction =>
