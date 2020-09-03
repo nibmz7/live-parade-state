@@ -11,7 +11,7 @@ describe('Mock Auth Manager', () => {
     new MockAuthManager();
   });
 
-  afterEach(() => {
+  beforeEach(() => {
     ApplicationStore.reset();
   });
 

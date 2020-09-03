@@ -9,7 +9,23 @@ import ACTION_DEPARTMENT from '../../data/actions/department_action';
 
 describe('Mock Data Manager', async () => {
   const mockDataManager = new MockDataManager();
-  mockDataManager.initialize();
+
+  beforeEach(() => {
+    ApplicationStore.reset();
+  });
+
+  it('Initialization test', (done) => {
+    let callback = (data: DepartmentStoreState, unsubscribe: Unsubscribe) => {
+      if (data.action.type === ACTION_TYPE.INITIALIZED) {
+        let expectedResult = MockModel.DepartmentArray;
+        expect(data.items).to.eql(expectedResult);
+        unsubscribe();
+        done();
+      }
+    };
+    ApplicationStore.listen(ACTION_ROOT.DEPARTMENTS, callback);
+    mockDataManager.initialize();
+  });
 
   it('Request add data', (done) => {
     let callback = (data: DepartmentStoreState, unsubscribe: Unsubscribe) => {
