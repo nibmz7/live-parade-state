@@ -46,7 +46,7 @@ describe('Store', () => {
       auth: { action },
       department: {
         action,
-        items: {}
+        items: []
       }
     };
     ApplicationStore.listen(ACTION_ROOT.ALL, (data, unsubscribe) => {

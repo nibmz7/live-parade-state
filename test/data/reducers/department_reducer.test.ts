@@ -10,7 +10,7 @@ describe('Department reducer', () => {
     let reduce = department(undefined, action);
     let expectedResult: DepartmentStoreState = {
       action,
-      items: {}
+      items: []
     };
     expect(reduce).deep.equal(expectedResult);
   });
@@ -20,9 +20,7 @@ describe('Department reducer', () => {
     let reduce = department(undefined, action);
     let expectedResult: DepartmentStoreState = {
       action,
-      items: {
-        [MockModel.Department.id]: MockModel.Department
-      }
+      items: [MockModel.Department]
     };
     expect(reduce).deep.equal(expectedResult);
   });
@@ -31,14 +29,12 @@ describe('Department reducer', () => {
     let action = ACTION_DEPARTMENT.removed(MockModel.Department);
     let initialState = {
       action,
-      items: {
-        [MockModel.Department.id]: MockModel.Department
-      }
+      items: [MockModel.Department]
     };
     let reduce = department(initialState, action);
     let expectedResult: DepartmentStoreState = {
       action,
-      items: {}
+      items: []
     };
     expect(reduce).deep.equal(expectedResult);
   });

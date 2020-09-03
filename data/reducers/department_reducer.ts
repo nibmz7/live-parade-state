@@ -29,21 +29,25 @@ export const department = (
   if (type === ACTION_TYPE.INITIALIZED) {
     return { items: action.payload as Array<Department>, action };
   }
-  
+
   const department = action.payload as Department;
   const items = state.items;
 
   switch (type) {
-    case ACTION_TYPE.ADDED:
+    case ACTION_TYPE.ADDED: {
       items.push(department);
       break;
-    case ACTION_TYPE.MODIFIED:
-      items.push(department);
+    }
+    case ACTION_TYPE.MODIFIED: {
+      let index = items.findIndex((item) => item.id === department.id);
+      items[index] = department;
       break;
-    case ACTION_TYPE.REMOVED:
+    }
+    case ACTION_TYPE.REMOVED: {
       let index = items.findIndex((item) => item.id === department.id);
       items.splice(index, 1);
       break;
+    }
   }
 
   return { items, action };

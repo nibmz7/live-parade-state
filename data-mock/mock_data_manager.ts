@@ -30,7 +30,7 @@ export default class MockDataManager extends DataManager {
       ACTION_TYPE.REMOVED
     );
   }
-  protected async connectToDB(): Promise<DataResults> {
+  protected async connectDB(): Promise<DataResults> {
     return { departments: MockModel.DepartmentArray };
   }
 }

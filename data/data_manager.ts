@@ -29,7 +29,8 @@ export abstract class DataManager {
     );
   }
 
-  protected abstract async connectToDB(): Promise<DataResults>;
+  protected abstract async connectDB(): Promise<DataResults>;
+  // protected abstract async disconnectDB(): Promise<DataResults>;
   protected abstract requestAddDepartment(state: DepartmentStoreState): void;
   protected abstract requestModifyDepartment(state: DepartmentStoreState): void;
   protected abstract requestRemoveDepartment(state: DepartmentStoreState): void;
@@ -63,7 +64,7 @@ export abstract class DataManager {
   }
 
   async initialize() {
-    let results = await this.connectToDB();
+    let results = await this.connectDB();
     ApplicationStore.dispatch(
       ACTION_DEPARTMENT.initialized(results.departments)
     );

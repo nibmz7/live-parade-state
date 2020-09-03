@@ -14,9 +14,7 @@ describe('Mock Data Manager', async () => {
   it('Request add data', (done) => {
     let callback = (data: DepartmentStoreState, unsubscribe: Unsubscribe) => {
       if (data.action.type === ACTION_TYPE.ADDED) {
-        let expectedResult = {
-          [MockModel.Department.id]: MockModel.Department
-        };
+        let expectedResult = [MockModel.Department];
         expect(data.items).to.eql(expectedResult);
         unsubscribe();
         done();
