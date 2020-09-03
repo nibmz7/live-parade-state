@@ -25,7 +25,7 @@ describe('Mock Data Manager', async () => {
       }
     };
     ApplicationStore.listen(ACTION_ROOT.DEPARTMENTS, callback);
-    mockDataManager.initialize();
+    mockDataManager.subscribe();
   });
 
   it('Request add department', (done) => {
@@ -74,5 +74,24 @@ describe('Mock Data Manager', async () => {
     ApplicationStore.dispatch(
       ACTION_DEPARTMENT.requestRemove(MockModel.Department)
     );
+  });
+
+  it('Disconnect from DB', (done) => {
+    mockDataManager.unsubscribe();
+    let action = ACTION_DEPARTMENT.requestAdd(MockModel.Department);
+    let callback = (data: DepartmentStoreState, unsubscribe: Unsubscribe) => {
+      if (data.action.type === ACTION_TYPE.REQUEST_ERROR) {
+        let expectedResult = {
+          action: action,
+          type: 'Request failed',
+          message: 'Failed to connect to database'
+        };
+        expect(data.action.payload).to.eql(expectedResult);
+        unsubscribe();
+        done();
+      }
+    };
+    ApplicationStore.listen(ACTION_ROOT.DEPARTMENTS, callback);
+    ApplicationStore.dispatch(action);
   });
 });

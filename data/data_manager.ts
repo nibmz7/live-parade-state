@@ -1,4 +1,7 @@
-import { DepartmentStoreState } from './states/department_state';
+import {
+  DepartmentStoreState,
+  DepartmentActionError
+} from './states/department_state';
 import { ApplicationStore, ACTION_ROOT } from './store';
 import Department from '../model/department';
 import ACTION_DEPARTMENT from './actions/department_action';
@@ -9,10 +12,12 @@ export enum ACTION_TYPE {
   MODIFIED,
   REMOVED,
   REQUEST_ADD,
-  REQUEST_REMOVE,
   REQUEST_MODIFY,
+  REQUEST_REMOVE,
   REQUEST_ERROR
 }
+export const TYPE_REQUEST = (type) => type === 4 || type === 5 || type === 6;
+
 export type DepartmentChange = (
   department: Department,
   type: ACTION_TYPE
@@ -23,6 +28,8 @@ export interface DataResults {
 }
 
 export abstract class DataManager {
+  protected isDbConnected = false;
+
   constructor() {
     ApplicationStore.listen(ACTION_ROOT.DEPARTMENTS, (state) =>
       this.departmentOnRequest(state)
@@ -30,12 +37,21 @@ export abstract class DataManager {
   }
 
   protected abstract async connectDB(): Promise<DataResults>;
-  // protected abstract async disconnectDB(): Promise<DataResults>;
   protected abstract requestAddDepartment(state: DepartmentStoreState): void;
   protected abstract requestModifyDepartment(state: DepartmentStoreState): void;
   protected abstract requestRemoveDepartment(state: DepartmentStoreState): void;
 
   departmentOnRequest(state: DepartmentStoreState) {
+    if (!TYPE_REQUEST(state.action.type)) return;
+    if (!this.isDbConnected) {
+      let error: DepartmentActionError = {
+        action: state.action,
+        type: 'Request failed',
+        message: 'Failed to connect to database'
+      };
+      ApplicationStore.dispatch(ACTION_DEPARTMENT.error(error));
+      return;
+    }
     switch (state.action.type) {
       case ACTION_TYPE.REQUEST_ADD:
         this.requestAddDepartment(state);
@@ -63,10 +79,15 @@ export abstract class DataManager {
     }
   }
 
-  async initialize() {
+  async subscribe() {
     let results = await this.connectDB();
+    this.isDbConnected = true;
     ApplicationStore.dispatch(
       ACTION_DEPARTMENT.initialized(results.departments)
     );
+  }
+
+  unsubscribe() {
+    this.isDbConnected = false;
   }
 }
