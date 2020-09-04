@@ -34,7 +34,7 @@ export default class Rank {
 
   constructor(rank: string) {
     this.text = rank;
-    this.code = Rank.ToInt(rank);
+    this.code = Rank.toInt(rank);
   }
 
   static isValid(rank: string): boolean {
@@ -46,7 +46,7 @@ export default class Rank {
     return false;
   }
 
-  static ToInt(rank: string): number {
+  static toInt(rank: string): number {
     if (rank.toUpperCase().includes('DX')) {
       if (rank.length > 4) return 99;
       let suffix = Number(rank.substring(2));
