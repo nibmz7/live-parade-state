@@ -94,4 +94,5 @@ describe('Mock Data Manager', async () => {
     ApplicationStore.listen(ACTION_ROOT.DEPARTMENTS, callback);
     ApplicationStore.dispatch(action);
   });
+
 });

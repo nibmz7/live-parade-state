@@ -16,7 +16,8 @@ export enum ACTION_TYPE {
   REQUEST_REMOVE,
   REQUEST_ERROR
 }
-export const TYPE_REQUEST = (type) => type === 4 || type === 5 || type === 6;
+export const TYPE_REQUEST = (type: ACTION_TYPE) =>
+  type === 4 || type === 5 || type === 6;
 
 export type DepartmentChange = (
   department: Department,
