@@ -18,15 +18,15 @@ export interface UserByStatus extends User {
   afternoon: Status;
 }
 
-export function compare(a: User, b: User) {
-  let aRank = a.rank.code;
-  let bRank = b.rank.code;
+export function compare(user: User, compareTo: User) {
+  let userRank = user.rank.code;
+  let compareToRank = compareTo.rank.code;
 
-  if (aRank < bRank) return -1;
-  if (bRank < aRank) return 1;
+  if (userRank < compareToRank) return -1;
+  if (compareToRank < userRank) return 1;
 
-  if (a.name < b.name) return -1;
-  if (b.name < a.name) return 1;
+  if (user.name < compareTo.name) return -1;
+  if (compareTo.name < user.name) return 1;
 
   return 0;
 }

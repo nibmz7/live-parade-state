@@ -56,7 +56,7 @@ describe('Rank class methods', () => {
 
   it('Check rank to int method', () => {
     let results = Object.keys(ranks).map((rank) => {
-      return ranks[rank] === Rank.ToInt(rank);
+      return ranks[rank] === Rank.toInt(rank);
     });
     expect(results.every((result) => result === true)).to.equal(true);
   });

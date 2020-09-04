@@ -42,62 +42,59 @@ export const MockError = {
 };
 
 const ModelRank = new Rank('SSG');
+
 const ModelBranch: Branch = {
   id: '123',
   name: 'Pasir Laba',
   domain: MockAuth.UserCredentials.email.split('@')[1]
 };
-const ModelDepartment: Department = { id: '123', name: 'Manpower Branch' };
-const ModelUser: User = {
+
+const ModelDepartment1: Department = { id: '123', name: 'Manpower Branch' };
+const ModelDepartment2: Department = { id: '456', name: 'Logistics Branch' };
+const ModelDepartment3: Department = { id: '789', name: 'Accounting Branch' };
+
+const ModelDepartmentArray: Array<Department> = [
+  ModelDepartment1,
+  ModelDepartment2,
+  ModelDepartment3
+];
+
+const ModelUser1: User = {
   uid: '101',
   name: 'John',
-  email: 'john@lol.com',
+  email: 'john1@lol.com',
   regular: true,
-  rank: ModelRank,
+  rank: new Rank('CPL'),
   branch: ModelBranch,
-  department: ModelDepartment
+  department: ModelDepartment1
 };
-const ModelDepartmentArray: Array<Department> = [
-  { id: '123', name: 'Manpower Branch' },
-  { id: '456', name: 'Logistics Branch' },
-  { id: '789', name: 'Accounting Branch' }
-];
-const ModelUserArray: Array<User> = [
-  {
-    uid: '101',
-    name: 'John1',
-    email: 'john1@lol.com',
-    regular: true,
-    rank: new Rank('CPL'),
-    branch: ModelBranch,
-    department: ModelDepartmentArray[0]
-  },
-  {
-    uid: '104',
-    name: 'John4',
-    email: 'john4@lol.com',
-    regular: true,
-    rank: new Rank('CPL'),
-    branch: ModelBranch,
-    department: ModelDepartmentArray[1]
-  },
-  {
-    uid: '107',
-    name: 'John7',
-    email: 'john7@lol.com',
-    regular: true,
-    rank: new Rank('CPL'),
-    branch: ModelBranch,
-    department: ModelDepartmentArray[2]
-  }
-];
+const ModelUser2: User = {
+  uid: '201',
+  name: 'John',
+  email: 'john2@lol.com',
+  regular: true,
+  rank: new Rank('MAJ'),
+  branch: ModelBranch,
+  department: ModelDepartment2
+};
+const ModelUser3: User = {
+  uid: '301',
+  name: 'John',
+  email: 'john3@lol.com',
+  regular: true,
+  rank: new Rank('PTE'),
+  branch: ModelBranch,
+  department: ModelDepartment3
+};
+
+const ModelUserArray: Array<User> = [ModelUser1, ModelUser2, ModelUser3];
 
 export const MockModel = {
   Rank: ModelRank,
   Branch: ModelBranch,
-  Department: ModelDepartment,
+  Department: ModelDepartment1,
   DepartmentArray: ModelDepartmentArray,
-  User: ModelUser,
+  User: ModelUser1,
   UserArray: ModelUserArray,
   Admin: new Admin('321', 'admin@lol.com')
 };
