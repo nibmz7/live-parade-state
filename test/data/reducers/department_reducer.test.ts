@@ -15,7 +15,7 @@ describe('Department reducer', () => {
     expect(reduce).deep.equal(expectedResult);
   });
 
-  it('Add', () => {
+  it('Added', () => {
     let action = ACTION_DEPARTMENT.added(MockModel.Department);
     let reduce = department(undefined, action);
     let expectedResult: DepartmentStoreState = {
@@ -25,7 +25,7 @@ describe('Department reducer', () => {
     expect(reduce).deep.equal(expectedResult);
   });
 
-  it('Remove', () => {
+  it('Removed', () => {
     let action = ACTION_DEPARTMENT.removed(MockModel.Department);
     let initialState = {
       action,
