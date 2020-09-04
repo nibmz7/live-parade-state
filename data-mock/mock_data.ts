@@ -12,6 +12,7 @@ import {
   DepartmentAction,
   DepartmentActionError
 } from '../data/states/department_state';
+import { UserAction, UserActionError } from '../data/states/user_state';
 
 export const MockAuth = {
   UserCredentials: {
@@ -38,6 +39,11 @@ export const MockError = {
     action,
     type: 'Error adding departmnet',
     message: 'Department name is too long'
+  }),
+  UserRequest: (action: UserAction): UserActionError => ({
+    action,
+    type: 'Error adding user',
+    message: "User's rank is invalid"
   })
 };
 
