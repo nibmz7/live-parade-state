@@ -11,11 +11,8 @@ export interface User {
   rank: Rank;
   branch: Branch;
   department: Department;
-}
-
-export interface UserByStatus extends User {
-  morning: Status;
-  afternoon: Status;
+  morning?: Status;
+  afternoon?: Status;
 }
 
 export function compare(user: User, compareTo: User) {
@@ -31,7 +28,10 @@ export function compare(user: User, compareTo: User) {
   return 0;
 }
 
-export function getInsertionIndex(sortedList: Array<User>, newUser: User): number {
+export function getInsertionIndex(
+  sortedList: Array<User>,
+  newUser: User
+): number {
   if (sortedList.length === 0) return 0;
   let index = sortedList.length - 1;
   while (index >= 0) {

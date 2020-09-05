@@ -28,7 +28,7 @@ export interface DataStoreState {
   action: Action;
 }
 
-export type Predicate = (data: DataStoreState) => boolean;
+export type Predicate = (data: any) => boolean;
 
 export type DataStoreListener = (data: any, unsubscribe: Unsubscribe) => void;
 
@@ -85,7 +85,7 @@ class DataStoreImpl implements DataStore {
     const handleChange = () => {
       let data = getState(this.store.getState());
       if (!data || currentActionId === data?.action?.id) return;
-      if (predicate?.(data)) return;
+      if (!predicate?.(data)) return;
       currentActionId = data?.action?.id;
       listener(data, unsubscribe);
     };

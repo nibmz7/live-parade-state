@@ -1,10 +1,8 @@
-import {
-  DepartmentStoreState,
-  DepartmentActionError
-} from './states/department_state';
 import { ApplicationStore, ACTION_ROOT } from './store';
 import Department from '../model/department';
 import ACTION_DEPARTMENT from './actions/department_action';
+import ACTION_USER from './actions/user_action';
+import User from '../model/user';
 
 export enum ACTION_TYPE {
   INITIALIZED,
@@ -31,40 +29,9 @@ export interface DataResults {
 export abstract class DataManager {
   protected isDbConnected = false;
 
-  constructor() {
-    ApplicationStore.listen(ACTION_ROOT.DEPARTMENTS, (state) =>
-      this.departmentOnRequest(state)
-    );
-  }
+  constructor() {}
 
   protected abstract async connectDB(): Promise<DataResults>;
-  protected abstract requestAddDepartment(state: DepartmentStoreState): void;
-  protected abstract requestModifyDepartment(state: DepartmentStoreState): void;
-  protected abstract requestRemoveDepartment(state: DepartmentStoreState): void;
-
-  departmentOnRequest(state: DepartmentStoreState) {
-    if (!TYPE_REQUEST(state.action.type)) return;
-    if (!this.isDbConnected) {
-      let error: DepartmentActionError = {
-        action: state.action,
-        type: 'Request failed',
-        message: 'Failed to connect to database'
-      };
-      ApplicationStore.dispatch(ACTION_DEPARTMENT.error(error));
-      return;
-    }
-    switch (state.action.type) {
-      case ACTION_TYPE.REQUEST_ADD:
-        this.requestAddDepartment(state);
-        break;
-      case ACTION_TYPE.REQUEST_MODIFY:
-        this.requestModifyDepartment(state);
-        break;
-      case ACTION_TYPE.REQUEST_REMOVE:
-        this.requestRemoveDepartment(state);
-        break;
-    }
-  }
 
   departmentOnChange(department: Department, type: ACTION_TYPE) {
     switch (type) {
@@ -76,6 +43,20 @@ export abstract class DataManager {
         break;
       case ACTION_TYPE.REMOVED:
         ApplicationStore.dispatch(ACTION_DEPARTMENT.removed(department));
+        break;
+    }
+  }
+
+  userOnChange(user: User, type: ACTION_TYPE) {
+    switch (type) {
+      case ACTION_TYPE.ADDED:
+        ApplicationStore.dispatch(ACTION_USER.added(user));
+        break;
+      case ACTION_TYPE.MODIFIED:
+        ApplicationStore.dispatch(ACTION_USER.modified(user));
+        break;
+      case ACTION_TYPE.REMOVED:
+        ApplicationStore.dispatch(ACTION_USER.removed(user));
         break;
     }
   }

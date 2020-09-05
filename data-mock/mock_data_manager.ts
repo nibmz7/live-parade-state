@@ -2,6 +2,8 @@ import { DataManager, ACTION_TYPE, DataResults } from '../data/data_manager';
 import { DepartmentStoreState } from '../data/states/department_state';
 import Department from '../model/department';
 import { MockModel } from './mock_data';
+import { UserStoreState } from '../data/states/user_state';
+import User from '../model/user';
 
 export default class MockDataManager extends DataManager {
   constructor() {
@@ -31,5 +33,17 @@ export default class MockDataManager extends DataManager {
       state.action.payload as Department,
       ACTION_TYPE.REMOVED
     );
+  }
+
+  protected requestAddUser(state: UserStoreState): void {
+    this.userOnChange(state.action.payload as User, ACTION_TYPE.ADDED);
+  }
+
+  protected requestModifyUser(state: UserStoreState): void {
+    this.userOnChange(state.action.payload as User, ACTION_TYPE.MODIFIED);
+  }
+
+  protected requestRemoveUser(state: UserStoreState): void {
+    this.userOnChange(state.action.payload as User, ACTION_TYPE.REMOVED);
   }
 }
