@@ -1,10 +1,10 @@
+import { expect } from '@open-wc/testing';
 import ACTION_DEPARTMENT from '../../../data/actions/department_action';
 import { MockModel, MockError } from '../../../data-mock/mock_data';
 import {
   DepartmentAction
 } from '../../../data/states/department_state';
 import { ACTION_ROOT } from '../../../data/store';
-import { expect } from 'chai';
 import { ACTION_TYPE } from '../../../data/data_manager';
 
 describe('Department actions', () => {

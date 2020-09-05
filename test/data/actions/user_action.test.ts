@@ -1,6 +1,6 @@
+import { expect } from '@open-wc/testing';
 import { MockModel, MockError } from '../../../data-mock/mock_data';
 import { ACTION_ROOT } from '../../../data/store';
-import { expect } from 'chai';
 import { ACTION_TYPE } from '../../../data/data_manager';
 import ACTION_USER from '../../../data/actions/user_action';
 import { UserAction } from '../../../data/states/user_state';

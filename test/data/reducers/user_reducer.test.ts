@@ -1,5 +1,5 @@
+import { expect } from '@open-wc/testing';
 import { MockModel } from '../../../data-mock/mock_data';
-import { expect } from 'chai';
 import ACTION_USER from '../../../data/actions/user_action';
 import { UserStoreState } from '../../../data/states/user_state';
 import { user } from '../../../data/reducers/user_reducer';

@@ -1,8 +1,8 @@
+import { expect } from '@open-wc/testing';
 import ACTION_DEPARTMENT from '../../../data/actions/department_action';
 import { MockModel } from '../../../data-mock/mock_data';
 import { department } from '../../../data/reducers/department_reducer';
 import { DepartmentStoreState } from '../../../data/states/department_state';
-import { expect } from 'chai';
 
 describe('Department reducer', () => {
   it('Request add', () => {

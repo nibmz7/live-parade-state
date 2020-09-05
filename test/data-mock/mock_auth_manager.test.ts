@@ -1,4 +1,4 @@
-import { expect } from 'chai';
+import { expect } from '@open-wc/testing';
 import { ApplicationStore, ACTION_ROOT } from '../../data/store';
 import { AuthState, AuthStoreState } from '../../data/states/auth_state';
 import ACTION_AUTH from '../../data/actions/auth_action';

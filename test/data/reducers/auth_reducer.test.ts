@@ -1,4 +1,4 @@
-import { expect } from 'chai';
+import { expect } from '@open-wc/testing';
 import { auth } from '../../../data/reducers/auth_reducer';
 import {
   AuthAction,

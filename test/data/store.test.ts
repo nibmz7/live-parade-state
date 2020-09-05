@@ -1,10 +1,10 @@
+import { expect } from '@open-wc/testing';
 import {
   generateActionId,
   ApplicationStore,
   Action,
   ACTION_ROOT
 } from '../../data/store';
-import { expect } from 'chai';
 import ACTION_AUTH from '../../data/actions/auth_action';
 import { AuthStoreState } from '../../data/states/auth_state';
 import { Unsubscribe } from 'redux';

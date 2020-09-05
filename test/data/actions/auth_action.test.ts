@@ -1,9 +1,9 @@
-import { expect } from 'chai';
+import { expect } from '@open-wc/testing';
 import ACTION_AUTH from '../../../data/actions/auth_action';
 import {
   AuthAction,
   AuthState,
-  SignInError
+  SignInError,
 } from '../../../data/states/auth_state';
 import { ACTION_ROOT } from '../../../data/store';
 import { MockAuth, MockModel, MockError } from '../../../data-mock/mock_data';
@@ -15,7 +15,7 @@ describe('Auth Actions', () => {
       id: action.id,
       root: ACTION_ROOT.AUTH,
       type: AuthState.REQUEST_SIGN_IN,
-      payload: MockAuth.UserCredentials
+      payload: MockAuth.UserCredentials,
     };
     expect(action).to.deep.equal(expectedAction);
   });
@@ -26,7 +26,7 @@ describe('Auth Actions', () => {
       id: action.id,
       root: ACTION_ROOT.AUTH,
       type: AuthState.REQUEST_SIGN_OUT,
-      payload: undefined
+      payload: undefined,
     };
     expect(action).to.deep.equal(expectedAction);
   });
@@ -37,7 +37,7 @@ describe('Auth Actions', () => {
       id: action.id,
       root: ACTION_ROOT.AUTH,
       type: AuthState.SIGNED_IN,
-      payload: MockModel.User
+      payload: MockModel.User,
     };
     expect(action).to.deep.equal(expectedAction);
   });
@@ -50,7 +50,7 @@ describe('Auth Actions', () => {
       id: action.id,
       root: ACTION_ROOT.AUTH,
       type: AuthState.REQUEST_SIGN_IN_FAILED,
-      payload: error
+      payload: error,
     };
     expect(action).to.deep.equal(expectedAction);
   });

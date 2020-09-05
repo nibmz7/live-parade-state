@@ -1,9 +1,9 @@
+import { expect } from '@open-wc/testing';
 import MockAdminManager from '../../data-mock/mock_admin_manager';
 import { ApplicationStore, ACTION_ROOT } from '../../data/store';
 import { DepartmentStoreState } from '../../data/states/department_state';
 import { ACTION_TYPE } from '../../data/data_manager';
 import { MockModel } from '../../data-mock/mock_data';
-import { expect } from 'chai';
 import { Unsubscribe } from 'redux';
 import ACTION_DEPARTMENT from '../../data/actions/department_action';
 
