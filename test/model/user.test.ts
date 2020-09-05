@@ -7,13 +7,13 @@ import User from '../../model/user';
 describe('User', () => {
   it('Compare 2 users', () => {
     let difference = compare(MockModel.UserArray[0], MockModel.UserArray[1]);
-    expect(difference).equal(1);
+    expect(difference).equal(-1);
   });
 
   it('Sort users', () => {
     let expectedResult = [
-      MockModel.UserArray[1],
       MockModel.UserArray[0],
+      MockModel.UserArray[1],
       MockModel.UserArray[2]
     ];
     MockModel.UserArray.sort(compare);

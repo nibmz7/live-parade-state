@@ -29,18 +29,12 @@ export interface DataStoreState {
   action: Action;
 }
 
-export type Predicate = (data: any) => boolean;
-
 export type DataStoreListener = (data: any, unsubscribe: Unsubscribe) => void;
 
 export interface DataStore {
   reset(): void;
   dispatch(action: Action): void;
-  listen(
-    actionType: ACTION_ROOT,
-    listener: DataStoreListener,
-    predicate?: Predicate
-  ): Unsubscribe;
+  listen(actionType: ACTION_ROOT, listener: DataStoreListener): Unsubscribe;
 }
 
 let action_uuid: number = 1000;
@@ -68,11 +62,7 @@ class DataStoreImpl implements DataStore {
     this.store.dispatch(action);
   }
 
-  listen(
-    actionType: ACTION_ROOT,
-    listener: DataStoreListener,
-    predicate?: Predicate
-  ): Unsubscribe {
+  listen(actionType: ACTION_ROOT, listener: DataStoreListener): Unsubscribe {
     let currentActionId: ACTION_ID = 0;
     let getState = (data) => {
       switch (actionType) {
@@ -81,7 +71,7 @@ class DataStoreImpl implements DataStore {
         case ACTION_ROOT.DEPARTMENTS:
           return data.department;
         case ACTION_ROOT.USERS:
-          return data.department;
+          return data.user;
         default:
           return data;
       }
@@ -89,7 +79,6 @@ class DataStoreImpl implements DataStore {
     const handleChange = () => {
       let data = getState(this.store.getState());
       if (!data || currentActionId === data?.action?.id) return;
-      if (predicate?.(data)) return;
       currentActionId = data?.action?.id;
       listener(data, unsubscribe);
     };

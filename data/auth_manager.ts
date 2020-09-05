@@ -25,6 +25,7 @@ export default abstract class AuthManager {
   protected abstract async signInWithCredentials(auth: AuthAction);
 
   protected signOut() {
+    ApplicationStore.reset();
     let action = ACTION_AUTH.userSignedOut();
     ApplicationStore.dispatch(action);
   }

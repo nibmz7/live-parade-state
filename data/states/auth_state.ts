@@ -5,7 +5,7 @@ import User from '../../model/user';
 import { DataStoreState } from '../../data/store';
 
 export enum AuthState {
-  INITIALIZED,
+  INITIALIZING,
   SIGNED_IN,
   SIGNED_OUT,
   REQUEST_SIGN_IN,

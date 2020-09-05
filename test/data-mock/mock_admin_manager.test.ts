@@ -11,6 +11,7 @@ describe('Mock Admin Manager', async () => {
   const mockAdminManager = new MockAdminManager();
 
   after(() => {
+    mockAdminManager.unsubscribe();
     ApplicationStore.reset();
   });
 
@@ -74,24 +75,5 @@ describe('Mock Admin Manager', async () => {
     ApplicationStore.dispatch(
       ACTION_DEPARTMENT.requestRemove(MockModel.Department)
     );
-  });
-
-  it('Disconnect from DB', (done) => {
-    mockAdminManager.unsubscribe();
-    let action = ACTION_DEPARTMENT.requestAdd(MockModel.Department);
-    let callback = (data: DepartmentStoreState, unsubscribe: Unsubscribe) => {
-      if (data.action.type === ACTION_TYPE.REQUEST_ERROR) {
-        let expectedResult = {
-          action: action,
-          type: 'Request failed',
-          message: 'Failed to connect to database'
-        };
-        expect(data.action.payload).to.eql(expectedResult);
-        unsubscribe();
-        done();
-      }
-    };
-    ApplicationStore.listen(ACTION_ROOT.DEPARTMENTS, callback);
-    ApplicationStore.dispatch(action);
   });
 });

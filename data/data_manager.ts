@@ -24,6 +24,7 @@ export type DepartmentChange = (
 
 export interface DataResults {
   departments: Array<Department>;
+  users: Array<User>;
 }
 
 export abstract class DataManager {
@@ -32,6 +33,8 @@ export abstract class DataManager {
   constructor() {}
 
   protected abstract async connectDB(): Promise<DataResults>;
+  protected abstract startRequestListening(): void;
+  protected abstract stopRequestListening(): void;
 
   departmentOnChange(department: Department, type: ACTION_TYPE) {
     switch (type) {
@@ -67,9 +70,12 @@ export abstract class DataManager {
     ApplicationStore.dispatch(
       ACTION_DEPARTMENT.initialized(results.departments)
     );
+    ApplicationStore.dispatch(ACTION_USER.initialized(results.users));
+    this.startRequestListening();
   }
 
   unsubscribe() {
     this.isDbConnected = false;
+    this.stopRequestListening();
   }
 }

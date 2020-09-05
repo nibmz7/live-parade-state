@@ -12,7 +12,10 @@ export default class MockAdminManager extends AdminManager {
   }
 
   protected async connectDB(): Promise<DataResults> {
-    return { departments: MockModel.DepartmentArray };
+    return {
+      departments: MockModel.DepartmentArray,
+      users: MockModel.UserArray
+    };
   }
 
   protected requestAddDepartment(state: DepartmentStoreState): void {
