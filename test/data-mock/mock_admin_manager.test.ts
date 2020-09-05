@@ -1,4 +1,4 @@
-import MockDataManager from '../../data-mock/mock_data_manager';
+import MockAdminManager from '../../data-mock/mock_admin_manager';
 import { ApplicationStore, ACTION_ROOT } from '../../data/store';
 import { DepartmentStoreState } from '../../data/states/department_state';
 import { ACTION_TYPE } from '../../data/data_manager';
@@ -7,8 +7,8 @@ import { expect } from 'chai';
 import { Unsubscribe } from 'redux';
 import ACTION_DEPARTMENT from '../../data/actions/department_action';
 
-describe('Mock Data Manager', async () => {
-  const mockDataManager = new MockDataManager();
+describe('Mock Admin Manager', async () => {
+  const mockAdminManager = new MockAdminManager();
 
   after(() => {
     ApplicationStore.reset();
@@ -25,7 +25,7 @@ describe('Mock Data Manager', async () => {
       }
     };
     ApplicationStore.listen(ACTION_ROOT.DEPARTMENTS, callback);
-    mockDataManager.subscribe();
+    mockAdminManager.subscribe();
   });
 
   it('Request add department', (done) => {
@@ -77,7 +77,7 @@ describe('Mock Data Manager', async () => {
   });
 
   it('Disconnect from DB', (done) => {
-    mockDataManager.unsubscribe();
+    mockAdminManager.unsubscribe();
     let action = ACTION_DEPARTMENT.requestAdd(MockModel.Department);
     let callback = (data: DepartmentStoreState, unsubscribe: Unsubscribe) => {
       if (data.action.type === ACTION_TYPE.REQUEST_ERROR) {
@@ -94,5 +94,4 @@ describe('Mock Data Manager', async () => {
     ApplicationStore.listen(ACTION_ROOT.DEPARTMENTS, callback);
     ApplicationStore.dispatch(action);
   });
-
 });

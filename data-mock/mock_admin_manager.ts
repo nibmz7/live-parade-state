@@ -1,11 +1,12 @@
-import { DataManager, ACTION_TYPE, DataResults } from '../data/data_manager';
+import { ACTION_TYPE, DataResults } from '../data/data_manager';
 import { DepartmentStoreState } from '../data/states/department_state';
 import Department from '../model/department';
 import { MockModel } from './mock_data';
 import { UserStoreState } from '../data/states/user_state';
 import User from '../model/user';
+import AdminManager from '../data/admin_manager';
 
-export default class MockDataManager extends DataManager {
+export default class MockAdminManager extends AdminManager {
   constructor() {
     super();
   }

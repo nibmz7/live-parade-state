@@ -1,4 +1,4 @@
-import { ApplicationStore, ACTION_ROOT } from './store';
+import { ApplicationStore } from './store';
 import Department from '../model/department';
 import ACTION_DEPARTMENT from './actions/department_action';
 import ACTION_USER from './actions/user_action';

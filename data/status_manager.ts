@@ -7,7 +7,7 @@ export default abstract class StatusManager extends DataManager {
   constructor() {
     super();
     const predicate: Predicate = (state: UserStoreState) =>
-      state.action.type === ACTION_TYPE.MODIFIED;
+      state.action.type !== ACTION_TYPE.MODIFIED;
     ApplicationStore.listen(
       ACTION_ROOT.USERS,
       (state) => this.userOnRequest(state),

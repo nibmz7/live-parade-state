@@ -1,6 +1,7 @@
 import { createStore, combineReducers, Unsubscribe } from 'redux';
 import { auth } from '../data/reducers/auth_reducer';
 import { department } from '../data/reducers/department_reducer';
+import { user } from '../data/reducers/user_reducer';
 
 export enum ACTION_ROOT {
   RESET,
@@ -49,7 +50,8 @@ class DataStoreImpl implements DataStore {
   private store = createStore(
     combineReducers({
       auth,
-      department
+      department,
+      user
     })
   );
 
@@ -78,6 +80,8 @@ class DataStoreImpl implements DataStore {
           return data.auth;
         case ACTION_ROOT.DEPARTMENTS:
           return data.department;
+        case ACTION_ROOT.USERS:
+          return data.department;
         default:
           return data;
       }
@@ -85,7 +89,7 @@ class DataStoreImpl implements DataStore {
     const handleChange = () => {
       let data = getState(this.store.getState());
       if (!data || currentActionId === data?.action?.id) return;
-      if (!predicate?.(data)) return;
+      if (predicate?.(data)) return;
       currentActionId = data?.action?.id;
       listener(data, unsubscribe);
     };
