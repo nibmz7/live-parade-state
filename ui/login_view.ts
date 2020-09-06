@@ -1,13 +1,19 @@
 import { LitElement, html, customElement, property, css } from 'lit-element';
 import { inputStyles, cardStyles, buttonStyles } from './global_styles';
 
+const enum INPUT_STATE {
+    PENDING,
+    INVALID,
+    VALID
+}
+
 @customElement('login-view')
 export class LoginView extends LitElement {
   @property({ type: String, attribute: false })
   emailValue = '';
 
-  @property({ type: Boolean })
-  emailIsValid = true;
+  @property({ type: Number })
+  emailIsValid = INPUT_STATE.PENDING
 
   private onSubmit(e: Event) {
     e.preventDefault();
@@ -16,12 +22,12 @@ export class LoginView extends LitElement {
   private updateEmailValue(e: Event) {
     let input = e.target as HTMLInputElement;
     this.emailValue = input.value;
-    this.emailIsValid = input.validity.valid;
+    this.emailIsValid = input.validity.valid ? INPUT_STATE.VALID : INPUT_STATE.INVALID;
     console.log(this.emailIsValid);
   }
 
   private reset() {
-    this.emailIsValid = true;
+    this.emailIsValid = INPUT_STATE.PENDING;
   }
 
   render() {
@@ -31,9 +37,10 @@ export class LoginView extends LitElement {
 
         <label for="email" class="visuallyhidden">Email: </label>
         <input
-          @change="${this.updateEmailValue}"
-          ?invalid="${!this.emailIsValid}"
+          ?invalid="${this.emailIsValid === INPUT_STATE.INVALID}"
+          ?valid="${this.emailIsValid === INPUT_STATE.VALID}"
           @focus="${this.reset}"
+          @blur="${this.updateEmailValue}"
           id="email"
           type="email"
           placeholder="Email"

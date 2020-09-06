@@ -11,11 +11,15 @@ export const inputStyles = css`
     border-radius: 3px;
     padding: 5px;
     font-size: 1rem;
-    transition: border-color 0.2s;
+    transition: border-color 0.5s;
   }
 
   input[invalid] {
-    --color-primary: pink;
+    --color-primary: red;
+  }
+
+  input[valid] {
+      --color-primary: green;
   }
 
   .visuallyhidden {
