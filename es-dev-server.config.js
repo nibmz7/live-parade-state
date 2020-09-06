@@ -3,10 +3,6 @@ module.exports = {
   watch: true,
   nodeResolve: true,
   open: true,
-  rootDir: "./",
-  basePath: './',
-  appIndex: 'src/index.html',
-  preserveSymlinks: true,
-  plugins: [],
+  appIndex: 'dist/index.html',
   moduleDirs: ["node_modules"]
 };

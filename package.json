@@ -25,14 +25,14 @@
     "webpack-cli": "^3.3.11"
   },
   "scripts": {
-    "test old": "echo \"Error: no test specified\" && exit 1",
     "build-old": "npx webpack --config webpack.config.js",
     "start-dev-server": "firebase serve --host 0.0.0.0",
     "start-emulators": "firebase emulators:start --import=./firestore-db",
     "deploy-hosting": "firebase deploy --only hosting",
+    "serve": "es-dev-server",
     "test": "karma start --coverage",
     "test:watch": "karma start --auto-watch=true --single-run=false",
-    "build": "tsc --build",
+    "build": "tsc --build --watch",
     "build:clean": "tsc --build --clean",
     "build:tests": "tsc --build test --watch",
     "build:tests:clean": "tsc --build --clean test",

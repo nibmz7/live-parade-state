@@ -43,7 +43,7 @@ const ranks = {
   'REC': 46,
 };
 
-describe('Rank class methods', () => {
+describe('Rank', () => {
   it('Check valid ranks', () => {
     let results = validRanks.map((rank) => Rank.isValid(rank));
     expect(results.every((result) => result === true)).to.equal(true);
