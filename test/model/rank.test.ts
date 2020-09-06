@@ -1,4 +1,4 @@
-import { expect } from 'chai';
+import { expect } from '@open-wc/testing';
 import Rank from '../../model/rank';
 
 const validRanks = [

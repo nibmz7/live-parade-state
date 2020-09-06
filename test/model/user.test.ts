@@ -1,6 +1,6 @@
+import { expect } from '@open-wc/testing';
 import { compare, getInsertionIndex } from '../../model/user';
 import { MockModel } from '../../data-mock/mock_data';
-import { expect } from 'chai';
 import Rank from '../../model/rank';
 import User from '../../model/user';
 
