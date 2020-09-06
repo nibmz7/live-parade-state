@@ -8,6 +8,7 @@
     "allowJs": true,
     "sourceMap": false,
     "inlineSources": false,
+    "experimentalDecorators": true,
     "esModuleInterop": true,
     "tsBuildInfoFile": ".tsbuildinfo"
   },
