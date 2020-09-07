@@ -1,7 +1,7 @@
 const path = require('path');
 const ReplaceInFileWebpackPlugin = require('replace-in-file-webpack-plugin');
 
-const MAIN_DIR = 'dist'
+const MAIN_DIR = 'prod'
 
 module.exports = {
   entry: './public/main.js',

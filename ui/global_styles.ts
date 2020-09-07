@@ -2,24 +2,47 @@ import { css } from 'lit-element';
 
 export const inputStyles = css`
   input {
-    --color-primary: #8899a9;
-    --color-primary-dark: #34495e;
-    margin: 15px 0;
+    --color-input-primary: #8899a9;
+    --color-input-primary-dark: #34495e;
+    --color-input-error: red;
+    --color-input-success: green;
+    font: inherit;
     outline: none;
-    border: 3px solid;
-    border-color: var(--color-primary);
-    border-radius: 3px;
+    margin: 15px 0;
     padding: 5px;
-    font-size: 1rem;
+    box-sizing: border-box;
+    border: 3px solid;
+    border-radius: 3px;
+    border-color: var(--color-input-primary);
     transition: border-color 0.5s;
   }
 
+  input:hover {
+    border-color: var(--color-input-primary-dark);
+  }
+
   input[invalid] {
-    --color-primary: red;
+    border-color: var(--color-input-error);
   }
 
   input[valid] {
-      --color-primary: green;
+    border-color: var(--color-input-success);
+  }
+
+  input:focus {
+    animation: glow 1.5s infinite;
+  }
+
+  @keyframes glow {
+    0% {
+      border-color: var(--color-input-primary);
+    }
+    50% {
+      border-color: var(--color-input-primary-dark);
+    }
+    100% {
+      border-color: var(--color-input-primary);
+    }
   }
 
   .visuallyhidden {
@@ -32,51 +55,36 @@ export const inputStyles = css`
     position: absolute;
     width: 1px;
   }
-
-  input:focus {
-    animation: glow 1.5s infinite;
-  }
-
-  @keyframes glow {
-    0% {
-      border-color: var(--color-primary);
-    }
-    50% {
-      border-color: var(--color-primary-dark);
-    }
-    100% {
-      border-color: var(--color-primary);
-    }
-  }
 `;
 
 export const cardStyles = css`
   .card {
     background: white;
-    box-shadow: 0px 2px 50px 0px rgba(209, 202, 209, 1);
     display: flex;
     flex-direction: column;
     justify-content: center;
+    box-shadow: 0px 2px 50px 0px rgba(209, 202, 209, 1);
   }
 `;
 
 export const buttonStyles = css`
   button {
     font: inherit;
-    font-size: 1.3rem;
-    padding: 15px 10px;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
+    color: white;
+    width: 100%;
+    padding: 10px;
+    border-radius: 5px;
     cursor: pointer;
     outline: none;
-    border-radius: 5px;
-    color: white;
-    background: var(--color-primary);
-    width: 100%;
-    transition: all 0.2s;
     border: none;
-    box-shadow: 0 4px 6px -1px rgba(var(--color-primary-rgb), 0.2),
-      0 2px 4px -1px rgba(var(--color-primary-rgb), 0.12);
+    transition: background-color 0.3s;
+    background-color: var(--color-primary);
+    box-shadow: 0 2px 4px -1px rgba(var(--color-primary-rgb), 0.5);
+  }
+
+  button:hover,
+  button:active,
+  button:focus {
+    background-color: var(--color-primary-dark);
   }
 `;
