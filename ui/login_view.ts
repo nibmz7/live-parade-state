@@ -1,4 +1,4 @@
-import { LitElement, html, customElement, property, css } from 'lit-element';
+import { LitElement, html, customElement, css } from 'lit-element';
 import { inputStyles, cardStyles, buttonStyles } from './global_styles';
 
 const enum INPUT_STATE {
@@ -9,43 +9,45 @@ const enum INPUT_STATE {
 
 @customElement('login-view')
 export class LoginView extends LitElement {
-  @property({ type: Boolean })
-  isProcessing = false;
+  private isProcessing = false;
+  private emailValue = '';
+  private emailIsValid = INPUT_STATE.PENDING;
+  private passwordValue = '';
+  private passwordIsValid = INPUT_STATE.PENDING;
+  private passwordVisibility = false;
+  private errorMessage = '';
+  private errorVisible = false;
 
-  @property({ type: String, attribute: false })
-  emailValue = '';
-
-  @property({ type: String, attribute: false })
-  passwordValue = '';
-
-  @property({ type: Number })
-  emailIsValid = INPUT_STATE.PENDING;
-
-  @property({ type: Number })
-  passwordIsValid = INPUT_STATE.PENDING;
-
-  @property({ type: Boolean })
-  passwordVisibility = false;
-
-  @property({ type: Boolean })
-  errorVisible = false;
-
-  @property({ type: String })
-  errorMessage = '';
+  static get properties() {
+    return {
+      isProcessing: { type: Boolean },
+      emailValue: { type: String, attribute: false },
+      emailIsValid: { type: Number },
+      passwordValue: { type: String, attribute: false },
+      passwordIsValid: { type: Number },
+      passwordVisibility: { type: Boolean },
+      errorMessage: { type: String },
+      errorVisible: { type: Boolean }
+    };
+  }
 
   private onSubmit(e: Event) {
     e.preventDefault();
     if (this.emailIsValid !== INPUT_STATE.VALID) {
-      this.errorMessage = 'Please enter a valid email address!';
-      this.errorVisible = true;
+      this.showError('Please enter a valid email address!');
       return;
     } else if (this.passwordIsValid !== INPUT_STATE.VALID) {
-      this.errorMessage = 'Please enter a valid password!';
-      this.errorVisible = true;
+      this.showError('Please enter a valid password!');
       return;
     }
     if (this.isProcessing) return;
     this.isProcessing = true;
+    console.log(this.emailValue, this.passwordValue);
+  }
+
+  private showError(message: string) {
+    this.errorMessage = message;
+    this.errorVisible = true;
   }
 
   private updateInputValue(e: Event) {
@@ -85,7 +87,6 @@ export class LoginView extends LitElement {
       <form class="card" @submit="${this.onSubmit}" novalidate>
         <h3>Sign in</h3>
 
-        <label for="email" class="visuallyhidden">Email: </label>
         <input
           id="email"
           type="email"
