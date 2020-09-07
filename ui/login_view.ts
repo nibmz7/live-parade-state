@@ -1,6 +1,5 @@
 import { LitElement, html, customElement, property, css } from 'lit-element';
 import { inputStyles, cardStyles, buttonStyles } from './global_styles';
-import { styleMap } from 'lit-html/directives/style-map';
 
 const enum INPUT_STATE {
   PENDING,
@@ -10,6 +9,9 @@ const enum INPUT_STATE {
 
 @customElement('login-view')
 export class LoginView extends LitElement {
+  @property({ type: Boolean })
+  isProcessing = false;
+
   @property({ type: String, attribute: false })
   emailValue = '';
 
@@ -25,14 +27,25 @@ export class LoginView extends LitElement {
   @property({ type: Boolean })
   passwordVisibility = false;
 
-  @property({ type: String })
-  errorMessage = 'Lorem ipsum seven eight nine';
+  @property({ type: Boolean })
+  errorVisible = false;
 
-  @property({type: Object})
-  private errorStyles = {};
+  @property({ type: String })
+  errorMessage = '';
 
   private onSubmit(e: Event) {
     e.preventDefault();
+    if (this.emailIsValid !== INPUT_STATE.VALID) {
+      this.errorMessage = 'Please enter a valid email address!';
+      this.errorVisible = true;
+      return;
+    } else if (this.passwordIsValid !== INPUT_STATE.VALID) {
+      this.errorMessage = 'Please enter a valid password!';
+      this.errorVisible = true;
+      return;
+    }
+    if (this.isProcessing) return;
+    this.isProcessing = true;
   }
 
   private updateInputValue(e: Event) {
@@ -60,19 +73,11 @@ export class LoginView extends LitElement {
     } else {
       this.passwordIsValid = INPUT_STATE.PENDING;
     }
+    this.errorVisible = false;
   }
 
-  private async togglePasswordVisiblity() {
+  private togglePasswordVisiblity() {
     this.passwordVisibility = !this.passwordVisibility;
-    let error = this.shadowRoot?.getElementById('error');
-    error!.className = 'show';
-    let boxHeight = error!.offsetHeight;
-    this.errorStyles = { height: '0px', padding: '0' };
-    await new Promise((res) => requestAnimationFrame(() => res()));
-    this.errorStyles = {
-      height: `${boxHeight}px`,
-      display: 'unset'
-    };
   }
 
   render() {
@@ -86,6 +91,7 @@ export class LoginView extends LitElement {
           type="email"
           placeholder="Email"
           required
+          aria-label="Email input"
           ?invalid="${this.emailIsValid === INPUT_STATE.INVALID}"
           ?valid="${this.emailIsValid === INPUT_STATE.VALID}"
           @focus="${this.resetInput}"
@@ -93,12 +99,12 @@ export class LoginView extends LitElement {
         />
 
         <div class="password-container">
-          <label for="password" class="visuallyhidden">Password: </label>
           <input
             id="password"
             minlength="8"
             placeholder="Password"
             required
+            aria-label="Password input"
             type="${this.passwordVisibility ? 'text' : 'password'}"
             ?invalid="${this.passwordIsValid === INPUT_STATE.INVALID}"
             ?valid="${this.passwordIsValid === INPUT_STATE.VALID}"
@@ -114,6 +120,7 @@ export class LoginView extends LitElement {
             class="password-toggle"
             @click="${this.togglePasswordVisiblity}"
             ?visible="${this.passwordVisibility}"
+            des
           >
             <path
               d="M12 4C7 4 2.73 7.11 1 11.5 2.73 15.89 7 19 12 19s9.27-3.11 11-7.5C21.27 7.11 17 4 12 4zm0 12.5c-2.76 0-5-2.24-5-5s2.24-5 5-5 5 2.24 5 5-2.24 5-5 5zm0-8c-1.66 0-3 1.34-3 3s1.34 3 3 3 3-1.34 3-3-1.34-3-3-3z"
@@ -125,12 +132,15 @@ export class LoginView extends LitElement {
           </svg>
         </div>
 
-        <button id="login">Continue</button>
+        <button id="login">
+          ${this.isProcessing ? 'Loading...' : 'Continue'}
+        </button>
 
         <p
           id="error"
           aria-label="Input error"
-          style=${styleMap(this.errorStyles)}
+          ?aria-errormessage="${this.errorVisible}"
+          aria-hidden="${!this.errorVisible}"
         >
           ${this.errorMessage}
         </p>
@@ -193,21 +203,18 @@ export class LoginView extends LitElement {
         }
 
         #error {
-          height: 0px;
-          display: none;
+          max-height: 0px;
+          opacity: 0;
           transition: 0.5s all;
           text-overflow: ellipsis;
           white-space: nowrap;
           overflow: hidden;
           font-size: 0.8rem;
-          margin: 0;
-          padding: 20px 0 5px;
-          transition: 0.3s height;
         }
 
-        #error.show {
-            height: auto;
-            display: unset;
+        #error[aria-hidden='false'] {
+          max-height: 2.4rem;
+          opacity: 1;
         }
       `
     ];
