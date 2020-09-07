@@ -1,5 +1,14 @@
 import { LitElement, html, customElement, css } from 'lit-element';
 import { inputStyles, cardStyles, buttonStyles } from './global_styles';
+import { ApplicationStore, ACTION_ROOT } from '../data/store';
+import {
+  AuthStoreState,
+  AuthState,
+  SignInError,
+  SignInCredentials
+} from '../data/states/auth_state';
+import { Unsubscribe } from 'redux';
+import ACTION_AUTH from '../data/actions/auth_action';
 
 const enum INPUT_STATE {
   PENDING,
@@ -31,6 +40,22 @@ export class LoginView extends LitElement {
     };
   }
 
+  connectedCallback() {
+    super.connectedCallback();
+    const listener = (state: AuthStoreState, unsubscribe: Unsubscribe) => {
+      if (state.action.type === AuthState.REQUEST_SIGN_IN_FAILED) {
+        let error = state.action.payload as SignInError;
+        this.isProcessing = false;
+        this.showError(error.message);
+      } else if (state.action.type === AuthState.SIGNED_IN) {
+        unsubscribe();
+        let event = new Event('signed-in');
+        this.dispatchEvent(event);
+      }
+    };
+    ApplicationStore.listen(ACTION_ROOT.AUTH, listener);
+  }
+
   private onSubmit(e: Event) {
     e.preventDefault();
     if (this.emailIsValid !== INPUT_STATE.VALID) {
@@ -42,7 +67,12 @@ export class LoginView extends LitElement {
     }
     if (this.isProcessing) return;
     this.isProcessing = true;
-    console.log(this.emailValue, this.passwordValue);
+    let credentials: SignInCredentials = {
+      email: this.emailValue,
+      password: this.passwordValue
+    };
+    let action = ACTION_AUTH.requestSignIn(credentials);
+    ApplicationStore.dispatch(action);
   }
 
   private showError(message: string) {
@@ -191,6 +221,7 @@ export class LoginView extends LitElement {
           bottom: 0;
           margin-top: auto;
           margin-bottom: auto;
+          fill: #979393;
         }
 
         .password-toggle > #stroke {
