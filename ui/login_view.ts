@@ -66,28 +66,28 @@ export class LoginView extends LitElement {
 
         <label for="email" class="visuallyhidden">Email: </label>
         <input
-          ?invalid="${this.emailIsValid === INPUT_STATE.INVALID}"
-          ?valid="${this.emailIsValid === INPUT_STATE.VALID}"
-          @focus="${this.resetInput}"
-          @blur="${this.updateInputValue}"
           id="email"
           type="email"
           placeholder="Email"
           required
+          ?invalid="${this.emailIsValid === INPUT_STATE.INVALID}"
+          ?valid="${this.emailIsValid === INPUT_STATE.VALID}"
+          @focus="${this.resetInput}"
+          @blur="${this.updateInputValue}"
         />
 
         <div class="password-container">
           <label for="password" class="visuallyhidden">Password: </label>
           <input
+            id="password"
+            minlength="8"
+            placeholder="Password"
+            required
+            type="${this.passwordVisibility ? 'text' : 'password'}"
             ?invalid="${this.passwordIsValid === INPUT_STATE.INVALID}"
             ?valid="${this.passwordIsValid === INPUT_STATE.VALID}"
             @focus="${this.resetInput}"
             @blur="${this.updateInputValue}"
-            id="password"
-            type="${this.passwordVisibility ? 'text' : 'password'}"
-            minlength="8"
-            placeholder="Password"
-            required
           />
 
           <svg
