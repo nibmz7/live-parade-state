@@ -1,5 +1,6 @@
 import { LitElement, html, customElement, property, css } from 'lit-element';
 import { inputStyles, cardStyles, buttonStyles } from './global_styles';
+import { styleMap } from 'lit-html/directives/style-map';
 
 const enum INPUT_STATE {
   PENDING,
@@ -23,6 +24,12 @@ export class LoginView extends LitElement {
 
   @property({ type: Boolean })
   passwordVisibility = false;
+
+  @property({ type: String })
+  errorMessage = 'Lorem ipsum seven eight nine';
+
+  @property({type: Object})
+  private errorStyles = {};
 
   private onSubmit(e: Event) {
     e.preventDefault();
@@ -55,8 +62,17 @@ export class LoginView extends LitElement {
     }
   }
 
-  private togglePasswordVisiblity() {
+  private async togglePasswordVisiblity() {
     this.passwordVisibility = !this.passwordVisibility;
+    let error = this.shadowRoot?.getElementById('error');
+    error!.className = 'show';
+    let boxHeight = error!.offsetHeight;
+    this.errorStyles = { height: '0px', padding: '0' };
+    await new Promise((res) => requestAnimationFrame(() => res()));
+    this.errorStyles = {
+      height: `${boxHeight}px`,
+      display: 'unset'
+    };
   }
 
   render() {
@@ -111,7 +127,13 @@ export class LoginView extends LitElement {
 
         <button id="login">Continue</button>
 
-        <p id="error"></p>
+        <p
+          id="error"
+          aria-label="Input error"
+          style=${styleMap(this.errorStyles)}
+        >
+          ${this.errorMessage}
+        </p>
       </form>
     `;
   }
@@ -143,6 +165,10 @@ export class LoginView extends LitElement {
           font-size: 1.2rem;
         }
 
+        #password {
+          width: 100%;
+        }
+
         .password-container {
           position: relative;
         }
@@ -166,23 +192,22 @@ export class LoginView extends LitElement {
           transform: scale(1);
         }
 
-        #password {
-          width: 100%;
-        }
-
         #error {
-          max-height: 0px;
-          opacity: 0;
+          height: 0px;
+          display: none;
           transition: 0.5s all;
           text-overflow: ellipsis;
           white-space: nowrap;
           overflow: hidden;
           font-size: 0.8rem;
+          margin: 0;
+          padding: 20px 0 5px;
+          transition: 0.3s height;
         }
 
         #error.show {
-          max-height: 100px;
-          opacity: 1;
+            height: auto;
+            display: unset;
         }
       `
     ];
