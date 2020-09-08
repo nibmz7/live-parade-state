@@ -16,7 +16,8 @@
     "./**/*.ts",
     "../model/**/*.ts",
     "../data/**/*.ts",
-    "../data-mock/**/*.ts"
+    "../data-mock/**/*.ts",
+    "../ui/**/*.ts"
   ],
   "exclude": ["./js"],
   // NEW: Options for file/directory watching
