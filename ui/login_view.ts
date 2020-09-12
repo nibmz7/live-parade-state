@@ -123,6 +123,7 @@ export class LoginView extends LitElement {
           placeholder="Email"
           required
           aria-label="Email input"
+          tabindex="0"
           ?invalid="${this.emailIsValid === INPUT_STATE.INVALID}"
           ?valid="${this.emailIsValid === INPUT_STATE.VALID}"
           @focus="${this.resetInput}"
@@ -136,6 +137,7 @@ export class LoginView extends LitElement {
             placeholder="Password"
             required
             aria-label="Password input"
+            tabindex="0"
             type="${this.passwordVisibility ? 'text' : 'password'}"
             ?invalid="${this.passwordIsValid === INPUT_STATE.INVALID}"
             ?valid="${this.passwordIsValid === INPUT_STATE.VALID}"
@@ -146,12 +148,13 @@ export class LoginView extends LitElement {
           <svg
             xmlns="http://www.w3.org/2000/svg"
             height="24"
-            viewBox="0 0 24 24"
             width="24"
+            viewBox="0 0 24 24"
+            tabindex="0"
+            aria-label="Toggle password visibility"
             class="password-toggle"
             @click="${this.togglePasswordVisiblity}"
             ?visible="${this.passwordVisibility}"
-            des
           >
             <path
               d="M12 4C7 4 2.73 7.11 1 11.5 2.73 15.89 7 19 12 19s9.27-3.11 11-7.5C21.27 7.11 17 4 12 4zm0 12.5c-2.76 0-5-2.24-5-5s2.24-5 5-5 5 2.24 5 5-2.24 5-5 5zm0-8c-1.66 0-3 1.34-3 3s1.34 3 3 3 3-1.34 3-3-1.34-3-3-3z"
@@ -163,7 +166,7 @@ export class LoginView extends LitElement {
           </svg>
         </div>
 
-        <button id="login">
+        <button id="login" tabindex="0">
           ${this.isProcessing ? 'Loading...' : 'Continue'}
         </button>
 
