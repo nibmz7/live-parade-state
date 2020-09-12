@@ -16,6 +16,30 @@ const enum INPUT_STATE {
   VALID
 }
 
+const onPressed = (callback: (e: Event) => any, autoBlur = true, debounce = true) => {
+  let isRunning = false;
+
+  let onPressListener = (e: Event) => {
+    if (isRunning) return;
+    if(debounce) {
+      isRunning = true;
+      setTimeout(() => (isRunning = false), 1000);
+    }
+    let eventType = e.type;
+    if(eventType === 'click') callback(e);
+    else if(eventType === 'keydown') {
+      let key = (e as KeyboardEvent).key;
+      if(key === 'Enter' || key === ' ') {
+        callback(e);
+        let element = e.target as HTMLElement;
+        if (autoBlur) element.blur();
+      }
+    }
+  };
+
+  return onPressListener;
+};
+
 @customElement('login-view')
 export class LoginView extends LitElement {
   private isProcessing = false;
@@ -26,6 +50,10 @@ export class LoginView extends LitElement {
   private passwordVisibility = false;
   private errorMessage = '';
   private errorVisible = false;
+  private togglePasswordVisiblity = onPressed(() => {
+    this.passwordVisibility = !this.passwordVisibility;
+
+  }, false, false);
 
   static get properties() {
     return {
@@ -108,10 +136,6 @@ export class LoginView extends LitElement {
     this.errorVisible = false;
   }
 
-  private togglePasswordVisiblity() {
-    this.passwordVisibility = !this.passwordVisibility;
-  }
-
   render() {
     return html`
       <form class="card" @submit="${this.onSubmit}" novalidate>
@@ -154,6 +178,7 @@ export class LoginView extends LitElement {
             aria-label="Toggle password visibility"
             class="password-toggle"
             @click="${this.togglePasswordVisiblity}"
+            @keydown="${this.togglePasswordVisiblity}"
             ?visible="${this.passwordVisibility}"
           >
             <path
