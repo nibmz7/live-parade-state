@@ -14,6 +14,7 @@ export default abstract class AuthManager {
     ApplicationStore.listen(ACTION_ROOT.AUTH, (state) =>
       this.authStateChanged(state)
     );
+    this.signOut();
   }
 
   authStateChanged(state: AuthStoreState) {

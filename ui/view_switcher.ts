@@ -1,10 +1,12 @@
 import { LitElement, html, customElement, css } from 'lit-element';
 import MockAuthManager from '../data-mock/mock_auth_manager';
+import { ACTION_ROOT, ApplicationStore } from '../data/store';
+import { AuthState, AuthStoreState } from '../data/states/auth_state';
+import { fadeAnimation } from './global_styles';
 import './login_view';
-// import { ApplicationStore } from '../data/store';
 
 const enum VIEW_TYPES {
-  LOADING,
+  UNINITALIZED,
   AUTH,
   ADMIN,
   USER
@@ -12,8 +14,8 @@ const enum VIEW_TYPES {
 
 @customElement('view-switcher')
 export class ViewSwitcher extends LitElement {
-  private viewType: VIEW_TYPES = VIEW_TYPES.AUTH;
-  private visible = true;
+  private viewType: VIEW_TYPES = VIEW_TYPES.UNINITALIZED;
+  private visible = false;
 
   static get properties() {
     return {
@@ -23,8 +25,31 @@ export class ViewSwitcher extends LitElement {
   }
 
   connectedCallback() {
-    new MockAuthManager();
     super.connectedCallback();
+    ApplicationStore.listen(ACTION_ROOT.AUTH, (state: AuthStoreState) => {
+      if (this.viewType === VIEW_TYPES.UNINITALIZED) {
+        this.addEventListener(
+          'animationend',
+          () => {
+            this.removeAttribute('loading');
+            this.removeAttribute('initialized');
+          },
+          { once: true }
+        );
+        this.setAttribute('initialized', '');
+      }
+      if (state.action.type === AuthState.SIGNED_OUT) {
+        this.viewType = VIEW_TYPES.AUTH;
+        this.visible = true;
+      } else if (
+        this.viewType === VIEW_TYPES.UNINITALIZED &&
+        state.action.type === AuthState.SIGNED_IN
+      ) {
+        this.viewType = VIEW_TYPES.USER;
+        this.visible = true;
+      }
+    });
+    new MockAuthManager();
   }
 
   async performUpdate() {
@@ -36,13 +61,7 @@ export class ViewSwitcher extends LitElement {
     this.visible = false;
     await new Promise((resolve) => {
       let root = this.shadowRoot?.getElementById('root');
-      root?.addEventListener(
-        'animationend',
-        () => {
-          resolve();
-        },
-        { once: true }
-      );
+      root?.addEventListener('animationend', () => resolve(), { once: true });
       this.performUpdate();
     });
     this.viewType = VIEW_TYPES.USER;
@@ -57,48 +76,30 @@ export class ViewSwitcher extends LitElement {
         case VIEW_TYPES.USER:
           return html`<div>User signed In</div>`;
         default:
-          return '';
+          return ``;
       }
     };
-    return html`<div
-      id="root"
-      ?fade-out="${!this.visible}"
-      ?fade-in="${this.visible}"
-    >
-      ${content()}
-    </div> `;
+    return html`
+      <div id="root" ?fade-out="${!this.visible}" ?fade-in="${this.visible}">
+        ${content()}
+      </div>
+    `;
   }
 
   static get styles() {
     return [
+      fadeAnimation,
       css`
-        #root {
+        :host([initialized])::after {
+          animation: fade-out 0.3s forwards;
         }
 
         #root[fade-in] {
-          animation: fade-in 1s;
+          animation: fade-in 0.5s;
         }
 
         #root[fade-out] {
-          animation: fade-out 1s;
-        }
-
-        @keyframes fade-in {
-          from {
-            opacity: 0;
-          }
-          to {
-            opacity: 1;
-          }
-        }
-
-        @keyframes fade-out {
-          from {
-            opacity: 1;
-          }
-          to {
-            opacity: 0;
-          }
+          animation: fade-out 0.3s;
         }
       `
     ];
