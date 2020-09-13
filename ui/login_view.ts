@@ -181,7 +181,7 @@ export class LoginView extends LitElement {
           <div
             tabindex="0"
             aria-label="Toggle password visibility"
-            class="password-toggle"
+            class="password-toggle selectable"
             @click="${this.togglePasswordVisiblity}"
             @keydown="${this.togglePasswordVisiblity}"
             ?visible="${this.passwordVisibility}"

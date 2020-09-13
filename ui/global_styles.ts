@@ -1,11 +1,9 @@
 import { css } from 'lit-element';
 
 export const globalStyles = css`
-  * {
+  button, input, .selectable {
     user-select: none;
     -webkit-tap-highlight-color: transparent;
-  }
-  *:focus {
     outline: none;
   }
 `;
@@ -17,7 +15,6 @@ export const inputStyles = css`
     --color-input-error: red;
     --color-input-success: green;
     font: inherit;
-    outline: none;
     margin: 15px 0;
     padding: 5px;
     box-sizing: border-box;
@@ -85,7 +82,6 @@ export const buttonStyles = css`
     padding: 10px;
     border-radius: 5px;
     cursor: pointer;
-    outline: none;
     border: none;
     transition: background-color 0.3s, box-shadow 0.3s;
     background-color: var(--color-primary);
