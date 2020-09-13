@@ -15,12 +15,7 @@ import {
 import { Unsubscribe } from 'redux';
 import ACTION_AUTH from '../data/actions/auth_action';
 import { onPressed } from './utils';
-
-const enum INPUT_STATE {
-  PENDING,
-  INVALID,
-  VALID
-}
+import { emailInput, INPUT_STATE } from './input';
 
 declare global {
   interface Window {
@@ -32,7 +27,7 @@ declare global {
 export class LoginView extends LitElement {
   private isProcessing = false;
   private emailValue = '';
-  private emailIsValid = INPUT_STATE.PENDING;
+  private emailState = INPUT_STATE.PENDING;
   private passwordValue = '';
   private passwordIsValid = INPUT_STATE.PENDING;
   private passwordVisibility = false;
@@ -48,7 +43,7 @@ export class LoginView extends LitElement {
 
   private onSubmit = onPressed((e: Event) => {
     e.preventDefault();
-    if (this.emailIsValid !== INPUT_STATE.VALID) {
+    if (this.emailState !== INPUT_STATE.VALID) {
       this.showError('Please enter a valid email address!');
       return;
     } else if (this.passwordIsValid !== INPUT_STATE.VALID) {
@@ -136,7 +131,7 @@ export class LoginView extends LitElement {
     }
     if (input.id === 'email') {
       this.emailValue = inputValue;
-      this.emailIsValid = inputIsValid;
+      this.emailState = inputIsValid;
     } else {
       this.passwordValue = inputValue;
       this.passwordIsValid = inputIsValid;
@@ -146,7 +141,7 @@ export class LoginView extends LitElement {
   private resetInput(e: Event) {
     let input = e.target as HTMLInputElement;
     if (input.id === 'email') {
-      this.emailIsValid = INPUT_STATE.PENDING;
+      this.emailState = INPUT_STATE.PENDING;
     } else {
       this.passwordIsValid = INPUT_STATE.PENDING;
     }
@@ -163,21 +158,12 @@ export class LoginView extends LitElement {
       >
         <h3>Sign in</h3>
 
-        <input
-          id="email"
-          type="email"
-          placeholder="Email"
-          name="email"
-          autocomplete="username"
-          required
-          aria-label="Email input"
-          tabindex="0"
-          value="${this.emailValue}"
-          ?invalid="${this.emailIsValid === INPUT_STATE.INVALID}"
-          ?valid="${this.emailIsValid === INPUT_STATE.VALID}"
-          @focus="${this.resetInput}"
-          @blur="${this.updateInputValue}"
-        />
+        ${emailInput(
+          this.emailValue,
+          this.emailState,
+          email => this.emailValue = email,
+          state => this.emailState = state
+        )}
 
         <div class="password-container">
           <input
