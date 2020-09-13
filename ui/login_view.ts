@@ -1,5 +1,10 @@
 import { LitElement, html, customElement, css } from 'lit-element';
-import { inputStyles, cardStyles, buttonStyles, globalStyles } from './global_styles';
+import {
+  inputStyles,
+  cardStyles,
+  buttonStyles,
+  globalStyles
+} from './global_styles';
 import { ApplicationStore, ACTION_ROOT } from '../data/store';
 import {
   AuthStoreState,
@@ -14,6 +19,12 @@ const enum INPUT_STATE {
   PENDING,
   INVALID,
   VALID
+}
+
+declare global {
+  interface Window {
+    PasswordCredential: any;
+  }
 }
 
 const onPressed = (
@@ -105,11 +116,31 @@ export class LoginView extends LitElement {
         this.showError(error.message);
       } else if (state.action.type === AuthState.SIGNED_IN) {
         unsubscribe();
-        let event = new Event('signed-in');
-        this.dispatchEvent(event);
+        this.successfullLogin();
       }
     };
     ApplicationStore.listen(ACTION_ROOT.AUTH, listener);
+
+    if (window.PasswordCredential) {
+      navigator.credentials.get({
+        password: true,
+        mediation: 'required'
+      }).then(c => {
+        console.log(c);
+      });
+    }
+  }
+
+  private successfullLogin() {
+    if (window.PasswordCredential) {
+      var c = new window.PasswordCredential({
+        id: this.emailValue,
+        password: this.passwordValue
+      });
+      navigator.credentials.store(c);
+    }
+    let event = new Event('signed-in');
+    this.dispatchEvent(event);
   }
 
   private showError(message: string) {
@@ -147,13 +178,20 @@ export class LoginView extends LitElement {
 
   render() {
     return html`
-      <form class="card" @submit="${(e: Event) => e.preventDefault()}" novalidate>
+      <form
+        id="form"
+        class="card"
+        @submit="${(e: Event) => e.preventDefault()}"
+        novalidate
+      >
         <h3>Sign in</h3>
 
         <input
           id="email"
           type="email"
           placeholder="Email"
+          name="email"
+          autocomplete="username"
           required
           aria-label="Email input"
           tabindex="0"
@@ -168,6 +206,8 @@ export class LoginView extends LitElement {
             id="password"
             minlength="8"
             placeholder="Password"
+            name="password"
+            autocomplete="current-password"
             required
             aria-label="Password input"
             tabindex="0"

@@ -80,7 +80,7 @@ export class ViewSwitcher extends LitElement {
         }
 
         #root[fade-out] {
-          animation: fade-out 3s;
+          animation: fade-out 1s;
         }
 
         @keyframes fade-in {
