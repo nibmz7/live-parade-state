@@ -1,5 +1,15 @@
 import { css } from 'lit-element';
 
+export const globalStyles = css`
+  * {
+    user-select: none;
+    -webkit-tap-highlight-color: transparent;
+  }
+  *:focus {
+    outline: none;
+  }
+`;
+
 export const inputStyles = css`
   input {
     --color-input-primary: #8899a9;
@@ -69,8 +79,6 @@ export const cardStyles = css`
 
 export const buttonStyles = css`
   button {
-    user-select: none;
-    -webkit-tap-highlight-color: transparent;
     font: inherit;
     color: white;
     width: 100%;
@@ -91,7 +99,8 @@ export const buttonStyles = css`
     }
   }
 
-  button:focus,button:active {
+  button:focus,
+  button:active {
     background-color: var(--color-primary-dark);
     box-shadow: 0px 2px 9px 1px rgba(var(--color-primary-dark-rgb), 0.5);
   }

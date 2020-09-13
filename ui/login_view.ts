@@ -1,5 +1,5 @@
 import { LitElement, html, customElement, css } from 'lit-element';
-import { inputStyles, cardStyles, buttonStyles } from './global_styles';
+import { inputStyles, cardStyles, buttonStyles, globalStyles } from './global_styles';
 import { ApplicationStore, ACTION_ROOT } from '../data/store';
 import {
   AuthStoreState,
@@ -221,6 +221,7 @@ export class LoginView extends LitElement {
 
   static get styles() {
     return [
+      globalStyles,
       inputStyles,
       cardStyles,
       buttonStyles,
@@ -298,15 +299,6 @@ export class LoginView extends LitElement {
             transform: scale(1);
             opacity: 1;
           }
-        }
-
-        .password-toggle {
-          user-select: none;
-          -webkit-tap-highlight-color: transparent;
-        }
-
-        .password-toggle:focus {
-          outline: none;
         }
 
         .password-toggle > svg > #stroke {
