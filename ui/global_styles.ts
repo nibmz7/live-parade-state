@@ -77,7 +77,7 @@ export const buttonStyles = css`
     cursor: pointer;
     outline: none;
     border: none;
-    transition: background-color 0.3s;
+    transition: background-color .3s, box-shadow .3s;
     background-color: var(--color-primary);
     box-shadow: 0 2px 4px -1px rgba(var(--color-primary-rgb), 0.5);
   }
@@ -86,5 +86,6 @@ export const buttonStyles = css`
   button:active,
   button:focus {
     background-color: var(--color-primary-dark);
+    box-shadow: 0px 2px 9px 1px rgba(var(--color-primary-rgb), 0.7);
   }
 `;

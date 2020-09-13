@@ -16,20 +16,24 @@ const enum INPUT_STATE {
   VALID
 }
 
-const onPressed = (callback: (e: Event) => any, autoBlur = true, debounce = true) => {
+const onPressed = (
+  callback: (e: Event) => any,
+  autoBlur = true,
+  debounce = true
+) => {
   let isRunning = false;
 
   let onPressListener = (e: Event) => {
     if (isRunning) return;
-    if(debounce) {
+    if (debounce) {
       isRunning = true;
       setTimeout(() => (isRunning = false), 1000);
     }
     let eventType = e.type;
-    if(eventType === 'click') callback(e);
-    else if(eventType === 'keydown') {
+    if (eventType === 'click') callback(e);
+    else if (eventType === 'keydown') {
       let key = (e as KeyboardEvent).key;
-      if(key === 'Enter' || key === ' ') {
+      if (key === 'Enter' || key === ' ') {
         callback(e);
         let element = e.target as HTMLElement;
         if (autoBlur) element.blur();
@@ -50,10 +54,13 @@ export class LoginView extends LitElement {
   private passwordVisibility = false;
   private errorMessage = '';
   private errorVisible = false;
-  private togglePasswordVisiblity = onPressed(() => {
-    this.passwordVisibility = !this.passwordVisibility;
-
-  }, false, false);
+  private togglePasswordVisiblity = onPressed(
+    () => {
+      this.passwordVisibility = !this.passwordVisibility;
+    },
+    false,
+    false
+  );
 
   static get properties() {
     return {
@@ -169,11 +176,7 @@ export class LoginView extends LitElement {
             @blur="${this.updateInputValue}"
           />
 
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            height="24"
-            width="24"
-            viewBox="0 0 24 24"
+          <div
             tabindex="0"
             aria-label="Toggle password visibility"
             class="password-toggle"
@@ -181,14 +184,21 @@ export class LoginView extends LitElement {
             @keydown="${this.togglePasswordVisiblity}"
             ?visible="${this.passwordVisibility}"
           >
-            <path
-              d="M12 4C7 4 2.73 7.11 1 11.5 2.73 15.89 7 19 12 19s9.27-3.11 11-7.5C21.27 7.11 17 4 12 4zm0 12.5c-2.76 0-5-2.24-5-5s2.24-5 5-5 5 2.24 5 5-2.24 5-5 5zm0-8c-1.66 0-3 1.34-3 3s1.34 3 3 3 3-1.34 3-3-1.34-3-3-3z"
-            />
-            <path
-              id="stroke"
-              d="m2.71,3.16c-0.39,0.39 -0.39,1.02 0,1.41l16.32,16.33c0.39,0.39 1.02,0.39 1.41,0c0.39,-0.39 0.39,-1.02 0,-1.41l-16.31,-16.33c-0.39,-0.39 -1.03,-0.39 -1.42,0z"
-            />
-          </svg>
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              height="24"
+              width="24"
+              viewBox="0 0 24 24"
+            >
+              <path
+                d="M12 4C7 4 2.73 7.11 1 11.5 2.73 15.89 7 19 12 19s9.27-3.11 11-7.5C21.27 7.11 17 4 12 4zm0 12.5c-2.76 0-5-2.24-5-5s2.24-5 5-5 5 2.24 5 5-2.24 5-5 5zm0-8c-1.66 0-3 1.34-3 3s1.34 3 3 3 3-1.34 3-3-1.34-3-3-3z"
+              />
+              <path
+                id="stroke"
+                d="m2.71,3.16c-0.39,0.39 -0.39,1.02 0,1.41l16.32,16.33c0.39,0.39 1.02,0.39 1.41,0c0.39,-0.39 0.39,-1.02 0,-1.41l-16.31,-16.33c-0.39,-0.39 -1.03,-0.39 -1.42,0z"
+              />
+            </svg>
+          </div>
         </div>
 
         <button id="login" tabindex="0">
@@ -243,22 +253,67 @@ export class LoginView extends LitElement {
         }
 
         .password-toggle {
+          display: flex;
+          justify-content: center;
+          align-items: center;
           position: absolute;
           right: 15px;
-          top: 0;
-          bottom: 0;
+          top: 15px;
+          bottom: 15px;
           margin-top: auto;
           margin-bottom: auto;
-          fill: #979393;
+          fill: rgb(151, 147, 147);
+          cursor: pointer;
         }
 
-        .password-toggle > #stroke {
+        .password-toggle::after {
+          background-image: radial-gradient(
+            circle farthest-side,
+            rgba(0, 0, 0, 0.12),
+            rgba(0, 0, 0, 0.12) 80%,
+            rgba(0, 0, 0, 0) 100%
+          );
+          position: absolute;
+          top: 0px;
+          bottom: 0px;
+          left: -5px;
+          right: -5px;
+          content: '';
+          visibility: hidden;
+        }
+
+        .password-toggle:focus::after {
+          visibility: visible;
+          animation: pulse .7s infinite alternate;
+        }
+
+        @keyframes pulse {
+          from {
+            transform: scale(0.8);
+            opacity: 0;
+          }
+          to {
+            transform: scale(1);
+            opacity: 1;
+          }
+        }
+
+        .password-toggle {
+          user-select: none;
+          -webkit-tap-highlight-color: transparent;
+        }
+
+        .password-toggle:focus {
+          outline: none;
+        }
+
+        .password-toggle > svg > #stroke {
           transform: scale(0);
           transition: transform 0.3s;
           transform-origin: 10% 10%;
         }
 
-        .password-toggle[visible] > #stroke {
+        .password-toggle[visible] > svg > #stroke {
           transform: scale(1);
         }
 
