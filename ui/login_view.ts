@@ -15,7 +15,7 @@ import {
 import { Unsubscribe } from 'redux';
 import ACTION_AUTH from '../data/actions/auth_action';
 import { onPressed } from './utils';
-import { emailInput, INPUT_STATE } from './input';
+import { emailInput, INPUT_STATE, passwordInput } from './input';
 
 declare global {
   interface Window {
@@ -29,24 +29,17 @@ export class LoginView extends LitElement {
   private emailValue = '';
   private emailState = INPUT_STATE.PENDING;
   private passwordValue = '';
-  private passwordIsValid = INPUT_STATE.PENDING;
+  private passwordState = INPUT_STATE.PENDING;
   private passwordVisibility = false;
   private errorMessage = '';
   private errorVisible = false;
-
-  private togglePasswordVisiblity = onPressed(
-    () => {
-      this.passwordVisibility = !this.passwordVisibility;
-    },
-    { autoBlur: false, debounce: false }
-  );
 
   private onSubmit = onPressed((e: Event) => {
     e.preventDefault();
     if (this.emailState !== INPUT_STATE.VALID) {
       this.showError('Please enter a valid email address!');
       return;
-    } else if (this.passwordIsValid !== INPUT_STATE.VALID) {
+    } else if (this.passwordState !== INPUT_STATE.VALID) {
       this.showError('Please enter a valid password!');
       return;
     }
@@ -66,7 +59,7 @@ export class LoginView extends LitElement {
       emailValue: { type: String, attribute: false },
       emailIsValid: { type: Number },
       passwordValue: { type: String, attribute: false },
-      passwordIsValid: { type: Number },
+      passwordState: { type: Number },
       passwordVisibility: { type: Boolean },
       errorMessage: { type: String },
       errorVisible: { type: Boolean }
@@ -120,34 +113,6 @@ export class LoginView extends LitElement {
     this.errorVisible = true;
   }
 
-  private updateInputValue(e: Event) {
-    let input = e.target as HTMLInputElement;
-    let inputValue = input.value;
-    let inputIsValid: INPUT_STATE = INPUT_STATE.PENDING;
-    if (inputValue.length > 0) {
-      inputIsValid = input.validity.valid
-        ? INPUT_STATE.VALID
-        : INPUT_STATE.INVALID;
-    }
-    if (input.id === 'email') {
-      this.emailValue = inputValue;
-      this.emailState = inputIsValid;
-    } else {
-      this.passwordValue = inputValue;
-      this.passwordIsValid = inputIsValid;
-    }
-  }
-
-  private resetInput(e: Event) {
-    let input = e.target as HTMLInputElement;
-    if (input.id === 'email') {
-      this.emailState = INPUT_STATE.PENDING;
-    } else {
-      this.passwordIsValid = INPUT_STATE.PENDING;
-    }
-    this.errorVisible = false;
-  }
-
   render() {
     return html`
       <form
@@ -161,52 +126,17 @@ export class LoginView extends LitElement {
         ${emailInput(
           this.emailValue,
           this.emailState,
-          email => this.emailValue = email,
-          state => this.emailState = state
+          (email) => (this.emailValue = email),
+          (state) => (this.emailState = state)
         )}
-
-        <div class="password-container">
-          <input
-            id="password"
-            minlength="8"
-            placeholder="Password"
-            name="password"
-            autocomplete="current-password"
-            required
-            aria-label="Password input"
-            tabindex="0"
-            value="${this.passwordValue}"
-            type="${this.passwordVisibility ? 'text' : 'password'}"
-            ?invalid="${this.passwordIsValid === INPUT_STATE.INVALID}"
-            ?valid="${this.passwordIsValid === INPUT_STATE.VALID}"
-            @focus="${this.resetInput}"
-            @blur="${this.updateInputValue}"
-          />
-
-          <div
-            tabindex="0"
-            aria-label="Toggle password visibility"
-            class="password-toggle selectable"
-            @click="${this.togglePasswordVisiblity}"
-            @keydown="${this.togglePasswordVisiblity}"
-            ?visible="${this.passwordVisibility}"
-          >
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              height="24"
-              width="24"
-              viewBox="0 0 24 24"
-            >
-              <path
-                d="M12 4C7 4 2.73 7.11 1 11.5 2.73 15.89 7 19 12 19s9.27-3.11 11-7.5C21.27 7.11 17 4 12 4zm0 12.5c-2.76 0-5-2.24-5-5s2.24-5 5-5 5 2.24 5 5-2.24 5-5 5zm0-8c-1.66 0-3 1.34-3 3s1.34 3 3 3 3-1.34 3-3-1.34-3-3-3z"
-              />
-              <path
-                id="stroke"
-                d="m2.71,3.16c-0.39,0.39 -0.39,1.02 0,1.41l16.32,16.33c0.39,0.39 1.02,0.39 1.41,0c0.39,-0.39 0.39,-1.02 0,-1.41l-16.31,-16.33c-0.39,-0.39 -1.03,-0.39 -1.42,0z"
-              />
-            </svg>
-          </div>
-        </div>
+        ${passwordInput(
+          this.passwordValue,
+          this.passwordState,
+          this.passwordVisibility,
+          (value) => (this.passwordValue = value),
+          (state) => (this.passwordState = state),
+          (visible) => (this.passwordVisibility = visible)
+        )}
 
         <button id="login" tabindex="0" @click=${this.onSubmit}>
           ${this.isProcessing ? 'Loading...' : 'Continue'}
