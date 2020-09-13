@@ -27,12 +27,18 @@ export const emailInput = (
   inputValue: string,
   inputState: INPUT_STATE,
   setValue: (email: string) => void,
-  setState: (state: INPUT_STATE) => void
+  setState: (state: INPUT_STATE) => void,
+  reset: () => void
 ) => {
   const updateValue = updateInputValue((value, state) => {
     setValue(value);
     setState(state);
   });
+
+  const inputReset = () => {
+    setState(INPUT_STATE.PENDING);
+    reset();
+  };
 
   return html`
     <input
@@ -45,7 +51,7 @@ export const emailInput = (
       value="${inputValue}"
       ?invalid="${inputState === INPUT_STATE.INVALID}"
       ?valid="${inputState === INPUT_STATE.VALID}"
-      @focus="${() => setState(INPUT_STATE.PENDING)}"
+      @focus="${inputReset}"
       @blur="${updateValue}"
     />
   `;
@@ -57,7 +63,8 @@ export const passwordInput = (
   visible: boolean,
   setValue: (email: string) => void,
   setState: (state: INPUT_STATE) => void,
-  setVisibility: (visible: boolean) => void
+  setVisibility: (visible: boolean) => void,
+  reset: () => void
 ) => {
   const updateValue = updateInputValue((value, state) => {
     setValue(value);
@@ -68,6 +75,11 @@ export const passwordInput = (
     autoBlur: false,
     debounce: false
   });
+
+  const inputReset = () => {
+    setState(INPUT_STATE.PENDING);
+    reset();
+  };
 
   return html`
     <div class="password-container">
@@ -82,7 +94,7 @@ export const passwordInput = (
         type="${visible ? 'text' : 'password'}"
         ?invalid="${inputState === INPUT_STATE.INVALID}"
         ?valid="${inputState === INPUT_STATE.VALID}"
-        @focus="${() => setState(INPUT_STATE.PENDING)}"
+        @focus="${inputReset}"
         @blur="${updateValue}"
       />
 

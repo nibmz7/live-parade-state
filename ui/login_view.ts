@@ -3,7 +3,8 @@ import {
   inputStyles,
   cardStyles,
   buttonStyles,
-  globalStyles
+  globalStyles,
+  passwordInputStyles
 } from './global_styles';
 import { ApplicationStore, ACTION_ROOT } from '../data/store';
 import {
@@ -33,25 +34,6 @@ export class LoginView extends LitElement {
   private passwordVisibility = false;
   private errorMessage = '';
   private errorVisible = false;
-
-  private onSubmit = onPressed((e: Event) => {
-    e.preventDefault();
-    if (this.emailState !== INPUT_STATE.VALID) {
-      this.showError('Please enter a valid email address!');
-      return;
-    } else if (this.passwordState !== INPUT_STATE.VALID) {
-      this.showError('Please enter a valid password!');
-      return;
-    }
-    if (this.isProcessing) return;
-    this.isProcessing = true;
-    let credentials: SignInCredentials = {
-      email: this.emailValue,
-      password: this.passwordValue
-    };
-    let action = ACTION_AUTH.requestSignIn(credentials);
-    ApplicationStore.dispatch(action);
-  });
 
   static get properties() {
     return {
@@ -113,6 +95,25 @@ export class LoginView extends LitElement {
     this.errorVisible = true;
   }
 
+  private onSubmit = onPressed((e: Event) => {
+    e.preventDefault();
+    if (this.emailState !== INPUT_STATE.VALID) {
+      this.showError('Please enter a valid email address!');
+      return;
+    } else if (this.passwordState !== INPUT_STATE.VALID) {
+      this.showError('Please enter a valid password!');
+      return;
+    }
+    if (this.isProcessing) return;
+    this.isProcessing = true;
+    let credentials: SignInCredentials = {
+      email: this.emailValue,
+      password: this.passwordValue
+    };
+    let action = ACTION_AUTH.requestSignIn(credentials);
+    ApplicationStore.dispatch(action);
+  });
+
   render() {
     return html`
       <form
@@ -127,7 +128,8 @@ export class LoginView extends LitElement {
           this.emailValue,
           this.emailState,
           (email) => (this.emailValue = email),
-          (state) => (this.emailState = state)
+          (state) => (this.emailState = state),
+          () => (this.errorVisible = false)
         )}
         ${passwordInput(
           this.passwordValue,
@@ -135,10 +137,11 @@ export class LoginView extends LitElement {
           this.passwordVisibility,
           (value) => (this.passwordValue = value),
           (state) => (this.passwordState = state),
-          (visible) => (this.passwordVisibility = visible)
+          (visible) => (this.passwordVisibility = visible),
+          () => (this.errorVisible = false)
         )}
 
-        <button id="login" tabindex="0" @click=${this.onSubmit}>
+        <button id="submit" tabindex="0" @click=${this.onSubmit}>
           ${this.isProcessing ? 'Loading...' : 'Continue'}
         </button>
 
@@ -158,13 +161,10 @@ export class LoginView extends LitElement {
     return [
       globalStyles,
       inputStyles,
+      passwordInputStyles,
       cardStyles,
       buttonStyles,
       css`
-        #email {
-          margin-bottom: 0px;
-        }
-
         h3 {
           margin: 15px 0 10px;
         }
@@ -174,76 +174,12 @@ export class LoginView extends LitElement {
           padding: 10px 20px;
         }
 
-        input[valid] {
-          border-color: var(--color-input-primary);
+        input[type='email'] {
+          margin-bottom: 0px;
         }
 
-        #login {
+        #submit {
           font-size: 1.2rem;
-        }
-
-        #password {
-          width: 100%;
-        }
-
-        .password-container {
-          position: relative;
-        }
-
-        .password-toggle {
-          display: flex;
-          justify-content: center;
-          align-items: center;
-          position: absolute;
-          right: 15px;
-          top: 15px;
-          bottom: 15px;
-          margin-top: auto;
-          margin-bottom: auto;
-          fill: rgb(151, 147, 147);
-          cursor: pointer;
-        }
-
-        .password-toggle::after {
-          background-image: radial-gradient(
-            circle farthest-side,
-            rgba(0, 0, 0, 0.12),
-            rgba(0, 0, 0, 0.12) 80%,
-            rgba(0, 0, 0, 0) 100%
-          );
-          position: absolute;
-          top: 0px;
-          bottom: 0px;
-          left: -5px;
-          right: -5px;
-          content: '';
-          visibility: hidden;
-        }
-
-        .password-toggle:focus::after {
-          visibility: visible;
-          animation: pulse 0.7s infinite alternate;
-        }
-
-        @keyframes pulse {
-          from {
-            transform: scale(0.8);
-            opacity: 0;
-          }
-          to {
-            transform: scale(1);
-            opacity: 1;
-          }
-        }
-
-        .password-toggle > svg > #stroke {
-          transform: scale(0);
-          transition: transform 0.3s;
-          transform-origin: 10% 10%;
-        }
-
-        .password-toggle[visible] > svg > #stroke {
-          transform: scale(1);
         }
 
         #error {

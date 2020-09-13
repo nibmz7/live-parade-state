@@ -1,7 +1,9 @@
 import { css } from 'lit-element';
 
 export const globalStyles = css`
-  button, input, .selectable {
+  button,
+  input,
+  .selectable {
     user-select: none;
     -webkit-tap-highlight-color: transparent;
     outline: none;
@@ -13,7 +15,7 @@ export const inputStyles = css`
     --color-input-primary: #8899a9;
     --color-input-primary-dark: #34495e;
     --color-input-error: red;
-    --color-input-success: green;
+    --color-input-success: var(--color-input-primary);
     font: inherit;
     margin: 15px 0;
     padding: 5px;
@@ -51,16 +53,71 @@ export const inputStyles = css`
       border-color: var(--color-input-primary);
     }
   }
+`;
 
-  .visuallyhidden {
-    border: 0;
-    clip: rect(0 0 0 0);
-    height: 1px;
-    margin: -1px;
-    overflow: hidden;
-    padding: 0;
+export const passwordInputStyles = css`
+  .password-container {
+    position: relative;
+  }
+
+  .password-container > input {
+    width: 100%;
+  }
+
+  .password-toggle {
+    display: flex;
+    justify-content: center;
+    align-items: center;
     position: absolute;
-    width: 1px;
+    right: 15px;
+    top: 15px;
+    bottom: 15px;
+    margin-top: auto;
+    margin-bottom: auto;
+    fill: rgb(151, 147, 147);
+    cursor: pointer;
+  }
+
+  .password-toggle::after {
+    background-image: radial-gradient(
+      circle farthest-side,
+      rgba(0, 0, 0, 0.12),
+      rgba(0, 0, 0, 0.12) 80%,
+      rgba(0, 0, 0, 0) 100%
+    );
+    position: absolute;
+    top: 0px;
+    bottom: 0px;
+    left: -5px;
+    right: -5px;
+    content: '';
+    visibility: hidden;
+  }
+
+  .password-toggle:focus::after {
+    visibility: visible;
+    animation: pulse 0.7s infinite alternate;
+  }
+
+  .password-toggle > svg > #stroke {
+    transform: scale(0);
+    transition: transform 0.3s;
+    transform-origin: 10% 10%;
+  }
+
+  .password-toggle[visible] > svg > #stroke {
+    transform: scale(1);
+  }
+
+  @keyframes pulse {
+    from {
+      transform: scale(0.8);
+      opacity: 0;
+    }
+    to {
+      transform: scale(1);
+      opacity: 1;
+    }
   }
 `;
 
