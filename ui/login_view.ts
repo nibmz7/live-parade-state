@@ -14,6 +14,7 @@ import {
 } from '../data/states/auth_state';
 import { Unsubscribe } from 'redux';
 import ACTION_AUTH from '../data/actions/auth_action';
+import { onPressed } from './utils';
 
 const enum INPUT_STATE {
   PENDING,
@@ -27,36 +28,6 @@ declare global {
   }
 }
 
-const onPressed = (
-  callback: (e: Event) => any,
-  autoBlur = true,
-  debounce = true
-) => {
-  let isRunning = false;
-
-  let onPressListener = (e: Event) => {
-    if (isRunning) return;
-    if (debounce) {
-      isRunning = true;
-      setTimeout(() => (isRunning = false), 1000);
-    }
-    if (autoBlur) {
-      let element = e.target as HTMLElement;
-      element.blur();
-    }
-    let eventType = e.type;
-    if (eventType === 'click') callback(e);
-    else if (eventType === 'keydown') {
-      let key = (e as KeyboardEvent).key;
-      if (key === 'Enter' || key === ' ') {
-        callback(e);
-      }
-    }
-  };
-
-  return onPressListener;
-};
-
 @customElement('login-view')
 export class LoginView extends LitElement {
   private isProcessing = false;
@@ -67,12 +38,12 @@ export class LoginView extends LitElement {
   private passwordVisibility = false;
   private errorMessage = '';
   private errorVisible = false;
+
   private togglePasswordVisiblity = onPressed(
     () => {
       this.passwordVisibility = !this.passwordVisibility;
     },
-    false,
-    false
+    { autoBlur: false, debounce: false }
   );
 
   private onSubmit = onPressed((e: Event) => {
@@ -122,12 +93,18 @@ export class LoginView extends LitElement {
     ApplicationStore.listen(ACTION_ROOT.AUTH, listener);
 
     if (window.PasswordCredential) {
-      navigator.credentials.get({
-        password: true,
-        mediation: 'required'
-      }).then(c => {
-        console.log(c);
-      });
+      navigator.credentials
+        .get({
+          password: true,
+          mediation: 'required'
+        })
+        .then((c?) => {
+          if (c) {
+            let passwordCredential = c as PasswordCredential;
+            this.emailValue = passwordCredential.id;
+            this.passwordValue = passwordCredential.password!;
+          }
+        });
     }
   }
 
@@ -195,6 +172,7 @@ export class LoginView extends LitElement {
           required
           aria-label="Email input"
           tabindex="0"
+          value="${this.emailValue}"
           ?invalid="${this.emailIsValid === INPUT_STATE.INVALID}"
           ?valid="${this.emailIsValid === INPUT_STATE.VALID}"
           @focus="${this.resetInput}"
@@ -211,6 +189,7 @@ export class LoginView extends LitElement {
             required
             aria-label="Password input"
             tabindex="0"
+            value="${this.passwordValue}"
             type="${this.passwordVisibility ? 'text' : 'password'}"
             ?invalid="${this.passwordIsValid === INPUT_STATE.INVALID}"
             ?valid="${this.passwordIsValid === INPUT_STATE.VALID}"
