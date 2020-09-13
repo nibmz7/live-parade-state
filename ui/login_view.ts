@@ -29,14 +29,16 @@ const onPressed = (
       isRunning = true;
       setTimeout(() => (isRunning = false), 1000);
     }
+    if (autoBlur) {
+      let element = e.target as HTMLElement;
+      element.blur();
+    }
     let eventType = e.type;
     if (eventType === 'click') callback(e);
     else if (eventType === 'keydown') {
       let key = (e as KeyboardEvent).key;
       if (key === 'Enter' || key === ' ') {
         callback(e);
-        let element = e.target as HTMLElement;
-        if (autoBlur) element.blur();
       }
     }
   };
@@ -61,6 +63,25 @@ export class LoginView extends LitElement {
     false,
     false
   );
+
+  private onSubmit = onPressed((e: Event) => {
+    e.preventDefault();
+    if (this.emailIsValid !== INPUT_STATE.VALID) {
+      this.showError('Please enter a valid email address!');
+      return;
+    } else if (this.passwordIsValid !== INPUT_STATE.VALID) {
+      this.showError('Please enter a valid password!');
+      return;
+    }
+    if (this.isProcessing) return;
+    this.isProcessing = true;
+    let credentials: SignInCredentials = {
+      email: this.emailValue,
+      password: this.passwordValue
+    };
+    let action = ACTION_AUTH.requestSignIn(credentials);
+    ApplicationStore.dispatch(action);
+  });
 
   static get properties() {
     return {
@@ -89,25 +110,6 @@ export class LoginView extends LitElement {
       }
     };
     ApplicationStore.listen(ACTION_ROOT.AUTH, listener);
-  }
-
-  private onSubmit(e: Event) {
-    e.preventDefault();
-    if (this.emailIsValid !== INPUT_STATE.VALID) {
-      this.showError('Please enter a valid email address!');
-      return;
-    } else if (this.passwordIsValid !== INPUT_STATE.VALID) {
-      this.showError('Please enter a valid password!');
-      return;
-    }
-    if (this.isProcessing) return;
-    this.isProcessing = true;
-    let credentials: SignInCredentials = {
-      email: this.emailValue,
-      password: this.passwordValue
-    };
-    let action = ACTION_AUTH.requestSignIn(credentials);
-    ApplicationStore.dispatch(action);
   }
 
   private showError(message: string) {
@@ -145,7 +147,7 @@ export class LoginView extends LitElement {
 
   render() {
     return html`
-      <form class="card" @submit="${this.onSubmit}" novalidate>
+      <form class="card" @submit="${(e: Event) => e.preventDefault()}" novalidate>
         <h3>Sign in</h3>
 
         <input
@@ -201,7 +203,7 @@ export class LoginView extends LitElement {
           </div>
         </div>
 
-        <button id="login" tabindex="0">
+        <button id="login" tabindex="0" @click=${this.onSubmit}>
           ${this.isProcessing ? 'Loading...' : 'Continue'}
         </button>
 
@@ -284,7 +286,7 @@ export class LoginView extends LitElement {
 
         .password-toggle:focus::after {
           visibility: visible;
-          animation: pulse .7s infinite alternate;
+          animation: pulse 0.7s infinite alternate;
         }
 
         @keyframes pulse {

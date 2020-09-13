@@ -69,6 +69,8 @@ export const cardStyles = css`
 
 export const buttonStyles = css`
   button {
+    user-select: none;
+    -webkit-tap-highlight-color: transparent;
     font: inherit;
     color: white;
     width: 100%;
@@ -77,15 +79,20 @@ export const buttonStyles = css`
     cursor: pointer;
     outline: none;
     border: none;
-    transition: background-color .3s, box-shadow .3s;
+    transition: background-color 0.3s, box-shadow 0.3s;
     background-color: var(--color-primary);
     box-shadow: 0 2px 4px -1px rgba(var(--color-primary-rgb), 0.5);
   }
 
-  button:hover,
-  button:active,
-  button:focus {
+  @media (hover: hover) {
+    button:hover {
+      background-color: var(--color-primary-dark);
+      box-shadow: 0px 2px 9px 1px rgba(var(--color-primary-dark-rgb), 0.5);
+    }
+  }
+
+  button:focus,button:active {
     background-color: var(--color-primary-dark);
-    box-shadow: 0px 2px 9px 1px rgba(var(--color-primary-rgb), 0.7);
+    box-shadow: 0px 2px 9px 1px rgba(var(--color-primary-dark-rgb), 0.5);
   }
 `;
