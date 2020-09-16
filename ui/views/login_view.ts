@@ -5,18 +5,18 @@ import {
   buttonStyles,
   globalStyles,
   passwordInputStyles
-} from './global_styles';
-import { ApplicationStore, ACTION_ROOT } from '../data/store';
+} from '../global_styles';
+import { ApplicationStore, ACTION_ROOT } from '../../data/store';
 import {
   AuthStoreState,
   AuthState,
   SignInError,
   SignInCredentials
-} from '../data/states/auth_state';
+} from '../../data/states/auth_state';
 import { Unsubscribe } from 'redux';
-import ACTION_AUTH from '../data/actions/auth_action';
-import { onPressed } from './utils';
-import { emailInput, INPUT_STATE, passwordInput } from './input';
+import ACTION_AUTH from '../../data/actions/auth_action';
+import { onPressed } from '../utils';
+import { emailInput, INPUT_STATE, passwordInput } from '../input';
 
 declare global {
   interface Window {
