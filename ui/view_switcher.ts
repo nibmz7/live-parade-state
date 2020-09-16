@@ -39,8 +39,8 @@ export class ViewSwitcher extends LitElement {
           this.initialized = false;
         };
         this.addEventListener('animationend', onInitialized, { once: true });
-        if (type === AuthState.SIGNED_IN) this.showView(VIEW_TYPES.USER);
-        else this.showView(VIEW_TYPES.AUTH);
+        if (type === AuthState.SIGNED_IN) this.signedIn();
+        else this.signedOut();
         this.initialized = true;
         unsubscribe();
       }
@@ -59,13 +59,17 @@ export class ViewSwitcher extends LitElement {
   }
 
   async showView(type: VIEW_TYPES) {
+    await this.hideView();
     this.viewType = type;
     this.visible = true;
   }
 
-  async signedIn() {
-    await this.hideView();
+  signedIn() {
     this.showView(VIEW_TYPES.USER);
+  }
+
+  signedOut() {
+    this.showView(VIEW_TYPES.AUTH);
   }
 
   render() {
