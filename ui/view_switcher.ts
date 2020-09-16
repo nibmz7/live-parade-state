@@ -1,4 +1,4 @@
-import { LitElement, html, customElement, css } from 'lit-element';
+import { LitElement, html, customElement, css, property } from 'lit-element';
 import MockAuthManager from '../data-mock/mock_auth_manager';
 import { ACTION_ROOT, ApplicationStore } from '../data/store';
 import { AuthState, AuthStoreState } from '../data/states/auth_state';
@@ -17,6 +17,9 @@ export class ViewSwitcher extends LitElement {
   private viewType: VIEW_TYPES = VIEW_TYPES.UNINITALIZED;
   private visible = false;
 
+  @property({ type: Boolean, reflect: true }) splashscreen = true;
+  @property({ type: Boolean, reflect: true }) initialized = false;
+
   static get properties() {
     return {
       viewType: { type: Number },
@@ -31,12 +34,12 @@ export class ViewSwitcher extends LitElement {
         this.addEventListener(
           'animationend',
           () => {
-            this.removeAttribute('loading');
-            this.removeAttribute('initialized');
+            this.splashscreen = false;
+            this.initialized = false;
           },
           { once: true }
         );
-        this.setAttribute('initialized', '');
+        this.initialized = true;
       }
       if (state.action.type === AuthState.SIGNED_OUT) {
         this.viewType = VIEW_TYPES.AUTH;
