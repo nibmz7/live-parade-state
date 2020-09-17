@@ -7,6 +7,10 @@ export default class MockAuthManager extends AuthManager {
     super();
   }
 
+  protected async initialize() {
+    this.signIn(MockModel.Admin);
+  }
+
   protected async signInWithCredentials(action: AuthAction) {
     let credentials = action.payload as SignInCredentials;
     if (credentials.email.includes('error')) {

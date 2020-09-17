@@ -14,16 +14,17 @@ export default abstract class AuthManager {
     ApplicationStore.listen(ACTION_ROOT.AUTH, (state) =>
       this.authStateChanged(state)
     );
-    this.signOut();
+    this.initialize();
   }
+
+  protected abstract async signInWithCredentials(auth: AuthAction);
+  protected abstract async initialize();
 
   authStateChanged(state: AuthStoreState) {
     if (state.action.type === AuthState.REQUEST_SIGN_IN)
       this.signInWithCredentials(state.action);
     else if (state.action.type === AuthState.REQUEST_SIGN_OUT) this.signOut();
   }
-
-  protected abstract async signInWithCredentials(auth: AuthAction);
 
   protected signOut() {
     ApplicationStore.reset();

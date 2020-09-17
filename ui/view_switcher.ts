@@ -5,6 +5,8 @@ import { AuthState, AuthStoreState } from '../data/states/auth_state';
 import { fadeAnimation } from './global_styles';
 import './views/login_view';
 import { Unsubscribe } from 'redux';
+import User from '../model/user';
+import Admin from '../model/admin';
 
 const enum VIEW_TYPES {
   UNINITALIZED,
@@ -34,12 +36,13 @@ export class ViewSwitcher extends LitElement {
       ACTION_ROOT.AUTH,
       (state: AuthStoreState, unsubscribe: Unsubscribe) => {
         let type = state.action.type;
+        let user = state.action.payload as User | Admin;
         let onInitialized = () => {
           this.splashscreen = false;
           this.initialized = false;
         };
         this.addEventListener('animationend', onInitialized, { once: true });
-        type === AuthState.SIGNED_IN ? this.signedIn() : this.signedOut();
+        type === AuthState.SIGNED_IN ? this.signedIn(user) : this.signedOut();
         this.initialized = true;
         unsubscribe();
       }
@@ -63,8 +66,10 @@ export class ViewSwitcher extends LitElement {
     this.visible = true;
   }
 
-  signedIn() {
-    this.showView(VIEW_TYPES.USER);
+  signedIn(user: User | Admin) {
+    (user as Admin).isAdmin
+      ? this.showView(VIEW_TYPES.ADMIN)
+      : this.showView(VIEW_TYPES.USER);
   }
 
   signedOut() {
@@ -75,7 +80,11 @@ export class ViewSwitcher extends LitElement {
     const content = () => {
       switch (this.viewType) {
         case VIEW_TYPES.AUTH:
-          return html`<login-view @signed-in="${this.signedIn}"></login-view>`;
+          return html`<login-view
+            @signed-in="${(e: CustomEvent) => this.signedIn(e.detail)}"
+          ></login-view>`;
+        case VIEW_TYPES.ADMIN:
+          return html`<div>Admin signed In</div>`;
         case VIEW_TYPES.USER:
           return html`<div>User signed In</div>`;
         default:
