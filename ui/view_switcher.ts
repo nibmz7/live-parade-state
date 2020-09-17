@@ -39,8 +39,7 @@ export class ViewSwitcher extends LitElement {
           this.initialized = false;
         };
         this.addEventListener('animationend', onInitialized, { once: true });
-        if (type === AuthState.SIGNED_IN) this.signedIn();
-        else this.signedOut();
+        type === AuthState.SIGNED_IN ? this.signedIn() : this.signedOut();
         this.initialized = true;
         unsubscribe();
       }
