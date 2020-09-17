@@ -3,10 +3,10 @@ import MockAuthManager from '../data-mock/mock_auth_manager';
 import { ACTION_ROOT, ApplicationStore } from '../data/store';
 import { AuthState, AuthStoreState } from '../data/states/auth_state';
 import { fadeAnimation } from './global_styles';
-import './views/login_view';
 import { Unsubscribe } from 'redux';
-import User from '../model/user';
 import Admin from '../model/admin';
+import './views/login_view';
+import './views/admin_view';
 
 const enum VIEW_TYPES {
   UNINITALIZED,
@@ -16,7 +16,7 @@ const enum VIEW_TYPES {
 }
 
 @customElement('view-switcher')
-export class ViewSwitcher extends LitElement {
+export default class ViewSwitcher extends LitElement {
   @property({ type: Boolean, reflect: true }) splashscreen = true;
   @property({ type: Boolean, reflect: true }) initialized = false;
 
@@ -36,13 +36,12 @@ export class ViewSwitcher extends LitElement {
       ACTION_ROOT.AUTH,
       (state: AuthStoreState, unsubscribe: Unsubscribe) => {
         let type = state.action.type;
-        let user = state.action.payload as User | Admin;
         let onInitialized = () => {
           this.splashscreen = false;
           this.initialized = false;
         };
         this.addEventListener('animationend', onInitialized, { once: true });
-        type === AuthState.SIGNED_IN ? this.signedIn(user) : this.signedOut();
+        type === AuthState.SIGNED_IN ? this.signedIn() : this.signedOut();
         this.initialized = true;
         unsubscribe();
       }
@@ -66,7 +65,8 @@ export class ViewSwitcher extends LitElement {
     this.visible = true;
   }
 
-  signedIn(user: User | Admin) {
+  signedIn() {
+    let user = ApplicationStore.getAuth().action.payload;
     (user as Admin).isAdmin
       ? this.showView(VIEW_TYPES.ADMIN)
       : this.showView(VIEW_TYPES.USER);
@@ -80,11 +80,9 @@ export class ViewSwitcher extends LitElement {
     const content = () => {
       switch (this.viewType) {
         case VIEW_TYPES.AUTH:
-          return html`<login-view
-            @signed-in="${(e: CustomEvent) => this.signedIn(e.detail)}"
-          ></login-view>`;
+          return html`<login-view @signed-in="${this.signedIn}"></login-view>`;
         case VIEW_TYPES.ADMIN:
-          return html`<div>Admin signed In</div>`;
+          return html`<admin-view></admin-view>`;
         case VIEW_TYPES.USER:
           return html`<div>User signed In</div>`;
         default:

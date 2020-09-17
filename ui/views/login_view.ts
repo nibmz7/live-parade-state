@@ -17,8 +17,6 @@ import { Unsubscribe } from 'redux';
 import ACTION_AUTH from '../../data/actions/auth_action';
 import { onPressed } from '../utils';
 import { emailInput, INPUT_STATE, passwordInput } from '../input';
-import Admin from '../../model/admin';
-import User from '../../model/user';
 
 declare global {
   interface Window {
@@ -59,7 +57,7 @@ export class LoginView extends LitElement {
         this.showError(error.message);
       } else if (state.action.type === AuthState.SIGNED_IN) {
         unsubscribe();
-        this.successfullLogin(state.action.payload as User | Admin);
+        this.successfullLogin();
       }
     };
     ApplicationStore.listen(ACTION_ROOT.AUTH, listener);
@@ -80,7 +78,7 @@ export class LoginView extends LitElement {
     }
   }
 
-  private successfullLogin(user: User | Admin) {
+  private successfullLogin() {
     if (window.PasswordCredential) {
       var c = new window.PasswordCredential({
         id: this.emailValue,
@@ -88,7 +86,7 @@ export class LoginView extends LitElement {
       });
       navigator.credentials.store(c);
     }
-    let event = new CustomEvent('signed-in', { detail: user });
+    let event = new Event('signed-in');
     this.dispatchEvent(event);
   }
 

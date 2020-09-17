@@ -89,6 +89,10 @@ class DataStoreImpl implements DataStore {
   getState() {
     return this.store.getState();
   }
+
+  getAuth() {
+    return this.getState().auth;
+  }
 }
 
 export const ApplicationStore = new DataStoreImpl();
