@@ -116,44 +116,46 @@ export class LoginView extends LitElement {
 
   render() {
     return html`
-      <form
-        id="form"
-        class="card"
-        @submit="${(e: Event) => e.preventDefault()}"
-        novalidate
-      >
-        <h3>Sign in</h3>
-
-        ${emailInput(
-          this.emailValue,
-          this.emailState,
-          (email) => (this.emailValue = email),
-          (state) => (this.emailState = state),
-          () => (this.errorVisible = false)
-        )}
-        ${passwordInput(
-          this.passwordValue,
-          this.passwordState,
-          this.passwordVisibility,
-          (value) => (this.passwordValue = value),
-          (state) => (this.passwordState = state),
-          (visible) => (this.passwordVisibility = visible),
-          () => (this.errorVisible = false)
-        )}
-
-        <button id="submit" tabindex="0" @click=${this.onSubmit}>
-          ${this.isProcessing ? 'Loading...' : 'Continue'}
-        </button>
-
-        <p
-          id="error"
-          aria-label="Input error"
-          ?aria-errormessage="${this.errorVisible}"
-          aria-hidden="${!this.errorVisible}"
+      <div id="root">
+        <form
+          id="form"
+          class="card"
+          @submit="${(e: Event) => e.preventDefault()}"
+          novalidate
         >
-          ${this.errorMessage}
-        </p>
-      </form>
+          <h3>Sign in</h3>
+
+          ${emailInput(
+            this.emailValue,
+            this.emailState,
+            (email) => (this.emailValue = email),
+            (state) => (this.emailState = state),
+            () => (this.errorVisible = false)
+          )}
+          ${passwordInput(
+            this.passwordValue,
+            this.passwordState,
+            this.passwordVisibility,
+            (value) => (this.passwordValue = value),
+            (state) => (this.passwordState = state),
+            (visible) => (this.passwordVisibility = visible),
+            () => (this.errorVisible = false)
+          )}
+
+          <button id="submit" tabindex="0" @click=${this.onSubmit}>
+            ${this.isProcessing ? 'Loading...' : 'Continue'}
+          </button>
+
+          <p
+            id="error"
+            aria-label="Input error"
+            ?aria-errormessage="${this.errorVisible}"
+            aria-hidden="${!this.errorVisible}"
+          >
+            ${this.errorMessage}
+          </p>
+        </form>
+      </div>
     `;
   }
 
@@ -165,6 +167,18 @@ export class LoginView extends LitElement {
       cardStyles,
       buttonStyles,
       css`
+        #root {
+          height: 100%;
+          width: 100%;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+        }
+
+        form {
+          width: 70%;
+        }
+
         h3 {
           margin: 15px 0 10px;
         }

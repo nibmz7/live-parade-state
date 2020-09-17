@@ -97,6 +97,11 @@ export class ViewSwitcher extends LitElement {
           animation: fade-out 0.3s forwards;
         }
 
+        #root {
+          height: 100%;
+          width: 100%;
+        }
+
         #root[fade-in] {
           animation: fade-in 0.5s;
         }
