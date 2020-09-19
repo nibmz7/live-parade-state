@@ -1,14 +1,28 @@
 import { LitElement, html, customElement, css } from 'lit-element';
+import Department from '../../model/department';
 import { buttonStyles, cardStyles, globalStyles } from '../global_styles';
 
-@customElement('add-department')
-export default class AddDepartment extends LitElement {
+@customElement('edit-department')
+export default class EditDepartment extends LitElement {
+  private department?: Department;
+
   static get properties() {
-    return {};
+    return { department: { type: Object} };
+  }
+
+  connectedCallback() {
+      super.connectedCallback();
+      console.log(this.department);
+  }
+
+  close() {
+    this.dispatchEvent(new Event('close'));
   }
 
   render() {
-    return html`<div id="root">hello</div>`;
+    return html`<div id="root">
+      <button @click="${this.close}">Close</button>
+    </div>`;
   }
 
   static get styles() {

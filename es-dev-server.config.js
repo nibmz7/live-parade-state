@@ -1,5 +1,5 @@
 module.exports = {
-  port: 8080,
+  port: 5500,
   watch: true,
   nodeResolve: true,
   open: true,

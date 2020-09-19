@@ -11,7 +11,7 @@ import Department from '../../model/department';
 import User from '../../model/user';
 import { buttonStyles, cardStyles, globalStyles } from '../global_styles';
 import { onPressed } from '../utils';
-import '../dialogs/add_department';
+import '../dialogs/edit_department';
 
 @customElement('admin-view')
 export default class AdminView extends LitElement {
@@ -21,13 +21,13 @@ export default class AdminView extends LitElement {
   private departmentsUnsubscribe?: Unsubscribe;
   private usersUnsubscribe?: Unsubscribe;
   private selectedDepartment?: Department;
-  private showAddDepartment: Boolean = false;
+  private showEditDepartment: Boolean = false;
 
   static get properties() {
     return {
       departments: { type: Array },
       selectedDepartment: { type: Object },
-      showAddDepartment: { type: Boolean }
+      showEditDepartment: { type: Boolean }
     };
   }
 
@@ -55,8 +55,8 @@ export default class AdminView extends LitElement {
     this.usersUnsubscribe?.();
   }
 
-  private onAddDepartment = onPressed(() => {
-    this.showAddDepartment = true;
+  private onEditDepartment = onPressed(() => {
+    this.showEditDepartment = true;
   });
 
   render() {
@@ -72,7 +72,16 @@ export default class AdminView extends LitElement {
         <div class="department">
           <div class="header">
             <h3>${department.name}</h3>
-            <button id="edit" plain>edit</button>
+            <button
+              id="edit"
+              plain
+              @click="${(e: Event) => {
+                this.selectedDepartment = department;
+                this.onEditDepartment(e);
+              }}"
+            >
+              edit
+            </button>
           </div>
           <div
             class="users card"
@@ -88,14 +97,19 @@ export default class AdminView extends LitElement {
     return html`<div id="root">
       ${this.departments.map(departmentTemplate)}
 
-      <button id="add-department" solid @click="${this.onAddDepartment}">
+      <button id="add-department" solid @click="${this.onEditDepartment}">
         Add department
       </button>
 
-      ${this.showAddDepartment
-        ? html`<add-department
+      ${this.showEditDepartment
+        ? html`<edit-department
+            .department=${this.selectedDepartment}
             ?editing="${this.selectedDepartment}"
-          ></add-department>`
+            @close="${() => {
+              this.showEditDepartment = false;
+              this.selectedDepartment = undefined;
+            }}"
+          ></edit-department>`
         : ''}
     </div>`;
   }
