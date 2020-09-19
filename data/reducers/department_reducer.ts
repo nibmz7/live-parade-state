@@ -31,21 +31,30 @@ export const department = (
   }
 
   const department = action.payload as Department;
-  const items = state.items;
+  let items: Array<Department>;
 
   switch (type) {
     case ACTION_TYPE.ADDED: {
+      items = state.items.slice();
       items.push(department);
       break;
     }
     case ACTION_TYPE.MODIFIED: {
-      let index = items.findIndex((item) => item.id === department.id);
-      items[index] = department;
+      items = state.items.map((item) => {
+        if (item.id !== department.id) return item;
+        return {
+          ...item,
+          ...department
+        };
+      });
       break;
     }
     case ACTION_TYPE.REMOVED: {
-      let index = items.findIndex((item) => item.id === department.id);
-      items.splice(index, 1);
+      items = state.items.filter((item) => item.id !== department.id);
+      break;
+    }
+    default: {
+      items = state.items;
       break;
     }
   }

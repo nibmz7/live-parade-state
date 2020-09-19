@@ -19,6 +19,13 @@ export default class AdminView extends LitElement {
     });
     let adminManager = new MockAdminManager();
     adminManager.subscribe();
+
+    let someObject = { item1: { data: 'hello' } };
+    let item = someObject.item1;
+    console.log(item, someObject);
+    // @ts-ignore
+    delete someObject.item1;
+    console.log(item, someObject);
   }
 
   render() {
