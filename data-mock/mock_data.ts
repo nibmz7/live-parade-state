@@ -98,8 +98,8 @@ const ModelUser3 = new User({
 });
 
 const ModelUsers: UsersByDepartment = {
-  [ModelDepartment1.id]: [ModelUser1],
-  [ModelDepartment2.id]: [ModelUser2],
+  [ModelDepartment1.id]: [],
+  [ModelDepartment2.id]: [ModelUser1, ModelUser2],
   [ModelDepartment3.id]: [ModelUser3]
 };
 

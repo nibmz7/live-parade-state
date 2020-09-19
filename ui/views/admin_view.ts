@@ -51,7 +51,7 @@ export default class AdminView extends LitElement {
 
   render() {
     const userTemplate = (user: User) => html`
-      <div class="list-item">
+      <div class="item">
         <p id="primary-text">${user.fullname}</p>
         <p id="secondary-text">${user.email}</p>
       </div>
@@ -64,7 +64,10 @@ export default class AdminView extends LitElement {
             <h3>${department.name}</h3>
             <button id="edit" plain>edit</button>
           </div>
-          <div class="users card">
+          <div
+            class="users card"
+            ?empty="${this.usersByDepartment[department.id].length === 0}"
+          >
             <button id="add" plain>Add user</button>
             <div id="list">
               ${this.usersByDepartment[department.id].map(userTemplate)}
@@ -109,12 +112,55 @@ export default class AdminView extends LitElement {
 
         .users #add {
           font-size: 1.3rem;
-          border-radius: 15px;
           border-bottom: 2px dashed var(--color-primary);
+          border-radius: 15px 15px 0 0;
         }
 
-        .users.empty #add {
+        .users[empty] #add {
           border-bottom: none;
+          border-radius: 15px;
+        }
+
+        .item {
+          padding: 10px 15px;
+          transition: background-color 0.3s;
+          cursor: pointer;
+        }
+
+        .item:last-child {
+          border-bottom-left-radius: 15px;
+          border-bottom-right-radius: 15px;
+        }
+
+        .item > p {
+          margin: 0;
+        }
+
+        .item #primary-text {
+          text-transform: capitalize;
+          color: #323232;
+          font-weight: 500;
+        }
+
+        .item #primary-text[regular] {
+          color: var(--color-primary);
+        }
+
+        .item #secondary-text {
+          color: #878787;
+          font-size: 0.8rem;
+          font-weight: 400;
+        }
+
+        .item:focus,
+        .item:active {
+          background-color: #f0f0f0;
+        }
+
+        @media (hover: hover) {
+          .item:hover {
+            background-color: #f0f0f0;
+          }
         }
       `
     ];

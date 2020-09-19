@@ -147,7 +147,7 @@ export const cardStyles = css`
     display: flex;
     flex-direction: column;
     justify-content: center;
-    box-shadow: 0px 2px 50px 0px rgba(209, 202, 209, 1);
+    box-shadow: rgb(101 101 101 / 30%) 0px 1px 5px 0px;
   }
 `;
 
