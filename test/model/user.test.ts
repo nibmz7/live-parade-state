@@ -21,7 +21,7 @@ describe('User', () => {
   });
 
   it('Insert new user index', () => {
-    let user: User = {
+    let user = new User({
       uid: '401',
       name: 'John',
       email: 'john4@lol.com',
@@ -29,7 +29,7 @@ describe('User', () => {
       rank: new Rank('CFC'),
       branch: MockModel.Branch,
       department: MockModel.Department
-    };
+    });
     let index = getInsertionIndex(MockModel.UserArray, user);
     expect(index).equal(1);
   });

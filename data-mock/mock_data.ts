@@ -69,7 +69,7 @@ const ModelDepartmentArray: Array<Department> = [
   ModelDepartment3
 ];
 
-const ModelUser1: User = {
+const ModelUser1 = new User({
   uid: '101',
   name: 'John',
   email: 'john1@lol.com',
@@ -77,8 +77,8 @@ const ModelUser1: User = {
   rank: new Rank('CPL'),
   branch: ModelBranch,
   department: ModelDepartment1
-};
-const ModelUser2: User = {
+});
+const ModelUser2 = new User({
   uid: '201',
   name: 'John',
   email: 'john2@lol.com',
@@ -86,8 +86,8 @@ const ModelUser2: User = {
   rank: new Rank('MAJ'),
   branch: ModelBranch,
   department: ModelDepartment2
-};
-const ModelUser3: User = {
+});
+const ModelUser3 = new User({
   uid: '301',
   name: 'John',
   email: 'john3@lol.com',
@@ -95,7 +95,7 @@ const ModelUser3: User = {
   rank: new Rank('PTE'),
   branch: ModelBranch,
   department: ModelDepartment3
-};
+});
 
 const ModelUsers: UsersByDepartment = {
   [ModelDepartment1.id]: [ModelUser1],

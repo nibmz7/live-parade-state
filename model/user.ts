@@ -3,16 +3,40 @@ import Status from './status';
 import Department from './department';
 import Branch from './branch';
 
-export interface User {
+export default class User {
   uid: String;
   email: string;
   name: string;
+  fullname: String;
   regular: boolean;
   rank: Rank;
   branch: Branch;
   department: Department;
   morning?: Status;
   afternoon?: Status;
+
+  constructor(data: {
+    uid: String;
+    email: string;
+    name: string;
+    regular: boolean;
+    rank: Rank;
+    branch: Branch;
+    department: Department;
+    morning?: Status;
+    afternoon?: Status;
+  }) {
+    this.uid = data.uid;
+    this.email = data.email;
+    this.name = data.name;
+    this.regular = data.regular;
+    this.rank = data.rank;
+    this.branch = data.branch;
+    this.department = data.department;
+    this.morning = data.morning;
+    this.afternoon = data.afternoon;
+    this.fullname = `${data.rank} ${data.name}`;
+  }
 }
 
 export function compare(user: User, compareTo: User) {
@@ -42,5 +66,3 @@ export function getInsertionIndex(
   }
   return ++index;
 }
-
-export default User;
