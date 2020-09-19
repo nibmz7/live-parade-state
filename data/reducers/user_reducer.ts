@@ -28,30 +28,27 @@ export const user = (
   }
 
   const user = action.payload as User;
-  const items = state.items;
-
-  const addUser = (user: User) => {
-    let index = getInsertionIndex(items, user);
-    items.splice(index, 0, user);
-  };
-
-  const removeUser = (user: User) => {
-    let index = items.findIndex((item) => item.uid === user.uid);
-    items.splice(index, 1);
-  };
+  let items: Array<User>;
 
   switch (type) {
     case ACTION_TYPE.ADDED: {
-      addUser(user);
+      items = state.items.slice();
+      let index = getInsertionIndex(items, user);
+      items.splice(index, 0, user);
       break;
     }
     case ACTION_TYPE.MODIFIED: {
-      removeUser(user);
-      addUser(user);
+      items = state.items.filter((item) => item.uid !== user.uid);
+      let index = getInsertionIndex(items, user);
+      items.splice(index, 0, user);
       break;
     }
     case ACTION_TYPE.REMOVED: {
-      removeUser(user);
+      items = state.items.filter((item) => item.uid !== user.uid);
+      break;
+    }
+    default: {
+      items = state.items;
       break;
     }
   }
