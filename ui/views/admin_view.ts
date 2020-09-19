@@ -11,6 +11,7 @@ import Department from '../../model/department';
 import User from '../../model/user';
 import { buttonStyles, cardStyles, globalStyles } from '../global_styles';
 import { onPressed } from '../utils';
+import '../dialogs/add_department';
 
 @customElement('admin-view')
 export default class AdminView extends LitElement {
@@ -19,10 +20,14 @@ export default class AdminView extends LitElement {
   private adminManager = new MockAdminManager();
   private departmentsUnsubscribe?: Unsubscribe;
   private usersUnsubscribe?: Unsubscribe;
+  private selectedDepartment?: Department;
+  private showAddDepartment: Boolean = false;
 
   static get properties() {
     return {
-      departments: { type: Array }
+      departments: { type: Array },
+      selectedDepartment: { type: Object },
+      showAddDepartment: { type: Boolean }
     };
   }
 
@@ -51,7 +56,7 @@ export default class AdminView extends LitElement {
   }
 
   private onAddDepartment = onPressed(() => {
-    console.log('add');
+    this.showAddDepartment = true;
   });
 
   render() {
@@ -83,7 +88,15 @@ export default class AdminView extends LitElement {
     return html`<div id="root">
       ${this.departments.map(departmentTemplate)}
 
-      <button id="add-department"  solid @click="${this.onAddDepartment}">Add department</button>
+      <button id="add-department" solid @click="${this.onAddDepartment}">
+        Add department
+      </button>
+
+      ${this.showAddDepartment
+        ? html`<add-department
+            ?editing="${this.selectedDepartment}"
+          ></add-department>`
+        : ''}
     </div>`;
   }
 
