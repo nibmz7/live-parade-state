@@ -154,27 +154,44 @@ export const cardStyles = css`
 export const buttonStyles = css`
   button {
     font: inherit;
-    color: white;
-    width: 100%;
     padding: 10px;
     border-radius: 5px;
     cursor: pointer;
     border: none;
-    transition: background-color 0.3s, box-shadow 0.3s;
+  }
+
+  button[solid] {
+    color: white;
     background-color: var(--color-primary);
+    transition: background-color .3s, box-shadow .3s;
     box-shadow: 0 2px 4px -1px rgba(var(--color-primary-rgb), 0.5);
   }
 
+  button[plain] {
+    --color-primary-dark: rgba(0, 0, 0, 0.1);
+    color: var(--color-primary);
+    background-color: transparent;
+    transition: background-color .3s;
+  }
+
   @media (hover: hover) {
-    button:hover {
+    button[solid]:hover {
       background-color: var(--color-primary-dark);
       box-shadow: 0px 2px 9px 1px rgba(var(--color-primary-dark-rgb), 0.5);
     }
+    button[plain]:hover {
+      background-color: var(--color-primary-dark);
+    }
   }
 
-  button:focus,
-  button:active {
+  button[solid]:focus,
+  button[solid]:active {
     background-color: var(--color-primary-dark);
     box-shadow: 0px 2px 9px 1px rgba(var(--color-primary-dark-rgb), 0.5);
+  }
+
+  button[plain]:focus,
+  button[plain]:active {
+    background-color: var(--color-primary-dark);
   }
 `;

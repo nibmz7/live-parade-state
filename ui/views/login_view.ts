@@ -142,7 +142,7 @@ export class LoginView extends LitElement {
             () => (this.errorVisible = false)
           )}
 
-          <button id="submit" tabindex="0" @click=${this.onSubmit}>
+          <button id="submit" tabindex="0" @click=${this.onSubmit} solid>
             ${this.isProcessing ? 'Loading...' : 'Continue'}
           </button>
 
@@ -194,6 +194,7 @@ export class LoginView extends LitElement {
 
         #submit {
           font-size: 1.2rem;
+          width: 100%;
         }
 
         #error {

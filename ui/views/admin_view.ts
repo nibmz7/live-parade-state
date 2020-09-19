@@ -1,38 +1,80 @@
 import { LitElement, html, customElement, css } from 'lit-element';
+import { Unsubscribe } from 'redux';
 import MockAdminManager from '../../data-mock/mock_admin_manager';
+import { DepartmentStoreState } from '../../data/states/department_state';
 import { ACTION_ROOT, ApplicationStore } from '../../data/store';
-import { globalStyles } from '../global_styles';
+import Department from '../../model/department';
+import { buttonStyles, globalStyles } from '../global_styles';
 
 @customElement('admin-view')
 export default class AdminView extends LitElement {
+  private departments: Array<Department> = [];
+  private adminManager = new MockAdminManager();
+  private unsubscribe?: Unsubscribe;
+
   static get properties() {
-    return {};
+    return {
+      departments: { type: Array }
+    };
   }
 
   connectedCallback() {
     super.connectedCallback();
-    ApplicationStore.listen(ACTION_ROOT.DEPARTMENTS, (state) => {
-      console.log(state);
-    });
-    ApplicationStore.listen(ACTION_ROOT.USERS, (state) => {
-      console.log(state);
-    });
-    let adminManager = new MockAdminManager();
-    adminManager.subscribe();
+    this.unsubscribe = ApplicationStore.listen(
+      ACTION_ROOT.DEPARTMENTS,
+      (state: DepartmentStoreState) => {
+        this.departments = state.items;
+      }
+    );
+    this.adminManager.subscribe();
+  }
 
-    let someObject = { item1: { data: 'hello' } };
-    let item = someObject.item1;
-    console.log(item, someObject);
-    // @ts-ignore
-    delete someObject.item1;
-    console.log(item, someObject);
+  disconnectedCallback() {
+    super.disconnectedCallback();
+    this.adminManager.unsubscribe();
+    this.unsubscribe?.();
   }
 
   render() {
-    return html`<div>Admin signed In</div>`;
+    const department = (item: Department) => html`
+      <div class="department">
+        <div class="header">
+          <h3>${item.name}</h3>
+          <button plain>edit</button>
+        </div>
+        <div class="users">
+          <button plain>Add user</button>
+          <div id="list"></div>
+        </div>
+      </div>
+    `;
+    return html`<div id="root">
+      ${this.departments.map((item) => department(item))}
+    </div>`;
   }
 
   static get styles() {
-    return [globalStyles, css``];
+    return [
+      globalStyles,
+      buttonStyles,
+      css`
+        #root {
+          padding: 8px;
+        }
+        .header {
+          display: flex;
+          flex-direction: row;
+          justify-content: space-between;
+          align-items: center;
+          padding: 18px 0;
+        }
+        .header h3 {
+          color: #828282;
+          text-transform: capitalize;
+          font-weight: 500;
+          margin: 0;
+        }
+      `
+    ];
   }
 }

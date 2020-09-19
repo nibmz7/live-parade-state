@@ -67,10 +67,10 @@ export abstract class DataManager {
   async subscribe() {
     let results = await this.connectDB();
     this.isDbConnected = true;
+    ApplicationStore.dispatch(ACTION_USER.initialized(results.users));
     ApplicationStore.dispatch(
       ACTION_DEPARTMENT.initialized(results.departments)
     );
-    ApplicationStore.dispatch(ACTION_USER.initialized(results.users));
     this.startRequestListening();
   }
 
