@@ -8,11 +8,13 @@ import {
 import { ACTION_TYPE } from '../data_manager';
 import User from '../../model/user';
 
+export type UsersByDepartment = {[departmentId: string]: Array<User>};
+
 export interface UserActionError extends ActionError {
   action: UserAction;
 }
 
-export type UserPayload = User | Array<User> | UserActionError | undefined;
+export type UserPayload = User | UsersByDepartment | UserActionError | undefined;
 
 export interface UserAction extends Action {
   root: ACTION_ROOT.USERS;
@@ -23,5 +25,5 @@ export interface UserAction extends Action {
 
 export interface UserStoreState extends DataStoreState {
   action: UserAction;
-  items: Array<User>;
+  items: UsersByDepartment;
 }

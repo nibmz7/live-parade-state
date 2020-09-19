@@ -1,6 +1,6 @@
 import { ACTION_ROOT, generateActionId } from '../store';
 import { ACTION_TYPE } from '../data_manager';
-import { UserAction, UserPayload, UserActionError } from '../states/user_state';
+import { UserAction, UserPayload, UserActionError, UsersByDepartment } from '../states/user_state';
 import User from '../../model/user';
 
 const makeAction = (type: ACTION_TYPE, payload: UserPayload): UserAction => ({
@@ -11,7 +11,7 @@ const makeAction = (type: ACTION_TYPE, payload: UserPayload): UserAction => ({
 });
 
 const ACTION_USER = {
-  initialized: (Users: Array<User>): UserAction =>
+  initialized: (Users: UsersByDepartment): UserAction =>
     makeAction(ACTION_TYPE.INITIALIZED, Users),
   added: (User: User): UserAction => makeAction(ACTION_TYPE.ADDED, User),
   modified: (User: User): UserAction => makeAction(ACTION_TYPE.MODIFIED, User),

@@ -3,6 +3,7 @@ import Department from '../model/department';
 import ACTION_DEPARTMENT from './actions/department_action';
 import ACTION_USER from './actions/user_action';
 import User from '../model/user';
+import { UsersByDepartment } from './states/user_state';
 
 export enum ACTION_TYPE {
   INITIALIZED,
@@ -24,7 +25,7 @@ export type DepartmentChange = (
 
 export interface DataResults {
   departments: Array<Department>;
-  users: Array<User>;
+  users: UsersByDepartment;
 }
 
 export abstract class DataManager {

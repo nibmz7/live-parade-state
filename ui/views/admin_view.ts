@@ -4,11 +4,15 @@ import MockAdminManager from '../../data-mock/mock_admin_manager';
 import { DepartmentStoreState } from '../../data/states/department_state';
 import { ACTION_ROOT, ApplicationStore } from '../../data/store';
 import Department from '../../model/department';
-import { buttonStyles, globalStyles } from '../global_styles';
+import User from '../../model/user';
+import { buttonStyles, cardStyles, globalStyles } from '../global_styles';
+
 
 @customElement('admin-view')
 export default class AdminView extends LitElement {
   private departments: Array<Department> = [];
+  //@ts-ignore
+  private usersByDepartment: { [departmentId: string]: User } = {};
   private adminManager = new MockAdminManager();
   private unsubscribe?: Unsubscribe;
 
@@ -36,18 +40,20 @@ export default class AdminView extends LitElement {
   }
 
   render() {
-    const department = (item: Department) => html`
+    const department = (item: Department) => {
+      
+      return html`
       <div class="department">
         <div class="header">
           <h3>${item.name}</h3>
-          <button plain>edit</button>
+          <button id="edit" plain>edit</button>
         </div>
-        <div class="users">
-          <button plain>Add user</button>
+        <div class="users card">
+          <button id="add" plain>Add user</button>
           <div id="list"></div>
         </div>
       </div>
-    `;
+    `};
     return html`<div id="root">
       ${this.departments.map((item) => department(item))}
     </div>`;
@@ -57,6 +63,7 @@ export default class AdminView extends LitElement {
     return [
       globalStyles,
       buttonStyles,
+      cardStyles,
       css`
         #root {
           padding: 8px;
@@ -73,6 +80,23 @@ export default class AdminView extends LitElement {
           text-transform: capitalize;
           font-weight: 500;
           margin: 0;
+        }
+        .header #edit {
+          font-size: 1.3rem;
+        }
+
+        .users {
+          border-radius: 15px;
+        }
+
+        .users #add {
+          font-size: 1.3rem;
+          border-radius: 15px;
+          border-bottom: 2px dashed var(--color-primary);
+        }
+
+        .users.empty #add {
+          border-bottom: none;
         }
       `
     ];
