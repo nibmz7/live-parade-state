@@ -35,7 +35,7 @@ export default class User {
     this.department = data.department;
     this.morning = data.morning;
     this.afternoon = data.afternoon;
-    this.fullname = `${data.rank} ${data.name}`;
+    this.fullname = `${data.rank.text} ${data.name}`;
   }
 }
 

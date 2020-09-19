@@ -2,19 +2,22 @@ import { LitElement, html, customElement, css } from 'lit-element';
 import { Unsubscribe } from 'redux';
 import MockAdminManager from '../../data-mock/mock_admin_manager';
 import { DepartmentStoreState } from '../../data/states/department_state';
+import {
+  UsersByDepartment,
+  UserStoreState
+} from '../../data/states/user_state';
 import { ACTION_ROOT, ApplicationStore } from '../../data/store';
 import Department from '../../model/department';
 import User from '../../model/user';
 import { buttonStyles, cardStyles, globalStyles } from '../global_styles';
 
-
 @customElement('admin-view')
 export default class AdminView extends LitElement {
   private departments: Array<Department> = [];
-  //@ts-ignore
-  private usersByDepartment: { [departmentId: string]: User } = {};
+  private usersByDepartment: UsersByDepartment = {};
   private adminManager = new MockAdminManager();
-  private unsubscribe?: Unsubscribe;
+  private departmentsUnsubscribe?: Unsubscribe;
+  private usersUnsubscribe?: Unsubscribe;
 
   static get properties() {
     return {
@@ -24,10 +27,16 @@ export default class AdminView extends LitElement {
 
   connectedCallback() {
     super.connectedCallback();
-    this.unsubscribe = ApplicationStore.listen(
+    this.departmentsUnsubscribe = ApplicationStore.listen(
       ACTION_ROOT.DEPARTMENTS,
       (state: DepartmentStoreState) => {
         this.departments = state.items;
+      }
+    );
+    this.usersUnsubscribe = ApplicationStore.listen(
+      ACTION_ROOT.USERS,
+      (state: UserStoreState) => {
+        this.usersByDepartment = state.items;
       }
     );
     this.adminManager.subscribe();
@@ -36,26 +45,35 @@ export default class AdminView extends LitElement {
   disconnectedCallback() {
     super.disconnectedCallback();
     this.adminManager.unsubscribe();
-    this.unsubscribe?.();
+    this.departmentsUnsubscribe?.();
+    this.usersUnsubscribe?.();
   }
 
   render() {
-    const department = (item: Department) => {
-      
-      return html`
-      <div class="department">
-        <div class="header">
-          <h3>${item.name}</h3>
-          <button id="edit" plain>edit</button>
-        </div>
-        <div class="users card">
-          <button id="add" plain>Add user</button>
-          <div id="list"></div>
-        </div>
+    const userTemplate = (user: User) => html`
+      <div class="list-item">
+        <p id="primary-text">${user.fullname}</p>
+        <p id="secondary-text">${user.email}</p>
       </div>
-    `};
+    `;
+
+    const departmentTemplate = (department: Department) =>
+      html`
+        <div class="department">
+          <div class="header">
+            <h3>${department.name}</h3>
+            <button id="edit" plain>edit</button>
+          </div>
+          <div class="users card">
+            <button id="add" plain>Add user</button>
+            <div id="list">
+              ${this.usersByDepartment[department.id].map(userTemplate)}
+            </div>
+          </div>
+        </div>
+      `;
     return html`<div id="root">
-      ${this.departments.map((item) => department(item))}
+      ${this.departments.map(departmentTemplate)}
     </div>`;
   }
 
