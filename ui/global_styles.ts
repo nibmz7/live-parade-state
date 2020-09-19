@@ -24,8 +24,6 @@ export const globalStyles = css`
   button,
   input,
   .selectable {
-    user-select: none;
-    -webkit-tap-highlight-color: transparent;
     outline: none;
   }
 `;

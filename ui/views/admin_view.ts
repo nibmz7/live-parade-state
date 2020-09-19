@@ -10,6 +10,7 @@ import { ACTION_ROOT, ApplicationStore } from '../../data/store';
 import Department from '../../model/department';
 import User from '../../model/user';
 import { buttonStyles, cardStyles, globalStyles } from '../global_styles';
+import { onPressed } from '../utils';
 
 @customElement('admin-view')
 export default class AdminView extends LitElement {
@@ -49,6 +50,10 @@ export default class AdminView extends LitElement {
     this.usersUnsubscribe?.();
   }
 
+  private onAddDepartment = onPressed(() => {
+    console.log('add');
+  });
+
   render() {
     const userTemplate = (user: User) => html`
       <div class="item">
@@ -77,6 +82,8 @@ export default class AdminView extends LitElement {
       `;
     return html`<div id="root">
       ${this.departments.map(departmentTemplate)}
+
+      <button id="add-department"  solid @click="${this.onAddDepartment}">Add department</button>
     </div>`;
   }
 
@@ -87,8 +94,34 @@ export default class AdminView extends LitElement {
       cardStyles,
       css`
         #root {
-          padding: 8px;
+          height: 100%;
+          width: 100%;
+          padding: 8px 30px;
+          position: relative;
+          box-sizing: border-box;
         }
+
+        #add-department {
+          position: absolute;
+          bottom: 10px;
+          left: 0px;
+          right: 0px;
+          margin-left: auto;
+          margin-right: auto;
+          font-size: 1.1rem;
+          padding: 15px 50px;
+          border-radius: 50px;
+          font-weight: 500;
+        }
+
+        .department {
+          margin-bottom: 20px;
+        }
+
+        .department:last-of-type {
+          margin-bottom: 0px;
+        }
+
         .header {
           display: flex;
           flex-direction: row;
@@ -154,12 +187,12 @@ export default class AdminView extends LitElement {
 
         .item:focus,
         .item:active {
-          background-color: #f0f0f0;
+          background-color: rgba(0, 0, 0, 0.1);
         }
 
         @media (hover: hover) {
           .item:hover {
-            background-color: #f0f0f0;
+            background-color: rgba(0, 0, 0, 0.1);
           }
         }
       `
