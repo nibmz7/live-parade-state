@@ -105,7 +105,8 @@ export default class AdminView extends LitElement {
         ? html`<edit-department
             .department=${this.selectedDepartment}
             ?editing="${this.selectedDepartment}"
-            @close="${() => {
+            @close="${(e: Event) => {
+              e.stopPropagation();
               this.showEditDepartment = false;
               this.selectedDepartment = undefined;
             }}"

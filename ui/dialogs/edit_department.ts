@@ -7,6 +7,8 @@ import {
   inputStyles
 } from '../global_styles';
 import { InputState, INPUT_VALIDITY, textInput } from '../input';
+import './custom_dialog';
+import { DIALOG_STATE } from './custom_dialog';
 
 @customElement('edit-department')
 export default class EditDepartment extends LitElement {
@@ -16,11 +18,13 @@ export default class EditDepartment extends LitElement {
     value: '',
     validity: INPUT_VALIDITY.PENDING
   };
+  private dialogState = DIALOG_STATE.OPENING;
 
   static get properties() {
     return {
       department: { type: Object },
-      editing: { type: Boolean, reflect: true }
+      editing: { type: Boolean, reflect: true },
+      dialogState: { type: Number }
     };
   }
 
@@ -30,25 +34,23 @@ export default class EditDepartment extends LitElement {
   }
 
   close() {
-    this.dispatchEvent(new Event('close'));
+    this.dialogState = DIALOG_STATE.CLOSING;
   }
 
   render() {
-    return html`<div id="root" class="container">
-      <div class="container">
+    return html`<custom-dialog .state="${this.dialogState}">
+      <div id="root">
         <div class="header">
           <h3 id="header">Department</h3>
-          ${this.editing
-            ? html`<wc-button plain id="delete">delete</wc-button>`
-            : ''}
+          ${this.editing ? html`<button plain id="delete">delete</button>` : ''}
         </div>
         ${textInput(this.nameState, (state) => (this.nameState = state), {
-          placeholder: 'E.g Log Branch',
+          placeholder: 'e.g Log Branch',
           label: 'Department name'
         })}
-        <wc-button id="confirm" @click="${this.close}">Confirm</wc-button>
+        <button id="confirm" @click="${this.close}" solid>Confirm</button>
       </div>
-    </div>`;
+    </custom-dialog>`;
   }
 
   static get styles() {
@@ -59,15 +61,6 @@ export default class EditDepartment extends LitElement {
       inputStyles,
       css`
         #root {
-          position: absolute;
-          left: 0;
-          top: 0;
-          height: 100%;
-          width: 100%;
-          background: #ff00003d;
-        }
-
-        .container {
           display: flex;
           flex-direction: column;
           justify-content: center;
@@ -77,7 +70,6 @@ export default class EditDepartment extends LitElement {
           font-size: 1.2rem;
           padding: 10px;
           margin-bottom: 20px;
-          text-transform: capitalize;
         }
 
         .header {
@@ -87,8 +79,13 @@ export default class EditDepartment extends LitElement {
           align-items: center;
         }
 
+        #delete {
+          font-size: 1.3rem;
+        }
+
         #confirm {
-          --button-padding: 10px;
+          font-size: 1.3rem;
+          font-weight: 500;
         }
       `
     ];
