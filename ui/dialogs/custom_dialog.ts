@@ -34,12 +34,17 @@ export default class CustomDialog extends LitElement {
     dialog?.addEventListener('animationend', listener);
   }
 
+  close() {
+    if (this.state === DIALOG_STATE.OPENED) this.state = DIALOG_STATE.CLOSING;
+  }
+
   render() {
     return html`<div
       id="root"
       ?hide="${this.state === DIALOG_STATE.CLOSING}"
       ?show="${this.state === DIALOG_STATE.OPENING}"
       ?ready="${this.state === DIALOG_STATE.OPENED}"
+      @click="${this.close}"
     >
       <div id="dialog" class="card"><slot></slot></div>
     </div>`;
@@ -66,12 +71,6 @@ export default class CustomDialog extends LitElement {
           justify-content: center;
           background: rgba(0, 0, 0, 0.2);
           backdrop-filter: blur(2px);
-          pointer-events: none;
-        }
-
-        #root[ready],
-        #root[ready] > #dialog {
-          pointer-events: auto;
         }
 
         #root[show] {
@@ -97,6 +96,10 @@ export default class CustomDialog extends LitElement {
 
         #root[hide] > #dialog {
           animation: scale-out 0.3s;
+        }
+
+        #root[ready] > #dialog {
+          pointer-events: auto;
         }
 
         @keyframes scale-in {
