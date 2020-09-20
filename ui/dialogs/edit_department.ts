@@ -27,7 +27,6 @@ export default class EditDepartment extends LitElement {
       department: { type: Object },
       editing: { type: Boolean, reflect: true },
       dialogState: { type: Number },
-      focusIn: { type: Boolean },
       nameState: { type: Object }
     };
   }
@@ -38,9 +37,9 @@ export default class EditDepartment extends LitElement {
   }
 
   submit() {
-    if (this.editing && this.department) {
+    if (this.editing) {
       let action = ACTION_DEPARTMENT.requestModify({
-        ...this.department,
+        ...this.department!,
         name: this.nameState.value
       });
       ApplicationStore.dispatch(action);
@@ -64,7 +63,7 @@ export default class EditDepartment extends LitElement {
     return html`<custom-dialog .state="${this.dialogState}">
       <div id="root" tabindex="0" class="selectable">
         <div class="header">
-          <h3 id="header">Department</h3>
+          <h3>Department</h3>
           ${this.editing
             ? html`<button
                 plain

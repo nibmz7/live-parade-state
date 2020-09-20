@@ -19,10 +19,10 @@ export default class AdminView extends LitElement {
   private departments: Array<Department> = [];
   private usersByDepartment: UsersByDepartment = {};
   private adminManager = new MockAdminManager();
-  private departmentsUnsubscribe?: Unsubscribe;
-  private usersUnsubscribe?: Unsubscribe;
   private selectedDepartment?: Department;
   private showEditDepartment: Boolean = false;
+  private departmentsUnsubscribe?: Unsubscribe;
+  private usersUnsubscribe?: Unsubscribe;
 
   static get properties() {
     return {
@@ -45,7 +45,6 @@ export default class AdminView extends LitElement {
           type === ACTION_TYPE.REMOVED
         ) {
           this.departments = state.items;
-          console.log(state.items);
         }
       }
     );

@@ -1,5 +1,6 @@
 import { html } from 'lit-element';
 import { onPressed } from './utils';
+import {ifDefined} from 'lit-html/directives/if-defined';
 
 export enum INPUT_VALIDITY {
   PENDING,
@@ -33,7 +34,7 @@ const updateInputValue = (callback: (state: InputState) => void) => {
 export const textInput = (
   inputState: InputState,
   setInputState: (state: InputState) => void,
-  options?: { placeholder?: string; label?: string },
+  options?: { placeholder?: string; label?: string, id?: string },
   reset?: () => void
 ) => {
   const placeholder = options?.placeholder || '';
@@ -50,6 +51,7 @@ export const textInput = (
 
   return html`
     <input
+      id="${ifDefined(options?.id)}"
       required
       type="text"
       tabindex="0"
