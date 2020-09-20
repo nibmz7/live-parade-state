@@ -10,25 +10,33 @@ import { ACTION_ROOT, ApplicationStore } from '../../data/store';
 import Department from '../../model/department';
 import User from '../../model/user';
 import { buttonStyles, cardStyles, globalStyles } from '../global_styles';
-import { onPressed } from '../utils';
-import '../dialogs/edit_department';
 import { ACTION_TYPE } from '../../data/data_manager';
+import Admin from '../../model/admin';
+import '../dialogs/edit_department';
+import '../dialogs/edit_user';
 
 @customElement('admin-view')
 export default class AdminView extends LitElement {
+  private adminManager = new MockAdminManager();
   private departments: Array<Department> = [];
   private usersByDepartment: UsersByDepartment = {};
-  private adminManager = new MockAdminManager();
   private selectedDepartment?: Department;
   private showEditDepartment: Boolean = false;
   private departmentsUnsubscribe?: Unsubscribe;
   private usersUnsubscribe?: Unsubscribe;
+  private branch = (ApplicationStore.getAuth().action.payload as Admin).branch;
+  private selectedUser?: User;
+  private selectedUserDepartment?: Department;
+  private showEditUser = false;
 
   static get properties() {
     return {
       departments: { type: Array },
       selectedDepartment: { type: Object },
-      showEditDepartment: { type: Boolean }
+      showEditDepartment: { type: Boolean },
+      selectedUser: { type: Object },
+      selectedUserDepartment: { type: Object },
+      showEditUser: { type: Boolean }
     };
   }
 
@@ -64,13 +72,21 @@ export default class AdminView extends LitElement {
     this.usersUnsubscribe?.();
   }
 
-  private onEditDepartment = onPressed(() => {
+  onEditDepartment(department?: Department) {
     this.showEditDepartment = true;
-  });
+    this.selectedDepartment = department;
+  }
 
   render() {
-    const userTemplate = (user: User) => html`
-      <div class="item">
+    const userTemplate = (department: Department, user: User) => html`
+      <div
+        class="item"
+        @click="${() => {
+          this.selectedUser = user;
+          this.selectedUserDepartment = department;
+          this.showEditUser = true;
+        }}"
+      >
         <p id="primary-text">${user.fullname}</p>
         <p id="secondary-text">${user.email}</p>
       </div>
@@ -84,10 +100,7 @@ export default class AdminView extends LitElement {
             <button
               id="edit"
               plain
-              @click="${(e: Event) => {
-                this.selectedDepartment = department;
-                this.onEditDepartment(e);
-              }}"
+              @click="${() => this.onEditDepartment(department)}"
             >
               edit
             </button>
@@ -99,7 +112,9 @@ export default class AdminView extends LitElement {
           >
             <button id="add" plain>Add user</button>
             <div id="list">
-              ${this.usersByDepartment[department.id]?.map(userTemplate)}
+              ${this.usersByDepartment[department.id]?.map((user) =>
+                userTemplate(department, user)
+              )}
             </div>
           </div>
         </div>
@@ -107,7 +122,11 @@ export default class AdminView extends LitElement {
     return html`<div id="root">
       <div class="departments">${this.departments.map(departmentTemplate)}</div>
 
-      <button id="add-department" solid @click="${this.onEditDepartment}">
+      <button
+        id="add-department"
+        solid
+        @click="${() => this.onEditDepartment()}"
+      >
         Add department
       </button>
 
@@ -121,6 +140,21 @@ export default class AdminView extends LitElement {
               this.selectedDepartment = undefined;
             }}"
           ></edit-department>`
+        : ''}
+      ${this.showEditUser
+        ? html`
+            <edit-user
+              .branch=${this.branch}
+              .department=${this.selectedUserDepartment}
+              .user=${this.selectedUser}
+              ?editing=${this.selectedUser}
+              @close="${(e: Event) => {
+                e.stopPropagation();
+                this.showEditUser = false;
+                this.selectedUser = undefined;
+              }}"
+            ></edit-user>
+          `
         : ''}
     </div>`;
   }

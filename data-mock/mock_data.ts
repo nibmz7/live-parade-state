@@ -73,7 +73,7 @@ const ModelUser1 = new User({
   uid: '101',
   name: 'John',
   email: 'john1@lol.com',
-  regular: true,
+  regular: false,
   rank: new Rank('CPL'),
   branch: ModelBranch,
   department: ModelDepartment1
@@ -91,7 +91,7 @@ const ModelUser3 = new User({
   uid: '301',
   name: 'John',
   email: 'john3@lol.com',
-  regular: true,
+  regular: false,
   rank: new Rank('PTE'),
   branch: ModelBranch,
   department: ModelDepartment3

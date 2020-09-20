@@ -90,8 +90,6 @@ export const passwordInputStyles = css`
     right: 15px;
     top: 15px;
     bottom: 15px;
-    margin-top: auto;
-    margin-bottom: auto;
     fill: rgb(151, 147, 147);
     cursor: pointer;
   }

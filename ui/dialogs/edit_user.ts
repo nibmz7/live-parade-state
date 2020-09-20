@@ -9,7 +9,8 @@ import {
   buttonStyles,
   cardStyles,
   globalStyles,
-  inputStyles
+  inputStyles,
+  passwordInputStyles
 } from '../global_styles';
 import {
   emailInput,
@@ -66,6 +67,10 @@ export default class EditUser extends LitElement {
   connectedCallback() {
     super.connectedCallback();
     if (this.user) {
+      this.nameState.value = this.user.name;
+      this.rankState.value = this.user.rank.text;
+      this.emailState.value = this.user.email.split('@')[0];
+      this.isRegularState = this.user.regular;
     }
   }
 
@@ -121,12 +126,12 @@ export default class EditUser extends LitElement {
           id: 'name'
         })}
         <div id="email" class="row-box-reversed">
-          <p>${this.branch?.domain}</p>
+          <p>@${this.branch?.domain}</p>
           ${emailInput(this.emailState, (state) => (this.emailState = state))}
         </div>
 
         <div id="password" class="row-box-reversed">
-          <button id="change" ?hidden="${this.editing}" plain>change</button>
+          <button id="change" ?hidden="${!this.editing}" plain>change</button>
           ${passwordInput(
             this.passwordState,
             (state) => (this.passwordState = state)
@@ -166,17 +171,25 @@ export default class EditUser extends LitElement {
       buttonStyles,
       cardStyles,
       inputStyles,
+      passwordInputStyles,
       css`
         #root {
           display: flex;
-          flex-direction: column;
-          justify-content: center;
+          flex-direction: row;
+          flex-wrap: wrap;
         }
 
-        input {
+        input,
+        #password {
+          margin: 0 0 10px 0;
+        }
+
+        #department-name {
+          width: 100%;
+          text-align: center;
+          margin: 0;
           font-size: 1.2rem;
-          padding: 10px;
-          margin-bottom: 20px;
+          font-weight: 900;
         }
 
         .header {
@@ -184,6 +197,7 @@ export default class EditUser extends LitElement {
           flex-direction: row;
           justify-content: space-between;
           align-items: center;
+          width: 100%;
         }
 
         .row-box-reversed {
@@ -217,14 +231,23 @@ export default class EditUser extends LitElement {
           min-width: 0;
         }
 
-        #password > input {
+        #password > .password-container {
           flex-grow: 1;
         }
 
         #password > #change {
           font-size: 1rem;
-          padding: 0;
           margin: 0 0 0 10px;
+        }
+
+        .password-container > .password-toggle {
+          top: 0px;
+          right: 15px;
+          bottom: 0px;
+        }
+
+        .password-container > input {
+          margin: 0;
         }
 
         .regular-box {
@@ -247,6 +270,8 @@ export default class EditUser extends LitElement {
         #confirm {
           font-size: 1.3rem;
           font-weight: 500;
+          width: 100%;
+          margin-top: 10px;
         }
       `
     ];
