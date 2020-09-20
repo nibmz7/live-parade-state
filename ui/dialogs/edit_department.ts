@@ -19,12 +19,14 @@ export default class EditDepartment extends LitElement {
     validity: INPUT_VALIDITY.PENDING
   };
   private dialogState = DIALOG_STATE.OPENING;
+  private focusIn = false;
 
   static get properties() {
     return {
       department: { type: Object },
       editing: { type: Boolean, reflect: true },
-      dialogState: { type: Number }
+      dialogState: { type: Number },
+      focusIn: { type: Boolean}
     };
   }
 
@@ -38,11 +40,11 @@ export default class EditDepartment extends LitElement {
   }
 
   render() {
-    return html`<custom-dialog .state="${this.dialogState}">
+    return html`<custom-dialog .state="${this.dialogState}" ?focus="${this.focusIn}">
       <div id="root">
         <div class="header">
           <h3 id="header">Department</h3>
-          ${this.editing ? html`<button plain id="delete">delete</button>` : ''}
+          ${this.editing ? html`<button plain id="delete" @click="${() => {this.focusIn = true}}">delete</button>` : ''}
         </div>
         ${textInput(this.nameState, (state) => (this.nameState = state), {
           placeholder: 'e.g Log Branch',

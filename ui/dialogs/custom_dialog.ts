@@ -46,7 +46,13 @@ export default class CustomDialog extends LitElement {
       ?ready="${this.state === DIALOG_STATE.OPENED}"
       @click="${this.close}"
     >
-      <div id="dialog" class="card"><slot></slot></div>
+      <div
+        id="dialog"
+        class="card"
+        @click="${(e: Event) => e.stopPropagation()}"
+      >
+        <slot></slot>
+      </div>
     </div>`;
   }
 
@@ -86,7 +92,7 @@ export default class CustomDialog extends LitElement {
           box-sizing: border-box;
           border-radius: 5px;
           padding: 15px 20px;
-          transform: perspective(100px) translateZ(0px);
+          transform: perspective(100px) translateZ(0px) translateY(var(--offset-height));
           pointer-events: none;
         }
 
@@ -100,23 +106,24 @@ export default class CustomDialog extends LitElement {
 
         #root[ready] > #dialog {
           pointer-events: auto;
+          transition: transform .3s;
         }
 
         @keyframes scale-in {
           0% {
-            transform: perspective(100px) translateZ(10px);
+            transform: perspective(100px) translateZ(10px) translateY(var(--offset-height));
           }
           100% {
-            transform: perspective(100px) translateZ(0px);
+            transform: perspective(100px) translateZ(0px) translateY(var(--offset-height));
           }
         }
 
         @keyframes scale-out {
           0% {
-            transform: perspective(100px) translateZ(0px);
+            transform: perspective(100px) translateZ(0px) translateY(var(--offset-height));
           }
           100% {
-            transform: perspective(100px) translateZ(10px);
+            transform: perspective(100px) translateZ(10px) translateY(var(--offset-height));
           }
         }
       `
