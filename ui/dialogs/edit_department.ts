@@ -1,4 +1,6 @@
 import { LitElement, html, customElement, css } from 'lit-element';
+import ACTION_DEPARTMENT from '../../data/actions/department_action';
+import { ApplicationStore } from '../../data/store';
 import Department from '../../model/department';
 import {
   buttonStyles,
@@ -19,38 +21,67 @@ export default class EditDepartment extends LitElement {
     validity: INPUT_VALIDITY.PENDING
   };
   private dialogState = DIALOG_STATE.OPENING;
-  private focusIn = false;
 
   static get properties() {
     return {
       department: { type: Object },
       editing: { type: Boolean, reflect: true },
       dialogState: { type: Number },
-      focusIn: { type: Boolean}
+      focusIn: { type: Boolean },
+      nameState: { type: Object }
     };
   }
 
   connectedCallback() {
     super.connectedCallback();
-    console.log(this.department);
+    if (this.department) this.nameState.value = this.department.name;
   }
 
-  close() {
+  submit() {
+    if (this.editing && this.department) {
+      let action = ACTION_DEPARTMENT.requestModify({
+        ...this.department,
+        name: this.nameState.value
+      });
+      ApplicationStore.dispatch(action);
+    } else {
+      let action = ACTION_DEPARTMENT.requestAdd({
+        id: '0',
+        name: this.nameState.value
+      });
+      ApplicationStore.dispatch(action);
+    }
+    this.dialogState = DIALOG_STATE.CLOSING;
+  }
+
+  delete() {
+    let action = ACTION_DEPARTMENT.requestRemove(this.department!);
+    ApplicationStore.dispatch(action);
     this.dialogState = DIALOG_STATE.CLOSING;
   }
 
   render() {
-    return html`<custom-dialog .state="${this.dialogState}" ?focus="${this.focusIn}">
+    return html`<custom-dialog
+      .state="${this.dialogState}"
+    >
       <div id="root">
         <div class="header">
           <h3 id="header">Department</h3>
-          ${this.editing ? html`<button plain id="delete" @click="${() => {this.focusIn = true}}">delete</button>` : ''}
+          ${this.editing
+            ? html`<button
+                plain
+                id="delete"
+                @click="${this.delete}"
+              >
+                delete
+              </button>`
+            : ''}
         </div>
         ${textInput(this.nameState, (state) => (this.nameState = state), {
-          placeholder: 'e.g Log Branch',
+          placeholder: 'e.g. Log Branch',
           label: 'Department name'
         })}
-        <button id="confirm" @click="${this.close}" solid>Confirm</button>
+        <button id="confirm" @click="${this.submit}" solid>Confirm</button>
       </div>
     </custom-dialog>`;
   }

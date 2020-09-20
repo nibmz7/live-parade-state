@@ -85,11 +85,12 @@ export default class AdminView extends LitElement {
           </div>
           <div
             class="users card"
-            ?empty="${this.usersByDepartment[department.id].length === 0}"
+            ?empty="${this.usersByDepartment[department.id]?.length > 0 ===
+            false}"
           >
             <button id="add" plain>Add user</button>
             <div id="list">
-              ${this.usersByDepartment[department.id].map(userTemplate)}
+              ${this.usersByDepartment[department.id]?.map(userTemplate)}
             </div>
           </div>
         </div>
