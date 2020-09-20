@@ -4,5 +4,6 @@ module.exports = {
   nodeResolve: true,
   open: true,
   appIndex: 'dist/index.html',
-  moduleDirs: ["node_modules"]
+  moduleDirs: ["node_modules"],
+  compatibility: 'none'
 };

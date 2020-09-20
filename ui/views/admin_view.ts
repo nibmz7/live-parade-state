@@ -12,6 +12,7 @@ import User from '../../model/user';
 import { buttonStyles, cardStyles, globalStyles } from '../global_styles';
 import { onPressed } from '../utils';
 import '../dialogs/edit_department';
+import { ACTION_TYPE } from '../../data/data_manager';
 
 @customElement('admin-view')
 export default class AdminView extends LitElement {
@@ -36,7 +37,16 @@ export default class AdminView extends LitElement {
     this.departmentsUnsubscribe = ApplicationStore.listen(
       ACTION_ROOT.DEPARTMENTS,
       (state: DepartmentStoreState) => {
-        this.departments = state.items;
+        let type = state.action.type;
+        if (
+          type === ACTION_TYPE.INITIALIZED ||
+          type === ACTION_TYPE.ADDED ||
+          type === ACTION_TYPE.MODIFIED ||
+          type === ACTION_TYPE.REMOVED
+        ) {
+          this.departments = state.items;
+          console.log(state.items);
+        }
       }
     );
     this.usersUnsubscribe = ApplicationStore.listen(
@@ -96,7 +106,7 @@ export default class AdminView extends LitElement {
         </div>
       `;
     return html`<div id="root">
-      ${this.departments.map(departmentTemplate)}
+      <div class="departments">${this.departments.map(departmentTemplate)}</div>
 
       <button id="add-department" solid @click="${this.onEditDepartment}">
         Add department
@@ -125,9 +135,7 @@ export default class AdminView extends LitElement {
         #root {
           height: 100%;
           width: 100%;
-          padding: 8px 30px;
           position: relative;
-          box-sizing: border-box;
         }
 
         #add-department {
@@ -141,6 +149,13 @@ export default class AdminView extends LitElement {
           padding: 15px 50px;
           border-radius: 50px;
           font-weight: 500;
+        }
+
+        .departments {
+          overflow-y: auto;
+          max-height: 99%;
+          padding: 8px 30px 80px 30px;
+          box-sizing: border-box;
         }
 
         .department {

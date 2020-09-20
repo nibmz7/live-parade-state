@@ -101,7 +101,7 @@ export default class ViewSwitcher extends LitElement {
       fadeAnimation,
       css`
         :host([initialized])::after {
-          animation: fade-out 0.3s forwards;
+          animation: fade-out 0.3s;
         }
 
         #root {
