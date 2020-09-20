@@ -2,7 +2,7 @@ import User from '../model/user';
 import Admin from '../model/admin';
 import { ApplicationStore, ACTION_ROOT } from '../data/store';
 import {
-  AuthState,
+  AUTH_STATE,
   SignInError,
   AuthStoreState,
   AuthAction
@@ -21,9 +21,9 @@ export default abstract class AuthManager {
   protected abstract async initialize();
 
   authStateChanged(state: AuthStoreState) {
-    if (state.action.type === AuthState.REQUEST_SIGN_IN)
+    if (state.action.type === AUTH_STATE.REQUEST_SIGN_IN)
       this.signInWithCredentials(state.action);
-    else if (state.action.type === AuthState.REQUEST_SIGN_OUT) this.signOut();
+    else if (state.action.type === AUTH_STATE.REQUEST_SIGN_OUT) this.signOut();
   }
 
   protected signOut() {

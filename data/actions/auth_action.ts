@@ -1,7 +1,7 @@
 import { ACTION_ROOT, generateActionId } from '../store';
 import {
   SignInCredentials,
-  AuthState,
+  AUTH_STATE,
   AuthAction,
   SignInError,
   AuthPayload
@@ -9,7 +9,7 @@ import {
 import Admin from '../../model/admin';
 import User from '../../model/user';
 
-const makeAction = (type: AuthState, payload: AuthPayload): AuthAction => ({
+const makeAction = (type: AUTH_STATE, payload: AuthPayload): AuthAction => ({
   id: generateActionId(),
   root: ACTION_ROOT.AUTH,
   type,
@@ -18,14 +18,14 @@ const makeAction = (type: AuthState, payload: AuthPayload): AuthAction => ({
 
 const ACTION_AUTH = {
   requestSignIn: (credentials: SignInCredentials): AuthAction =>
-    makeAction(AuthState.REQUEST_SIGN_IN, credentials),
+    makeAction(AUTH_STATE.REQUEST_SIGN_IN, credentials),
   requestSignOut: (): AuthAction =>
-    makeAction(AuthState.REQUEST_SIGN_OUT, undefined),
+    makeAction(AUTH_STATE.REQUEST_SIGN_OUT, undefined),
   userSignedIn: (user: User | Admin): AuthAction =>
-    makeAction(AuthState.SIGNED_IN, user),
-  userSignedOut: (): AuthAction => makeAction(AuthState.SIGNED_OUT, undefined),
+    makeAction(AUTH_STATE.SIGNED_IN, user),
+  userSignedOut: (): AuthAction => makeAction(AUTH_STATE.SIGNED_OUT, undefined),
   signInFailed: (error: SignInError): AuthAction =>
-    makeAction(AuthState.REQUEST_SIGN_IN_FAILED, error)
+    makeAction(AUTH_STATE.REQUEST_SIGN_IN_FAILED, error)
 };
 
 export default ACTION_AUTH;

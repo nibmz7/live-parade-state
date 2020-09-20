@@ -4,7 +4,7 @@ import Admin from '../../model/admin';
 import User from '../../model/user';
 import { DataStoreState } from '../../data/store';
 
-export enum AuthState {
+export enum AUTH_STATE {
   INITIALIZING,
   SIGNED_IN,
   SIGNED_OUT,
@@ -27,7 +27,7 @@ export type AuthPayload = SignInCredentials | SignInError | User | Admin | undef
 export interface AuthAction extends Action {
   root: ACTION_ROOT.AUTH;
   id: ACTION_ID;
-  type: AuthState;
+  type: AUTH_STATE;
   payload?: AuthPayload;
 }
 

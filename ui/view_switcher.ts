@@ -1,7 +1,7 @@
 import { LitElement, html, customElement, css, property } from 'lit-element';
 import MockAuthManager from '../data-mock/mock_auth_manager';
 import { ACTION_ROOT, ApplicationStore } from '../data/store';
-import { AuthState, AuthStoreState } from '../data/states/auth_state';
+import { AUTH_STATE, AuthStoreState } from '../data/states/auth_state';
 import { fadeAnimation } from './global_styles';
 import { Unsubscribe } from 'redux';
 import Admin from '../model/admin';
@@ -41,7 +41,7 @@ export default class ViewSwitcher extends LitElement {
           this.initialized = false;
         };
         this.addEventListener('animationend', onInitialized, { once: true });
-        type === AuthState.SIGNED_IN ? this.signedIn() : this.signedOut();
+        type === AUTH_STATE.SIGNED_IN ? this.signedIn() : this.signedOut();
         this.initialized = true;
         unsubscribe();
       }

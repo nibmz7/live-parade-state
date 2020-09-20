@@ -9,14 +9,20 @@ import {
 import { ApplicationStore, ACTION_ROOT } from '../../data/store';
 import {
   AuthStoreState,
-  AuthState,
+  AUTH_STATE,
   SignInError,
   SignInCredentials
 } from '../../data/states/auth_state';
 import { Unsubscribe } from 'redux';
 import ACTION_AUTH from '../../data/actions/auth_action';
 import { onPressed } from '../utils';
-import { emailInput, INPUT_STATE, passwordInput } from '../input';
+import {
+  emailInput,
+  InputState,
+  INPUT_VALIDITY,
+  passwordInput,
+  PasswordInputState
+} from '../input';
 
 declare global {
   interface Window {
@@ -27,22 +33,23 @@ declare global {
 @customElement('login-view')
 export class LoginView extends LitElement {
   private isProcessing = false;
-  private emailValue = '';
-  private emailState = INPUT_STATE.PENDING;
-  private passwordValue = '';
-  private passwordState = INPUT_STATE.PENDING;
-  private passwordVisibility = false;
+  private emailState: InputState = {
+    value: '',
+    validity: INPUT_VALIDITY.PENDING
+  };
+  private passwordState: PasswordInputState = {
+    value: '',
+    validity: INPUT_VALIDITY.PENDING,
+    visible: false
+  };
   private errorMessage = '';
   private errorVisible = false;
 
   static get properties() {
     return {
       isProcessing: { type: Boolean },
-      emailValue: { type: String, attribute: false },
-      emailIsValid: { type: Number },
-      passwordValue: { type: String, attribute: false },
-      passwordState: { type: Number },
-      passwordVisibility: { type: Boolean },
+      emailState: { type: Object },
+      passwordState: { type: Object },
       errorMessage: { type: String },
       errorVisible: { type: Boolean }
     };
@@ -51,11 +58,11 @@ export class LoginView extends LitElement {
   connectedCallback() {
     super.connectedCallback();
     const listener = (state: AuthStoreState, unsubscribe: Unsubscribe) => {
-      if (state.action.type === AuthState.REQUEST_SIGN_IN_FAILED) {
+      if (state.action.type === AUTH_STATE.REQUEST_SIGN_IN_FAILED) {
         let error = state.action.payload as SignInError;
         this.isProcessing = false;
         this.showError(error.message);
-      } else if (state.action.type === AuthState.SIGNED_IN) {
+      } else if (state.action.type === AUTH_STATE.SIGNED_IN) {
         unsubscribe();
         this.successfullLogin();
       }
@@ -71,8 +78,8 @@ export class LoginView extends LitElement {
         .then((c?) => {
           if (c) {
             let passwordCredential = c as PasswordCredential;
-            this.emailValue = passwordCredential.id;
-            this.passwordValue = passwordCredential.password!;
+            this.emailState.value = passwordCredential.id;
+            this.passwordState.value = passwordCredential.password!;
           }
         });
     }
@@ -81,8 +88,8 @@ export class LoginView extends LitElement {
   private successfullLogin() {
     if (window.PasswordCredential) {
       var c = new window.PasswordCredential({
-        id: this.emailValue,
-        password: this.passwordValue
+        id: this.emailState.value,
+        password: this.passwordState.value
       });
       navigator.credentials.store(c);
     }
@@ -97,18 +104,18 @@ export class LoginView extends LitElement {
 
   private onSubmit = onPressed((e: Event) => {
     e.preventDefault();
-    if (this.emailState !== INPUT_STATE.VALID) {
+    if (this.emailState.validity !== INPUT_VALIDITY.VALID) {
       this.showError('Please enter a valid email address!');
       return;
-    } else if (this.passwordState !== INPUT_STATE.VALID) {
+    } else if (this.passwordState.validity !== INPUT_VALIDITY.VALID) {
       this.showError('Please enter a valid password!');
       return;
     }
     if (this.isProcessing) return;
     this.isProcessing = true;
     let credentials: SignInCredentials = {
-      email: this.emailValue,
-      password: this.passwordValue
+      email: this.emailState.value,
+      password: this.passwordState.value
     };
     let action = ACTION_AUTH.requestSignIn(credentials);
     ApplicationStore.dispatch(action);
@@ -126,19 +133,13 @@ export class LoginView extends LitElement {
           <h3>Sign in</h3>
 
           ${emailInput(
-            this.emailValue,
             this.emailState,
-            (email) => (this.emailValue = email),
             (state) => (this.emailState = state),
             () => (this.errorVisible = false)
           )}
           ${passwordInput(
-            this.passwordValue,
             this.passwordState,
-            this.passwordVisibility,
-            (value) => (this.passwordValue = value),
             (state) => (this.passwordState = state),
-            (visible) => (this.passwordVisibility = visible),
             () => (this.errorVisible = false)
           )}
 

@@ -1,43 +1,82 @@
 import { html } from 'lit-element';
 import { onPressed } from './utils';
 
-export const enum INPUT_STATE {
+export enum INPUT_VALIDITY {
   PENDING,
   INVALID,
   VALID
 }
 
-const updateInputValue = (
-  callback: (value: any, isValid: INPUT_STATE) => void
-) => {
+export interface InputState {
+  value: string;
+  validity: INPUT_VALIDITY;
+}
+
+export interface PasswordInputState extends InputState {
+  visible: boolean;
+}
+
+const updateInputValue = (callback: (state: InputState) => void) => {
   return (e: Event) => {
     let input = e.target as HTMLInputElement;
     let inputValue = input.value;
-    let inputIsValid: INPUT_STATE = INPUT_STATE.PENDING;
+    let inputIsValid: INPUT_VALIDITY = INPUT_VALIDITY.PENDING;
     if (inputValue.length > 0) {
       inputIsValid = input.validity.valid
-        ? INPUT_STATE.VALID
-        : INPUT_STATE.INVALID;
+        ? INPUT_VALIDITY.VALID
+        : INPUT_VALIDITY.INVALID;
     }
-    callback(inputValue, inputIsValid);
+    callback({ value: inputValue, validity: inputIsValid });
   };
 };
 
-export const emailInput = (
-  inputValue: string,
-  inputState: INPUT_STATE,
-  setValue: (email: string) => void,
-  setState: (state: INPUT_STATE) => void,
-  reset: () => void
+export const textInput = (
+  inputState: InputState,
+  setInputState: (state: InputState) => void,
+  options?: { placeholder?: string; label?: string },
+  reset?: () => void
 ) => {
-  const updateValue = updateInputValue((value, state) => {
-    setValue(value);
-    setState(state);
+  const placeholder = options?.placeholder || '';
+  const label = options?.label || '';
+
+  const updateValue = updateInputValue((state) => {
+    setInputState(state);
   });
 
   const inputReset = () => {
-    setState(INPUT_STATE.PENDING);
-    reset();
+    setInputState({ ...inputState, validity: INPUT_VALIDITY.PENDING });
+    reset?.();
+  };
+
+  return html`
+    <input
+      required
+      type="text"
+      tabindex="0"
+      placeholder="${placeholder}"
+      autocomplete="off"
+      aria-label="${label}"
+      value="${inputState.value}"
+      ?invalid="${inputState.validity === INPUT_VALIDITY.INVALID}"
+      ?valid="${inputState.validity === INPUT_VALIDITY.VALID}"
+      @focus="${inputReset}"
+      @blur="${updateValue}"
+    />
+  `;
+};
+
+export const emailInput = (
+  inputState: InputState,
+  setInputState: (state: InputState) => void,
+  reset?: () => void
+) => {
+  const updateValue = updateInputValue((state) => {
+    setInputState(state);
+  });
+
+  const inputReset = () => {
+    setInputState({ ...inputState, validity: INPUT_VALIDITY.PENDING });
+    reset?.();
   };
 
   return html`
@@ -48,9 +87,9 @@ export const emailInput = (
       placeholder="Email"
       autocomplete="username"
       aria-label="Email input"
-      value="${inputValue}"
-      ?invalid="${inputState === INPUT_STATE.INVALID}"
-      ?valid="${inputState === INPUT_STATE.VALID}"
+      value="${inputState.value}"
+      ?invalid="${inputState.validity === INPUT_VALIDITY.INVALID}"
+      ?valid="${inputState.validity === INPUT_VALIDITY.VALID}"
       @focus="${inputReset}"
       @blur="${updateValue}"
     />
@@ -58,27 +97,25 @@ export const emailInput = (
 };
 
 export const passwordInput = (
-  inputValue: string,
-  inputState: INPUT_STATE,
-  visible: boolean,
-  setValue: (email: string) => void,
-  setState: (state: INPUT_STATE) => void,
-  setVisibility: (visible: boolean) => void,
-  reset: () => void
+  inputState: PasswordInputState,
+  setInputState: (state: PasswordInputState) => void,
+  reset?: () => void
 ) => {
-  const updateValue = updateInputValue((value, state) => {
-    setValue(value);
-    setState(state);
+  const updateValue = updateInputValue((state) => {
+    setInputState(state as PasswordInputState);
   });
 
-  const togglePasswordVisiblity = onPressed(() => setVisibility(!visible), {
-    autoBlur: false,
-    debounce: false
-  });
+  const togglePasswordVisiblity = onPressed(
+    () => setInputState({ ...inputState, visible: !inputState.visible }),
+    {
+      autoBlur: false,
+      debounce: false
+    }
+  );
 
   const inputReset = () => {
-    setState(INPUT_STATE.PENDING);
-    reset();
+    setInputState({ ...inputState, validity: INPUT_VALIDITY.PENDING });
+    reset?.();
   };
 
   return html`
@@ -90,10 +127,10 @@ export const passwordInput = (
         placeholder="Password"
         aria-label="Password input"
         autocomplete="current-password"
-        value="${inputValue}"
-        type="${visible ? 'text' : 'password'}"
-        ?invalid="${inputState === INPUT_STATE.INVALID}"
-        ?valid="${inputState === INPUT_STATE.VALID}"
+        value="${inputState.value}"
+        type="${inputState.visible ? 'text' : 'password'}"
+        ?invalid="${inputState.validity === INPUT_VALIDITY.INVALID}"
+        ?valid="${inputState.validity === INPUT_VALIDITY.VALID}"
         @focus="${inputReset}"
         @blur="${updateValue}"
       />
@@ -104,7 +141,7 @@ export const passwordInput = (
         class="password-toggle selectable"
         @click="${togglePasswordVisiblity}"
         @keydown="${togglePasswordVisiblity}"
-        ?visible="${visible}"
+        ?visible="${inputState.visible}"
       >
         <svg
           xmlns="http://www.w3.org/2000/svg"
