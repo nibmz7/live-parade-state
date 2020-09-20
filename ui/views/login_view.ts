@@ -123,7 +123,7 @@ export class LoginView extends LitElement {
 
   render() {
     return html`
-      <div id="root">
+      <div id="root" tabindex="0" class="selectable">
         <form
           id="form"
           class="card"
@@ -140,10 +140,22 @@ export class LoginView extends LitElement {
           ${passwordInput(
             this.passwordState,
             (state) => (this.passwordState = state),
-            () => (this.errorVisible = false)
+            () => (this.errorVisible = false),
+            (e) => this.onSubmit(e)
           )}
 
-          <button id="submit" tabindex="0" @click=${this.onSubmit} solid>
+          <button
+            id="submit"
+            tabindex="0"
+            @click=${this.onSubmit}
+            @keydown="${(e: Event) => {
+              let key = (e as KeyboardEvent).key;
+              if (key === 'Tab') {
+                this.shadowRoot?.getElementById('root')?.focus();
+              }
+            }}"
+            solid
+          >
             ${this.isProcessing ? 'Loading...' : 'Continue'}
           </button>
 

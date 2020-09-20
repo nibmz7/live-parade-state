@@ -1,6 +1,6 @@
 import { LitElement, html, customElement, css } from 'lit-element';
 import ACTION_DEPARTMENT from '../../data/actions/department_action';
-import { ApplicationStore } from '../../data/store';
+import { ApplicationStore, generateActionId } from '../../data/store';
 import Department from '../../model/department';
 import {
   buttonStyles,
@@ -46,7 +46,7 @@ export default class EditDepartment extends LitElement {
       ApplicationStore.dispatch(action);
     } else {
       let action = ACTION_DEPARTMENT.requestAdd({
-        id: '0',
+        id: `${generateActionId()}`,
         name: this.nameState.value
       });
       ApplicationStore.dispatch(action);
@@ -61,10 +61,8 @@ export default class EditDepartment extends LitElement {
   }
 
   render() {
-    return html`<custom-dialog
-      .state="${this.dialogState}"
-    >
-      <div id="root">
+    return html`<custom-dialog .state="${this.dialogState}">
+      <div id="root" tabindex="0" class="selectable">
         <div class="header">
           <h3 id="header">Department</h3>
           ${this.editing
@@ -72,6 +70,7 @@ export default class EditDepartment extends LitElement {
                 plain
                 id="delete"
                 @click="${this.delete}"
+                aria-label="Delete department"
               >
                 delete
               </button>`
@@ -81,7 +80,20 @@ export default class EditDepartment extends LitElement {
           placeholder: 'e.g. Log Branch',
           label: 'Department name'
         })}
-        <button id="confirm" @click="${this.submit}" solid>Confirm</button>
+        <button
+          id="confirm"
+          @click="${this.submit}"
+          aria-label="Add/Edit department"
+          @keydown="${(e: Event) => {
+            let key = (e as KeyboardEvent).key;
+            if (key === 'Tab') {
+              this.shadowRoot?.getElementById('root')?.focus();
+            }
+          }}"
+          solid
+        >
+          Confirm
+        </button>
       </div>
     </custom-dialog>`;
   }

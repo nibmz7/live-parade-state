@@ -99,7 +99,8 @@ export const emailInput = (
 export const passwordInput = (
   inputState: PasswordInputState,
   setInputState: (state: PasswordInputState) => void,
-  reset?: () => void
+  reset?: () => void,
+  submit?: (e: Event) => void
 ) => {
   const updateValue = updateInputValue((state) => {
     setInputState(state as PasswordInputState);
@@ -133,6 +134,12 @@ export const passwordInput = (
         ?valid="${inputState.validity === INPUT_VALIDITY.VALID}"
         @focus="${inputReset}"
         @blur="${updateValue}"
+        @keydown="${(e: Event) => {
+          let key = (e as KeyboardEvent).key;
+          if (key === 'Enter') {
+            submit?.(e);
+          }
+        }}"
       />
 
       <div

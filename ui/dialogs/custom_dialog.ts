@@ -40,16 +40,19 @@ export default class CustomDialog extends LitElement {
 
   render() {
     return html`<div
+      tabindex="0"
       id="root"
       ?hide="${this.state === DIALOG_STATE.CLOSING}"
       ?show="${this.state === DIALOG_STATE.OPENING}"
       ?ready="${this.state === DIALOG_STATE.OPENED}"
       @click="${this.close}"
+      aria-label="Close dialog"
     >
       <div
         id="dialog"
         class="card"
         @click="${(e: Event) => e.stopPropagation()}"
+        aria-label="Dialog"
       >
         <slot></slot>
       </div>
