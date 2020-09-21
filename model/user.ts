@@ -35,32 +35,29 @@ export default class User {
     this.afternoon = data.afternoon;
     this.fullname = `${data.rank.text} ${data.name}`;
   }
-}
 
-export function compare(user: User, compareTo: User) {
-  let userRank = user.rank.code;
-  let compareToRank = compareTo.rank.code;
+  static compare(user: User, compareTo: User) {
+    let userRank = user.rank.code;
+    let compareToRank = compareTo.rank.code;
 
-  if (userRank < compareToRank) return -1;
-  if (compareToRank < userRank) return 1;
+    if (userRank < compareToRank) return -1;
+    if (compareToRank < userRank) return 1;
 
-  if (user.name < compareTo.name) return -1;
-  if (compareTo.name < user.name) return 1;
+    if (user.name < compareTo.name) return -1;
+    if (compareTo.name < user.name) return 1;
 
-  return 0;
-}
-
-export function getInsertionIndex(
-  sortedList: Array<User>,
-  newUser: User
-): number {
-  if (sortedList.length === 0) return 0;
-  let index = sortedList.length - 1;
-  while (index >= 0) {
-    let currentUser = sortedList[index];
-    let isHigher = compare(newUser, currentUser);
-    if (isHigher !== -1) break;
-    index--;
+    return 0;
   }
-  return ++index;
+
+  static getInsertionIndex(sortedList: Array<User>, newUser: User): number {
+    if (sortedList.length === 0) return 0;
+    let index = sortedList.length - 1;
+    while (index >= 0) {
+      let currentUser = sortedList[index];
+      let isHigher = User.compare(newUser, currentUser);
+      if (isHigher !== -1) break;
+      index--;
+    }
+    return ++index;
+  }
 }

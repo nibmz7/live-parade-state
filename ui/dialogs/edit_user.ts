@@ -1,5 +1,6 @@
 import { LitElement, html, customElement, css } from 'lit-element';
 import ACTION_USER from '../../data/actions/user_action';
+import { UserAction } from '../../data/states/user_state';
 import { ApplicationStore } from '../../data/store';
 import Branch from '../../model/branch';
 import Department from '../../model/department';
@@ -28,6 +29,10 @@ export default class EditUser extends LitElement {
   private branch?: Branch;
   private department?: Department;
   private editing = false;
+  private errorState = {
+    message: '',
+    visible: false
+  };
   private dialogState = DIALOG_STATE.OPENING;
   private nameState: InputState = {
     value: '',
@@ -59,21 +64,50 @@ export default class EditUser extends LitElement {
       rankState: { type: Object },
       emailState: { type: Object },
       passwordState: { type: Object },
-      isRegularState: { type: Boolean }
+      isRegularState: { type: Boolean },
+      errorState: { type: Object }
     };
   }
 
   connectedCallback() {
     super.connectedCallback();
     if (this.user) {
-      this.nameState.value = this.user.name;
-      this.rankState.value = this.user.rank.text;
-      this.emailState.value = this.user.email.split('@')[0];
+      this.nameState = {
+        value: this.user.name,
+        validity: INPUT_VALIDITY.VALID
+      };
+      this.rankState = {
+        value: this.user.rank.text,
+        validity: INPUT_VALIDITY.VALID
+      };
+      this.emailState = {
+        value: this.user.email.split('@')[0],
+        validity: INPUT_VALIDITY.VALID
+      };
       this.isRegularState = this.user.regular;
     }
   }
 
+  showError(message: string) {
+    this.errorState = { visible: true, message };
+  }
+
   submit() {
+    this.errorState = { visible: false, message: '' };
+    if (this.rankState.validity !== INPUT_VALIDITY.VALID) {
+      this.showError('Please enter a valid rank!');
+    } else if (this.nameState.validity !== INPUT_VALIDITY.VALID) {
+      this.showError('Please enter a valid name!');
+    } else if (this.emailState.validity !== INPUT_VALIDITY.VALID) {
+      this.showError('Please enter a valid email!');
+    } else if (
+      !this.editing &&
+      this.passwordState.validity !== INPUT_VALIDITY.VALID
+    ) {
+      this.showError('Please enter a valid password!');
+    }
+    if (this.errorState.visible) return;
+
     const name = this.nameState.value;
     const rank = new Rank(this.rankState.value);
     const email = this.emailState.value + '@' + this.branch?.domain;
@@ -82,18 +116,17 @@ export default class EditUser extends LitElement {
     const branchid = this.branch!.id;
 
     let data = { name, rank, email, regular, branchid, departmentid };
-
+    let action: UserAction;
     if (this.editing) {
-      let action = ACTION_USER.requestModify({
+      action = ACTION_USER.requestModify({
         ...this.user!,
         ...data
       });
-      ApplicationStore.dispatch(action);
     } else {
       let user = new User({ ...data, uid: '0' });
-      let action = ACTION_USER.requestAdd(user);
-      ApplicationStore.dispatch(action);
+      action = ACTION_USER.requestAdd(user);
     }
+    ApplicationStore.dispatch(action);
     this.dialogState = DIALOG_STATE.CLOSING;
   }
 
@@ -101,6 +134,13 @@ export default class EditUser extends LitElement {
     let action = ACTION_USER.requestRemove(this.user!);
     ApplicationStore.dispatch(action);
     this.dialogState = DIALOG_STATE.CLOSING;
+  }
+
+  reset() {
+    this.errorState = {
+      ...this.errorState,
+      visible: false
+    };
   }
 
   render() {
@@ -124,23 +164,45 @@ export default class EditUser extends LitElement {
         </div>
 
         <div id="rankname" class="row-box">
-          ${textInput(this.rankState, (state) => (this.rankState = state), {
-            placeholder: 'Rank',
-            label: 'Rank',
-            id: 'rank'
-          })}
-          ${textInput(this.nameState, (state) => (this.nameState = state), {
-            placeholder: 'Name',
-            label: 'Name',
-            id: 'name'
-          })}
+          ${textInput(
+            this.rankState,
+            (state) => {
+              let isValid = Rank.isValid(state.value.toUpperCase());
+              if (state.validity !== INPUT_VALIDITY.PENDING && !isValid) {
+                state.validity = INPUT_VALIDITY.INVALID;
+              }
+              this.rankState = state;
+            },
+            {
+              placeholder: 'Rank',
+              label: 'Rank',
+              id: 'rank'
+            },
+            () => this.reset()
+          )}
+          ${textInput(
+            this.nameState,
+            (state) => (this.nameState = state),
+            {
+              placeholder: 'Name',
+              label: 'Name',
+              id: 'name'
+            },
+            () => this.reset()
+          )}
         </div>
 
         <div id="email" class="row-box">
-          ${textInput(this.emailState, (state) => (this.emailState = state), {
-            placeholder: 'Email',
-            label: 'Email'
-          })}
+          ${textInput(
+            this.emailState,
+            (state) => (this.emailState = state),
+            {
+              placeholder: 'Email',
+              label: 'Email',
+              changeText: (text: string) => text.replace(/\W/g, '')
+            },
+            () => this.reset()
+          )}
 
           <p>@${this.branch?.domain}</p>
         </div>
@@ -148,7 +210,8 @@ export default class EditUser extends LitElement {
         <div id="password" class="row-box">
           ${passwordInput(
             this.passwordState,
-            (state) => (this.passwordState = state)
+            (state) => (this.passwordState = state),
+            () => this.reset()
           )}
 
           <button id="change" ?hidden="${!this.editing}" plain>change</button>
@@ -178,6 +241,10 @@ export default class EditUser extends LitElement {
         >
           Confirm
         </button>
+
+        <p class="error card" ?show=${this.errorState.visible}>
+          ${this.errorState.message}
+        </p>
       </div>
     </custom-dialog>`;
   }
@@ -311,6 +378,26 @@ export default class EditUser extends LitElement {
           .regular-box > input:hover::before {
             background-color: #cacad8;
           }
+        }
+
+        .error {
+          position: absolute;
+          left: 0;
+          right: 0;
+          bottom: -3rem;
+          text-align: center;
+          color: var(--color-primary);
+          margin: 0;
+          padding: 10px;
+          border-radius: 5px;
+          transform: translateY(50%);
+          opacity: 0;
+          transition: transform 0.3s, opacity 0.3s;
+        }
+
+        .error[show] {
+          transform: translateY(0);
+          opacity: 1;
         }
 
         #delete {

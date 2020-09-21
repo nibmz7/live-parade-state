@@ -1,6 +1,6 @@
 import { html } from 'lit-element';
 import { onPressed } from './utils';
-import {ifDefined} from 'lit-html/directives/if-defined';
+import { ifDefined } from 'lit-html/directives/if-defined';
 
 export enum INPUT_VALIDITY {
   PENDING,
@@ -34,11 +34,23 @@ const updateInputValue = (callback: (state: InputState) => void) => {
 export const textInput = (
   inputState: InputState,
   setInputState: (state: InputState) => void,
-  options?: { placeholder?: string; label?: string, id?: string },
+  options?: {
+    placeholder?: string;
+    label?: string;
+    id?: string;
+    changeText?: (text: string) => string;
+  },
   reset?: () => void
 ) => {
   const placeholder = options?.placeholder || '';
   const label = options?.label || '';
+
+  const oninput = (e: Event) => {
+    if (options?.changeText) {
+      let input = e.currentTarget as HTMLInputElement;
+      input.value = options.changeText(input.value);
+    }
+  };
 
   const updateValue = updateInputValue((state) => {
     setInputState(state);
@@ -63,6 +75,7 @@ export const textInput = (
       ?valid="${inputState.validity === INPUT_VALIDITY.VALID}"
       @focus="${inputReset}"
       @blur="${updateValue}"
+      @input="${oninput}"
     />
   `;
 };

@@ -5,7 +5,7 @@ import {
   UserAction,
   UsersByDepartment
 } from '../states/user_state';
-import User, { compare, getInsertionIndex } from '../../model/user';
+import User from '../../model/user';
 
 const initialState: UserStoreState = {
   action: {
@@ -30,7 +30,7 @@ export const user = (
 
   if (type === ACTION_TYPE.INITIALIZED) {
     let users = action.payload as Array<User>;
-    users.sort(compare);
+    users.sort(User.compare);
     let usersByDepartment: UsersByDepartment = {};
     for (let user of users) {
       if (user.departmentid in usersByDepartment)
@@ -53,8 +53,8 @@ export const user = (
   };
 
   const addUser = (users: Array<User>, sortedUsers: Array<User>) => {
-    let userIndex = getInsertionIndex(users, user);
-    let sortedUserIndex = getInsertionIndex(sortedUsers, user);
+    let userIndex = User.getInsertionIndex(users, user);
+    let sortedUserIndex = User.getInsertionIndex(sortedUsers, user);
     users.splice(userIndex, 0, user);
     sortedUsers.splice(sortedUserIndex, 0, user);
   };
