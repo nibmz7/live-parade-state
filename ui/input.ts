@@ -87,7 +87,7 @@ export const emailInput = (
       type="email"
       tabindex="0"
       placeholder="Email"
-      autocomplete="username"
+      autocomplete="off"
       aria-label="Email input"
       value="${inputState.value}"
       ?invalid="${inputState.validity === INPUT_VALIDITY.INVALID}"

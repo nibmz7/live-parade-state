@@ -110,7 +110,7 @@ export default class CustomDialog extends LitElement {
 
         #root[ready] > #dialog {
           pointer-events: auto;
-          transition: transform 0.3s;
+          transition: transform .3s;
         }
 
         @keyframes scale-in {

@@ -17,14 +17,14 @@ import '../dialogs/edit_user';
 
 @customElement('admin-view')
 export default class AdminView extends LitElement {
+  private departmentsUnsubscribe?: Unsubscribe;
+  private usersUnsubscribe?: Unsubscribe;
+  private branch = (ApplicationStore.getAuth().action.payload as Admin).branch;
   private adminManager = new MockAdminManager();
   private departments: Array<Department> = [];
   private usersByDepartment: UsersByDepartment = {};
   private selectedDepartment?: Department;
   private showEditDepartment: Boolean = false;
-  private departmentsUnsubscribe?: Unsubscribe;
-  private usersUnsubscribe?: Unsubscribe;
-  private branch = (ApplicationStore.getAuth().action.payload as Admin).branch;
   private selectedUser?: User;
   private selectedUserDepartment?: Department;
   private showEditUser = false;
