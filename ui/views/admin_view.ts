@@ -86,16 +86,15 @@ export default class AdminView extends LitElement {
     this.selectedDepartment = department;
   }
 
+  onEditUser(department: Department, user?: User) {
+    this.selectedUser = user;
+    this.selectedUserDepartment = department;
+    this.showEditUser = true;
+  }
+
   render() {
     const userTemplate = (department: Department, user: User) => html`
-      <div
-        class="item"
-        @click="${() => {
-          this.selectedUser = user;
-          this.selectedUserDepartment = department;
-          this.showEditUser = true;
-        }}"
-      >
+      <div class="item" @click="${() => this.onEditUser(department, user)}">
         <p id="primary-text">${user.fullname}</p>
         <p id="secondary-text">${user.email}</p>
       </div>
@@ -119,7 +118,13 @@ export default class AdminView extends LitElement {
             ?empty="${this.usersByDepartment[department.id]?.length > 0 ===
             false}"
           >
-            <button id="add" plain>Add user</button>
+            <button
+              id="add"
+              plain
+              @click="${() => this.onEditUser(department)}"
+            >
+              Add user
+            </button>
             <div id="list">
               ${this.usersByDepartment[department.id]?.map((user) =>
                 userTemplate(department, user)

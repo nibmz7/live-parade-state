@@ -1,6 +1,6 @@
 import { LitElement, html, customElement, css } from 'lit-element';
 import ACTION_USER from '../../data/actions/user_action';
-import { ApplicationStore} from '../../data/store';
+import { ApplicationStore } from '../../data/store';
 import Branch from '../../model/branch';
 import Department from '../../model/department';
 import Rank from '../../model/rank';
@@ -107,8 +107,10 @@ export default class EditUser extends LitElement {
     return html`<custom-dialog .state="${this.dialogState}">
       <div id="root" tabindex="0" class="selectable">
         <p id="department-name">${this.department!.name}</p>
+
         <div class="header">
-          <h3>Edit user</h3>
+          <h3>${this.editing ? 'Edit' : 'Add'} User</h3>
+
           ${this.editing
             ? html` <button
                 plain
@@ -121,31 +123,35 @@ export default class EditUser extends LitElement {
             : ''}
         </div>
 
-        ${textInput(this.rankState, (state) => (this.rankState = state), {
-          placeholder: 'Rank',
-          label: 'Rank',
-          id: 'rank'
-        })}
-        ${textInput(this.nameState, (state) => (this.nameState = state), {
-          placeholder: 'Name',
-          label: 'Name',
-          id: 'name'
-        })}
+        <div id="rankname" class="row-box">
+          ${textInput(this.rankState, (state) => (this.rankState = state), {
+            placeholder: 'Rank',
+            label: 'Rank',
+            id: 'rank'
+          })}
+          ${textInput(this.nameState, (state) => (this.nameState = state), {
+            placeholder: 'Name',
+            label: 'Name',
+            id: 'name'
+          })}
+        </div>
 
-        <div id="email" class="row-box-reversed">
-          <p>@${this.branch?.domain}</p>
+        <div id="email" class="row-box">
           ${textInput(this.emailState, (state) => (this.emailState = state), {
             placeholder: 'Email',
             label: 'Email'
           })}
+
+          <p>@${this.branch?.domain}</p>
         </div>
 
-        <div id="password" class="row-box-reversed">
-          <button id="change" ?hidden="${!this.editing}" plain>change</button>
+        <div id="password" class="row-box">
           ${passwordInput(
             this.passwordState,
             (state) => (this.passwordState = state)
           )}
+
+          <button id="change" ?hidden="${!this.editing}" plain>change</button>
         </div>
 
         <div class="regular-box">
@@ -154,6 +160,7 @@ export default class EditUser extends LitElement {
             .checked="${this.isRegularState}"
             @click="${() => (this.isRegularState = !this.isRegularState)}"
           />
+
           <label for="regular">Regular serviceman</label>
         </div>
 
@@ -189,9 +196,23 @@ export default class EditUser extends LitElement {
           flex-wrap: wrap;
         }
 
-        input,
+        .row-box {
+          width: 100%;
+          display: flex;
+          align-items: center;
+        }
+
+        #rankname,
         #password {
-          margin: 0 0 10px 0;
+          margin-bottom: 10px;
+        }
+
+        #email {
+          margin-bottom: 8px;
+        }
+
+        input {
+          margin: 0;
         }
 
         #department-name {
@@ -207,12 +228,6 @@ export default class EditUser extends LitElement {
           flex-direction: row;
           justify-content: space-between;
           align-items: center;
-          width: 100%;
-        }
-
-        .row-box-reversed {
-          display: flex;
-          flex-direction: row-reverse;
           width: 100%;
         }
 
@@ -233,7 +248,6 @@ export default class EditUser extends LitElement {
 
         #email > p {
           margin: 0 15px;
-          align-self: center;
         }
 
         #email > input {
@@ -265,12 +279,38 @@ export default class EditUser extends LitElement {
           align-items: center;
           width: 100%;
         }
-        .regular-box > input {
-          margin: 0 10px 0 0;
-        }
 
         .regular-box > label {
           font-size: 1rem;
+        }
+
+        .regular-box > input {
+          margin: 0 10px 0 0;
+          position: relative;
+        }
+
+        .regular-box > input::before {
+          position: absolute;
+          top: -5px;
+          bottom: -5px;
+          left: -5px;
+          right: -5px;
+          border-radius: 30px;
+          content: '';
+          z-index: -1;
+          background-color: transparent;
+          transition: background-color 0.3s;
+        }
+
+        .regular-box > input:focus::before,
+        .regular-box > input:active::before {
+          background-color: #cacad8;
+        }
+
+        @media (hover: hover) {
+          .regular-box > input:hover::before {
+            background-color: #cacad8;
+          }
         }
 
         #delete {

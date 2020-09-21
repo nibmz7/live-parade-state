@@ -33,7 +33,7 @@ export default class Rank {
   readonly code: number;
 
   constructor(rank: string) {
-    this.text = rank;
+    this.text = rank.toUpperCase();
     this.code = Rank.toInt(rank);
   }
 
