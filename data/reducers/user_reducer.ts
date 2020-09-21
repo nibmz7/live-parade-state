@@ -5,7 +5,7 @@ import {
   UserAction,
   UsersByDepartment
 } from '../states/user_state';
-import User, { getInsertionIndex } from '../../model/user';
+import User, { compare, getInsertionIndex } from '../../model/user';
 
 const initialState: UserStoreState = {
   action: {
@@ -13,7 +13,8 @@ const initialState: UserStoreState = {
     type: 0,
     id: 0
   },
-  items: {}
+  items: {},
+  sortedItems: []
 };
 
 export const user = (
@@ -28,50 +29,75 @@ export const user = (
   const type = action.type;
 
   if (type === ACTION_TYPE.INITIALIZED) {
-    return { items: action.payload as UsersByDepartment, action };
+    let users = action.payload as Array<User>;
+    users.sort(compare);
+    let usersByDepartment: UsersByDepartment = {};
+    for (let user of users) {
+      if (user.departmentid in usersByDepartment)
+        usersByDepartment[user.departmentid].push(user);
+      else usersByDepartment[user.departmentid] = [user];
+    }
+    return { action, items: usersByDepartment, sortedItems: users };
   }
 
-  const user = action.payload as User;
+  const user = new User(action.payload as User);
   let items: UsersByDepartment;
+  let sortedItems: Array<User>;
 
   switch (type) {
     case ACTION_TYPE.ADDED: {
-      let users = state.items[user.department.id]?.slice() || [];
+      let users = state.items[user.departmentid]?.slice() || [];
       let index = getInsertionIndex(users, user);
       users.splice(index, 0, user);
       items = {
         ...state.items,
-        [user.department.id]: users
+        [user.departmentid]: users
       };
+      let sortedUsers = state.sortedItems.slice() || [];
+      let index2 = getInsertionIndex(sortedUsers, user);
+      users.splice(index2, 0, user);
+      sortedItems = sortedUsers;
       break;
     }
     case ACTION_TYPE.MODIFIED: {
-      let users = state.items[user.department.id].filter(
+      let users = state.items[user.departmentid].filter(
         (item) => item.uid !== user.uid
       );
       let index = getInsertionIndex(users, user);
       users.splice(index, 0, user);
       items = {
         ...state.items,
-        [user.department.id]: users
+        [user.departmentid]: users
       };
+      let sortedUsers = state.sortedItems.filter(
+        (item) => item.uid !== user.uid
+      );
+      let index2 = getInsertionIndex(users, user);
+      sortedUsers.splice(index2, 0, user);
+      sortedItems = sortedUsers;
+
       break;
     }
     case ACTION_TYPE.REMOVED: {
-      let users = state.items[user.department.id].filter(
+      let users = state.items[user.departmentid].filter(
         (item) => item.uid !== user.uid
       );
       items = {
         ...state.items,
-        [user.department.id]: users
+        [user.departmentid]: users
       };
+      let sortedUsers = state.sortedItems.filter(
+        (item) => item.uid !== user.uid
+      );
+      sortedItems = sortedUsers;
       break;
     }
     default: {
       items = state.items;
+      sortedItems = state.sortedItems;
       break;
     }
   }
 
-  return { items, action };
+  return { action, items, sortedItems };
 };

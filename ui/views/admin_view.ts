@@ -32,6 +32,7 @@ export default class AdminView extends LitElement {
   static get properties() {
     return {
       departments: { type: Array },
+      usersByDepartment: { type: Object },
       selectedDepartment: { type: Object },
       showEditDepartment: { type: Boolean },
       selectedUser: { type: Object },
@@ -59,7 +60,15 @@ export default class AdminView extends LitElement {
     this.usersUnsubscribe = ApplicationStore.listen(
       ACTION_ROOT.USERS,
       (state: UserStoreState) => {
-        this.usersByDepartment = state.items;
+        let type = state.action.type;
+        if (
+          type === ACTION_TYPE.INITIALIZED ||
+          type === ACTION_TYPE.ADDED ||
+          type === ACTION_TYPE.MODIFIED ||
+          type === ACTION_TYPE.REMOVED
+        ) {
+          this.usersByDepartment = state.items;
+        }
       }
     );
     this.adminManager.subscribe();

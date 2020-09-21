@@ -1,9 +1,9 @@
 import { LitElement, html, customElement, css } from 'lit-element';
-import ACTION_DEPARTMENT from '../../data/actions/department_action';
 import ACTION_USER from '../../data/actions/user_action';
-import { ApplicationStore, generateActionId } from '../../data/store';
+import { ApplicationStore} from '../../data/store';
 import Branch from '../../model/branch';
 import Department from '../../model/department';
+import Rank from '../../model/rank';
 import User from '../../model/user';
 import {
   buttonStyles,
@@ -13,7 +13,6 @@ import {
   passwordInputStyles
 } from '../global_styles';
 import {
-  emailInput,
   InputState,
   INPUT_VALIDITY,
   passwordInput,
@@ -75,17 +74,24 @@ export default class EditUser extends LitElement {
   }
 
   submit() {
+    const name = this.nameState.value;
+    const rank = new Rank(this.rankState.value);
+    const email = this.emailState.value + '@' + this.branch?.domain;
+    const regular = this.isRegularState;
+    const departmentid = this.department!.id;
+    const branchid = this.branch!.id;
+
+    let data = { name, rank, email, regular, branchid, departmentid };
+
     if (this.editing) {
       let action = ACTION_USER.requestModify({
         ...this.user!,
-        name: this.nameState.value
+        ...data
       });
       ApplicationStore.dispatch(action);
     } else {
-      let action = ACTION_DEPARTMENT.requestAdd({
-        id: `${generateActionId()}`,
-        name: this.nameState.value
-      });
+      let user = new User({ ...data, uid: '0' });
+      let action = ACTION_USER.requestAdd(user);
       ApplicationStore.dispatch(action);
     }
     this.dialogState = DIALOG_STATE.CLOSING;
@@ -125,9 +131,13 @@ export default class EditUser extends LitElement {
           label: 'Name',
           id: 'name'
         })}
+
         <div id="email" class="row-box-reversed">
           <p>@${this.branch?.domain}</p>
-          ${emailInput(this.emailState, (state) => (this.emailState = state))}
+          ${textInput(this.emailState, (state) => (this.emailState = state), {
+            placeholder: 'Email',
+            label: 'Email'
+          })}
         </div>
 
         <div id="password" class="row-box-reversed">

@@ -14,8 +14,7 @@ import {
 } from '../data/states/department_state';
 import {
   UserAction,
-  UserActionError,
-  UsersByDepartment
+  UserActionError
 } from '../data/states/user_state';
 
 export const MockAuth = {
@@ -75,8 +74,8 @@ const ModelUser1 = new User({
   email: 'john1@lol.com',
   regular: false,
   rank: new Rank('CPL'),
-  branch: ModelBranch,
-  department: ModelDepartment1
+  branchid: ModelBranch.id,
+  departmentid: ModelDepartment1.id
 });
 const ModelUser2 = new User({
   uid: '201',
@@ -84,8 +83,8 @@ const ModelUser2 = new User({
   email: 'john2@lol.com',
   regular: true,
   rank: new Rank('MAJ'),
-  branch: ModelBranch,
-  department: ModelDepartment2
+  branchid: ModelBranch.id,
+  departmentid: ModelDepartment2.id
 });
 const ModelUser3 = new User({
   uid: '301',
@@ -93,15 +92,9 @@ const ModelUser3 = new User({
   email: 'john3@lol.com',
   regular: false,
   rank: new Rank('PTE'),
-  branch: ModelBranch,
-  department: ModelDepartment3
+  branchid: ModelBranch.id,
+  departmentid: ModelDepartment3.id
 });
-
-const ModelUsers: UsersByDepartment = {
-  [ModelDepartment1.id]: [],
-  [ModelDepartment2.id]: [ModelUser1, ModelUser2],
-  [ModelDepartment3.id]: [ModelUser3]
-};
 
 const ModelUserArray: Array<User> = [ModelUser1, ModelUser2, ModelUser3];
 
@@ -111,7 +104,6 @@ export const MockModel = {
   Department: ModelDepartment1,
   DepartmentArray: ModelDepartmentArray,
   User: ModelUser1,
-  UsersByDepartment: ModelUsers,
   UserArray: ModelUserArray,
   Admin: new Admin('321', 'admin@lol.com')
 };

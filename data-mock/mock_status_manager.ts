@@ -16,7 +16,7 @@ export default class MockStatusManager extends StatusManager {
   protected async connectDB(): Promise<DataResults> {
     return {
       departments: MockModel.DepartmentArray,
-      users: MockModel.UsersByDepartment
+      users: MockModel.UserArray
     };
   }
 }

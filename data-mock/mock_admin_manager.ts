@@ -14,7 +14,7 @@ export default class MockAdminManager extends AdminManager {
   protected async connectDB(): Promise<DataResults> {
     return {
       departments: MockModel.DepartmentArray,
-      users: MockModel.UsersByDepartment
+      users: MockModel.UserArray
     };
   }
 

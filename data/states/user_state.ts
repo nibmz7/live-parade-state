@@ -14,7 +14,7 @@ export interface UserActionError extends ActionError {
   action: UserAction;
 }
 
-export type UserPayload = User | UsersByDepartment | UserActionError | undefined;
+export type UserPayload = User | Array<User> | UserActionError | undefined;
 
 export interface UserAction extends Action {
   root: ACTION_ROOT.USERS;
@@ -26,4 +26,5 @@ export interface UserAction extends Action {
 export interface UserStoreState extends DataStoreState {
   action: UserAction;
   items: UsersByDepartment;
+  sortedItems: Array<User>;
 }

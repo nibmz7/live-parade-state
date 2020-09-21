@@ -1,28 +1,26 @@
 import Rank from './rank';
 import Status from './status';
-import Department from './department';
-import Branch from './branch';
 
 export default class User {
-  uid: String;
+  uid: string;
   email: string;
   name: string;
-  fullname: String;
+  fullname: string;
   regular: boolean;
   rank: Rank;
-  branch: Branch;
-  department: Department;
+  branchid: string;
+  departmentid: string;
   morning?: Status;
   afternoon?: Status;
 
   constructor(data: {
-    uid: String;
+    uid: string;
     email: string;
     name: string;
     regular: boolean;
     rank: Rank;
-    branch: Branch;
-    department: Department;
+    branchid: string;
+    departmentid: string;
     morning?: Status;
     afternoon?: Status;
   }) {
@@ -31,8 +29,8 @@ export default class User {
     this.name = data.name;
     this.regular = data.regular;
     this.rank = data.rank;
-    this.branch = data.branch;
-    this.department = data.department;
+    this.branchid = data.branchid;
+    this.departmentid = data.departmentid;
     this.morning = data.morning;
     this.afternoon = data.afternoon;
     this.fullname = `${data.rank.text} ${data.name}`;
