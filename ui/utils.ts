@@ -13,7 +13,7 @@ export const onPressed = (
       setTimeout(() => (isRunning = false), 1000);
     }
     if (autoBlur) {
-      let element = e.target as HTMLElement;
+      let element = e.currentTarget as HTMLElement;
       element.blur();
     }
     let eventType = e.type;

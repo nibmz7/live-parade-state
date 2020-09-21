@@ -14,6 +14,7 @@ import { ACTION_TYPE } from '../../data/data_manager';
 import Admin from '../../model/admin';
 import '../dialogs/edit_department';
 import '../dialogs/edit_user';
+import { onPressed } from '../utils';
 
 @customElement('admin-view')
 export default class AdminView extends LitElement {
@@ -82,23 +83,34 @@ export default class AdminView extends LitElement {
   }
 
   onEditDepartment(department?: Department) {
-    this.showEditDepartment = true;
-    this.selectedDepartment = department;
+    return onPressed(() => {
+      this.showEditDepartment = true;
+      this.selectedDepartment = department;
+    });
   }
 
   onEditUser(department: Department, user?: User) {
-    this.selectedUser = user;
-    this.selectedUserDepartment = department;
-    this.showEditUser = true;
+    return onPressed(() => {
+      this.selectedUser = user;
+      this.selectedUserDepartment = department;
+      this.showEditUser = true;
+    });
   }
 
   render() {
-    const userTemplate = (department: Department, user: User) => html`
-      <div class="item" @click="${() => this.onEditUser(department, user)}">
-        <p id="primary-text">${user.fullname}</p>
-        <p id="secondary-text">${user.email}</p>
-      </div>
-    `;
+    const userTemplate = (department: Department, user: User) => {
+      return html`
+        <div
+          tabindex="0"
+          class="item selectable"
+          @click="${this.onEditUser(department, user)}"
+          @keydown="${this.onEditUser(department, user)}"
+        >
+          <p id="primary-text">${user.fullname}</p>
+          <p id="secondary-text">${user.email}</p>
+        </div>
+      `;
+    };
 
     const departmentTemplate = (department: Department) =>
       html`
@@ -108,7 +120,7 @@ export default class AdminView extends LitElement {
             <button
               id="edit"
               plain
-              @click="${() => this.onEditDepartment(department)}"
+              @click="${this.onEditDepartment(department)}"
             >
               edit
             </button>
@@ -118,11 +130,7 @@ export default class AdminView extends LitElement {
             ?empty="${this.usersByDepartment[department.id]?.length > 0 ===
             false}"
           >
-            <button
-              id="add"
-              plain
-              @click="${() => this.onEditUser(department)}"
-            >
+            <button id="add" plain @click="${this.onEditUser(department)}">
               Add user
             </button>
             <div id="list">
@@ -136,11 +144,7 @@ export default class AdminView extends LitElement {
     return html`<div id="root">
       <div class="departments">${this.departments.map(departmentTemplate)}</div>
 
-      <button
-        id="add-department"
-        solid
-        @click="${() => this.onEditDepartment()}"
-      >
+      <button id="add-department" solid @click="${this.onEditDepartment()}">
         Add department
       </button>
 

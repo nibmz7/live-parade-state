@@ -64,6 +64,7 @@ export default class EditDepartment extends LitElement {
       <div id="root" tabindex="0" class="selectable">
         <div class="header">
           <h3>Department</h3>
+
           ${this.editing
             ? html`<button
                 plain
@@ -75,11 +76,14 @@ export default class EditDepartment extends LitElement {
               </button>`
             : ''}
         </div>
+
         ${textInput(this.nameState, (state) => (this.nameState = state), {
           placeholder: 'e.g. Log Branch',
           label: 'Department name'
         })}
+
         <button
+          solid
           id="confirm"
           @click="${this.submit}"
           aria-label="Add/Edit department"
@@ -89,7 +93,6 @@ export default class EditDepartment extends LitElement {
               this.shadowRoot?.getElementById('root')?.focus();
             }
           }}"
-          solid
         >
           Confirm
         </button>
