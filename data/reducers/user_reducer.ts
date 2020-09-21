@@ -44,52 +44,45 @@ export const user = (
   let items: UsersByDepartment;
   let sortedItems: Array<User>;
 
+  const setData = (users: Array<User>, sortedUsers: Array<User>) => {
+    items = {
+      ...state.items,
+      [user.departmentid]: users
+    };
+    sortedItems = sortedUsers;
+  };
+
+  const addUser = (users: Array<User>, sortedUsers: Array<User>) => {
+    let userIndex = getInsertionIndex(users, user);
+    let sortedUserIndex = getInsertionIndex(sortedUsers, user);
+    users.splice(userIndex, 0, user);
+    sortedUsers.splice(sortedUserIndex, 0, user);
+  };
+
+  const removeUser = () => {
+    let depId = user.departmentid;
+    let users = state.items[depId].filter((item) => item.uid !== user.uid);
+    let sortedUsers = state.sortedItems.filter((item) => item.uid !== user.uid);
+    return { users, sortedUsers };
+  };
+
   switch (type) {
     case ACTION_TYPE.ADDED: {
       let users = state.items[user.departmentid]?.slice() || [];
-      let index = getInsertionIndex(users, user);
-      users.splice(index, 0, user);
-      items = {
-        ...state.items,
-        [user.departmentid]: users
-      };
-      let sortedUsers = state.sortedItems.slice() || [];
-      let index2 = getInsertionIndex(sortedUsers, user);
-      users.splice(index2, 0, user);
-      sortedItems = sortedUsers;
+      let sortedUsers = state.sortedItems.slice();
+      addUser(users, sortedUsers);
+      setData(users, sortedUsers);
       break;
     }
     case ACTION_TYPE.MODIFIED: {
-      let users = state.items[user.departmentid].filter(
-        (item) => item.uid !== user.uid
-      );
-      let index = getInsertionIndex(users, user);
-      users.splice(index, 0, user);
-      items = {
-        ...state.items,
-        [user.departmentid]: users
-      };
-      let sortedUsers = state.sortedItems.filter(
-        (item) => item.uid !== user.uid
-      );
-      let index2 = getInsertionIndex(users, user);
-      sortedUsers.splice(index2, 0, user);
-      sortedItems = sortedUsers;
-
+      let { users, sortedUsers } = removeUser();
+      addUser(users, sortedUsers);
+      setData(users, sortedUsers);
       break;
     }
     case ACTION_TYPE.REMOVED: {
-      let users = state.items[user.departmentid].filter(
-        (item) => item.uid !== user.uid
-      );
-      items = {
-        ...state.items,
-        [user.departmentid]: users
-      };
-      let sortedUsers = state.sortedItems.filter(
-        (item) => item.uid !== user.uid
-      );
-      sortedItems = sortedUsers;
+      let { users, sortedUsers } = removeUser();
+      setData(users, sortedUsers);
       break;
     }
     default: {
@@ -99,5 +92,6 @@ export const user = (
     }
   }
 
+  //@ts-ignore
   return { action, items, sortedItems };
 };
