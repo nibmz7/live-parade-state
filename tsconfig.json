@@ -19,6 +19,12 @@
     "rootDir": ".",
     "outDir": "./dist"
   },
-  "include": ["./model/**/*.ts", "./data/**/*.ts", "./data-mock/**/*.ts", "./ui/**/*.ts"],
+  "include": [
+    "./model/**/*.ts",
+    "./data/**/*.ts",
+    "./data-mock/**/*.ts",
+    "./ui/**/*.ts",
+    "./test/**/*.ts"
+  ],
   "exclude": []
 }

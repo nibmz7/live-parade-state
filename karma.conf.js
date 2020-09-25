@@ -7,7 +7,7 @@ module.exports = config => {
       files: [
         'test/global_variables.js',
         {
-          pattern: config.grep ? config.grep : 'test/js/**/*.test.js',
+          pattern: config.grep ? config.grep : 'dist/test/**/*.test.js',
           type: 'module',
         },
       ],

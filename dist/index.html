@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="main.css">
+    </link>
+    <script>
+        process = {
+            env: {
+                NODE_ENV: 'production',
+            },
+        };
+    </script>
+    <script src="ui/view_switcher.js" type="module"></script>
+</head>
+
+<body>
+    <view-switcher splashscreen></view-switcher>
+    <script>
+        const screenHeight = window.innerHeight;
+        const screenWidth = window.innerWidth;
+
+        document.body.style.height = screenHeight + 'px';
+        document.body.style.width = screenWidth + 'px';
+        window.onresize = () => {
+            let offsetHeight = (window.innerHeight - screenHeight)/2;
+            document.body.style.setProperty('--offset-height', offsetHeight + 'px');
+            console.log(offsetHeight); 
+        }
+    </script>
+</body>
+
+</html>

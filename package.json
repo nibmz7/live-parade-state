@@ -5,6 +5,7 @@
   "main": "index.js",
   "dependencies": {
     "firebase-functions": "^3.6.1",
+    "lit-element": "^2.4.0",
     "redux": "^4.0.5"
   },
   "devDependencies": {
@@ -35,8 +36,8 @@
     "serve": "es-dev-server",
     "test": "karma start --coverage",
     "test:watch": "karma start --auto-watch=true --single-run=false",
-    "build": "tsc --build --watch",
-    "build:clean": "tsc --build --clean",
+    "build": "tsc",
+    "build:watch": "tsc --watch",
     "build:tests": "tsc --build test --watch",
     "build:tests:clean": "tsc --build --clean test",
     "lint:prettier": "prettier \"**/*.js\" \"**/*.ts\" --check --ignore-path .gitignore",

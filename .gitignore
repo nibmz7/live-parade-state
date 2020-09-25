@@ -1,4 +1,4 @@
-.tsbuildinfo
+*.tsbuildinfo
 js/
 test/js
 prod/main.js
@@ -12,7 +12,11 @@ yarn-debug.log*
 yarn-error.log*
 firebase-debug.log*
 
-dist
+dist/**/*.js
+dist/**/*.ts
+dist/**/*.map
+
+
 firestore-database
 firestore-db
 

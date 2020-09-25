@@ -20,6 +20,7 @@ import {
   PasswordInputState,
   textInput
 } from '../input';
+import { onPressed } from '../utils';
 import './custom_dialog';
 import { DIALOG_STATE } from './custom_dialog';
 
@@ -92,8 +93,7 @@ export default class EditUser extends LitElement {
     this.errorState = { visible: true, message };
   }
 
-  submit() {
-    this.errorState = { visible: false, message: '' };
+  checkValidity() {
     if (this.rankState.validity !== INPUT_VALIDITY.VALID) {
       this.showError('Please enter a valid rank!');
     } else if (this.nameState.validity !== INPUT_VALIDITY.VALID) {
@@ -106,34 +106,48 @@ export default class EditUser extends LitElement {
     ) {
       this.showError('Please enter a valid password!');
     }
-    if (this.errorState.visible) return;
+  }
 
-    const name = this.nameState.value;
-    const rank = new Rank(this.rankState.value);
-    const email = this.emailState.value + '@' + this.branch?.domain;
-    const regular = this.isRegularState;
-    const departmentid = this.department!.id;
-    const branchid = this.branch!.id;
+  submit() {
+    return onPressed(() => {
+      this.checkValidity();
+      if (this.errorState.visible) return;
 
-    let data = { name, rank, email, regular, branchid, departmentid };
-    let action: UserAction;
-    if (this.editing) {
-      action = ACTION_USER.requestModify({
-        ...this.user!,
-        ...data
-      });
-    } else {
-      let user = new User({ ...data, uid: '0' });
-      action = ACTION_USER.requestAdd(user);
-    }
-    ApplicationStore.dispatch(action);
-    this.dialogState = DIALOG_STATE.CLOSING;
+      const name = this.nameState.value;
+      const rank = new Rank(this.rankState.value);
+      const email = this.emailState.value + '@' + this.branch?.domain;
+      const regular = this.isRegularState;
+      const departmentid = this.department!.id;
+      const branchid = this.branch!.id;
+
+      let data = { name, rank, email, regular, branchid, departmentid };
+      let action: UserAction;
+
+      if (this.editing) {
+        action = ACTION_USER.requestModify({
+          ...this.user!,
+          ...data
+        });
+      } else {
+        let user = new User({ ...data, uid: '0' });
+        action = ACTION_USER.requestAdd(user);
+      }
+
+      ApplicationStore.dispatch(action);
+      this.dialogState = DIALOG_STATE.CLOSING;
+    });
+  }
+
+  changePassword() {
+    return onPressed(() => {});
   }
 
   delete() {
-    let action = ACTION_USER.requestRemove(this.user!);
-    ApplicationStore.dispatch(action);
-    this.dialogState = DIALOG_STATE.CLOSING;
+    return onPressed(() => {
+      let action = ACTION_USER.requestRemove(this.user!);
+      ApplicationStore.dispatch(action);
+      this.dialogState = DIALOG_STATE.CLOSING;
+    });
   }
 
   reset() {
@@ -155,7 +169,7 @@ export default class EditUser extends LitElement {
             ? html` <button
                 plain
                 id="delete"
-                @click="${this.delete}"
+                @click="${this.delete()}"
                 aria-label="Delete user"
               >
                 delete
@@ -214,7 +228,14 @@ export default class EditUser extends LitElement {
             () => this.reset()
           )}
 
-          <button id="change" ?hidden="${!this.editing}" plain>change</button>
+          <button
+            plain
+            id="change"
+            ?hidden="${!this.editing}"
+            @click=${this.changePassword()}
+          >
+            change
+          </button>
         </div>
 
         <div class="regular-box">
@@ -229,7 +250,7 @@ export default class EditUser extends LitElement {
 
         <button
           id="confirm"
-          @click="${this.submit}"
+          @click=${this.submit()}
           aria-label="Add/Edit department"
           @keydown="${(e: Event) => {
             let key = (e as KeyboardEvent).key;

@@ -34,7 +34,7 @@ export default class Rank {
 
   constructor(rank: string) {
     this.text = rank.toUpperCase();
-    this.code = Rank.toInt(rank);
+    this.code = Rank.toInt(this.text);
   }
 
   static isValid(rank: string): boolean {
