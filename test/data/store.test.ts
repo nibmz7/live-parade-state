@@ -50,7 +50,8 @@ describe('Store', () => {
       },
       user: {
         action,
-        items: {}
+        items: {},
+        sortedItems: []
       }
     };
     ApplicationStore.listen(ACTION_ROOT.ALL, (data, unsubscribe) => {

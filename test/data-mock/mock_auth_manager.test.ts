@@ -1,6 +1,6 @@
 import { expect } from '@open-wc/testing';
 import { ApplicationStore, ACTION_ROOT } from '../../data/store';
-import { AuthState, AuthStoreState } from '../../data/states/auth_state';
+import { AUTH_STATE, AuthStoreState } from '../../data/states/auth_state';
 import ACTION_AUTH from '../../data/actions/auth_action';
 import MockAuthManager from '../../data-mock/mock_auth_manager';
 import { MockAuth, MockModel, MockError } from '../../data-mock/mock_data';
@@ -19,13 +19,13 @@ describe('Mock Auth Manager', () => {
     let action = ACTION_AUTH.requestSignIn(MockAuth.ErrorCredentials);
 
     let callback = (auth: AuthStoreState, unsubscribe: Unsubscribe) => {
-      if (auth.action.type !== AuthState.REQUEST_SIGN_IN_FAILED) return;
+      if (auth.action.type !== AUTH_STATE.REQUEST_SIGN_IN_FAILED) return;
 
       let expectedState: AuthStoreState = {
         action: {
           id: auth.action.id,
           root: ACTION_ROOT.AUTH,
-          type: AuthState.REQUEST_SIGN_IN_FAILED,
+          type: AUTH_STATE.REQUEST_SIGN_IN_FAILED,
           payload: MockError.SignIn(action)
         }
       };
@@ -42,12 +42,12 @@ describe('Mock Auth Manager', () => {
     let action = ACTION_AUTH.requestSignIn(MockAuth.UserCredentials);
 
     let callback = (auth: AuthStoreState, unsubscribe: Unsubscribe) => {
-      if (auth.action.type !== AuthState.SIGNED_IN) return;
+      if (auth.action.type !== AUTH_STATE.SIGNED_IN) return;
       let expectedState: AuthStoreState = {
         action: {
           id: auth.action.id,
           root: ACTION_ROOT.AUTH,
-          type: AuthState.SIGNED_IN,
+          type: AUTH_STATE.SIGNED_IN,
           payload: MockModel.User
         }
       };
@@ -64,12 +64,12 @@ describe('Mock Auth Manager', () => {
     let action = ACTION_AUTH.requestSignIn(MockAuth.AdminCredentials);
 
     let callback = (auth: AuthStoreState, unsubscribe: Unsubscribe) => {
-      if (auth.action.type !== AuthState.SIGNED_IN) return;
+      if (auth.action.type !== AUTH_STATE.SIGNED_IN) return;
       let expectedState: AuthStoreState = {
         action: {
           id: auth.action.id,
           root: ACTION_ROOT.AUTH,
-          type: AuthState.SIGNED_IN,
+          type: AUTH_STATE.SIGNED_IN,
           payload: MockModel.Admin
         }
       };
@@ -86,12 +86,12 @@ describe('Mock Auth Manager', () => {
     let action = ACTION_AUTH.requestSignOut();
 
     let callback = (auth: AuthStoreState, unsubscribe: Unsubscribe) => {
-      if (auth.action.type !== AuthState.SIGNED_OUT) return;
+      if (auth.action.type !== AUTH_STATE.SIGNED_OUT) return;
       let expectedState: AuthStoreState = {
         action: {
           id: auth.action.id,
           root: ACTION_ROOT.AUTH,
-          type: AuthState.SIGNED_OUT,
+          type: AUTH_STATE.SIGNED_OUT,
           payload: undefined
         }
       };

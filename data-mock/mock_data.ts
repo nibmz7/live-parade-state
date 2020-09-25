@@ -12,10 +12,7 @@ import {
   DepartmentAction,
   DepartmentActionError
 } from '../data/states/department_state';
-import {
-  UserAction,
-  UserActionError
-} from '../data/states/user_state';
+import { UserAction, UserActionError } from '../data/states/user_state';
 
 export const MockAuth = {
   UserCredentials: {
@@ -105,5 +102,10 @@ export const MockModel = {
   DepartmentArray: ModelDepartmentArray,
   User: ModelUser1,
   UserArray: ModelUserArray,
+  Users: {
+    [ModelDepartment1.id]: [ModelUser1],
+    [ModelDepartment2.id]: [ModelUser2],
+    [ModelDepartment3.id]: [ModelUser3]
+  },
   Admin: new Admin('321', 'admin@lol.com')
 };

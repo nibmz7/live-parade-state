@@ -2,7 +2,7 @@ import { expect } from '@open-wc/testing';
 import { auth } from '../../../data/reducers/auth_reducer';
 import {
   AuthAction,
-  AuthState,
+  AUTH_STATE,
   AuthStoreState
 } from '../../../data/states/auth_state';
 import { MockAuth } from '../../../data-mock/mock_data';
@@ -13,7 +13,7 @@ describe('Auth Reducer', () => {
     const action: AuthAction = {
       id: Date.now(),
       root: ACTION_ROOT.AUTH,
-      type: AuthState.REQUEST_SIGN_IN,
+      type: AUTH_STATE.REQUEST_SIGN_IN,
       payload: MockAuth.UserCredentials
     };
     const expectedState: AuthStoreState = {
@@ -26,7 +26,7 @@ describe('Auth Reducer', () => {
     const action: AuthAction = {
       id: Date.now(),
       root: ACTION_ROOT.AUTH,
-      type: AuthState.REQUEST_SIGN_OUT
+      type: AUTH_STATE.REQUEST_SIGN_OUT
     };
     const expectedState: AuthStoreState = {
       action

@@ -34,7 +34,7 @@
     "start-emulators": "firebase emulators:start --import=./firestore-db",
     "deploy-hosting": "firebase deploy --only hosting",
     "serve": "es-dev-server",
-    "test": "karma start --coverage",
+    "test": "karma start",
     "test:watch": "karma start --auto-watch=true --single-run=false",
     "build": "tsc",
     "build:watch": "tsc --watch",

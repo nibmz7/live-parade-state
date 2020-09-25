@@ -2,7 +2,7 @@ import { expect } from '@open-wc/testing';
 import ACTION_AUTH from '../../../data/actions/auth_action';
 import {
   AuthAction,
-  AuthState,
+  AUTH_STATE,
   SignInError,
 } from '../../../data/states/auth_state';
 import { ACTION_ROOT } from '../../../data/store';
@@ -14,7 +14,7 @@ describe('Auth Actions', () => {
     const expectedAction: AuthAction = {
       id: action.id,
       root: ACTION_ROOT.AUTH,
-      type: AuthState.REQUEST_SIGN_IN,
+      type: AUTH_STATE.REQUEST_SIGN_IN,
       payload: MockAuth.UserCredentials,
     };
     expect(action).to.deep.equal(expectedAction);
@@ -25,7 +25,7 @@ describe('Auth Actions', () => {
     const expectedAction: AuthAction = {
       id: action.id,
       root: ACTION_ROOT.AUTH,
-      type: AuthState.REQUEST_SIGN_OUT,
+      type: AUTH_STATE.REQUEST_SIGN_OUT,
       payload: undefined,
     };
     expect(action).to.deep.equal(expectedAction);
@@ -36,7 +36,7 @@ describe('Auth Actions', () => {
     const expectedAction: AuthAction = {
       id: action.id,
       root: ACTION_ROOT.AUTH,
-      type: AuthState.SIGNED_IN,
+      type: AUTH_STATE.SIGNED_IN,
       payload: MockModel.User,
     };
     expect(action).to.deep.equal(expectedAction);
@@ -49,7 +49,7 @@ describe('Auth Actions', () => {
     const expectedAction: AuthAction = {
       id: action.id,
       root: ACTION_ROOT.AUTH,
-      type: AuthState.REQUEST_SIGN_IN_FAILED,
+      type: AUTH_STATE.REQUEST_SIGN_IN_FAILED,
       payload: error,
     };
     expect(action).to.deep.equal(expectedAction);
