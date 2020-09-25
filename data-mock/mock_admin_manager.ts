@@ -5,6 +5,7 @@ import { MockModel } from './mock_data';
 import { UserStoreState } from '../data/states/user_state';
 import User from '../model/user';
 import AdminManager from '../data/admin_manager';
+import { generateActionId } from '../data/store';
 
 export default class MockAdminManager extends AdminManager {
   constructor() {
@@ -19,10 +20,9 @@ export default class MockAdminManager extends AdminManager {
   }
 
   protected requestAddDepartment(state: DepartmentStoreState): void {
-    this.departmentOnChange(
-      state.action.payload as Department,
-      ACTION_TYPE.ADDED
-    );
+    let department = state.action.payload as Department;
+    department.id = `dep-${generateActionId()}`;
+    this.departmentOnChange(department, ACTION_TYPE.ADDED);
   }
 
   protected requestModifyDepartment(state: DepartmentStoreState): void {
@@ -40,7 +40,8 @@ export default class MockAdminManager extends AdminManager {
   }
 
   protected requestAddUser(state: UserStoreState): void {
-    this.userOnChange(state.action.payload as User, ACTION_TYPE.ADDED);
+    let user = state.action.payload as User;
+    this.userOnChange(user, ACTION_TYPE.ADDED);
   }
 
   protected requestModifyUser(state: UserStoreState): void {

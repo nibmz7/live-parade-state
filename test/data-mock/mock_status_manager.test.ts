@@ -36,8 +36,7 @@ describe('Mock status manager', () => {
   });
 
   it('Modify user', (done) => {
-    let modifiedUser = new User({...MockModel.User});
-    modifiedUser.name = 'Modified user';
+    let modifiedUser = new User({ ...MockModel.User, name: 'Modified User' });
     ApplicationStore.listen(
       ACTION_ROOT.USERS,
       (state: UserStoreState, unsubscribe: Unsubscribe) => {

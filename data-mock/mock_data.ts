@@ -55,9 +55,9 @@ const ModelBranch: Branch = {
   domain: MockAuth.UserCredentials.email.split('@')[1]
 };
 
-const ModelDepartment1: Department = { id: '123', name: 'Manpower Branch' };
-const ModelDepartment2: Department = { id: '456', name: 'Logistics Branch' };
-const ModelDepartment3: Department = { id: '789', name: 'Accounting Branch' };
+const ModelDepartment1: Department = { id: 'dep-123', name: 'Manpower Branch' };
+const ModelDepartment2: Department = { id: 'dep-456', name: 'Logistics Branch' };
+const ModelDepartment3: Department = { id: 'dep-789', name: 'Accounting Branch' };
 
 const ModelDepartmentArray: Array<Department> = [
   ModelDepartment1,
@@ -66,7 +66,7 @@ const ModelDepartmentArray: Array<Department> = [
 ];
 
 const ModelUser1 = new User({
-  uid: '101',
+  uid: 'user-101',
   name: 'John',
   email: 'john1@lol.com',
   regular: false,
@@ -75,7 +75,7 @@ const ModelUser1 = new User({
   departmentid: ModelDepartment1.id
 });
 const ModelUser2 = new User({
-  uid: '201',
+  uid: 'user-201',
   name: 'John',
   email: 'john2@lol.com',
   regular: true,
@@ -84,7 +84,7 @@ const ModelUser2 = new User({
   departmentid: ModelDepartment2.id
 });
 const ModelUser3 = new User({
-  uid: '301',
+  uid: 'user-301',
   name: 'John',
   email: 'john3@lol.com',
   regular: false,

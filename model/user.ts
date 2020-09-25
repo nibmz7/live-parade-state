@@ -1,39 +1,51 @@
 import Rank from './rank';
 import Status from './status';
 
-export default class User {
-  uid: string;
+export interface UserBaseProps {
   email: string;
   name: string;
-  fullname: string;
   regular: boolean;
   rank: Rank;
   branchid: string;
   departmentid: string;
+}
+
+export class UserBase {
+  readonly email: string;
+  readonly name: string;
+  readonly fullname: string;
+  readonly regular: boolean;
+  readonly rank: Rank;
+  readonly branchid: string;
+  readonly departmentid: string;
+
+  constructor(props: UserBaseProps) {
+    this.email = props.email;
+    this.name = props.name;
+    this.regular = props.regular;
+    this.rank = props.rank;
+    this.branchid = props.branchid;
+    this.departmentid = props.departmentid;
+    this.fullname = `${props.rank.text} ${props.name}`;
+  }
+}
+
+export interface UserProps extends UserBaseProps {
+  uid: string;
   morning?: Status;
   afternoon?: Status;
+}
 
-  constructor(data: {
-    uid: string;
-    email: string;
-    name: string;
-    regular: boolean;
-    rank: Rank;
-    branchid: string;
-    departmentid: string;
-    morning?: Status;
-    afternoon?: Status;
-  }) {
-    this.uid = data.uid;
-    this.email = data.email;
-    this.name = data.name;
-    this.regular = data.regular;
-    this.rank = data.rank;
-    this.branchid = data.branchid;
-    this.departmentid = data.departmentid;
-    this.morning = data.morning;
-    this.afternoon = data.afternoon;
-    this.fullname = `${data.rank.text} ${data.name}`;
+export default class User extends UserBase {
+  readonly uid: string;
+  readonly morning?: Status;
+  readonly afternoon?: Status;
+
+  constructor(props: UserProps) {
+    super(props);
+    this.uid = props.uid;
+    this.morning = props.morning;
+    this.afternoon = props.afternoon;
   }
 
   static compare(user: User, compareTo: User) {

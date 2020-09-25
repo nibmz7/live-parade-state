@@ -42,6 +42,7 @@ export default class CustomDialog extends LitElement {
     return html`<div
       tabindex="0"
       id="root"
+      class="selectable"
       ?hide="${this.state === DIALOG_STATE.CLOSING}"
       ?show="${this.state === DIALOG_STATE.OPENING}"
       ?ready="${this.state === DIALOG_STATE.OPENED}"

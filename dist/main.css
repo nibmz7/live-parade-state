@@ -36,10 +36,12 @@ body {
 }
 
 @media all and (min-width: 50rem) {
+  html {
+    background-color: #e4e5e5;
+  }
   body {
     margin: auto;
     box-shadow: #817e7e91 0px 0px 5px 0px inset;
-    
   }
 }
 
