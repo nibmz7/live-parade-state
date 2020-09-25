@@ -9,12 +9,12 @@ import { ACTION_TYPE } from '../../../data/data_manager';
 
 describe('Department actions', () => {
   it('Add department', () => {
-    let action = ACTION_DEPARTMENT.requestAdd(MockModel.Department);
+    let action = ACTION_DEPARTMENT.requestAdd('New Department');
     let expectedAction: DepartmentAction = {
       id: action.id,
       root: ACTION_ROOT.DEPARTMENTS,
       type: ACTION_TYPE.REQUEST_ADD,
-      payload: MockModel.Department
+      payload: 'New Department'
     };
     expect(action).deep.equal(expectedAction);
   });
@@ -29,7 +29,7 @@ describe('Department actions', () => {
     expect(action).deep.equal(expectedAction);
   });
   it('Department request error', () => {
-    let addAction = ACTION_DEPARTMENT.requestAdd(MockModel.Department);
+    let addAction = ACTION_DEPARTMENT.requestAdd('New Department');
     let error = MockError.DepartmentRequest(addAction);
     let errorAction = ACTION_DEPARTMENT.error(error);
     let expectedAction: DepartmentAction = {

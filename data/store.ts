@@ -90,6 +90,10 @@ class DataStoreImpl implements DataStore {
     return this.store.getState();
   }
 
+  getDepartments() {
+    return this.getState().department;
+  }
+
   getAuth() {
     return this.getState().auth;
   }

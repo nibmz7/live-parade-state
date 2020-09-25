@@ -1,6 +1,6 @@
 import { LitElement, html, customElement, css } from 'lit-element';
 import ACTION_DEPARTMENT from '../../data/actions/department_action';
-import { ApplicationStore, generateActionId } from '../../data/store';
+import { ApplicationStore } from '../../data/store';
 import Department from '../../model/department';
 import {
   buttonStyles,
@@ -44,10 +44,7 @@ export default class EditDepartment extends LitElement {
       });
       ApplicationStore.dispatch(action);
     } else {
-      let action = ACTION_DEPARTMENT.requestAdd({
-        id: `${generateActionId()}`,
-        name: this.nameState.value
-      });
+      let action = ACTION_DEPARTMENT.requestAdd(this.nameState.value);
       ApplicationStore.dispatch(action);
     }
     this.dialogState = DIALOG_STATE.CLOSING;

@@ -5,7 +5,7 @@ import {
   UserPayload,
   UserActionError
 } from '../states/user_state';
-import User from '../../model/user';
+import User, { UserBase } from '../../model/user';
 
 const makeAction = (type: ACTION_TYPE, payload: UserPayload): UserAction => ({
   root: ACTION_ROOT.USERS,
@@ -20,7 +20,7 @@ const ACTION_USER = {
   added: (user: User): UserAction => makeAction(ACTION_TYPE.ADDED, user),
   modified: (user: User): UserAction => makeAction(ACTION_TYPE.MODIFIED, user),
   removed: (user: User): UserAction => makeAction(ACTION_TYPE.REMOVED, user),
-  requestAdd: (user: User): UserAction =>
+  requestAdd: (user: UserBase): UserAction =>
     makeAction(ACTION_TYPE.REQUEST_ADD, user),
   requestModify: (user: User): UserAction =>
     makeAction(ACTION_TYPE.REQUEST_MODIFY, user),

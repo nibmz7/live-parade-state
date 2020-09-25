@@ -6,6 +6,7 @@ import { ACTION_TYPE } from '../../data/data_manager';
 import { MockModel } from '../../data-mock/mock_data';
 import { Unsubscribe } from 'redux';
 import ACTION_DEPARTMENT from '../../data/actions/department_action';
+import Department from '../../model/department';
 
 describe('Mock Admin Manager', async () => {
   const mockAdminManager = new MockAdminManager();
@@ -33,21 +34,22 @@ describe('Mock Admin Manager', async () => {
     ApplicationStore.reset();
     let callback = (data: DepartmentStoreState, unsubscribe: Unsubscribe) => {
       if (data.action.type === ACTION_TYPE.ADDED) {
-        let expectedResult = [MockModel.Department];
-        expect(data.items).to.eql(expectedResult);
+        expect(data.items[0].name).to.eql(MockModel.Department.name);
         unsubscribe();
         done();
       }
     };
     ApplicationStore.listen(ACTION_ROOT.DEPARTMENTS, callback);
     ApplicationStore.dispatch(
-      ACTION_DEPARTMENT.requestAdd(MockModel.Department)
+      ACTION_DEPARTMENT.requestAdd(MockModel.Department.name)
     );
   });
 
   it('Request modify department', (done) => {
-    let modifiedDepartment = MockModel.Department;
-    modifiedDepartment.name = 'Modified branch';
+    let modifiedDepartment: Department = {
+      ...ApplicationStore.getDepartments().items[0],
+      name: 'Modified branch'
+    };
     let callback = (data: DepartmentStoreState, unsubscribe: Unsubscribe) => {
       if (data.action.type === ACTION_TYPE.MODIFIED) {
         let expectedResult = [modifiedDepartment];
@@ -73,7 +75,9 @@ describe('Mock Admin Manager', async () => {
     };
     ApplicationStore.listen(ACTION_ROOT.DEPARTMENTS, callback);
     ApplicationStore.dispatch(
-      ACTION_DEPARTMENT.requestRemove(MockModel.Department)
+      ACTION_DEPARTMENT.requestRemove(
+        ApplicationStore.getDepartments().items[0]
+      )
     );
   });
 });

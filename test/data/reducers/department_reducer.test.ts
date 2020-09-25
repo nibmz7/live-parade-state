@@ -6,7 +6,7 @@ import { DepartmentStoreState } from '../../../data/states/department_state';
 
 describe('Department reducer', () => {
   it('Request add', () => {
-    let action = ACTION_DEPARTMENT.requestAdd(MockModel.Department);
+    let action = ACTION_DEPARTMENT.requestAdd('New Department');
     let reduce = department(undefined, action);
     let expectedResult: DepartmentStoreState = {
       action,

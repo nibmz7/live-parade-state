@@ -6,7 +6,7 @@ import {
   ACTION_ID
 } from '../store';
 import { ACTION_TYPE } from '../data_manager';
-import User from '../../model/user';
+import User, { UserBase } from '../../model/user';
 
 export type UsersByDepartment = {[departmentId: string]: Array<User>};
 
@@ -14,7 +14,7 @@ export interface UserActionError extends ActionError {
   action: UserAction;
 }
 
-export type UserPayload = User | Array<User> | UserActionError | undefined;
+export type UserPayload = User | UserBase | Array<User> | UserActionError | undefined;
 
 export interface UserAction extends Action {
   root: ACTION_ROOT.USERS;

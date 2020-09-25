@@ -1,6 +1,6 @@
 import { ACTION_TYPE, DataResults } from '../data/data_manager';
 import { DepartmentStoreState } from '../data/states/department_state';
-import Department from '../model/department';
+import Department, { DepartmentName } from '../model/department';
 import { MockModel } from './mock_data';
 import { UserStoreState } from '../data/states/user_state';
 import User from '../model/user';
@@ -20,8 +20,11 @@ export default class MockAdminManager extends AdminManager {
   }
 
   protected requestAddDepartment(state: DepartmentStoreState): void {
-    let department = state.action.payload as Department;
-    department.id = `dep-${generateActionId()}`;
+    let name = state.action.payload as DepartmentName;
+    let department: Department = {
+      id: `dep-${generateActionId()}`,
+      name
+    };
     this.departmentOnChange(department, ACTION_TYPE.ADDED);
   }
 
