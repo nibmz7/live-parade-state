@@ -138,9 +138,11 @@ export default class AdminView extends LitElement {
               ...this.users,
               [user.departmentid]: departmentUsers
             };
+
             await new Promise((resolve) =>
               requestAnimationFrame(() => resolve())
             );
+
             this.listState = {
               ...this.listState,
               [user.departmentid]: {
@@ -156,27 +158,27 @@ export default class AdminView extends LitElement {
             const user = state.action.payload as User;
             const userState = this.listState[user.departmentid].items[user.uid];
             const departmentUsers = state.items[user.departmentid].slice();
-            departmentUsers.push(user);
 
             departmentUsers.map((item, index) => {
               const type = ACTION_TYPE.INITIALIZED;
               items[item.uid] = { index, type };
             });
+            departmentUsers.splice(userState.index, 0, user);
+
+            items[user.uid] = {
+              ...userState,
+              type: ACTION_TYPE.REMOVED
+            };
 
             this.users = {
               ...this.users,
               [user.departmentid]: departmentUsers
             };
+
             this.listState = {
               ...this.listState,
               [user.departmentid]: {
-                items: {
-                  ...items,
-                  [user.uid]: {
-                    ...userState,
-                    type: ACTION_TYPE.REMOVED
-                  }
-                },
+                items,
                 size: departmentUsers.length - 1
               }
             };
@@ -221,6 +223,7 @@ export default class AdminView extends LitElement {
           style="--offset-y:${itemState.index * 3.5}rem;"
           tabindex="0"
           class="item selectable"
+          ?regular="${user.regular}"
           ?added="${itemState.type === ACTION_TYPE.ADDED}"
           ?modified="${itemState.type === ACTION_TYPE.MODIFIED}"
           ?removed="${itemState.type === ACTION_TYPE.REMOVED}"
@@ -444,7 +447,7 @@ export default class AdminView extends LitElement {
           line-height: 1.2rem;
         }
 
-        .item #primary-text[regular] {
+        .item[regular] #primary-text {
           color: var(--color-primary);
         }
 

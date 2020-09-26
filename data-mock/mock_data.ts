@@ -87,7 +87,7 @@ const ModelUser22 = new User({
   uid: 'user-202',
   name: 'John',
   email: 'john3@lol.com',
-  regular: true,
+  regular: false,
   rank: new Rank('PTE'),
   branchid: ModelBranch.id,
   departmentid: ModelDepartment2.id
