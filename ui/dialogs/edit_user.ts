@@ -5,7 +5,7 @@ import { ApplicationStore } from '../../data/store';
 import Branch from '../../model/branch';
 import Department from '../../model/department';
 import Rank from '../../model/rank';
-import User from '../../model/user';
+import User, { UserBase } from '../../model/user';
 import {
   buttonStyles,
   cardStyles,
@@ -129,7 +129,7 @@ export default class EditUser extends LitElement {
           ...data
         });
       } else {
-        let user = new User({ ...data, uid: '0' });
+        let user = new UserBase({ ...data });
         action = ACTION_USER.requestAdd(user);
       }
 

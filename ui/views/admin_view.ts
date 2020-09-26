@@ -1,4 +1,5 @@
 import { LitElement, html, customElement, css } from 'lit-element';
+import { repeat } from 'lit-html/directives/repeat.js';
 import { Unsubscribe } from 'redux';
 import MockAdminManager from '../../data-mock/mock_admin_manager';
 import { DepartmentStoreState } from '../../data/states/department_state';
@@ -98,9 +99,14 @@ export default class AdminView extends LitElement {
   }
 
   render() {
-    const userTemplate = (department: Department, user: User) => {
+    const userTemplate = (
+      department: Department,
+      user: User,
+      index: number
+    ) => {
       return html`
         <div
+          style="transform:translateY(${index * 100}%)"
           tabindex="0"
           class="item selectable"
           @click="${this.onEditUser(department, user)}"
@@ -133,9 +139,15 @@ export default class AdminView extends LitElement {
             <button id="add" plain @click="${this.onEditUser(department)}">
               Add user
             </button>
-            <div id="list">
-              ${this.usersByDepartment[department.id]?.map((user) =>
-                userTemplate(department, user)
+            <div
+              id="list"
+              style="height:${this.usersByDepartment[department.id].length *
+              3.45}rem;"
+            >
+              ${repeat(
+                this.usersByDepartment[department.id],
+                (user) => user.uid,
+                (user, index) => userTemplate(department, user, index)
               )}
             </div>
           </div>
@@ -249,8 +261,15 @@ export default class AdminView extends LitElement {
           border-radius: 15px;
         }
 
+        .users > #list {
+          position: relative;
+        }
+
         .item {
-          padding: 10px 15px;
+          width: 100%;
+          position: absolute;
+          box-sizing: border-box;
+          padding: 0.6rem 15px;
           transition: background-color 0.3s;
           cursor: pointer;
         }

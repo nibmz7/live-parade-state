@@ -83,6 +83,15 @@ const ModelUser2 = new User({
   branchid: ModelBranch.id,
   departmentid: ModelDepartment2.id
 });
+const ModelUser22 = new User({
+  uid: 'user-202',
+  name: 'John',
+  email: 'john3@lol.com',
+  regular: true,
+  rank: new Rank('PTE'),
+  branchid: ModelBranch.id,
+  departmentid: ModelDepartment2.id
+});
 const ModelUser3 = new User({
   uid: 'user-301',
   name: 'John',
@@ -93,7 +102,7 @@ const ModelUser3 = new User({
   departmentid: ModelDepartment3.id
 });
 
-const ModelUserArray: Array<User> = [ModelUser1, ModelUser2, ModelUser3];
+const ModelUserArray: Array<User> = [ModelUser1, ModelUser2, ModelUser22, ModelUser3];
 
 export const MockModel = {
   Rank: ModelRank,
@@ -104,7 +113,7 @@ export const MockModel = {
   UserArray: ModelUserArray,
   Users: {
     [ModelDepartment1.id]: [ModelUser1],
-    [ModelDepartment2.id]: [ModelUser2],
+    [ModelDepartment2.id]: [ModelUser2, ModelUser22],
     [ModelDepartment3.id]: [ModelUser3]
   },
   Admin: new Admin('321', 'admin@lol.com')

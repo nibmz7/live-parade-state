@@ -3,7 +3,7 @@ import { DepartmentStoreState } from '../data/states/department_state';
 import Department, { DepartmentName } from '../model/department';
 import { MockModel } from './mock_data';
 import { UserStoreState } from '../data/states/user_state';
-import User from '../model/user';
+import User, { UserBase } from '../model/user';
 import AdminManager from '../data/admin_manager';
 import { generateActionId } from '../data/store';
 
@@ -43,7 +43,8 @@ export default class MockAdminManager extends AdminManager {
   }
 
   protected requestAddUser(state: UserStoreState): void {
-    let user = state.action.payload as User;
+    let userBase = state.action.payload as UserBase;
+    let user = new User({ uid: `user-${generateActionId()}`, ...userBase });
     this.userOnChange(user, ACTION_TYPE.ADDED);
   }
 
