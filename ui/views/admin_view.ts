@@ -1,8 +1,12 @@
 import { LitElement, html, customElement, css } from 'lit-element';
+import { repeat } from 'lit-html/directives/repeat';
 import { Unsubscribe } from 'redux';
 import MockAdminManager from '../../data-mock/mock_admin_manager';
 import { DepartmentStoreState } from '../../data/states/department_state';
-import { UserStoreState } from '../../data/states/user_state';
+import {
+  UsersByDepartment,
+  UserStoreState
+} from '../../data/states/user_state';
 import { ACTION_ROOT, ApplicationStore } from '../../data/store';
 import Department from '../../model/department';
 import User from '../../model/user';
@@ -13,10 +17,6 @@ import '../dialogs/edit_department';
 import '../dialogs/edit_user';
 import { onPressed } from '../utils';
 
-interface UserItem extends User {
-  index?: number;
-  removed?: boolean;
-}
 @customElement('admin-view')
 export default class AdminView extends LitElement {
   private departmentsUnsubscribe?: Unsubscribe;
@@ -24,9 +24,15 @@ export default class AdminView extends LitElement {
   private branch = (ApplicationStore.getAuth().action.payload as Admin).branch;
   private adminManager = new MockAdminManager();
   private departments: Array<Department> = [];
-  private usersByDepartment: {
+  private users: UsersByDepartment = {};
+  private listState: {
     [departmentId: string]: {
-      items: { [userid: string]: UserItem };
+      items: {
+        [userid: string]: {
+          index: number;
+          type: ACTION_TYPE;
+        };
+      };
       size: number;
     };
   } = {};
@@ -39,7 +45,8 @@ export default class AdminView extends LitElement {
   static get properties() {
     return {
       departments: { type: Array },
-      usersByDepartment: { type: Object },
+      users: { type: Object },
+      listState: { type: Object },
       selectedDepartment: { type: Object },
       showEditDepartment: { type: Boolean },
       selectedUser: { type: Object },
@@ -64,46 +71,113 @@ export default class AdminView extends LitElement {
         }
       }
     );
+
     this.usersUnsubscribe = ApplicationStore.listen(
       ACTION_ROOT.USERS,
-      (state: UserStoreState) => {
+      async (state: UserStoreState) => {
         let type = state.action.type;
         switch (type) {
           case ACTION_TYPE.INITIALIZED: {
             for (const [departmentid, userArray] of Object.entries(
               state.items
             )) {
-              const users = {};
-              for (const user of userArray) {
-                users[user.uid] = user;
-              }
-              this.usersByDepartment[departmentid] = {
-                items: users,
+              const items = {};
+              userArray.map((item, index) => {
+                const type = ACTION_TYPE.INITIALIZED;
+                items[item.uid] = { index, type };
+              });
+              this.listState[departmentid] = {
+                items,
                 size: userArray.length
               };
             }
+            this.users = state.items;
             break;
           }
           case ACTION_TYPE.ADDED: {
+            const items = {};
+            const user = state.action.payload as User;
+            const departmentUsers = state.items[user.departmentid].slice();
+
+            departmentUsers.map((item, index) => {
+              const type =
+                item.uid === user.uid
+                  ? ACTION_TYPE.ADDED
+                  : ACTION_TYPE.INITIALIZED;
+              items[item.uid] = { index, type };
+            });
+
+            this.users = {
+              ...this.users,
+              [user.departmentid]: departmentUsers
+            };
+
+            this.listState = {
+              ...this.listState,
+              [user.departmentid]: {
+                items,
+                size: departmentUsers.length
+              }
+            };
             break;
           }
           case ACTION_TYPE.MODIFIED: {
+            const items = {};
+            const user = state.action.payload as User;
+            const departmentUsers = state.items[user.departmentid].slice();
+
+            departmentUsers.map((item, index) => {
+              const type =
+                item.uid === user.uid
+                  ? ACTION_TYPE.MODIFIED
+                  : ACTION_TYPE.INITIALIZED;
+              items[item.uid] = { index, type };
+            });
+
+            this.users = {
+              ...this.users,
+              [user.departmentid]: departmentUsers
+            };
+            await new Promise((resolve) =>
+              requestAnimationFrame(() => resolve())
+            );
+            this.listState = {
+              ...this.listState,
+              [user.departmentid]: {
+                items,
+                size: departmentUsers.length
+              }
+            };
+
             break;
           }
           case ACTION_TYPE.REMOVED: {
+            const items = {};
             const user = state.action.payload as User;
-            const users = this.usersByDepartment[user.departmentid];
-            this.usersByDepartment = {
-              ...this.usersByDepartment,
+            const userState = this.listState[user.departmentid].items[user.uid];
+            const departmentUsers = state.items[user.departmentid].slice();
+            departmentUsers.push(user);
+
+            departmentUsers.map((item, index) => {
+              const type = ACTION_TYPE.INITIALIZED;
+              items[item.uid] = { index, type };
+            });
+
+            this.users = {
+              ...this.users,
+              [user.departmentid]: departmentUsers
+            };
+            this.listState = {
+              ...this.listState,
               [user.departmentid]: {
                 items: {
-                  ...users.items,
+                  ...items,
                   [user.uid]: {
-                    ...user,
-                    removed: true
+                    ...userState,
+                    type: ACTION_TYPE.REMOVED
                   }
                 },
-                size: users.size - 1
+                size: departmentUsers.length - 1
               }
             };
           }
@@ -136,16 +210,22 @@ export default class AdminView extends LitElement {
   }
 
   render() {
-    const userTemplate = (department: Department, user: UserItem) => {
+    const userTemplate = (
+      department: Department,
+      user: User,
+      length: number
+    ) => {
+      const itemState = this.listState[department.id].items[user.uid];
       return html`
         <div
-          id="${user.uid}"
-          style="--offset-y:${user.index! * 3.5}rem;"
+          style="--offset-y:${itemState.index * 3.5}rem;"
           tabindex="0"
           class="item selectable"
-          ?removed="${user.removed}"
+          ?added="${itemState.type === ACTION_TYPE.ADDED}"
+          ?modified="${itemState.type === ACTION_TYPE.MODIFIED}"
+          ?removed="${itemState.type === ACTION_TYPE.REMOVED}"
+          ?last="${itemState.index === length - 1}"
           @click="${this.onEditUser(department, user)}"
-          @keydown="${this.onEditUser(department, user)}"
         >
           <p id="primary-text">${user.fullname}</p>
           <p id="secondary-text">${user.email}</p>
@@ -154,11 +234,11 @@ export default class AdminView extends LitElement {
     };
 
     const departmentTemplate = (department: Department) => {
-      const users = this.usersByDepartment[department.id];
-      const length = users.size;
-      const height = users.size * 3.5;
+      const users = this.users[department.id];
+      const length = this.listState[department.id].size;
+      const height = length * 3.5;
       return html`
-        <div class="department">
+        <div class="department" id="${department.id}">
           <div class="header">
             <h3>${department.name}</h3>
             <button
@@ -174,16 +254,11 @@ export default class AdminView extends LitElement {
               Add user
             </button>
             <div id="list" style="height:${height}rem;">
-              ${Object.values(users.items).map((user, index, userArray) => {
-                if (index === 0) user.index = 0;
-                else {
-                  let prevUser = userArray[index - 1];
-                  if (prevUser.removed) {
-                    user.index = prevUser.index;
-                  } else user.index = prevUser.index! + 1;
-                }
-                return userTemplate(department, user);
-              })}
+              ${repeat(
+                Object.values(users),
+                (user) => user.uid,
+                (user) => userTemplate(department, user, length)
+              )}
             </div>
           </div>
         </div>
@@ -312,9 +387,39 @@ export default class AdminView extends LitElement {
           padding: 0.65rem 15px;
           opacity: 1;
           transform: translateY(var(--offset-y));
-          transition: background-color 0.3s, transform 0.3s, padding-top 0.3s,
-            padding-bottom 0.3s, opacity 0.3s;
+          transition: all 0.3s;
           cursor: pointer;
+        }
+
+        .item[added] {
+          animation: item-appear-in 0.3s;
+        }
+
+        .item[modified] {
+          animation: flash 1s 2;
+        }
+
+        @keyframes item-appear-in {
+          from {
+            opacity: 0;
+            padding: 0rem 15px;
+          }
+          to {
+            opacity: 1;
+            padding: 0.65rem 15px;
+          }
+        }
+
+        @keyframes flash {
+          0% {
+            background-color: white;
+          }
+          50% {
+            background-color: rgba(255, 56, 56, 0.18);
+          }
+          100% {
+            background-color: white;
+          }
         }
 
         .item[removed] {
@@ -322,7 +427,7 @@ export default class AdminView extends LitElement {
           opacity: 0;
         }
 
-        .item:last-child {
+        .item[last] {
           border-bottom-left-radius: 15px;
           border-bottom-right-radius: 15px;
         }
