@@ -45,14 +45,20 @@ export default class MockAdminManager extends AdminManager {
   protected requestAddUser(state: UserStoreState): void {
     let userBase = state.action.payload as UserBase;
     let user = new User({ uid: `user-${generateActionId()}`, ...userBase });
-    this.userOnChange(user, ACTION_TYPE.ADDED);
+    setTimeout(() => {
+      this.userOnChange(user, ACTION_TYPE.ADDED);
+    }, 2000);
   }
 
   protected requestModifyUser(state: UserStoreState): void {
-    this.userOnChange(state.action.payload as User, ACTION_TYPE.MODIFIED);
+    setTimeout(() => {
+      this.userOnChange(state.action.payload as User, ACTION_TYPE.MODIFIED);
+    }, 2000);
   }
 
   protected requestRemoveUser(state: UserStoreState): void {
-    this.userOnChange(state.action.payload as User, ACTION_TYPE.REMOVED);
+    setTimeout(() => {
+      this.userOnChange(state.action.payload as User, ACTION_TYPE.REMOVED);
+    }, 2000);
   }
 }

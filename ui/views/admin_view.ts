@@ -1,12 +1,8 @@
 import { LitElement, html, customElement, css } from 'lit-element';
-import { repeat } from 'lit-html/directives/repeat.js';
 import { Unsubscribe } from 'redux';
 import MockAdminManager from '../../data-mock/mock_admin_manager';
 import { DepartmentStoreState } from '../../data/states/department_state';
-import {
-  UsersByDepartment,
-  UserStoreState
-} from '../../data/states/user_state';
+import { UserStoreState } from '../../data/states/user_state';
 import { ACTION_ROOT, ApplicationStore } from '../../data/store';
 import Department from '../../model/department';
 import User from '../../model/user';
@@ -17,6 +13,10 @@ import '../dialogs/edit_department';
 import '../dialogs/edit_user';
 import { onPressed } from '../utils';
 
+interface UserItem extends User {
+  index?: number;
+  removed?: boolean;
+}
 @customElement('admin-view')
 export default class AdminView extends LitElement {
   private departmentsUnsubscribe?: Unsubscribe;
@@ -24,7 +24,12 @@ export default class AdminView extends LitElement {
   private branch = (ApplicationStore.getAuth().action.payload as Admin).branch;
   private adminManager = new MockAdminManager();
   private departments: Array<Department> = [];
-  private usersByDepartment: UsersByDepartment = {};
+  private usersByDepartment: {
+    [departmentId: string]: {
+      items: { [userid: string]: UserItem };
+      size: number;
+    };
+  } = {};
   private selectedDepartment?: Department;
   private showEditDepartment: Boolean = false;
   private selectedUser?: User;
@@ -63,13 +68,45 @@ export default class AdminView extends LitElement {
       ACTION_ROOT.USERS,
       (state: UserStoreState) => {
         let type = state.action.type;
-        if (
-          type === ACTION_TYPE.INITIALIZED ||
-          type === ACTION_TYPE.ADDED ||
-          type === ACTION_TYPE.MODIFIED ||
-          type === ACTION_TYPE.REMOVED
-        ) {
-          this.usersByDepartment = state.items;
+        switch (type) {
+          case ACTION_TYPE.INITIALIZED: {
+            for (const [departmentid, userArray] of Object.entries(
+              state.items
+            )) {
+              const users = {};
+              for (const user of userArray) {
+                users[user.uid] = user;
+              }
+              this.usersByDepartment[departmentid] = {
+                items: users,
+                size: userArray.length
+              };
+            }
+            break;
+          }
+          case ACTION_TYPE.ADDED: {
+            break;
+          }
+          case ACTION_TYPE.MODIFIED: {
+            break;
+          }
+          case ACTION_TYPE.REMOVED: {
+            const user = state.action.payload as User;
+            const users = this.usersByDepartment[user.departmentid];
+            this.usersByDepartment = {
+              ...this.usersByDepartment,
+              [user.departmentid]: {
+                items: {
+                  ...users.items,
+                  [user.uid]: {
+                    ...user,
+                    removed: true
+                  }
+                },
+                size: users.size - 1
+              }
+            };
+          }
         }
       }
     );
@@ -99,16 +136,14 @@ export default class AdminView extends LitElement {
   }
 
   render() {
-    const userTemplate = (
-      department: Department,
-      user: User,
-      index: number
-    ) => {
+    const userTemplate = (department: Department, user: UserItem) => {
       return html`
         <div
-          style="transform:translateY(${index * 100}%)"
+          id="${user.uid}"
+          style="--offset-y:${user.index! * 3.5}rem;"
           tabindex="0"
           class="item selectable"
+          ?removed="${user.removed}"
           @click="${this.onEditUser(department, user)}"
           @keydown="${this.onEditUser(department, user)}"
         >
@@ -118,8 +153,11 @@ export default class AdminView extends LitElement {
       `;
     };
 
-    const departmentTemplate = (department: Department) =>
-      html`
+    const departmentTemplate = (department: Department) => {
+      const users = this.usersByDepartment[department.id];
+      const length = users.size;
+      const height = users.size * 3.5;
+      return html`
         <div class="department">
           <div class="header">
             <h3>${department.name}</h3>
@@ -131,28 +169,26 @@ export default class AdminView extends LitElement {
               edit
             </button>
           </div>
-          <div
-            class="users card"
-            ?empty="${this.usersByDepartment[department.id]?.length > 0 ===
-            false}"
-          >
+          <div class="users card" ?empty="${length === 0}">
             <button id="add" plain @click="${this.onEditUser(department)}">
               Add user
             </button>
-            <div
-              id="list"
-              style="height:${this.usersByDepartment[department.id].length *
-              3.45}rem;"
-            >
-              ${repeat(
-                this.usersByDepartment[department.id],
-                (user) => user.uid,
-                (user, index) => userTemplate(department, user, index)
-              )}
+            <div id="list" style="height:${height}rem;">
+              ${Object.values(users.items).map((user, index, userArray) => {
+                if (index === 0) user.index = 0;
+                else {
+                  let prevUser = userArray[index - 1];
+                  if (prevUser.removed) {
+                    user.index = prevUser.index;
+                  } else user.index = prevUser.index! + 1;
+                }
+                return userTemplate(department, user);
+              })}
             </div>
           </div>
         </div>
       `;
+    };
     return html`<div id="root">
       <div class="departments">${this.departments.map(departmentTemplate)}</div>
 
@@ -236,12 +272,14 @@ export default class AdminView extends LitElement {
           align-items: center;
           padding: 18px 0;
         }
+
         .header h3 {
           color: #828282;
           text-transform: capitalize;
           font-weight: 500;
           margin: 0;
         }
+
         .header #edit {
           font-size: 1.3rem;
         }
@@ -263,15 +301,25 @@ export default class AdminView extends LitElement {
 
         .users > #list {
           position: relative;
+          transition: height 0.3s;
         }
 
         .item {
           width: 100%;
           position: absolute;
           box-sizing: border-box;
-          padding: 0.6rem 15px;
-          transition: background-color 0.3s;
+          height: 3.5rem;
+          padding: 0.65rem 15px;
+          opacity: 1;
+          transform: translateY(var(--offset-y));
+          transition: background-color 0.3s, transform 0.3s, padding-top 0.3s,
+            padding-bottom 0.3s, opacity 0.3s;
           cursor: pointer;
+        }
+
+        .item[removed] {
+          padding: 0rem 15px;
+          opacity: 0;
         }
 
         .item:last-child {
@@ -287,6 +335,8 @@ export default class AdminView extends LitElement {
           text-transform: capitalize;
           color: #323232;
           font-weight: 500;
+          font-size: 1rem;
+          line-height: 1.2rem;
         }
 
         .item #primary-text[regular] {
@@ -296,6 +346,7 @@ export default class AdminView extends LitElement {
         .item #secondary-text {
           color: #878787;
           font-size: 0.8rem;
+          line-height: 1rem;
           font-weight: 400;
         }
 
