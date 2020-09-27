@@ -11,13 +11,11 @@ import { buttonStyles, cardStyles, globalStyles } from '../../global_styles';
 import '../../dialogs/edit_department';
 import '../../base/welcome_text';
 import './admin_department';
-import { ACTION_TYPE } from '../../../data/data_manager';
-
-const REQUEST_ACTIONS = [
-  ACTION_TYPE.REQUEST_ADD,
-  ACTION_TYPE.REQUEST_MODIFY,
-  ACTION_TYPE.REQUEST_REMOVE
-];
+import {
+  ACTION_TYPE,
+  REQUEST_ACTIONS,
+  REQUEST_TYPES
+} from '../../../data/data_manager';
 
 @customElement('request-log')
 export default class RequestLog extends LitElement {
@@ -35,14 +33,15 @@ export default class RequestLog extends LitElement {
 
   private usersListener: DataStoreListener = async (state: UserStoreState) => {
     const type = state.action.type;
-    if (type === ACTION_TYPE.INITIALIZED) return;
+    if (!REQUEST_TYPES.includes(type)) return;
+
     if (REQUEST_ACTIONS.includes(type)) {
       console.log('REQUEST ACTIONS');
     } else if (type === ACTION_TYPE.REQUEST_SUCCESSFUL) {
       console.log('SUCCESS');
     } else if (type === ACTION_TYPE.REQUEST_ERROR) {
+      console.log('ERROR');
     }
-    console.log(type);
   };
 
   connectedCallback() {

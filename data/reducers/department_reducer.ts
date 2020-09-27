@@ -4,7 +4,7 @@ import {
   DepartmentAction
 } from '../states/department_state';
 import Department from '../../model/department';
-import { ACTION_TYPE } from '../data_manager';
+import { ACTION_TYPE, REQUEST_TYPES } from '../data_manager';
 
 const initialState: DepartmentStoreState = {
   action: {
@@ -25,6 +25,10 @@ export const department = (
 
   const action = rootAction as DepartmentAction;
   const type = action.type;
+
+  if (REQUEST_TYPES.includes(type)) {
+    return { ...state, action };
+  }
 
   if (type === ACTION_TYPE.INITIALIZED) {
     return { items: action.payload as Array<Department>, action };

@@ -21,7 +21,7 @@ import {
 import Department from '../../../model/department';
 import User from '../../../model/user';
 import { buttonStyles, cardStyles, globalStyles } from '../../global_styles';
-import { ACTION_TYPE } from '../../../data/data_manager';
+import { ACTION_TYPE, REQUEST_TYPES } from '../../../data/data_manager';
 import Admin from '../../../model/admin';
 import { ListState } from './admin_department';
 import { onPressed } from '../../utils';
@@ -52,6 +52,7 @@ export default class AdminView extends LitElement {
     state: DepartmentStoreState
   ) => {
     const type = state.action.type;
+    if (REQUEST_TYPES.includes(type)) return;
     this.departments = state.items;
     switch (type) {
       case ACTION_TYPE.INITIALIZED: {
@@ -84,6 +85,7 @@ export default class AdminView extends LitElement {
 
   private usersListener: DataStoreListener = async (state: UserStoreState) => {
     const type = state.action.type;
+    if (REQUEST_TYPES.includes(type)) return;
 
     const updateListState = (departmentid: string, users: Array<User>) => {
       const items = {};

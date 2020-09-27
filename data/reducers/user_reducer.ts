@@ -1,5 +1,5 @@
 import { ACTION_ROOT, Action } from '../store';
-import { ACTION_TYPE } from '../data_manager';
+import { ACTION_TYPE, REQUEST_TYPES } from '../data_manager';
 import {
   UserStoreState,
   UserAction,
@@ -27,6 +27,10 @@ export const user = (
 
   const action = rootAction as UserAction;
   const type = action.type;
+
+  if (REQUEST_TYPES.includes(type)) {
+    return { ...state, action };
+  }
 
   if (type === ACTION_TYPE.INITIALIZED) {
     let users = action.payload as Array<User>;

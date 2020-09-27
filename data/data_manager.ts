@@ -15,8 +15,20 @@ export enum ACTION_TYPE {
   REQUEST_SUCCESSFUL,
   REQUEST_ERROR
 }
-export const TYPE_REQUEST = (type: ACTION_TYPE) =>
-  type === 4 || type === 5 || type === 6;
+
+export const REQUEST_TYPES = [
+  ACTION_TYPE.REQUEST_ADD,
+  ACTION_TYPE.REQUEST_MODIFY,
+  ACTION_TYPE.REQUEST_REMOVE,
+  ACTION_TYPE.REQUEST_SUCCESSFUL,
+  ACTION_TYPE.REQUEST_ERROR
+];
+
+export const REQUEST_ACTIONS = [
+  ACTION_TYPE.REQUEST_ADD,
+  ACTION_TYPE.REQUEST_MODIFY,
+  ACTION_TYPE.REQUEST_REMOVE
+];
 
 export type DepartmentChange = (
   department: Department,

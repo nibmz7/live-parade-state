@@ -1,4 +1,4 @@
-import { DataManager, ACTION_TYPE, TYPE_REQUEST } from './data_manager';
+import { DataManager, ACTION_TYPE, REQUEST_ACTIONS } from './data_manager';
 import {
   DepartmentStoreState,
   DepartmentActionError
@@ -39,7 +39,7 @@ export default abstract class AdminManager extends DataManager {
   }
 
   departmentOnRequest(state: DepartmentStoreState) {
-    if (!TYPE_REQUEST(state.action.type)) return;
+    if (!REQUEST_ACTIONS.includes(state.action.type)) return;
     if (!this.isDbConnected) {
       let error: DepartmentActionError = {
         action: state.action,
@@ -63,7 +63,7 @@ export default abstract class AdminManager extends DataManager {
   }
 
   userOnRequest(state: UserStoreState) {
-    if (!TYPE_REQUEST(state.action.type)) return;
+    if (!REQUEST_ACTIONS.includes(state.action.type)) return;
     if (!this.isDbConnected) {
       let error: UserActionError = {
         action: state.action,
