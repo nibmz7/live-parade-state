@@ -1,28 +1,28 @@
-import { LitElement, html, customElement, css } from 'lit-element';
+import { LitElement, html, customElement, css, property } from 'lit-element';
 import {
   inputStyles,
   cardStyles,
   buttonStyles,
   globalStyles,
   passwordInputStyles
-} from '../global_styles';
-import { ApplicationStore, ACTION_ROOT } from '../../data/store';
+} from '../../global_styles';
+import { ApplicationStore, ACTION_ROOT } from '../../../data/store';
 import {
   AuthStoreState,
   AUTH_STATE,
   SignInError,
   SignInCredentials
-} from '../../data/states/auth_state';
+} from '../../../data/states/auth_state';
 import { Unsubscribe } from 'redux';
-import ACTION_AUTH from '../../data/actions/auth_action';
-import { onPressed } from '../utils';
+import ACTION_AUTH from '../../../data/actions/auth_action';
+import { onPressed } from '../../utils';
 import {
   emailInput,
   InputState,
   INPUT_VALIDITY,
   passwordInput,
   PasswordInputState
-} from '../base/input';
+} from '../../base/input';
 
 declare global {
   interface Window {
@@ -32,28 +32,18 @@ declare global {
 
 @customElement('login-view')
 export class LoginView extends LitElement {
-  private isProcessing = false;
-  private emailState: InputState = {
+  @property({ type: String }) errorMessage = '';
+  @property({ type: Boolean }) errorVisible = false;
+  @property({ type: Boolean }) isProcessing = false;
+  @property({ type: Object }) emailState: InputState = {
     value: '',
     validity: INPUT_VALIDITY.PENDING
   };
-  private passwordState: PasswordInputState = {
+  @property({ type: Object }) passwordState: PasswordInputState = {
     value: '',
     validity: INPUT_VALIDITY.PENDING,
     visible: false
   };
-  private errorMessage = '';
-  private errorVisible = false;
-
-  static get properties() {
-    return {
-      isProcessing: { type: Boolean },
-      emailState: { type: Object },
-      passwordState: { type: Object },
-      errorMessage: { type: String },
-      errorVisible: { type: Boolean }
-    };
-  }
 
   connectedCallback() {
     super.connectedCallback();
@@ -191,7 +181,7 @@ export class LoginView extends LitElement {
         form {
           width: 70%;
           transform: translateY(var(--offset-height));
-          transition: transform .3s;
+          transition: transform 0.3s;
         }
 
         h3 {

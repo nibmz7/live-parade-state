@@ -1,12 +1,12 @@
 import { LitElement, html, customElement, css, property } from 'lit-element';
-import MockAuthManager from '../data-mock/mock_auth_manager';
-import { ACTION_ROOT, ApplicationStore } from '../data/store';
-import { AUTH_STATE, AuthStoreState } from '../data/states/auth_state';
-import { fadeAnimation } from './global_styles';
+import MockAuthManager from '../../data-mock/mock_auth_manager';
+import { ACTION_ROOT, ApplicationStore } from '../../data/store';
+import { AUTH_STATE, AuthStoreState } from '../../data/states/auth_state';
+import { fadeAnimation } from '../global_styles';
 import { Unsubscribe } from 'redux';
-import Admin from '../model/admin';
-import './views/login_view';
-import './views/admin_view';
+import Admin from '../../model/admin';
+import './login/login_view';
+import './admin/admin_view';
 
 const enum VIEW_TYPES {
   UNINITALIZED,
@@ -19,16 +19,8 @@ const enum VIEW_TYPES {
 export default class ViewSwitcher extends LitElement {
   @property({ type: Boolean, reflect: true }) splashscreen = true;
   @property({ type: Boolean, reflect: true }) initialized = false;
-
-  private viewType: VIEW_TYPES = VIEW_TYPES.UNINITALIZED;
-  private visible = false;
-
-  static get properties() {
-    return {
-      viewType: { type: Number },
-      visible: { type: Boolean }
-    };
-  }
+  @property({ type: Number }) viewType: VIEW_TYPES = VIEW_TYPES.UNINITALIZED;
+  @property({ type: Boolean }) visible = false;
 
   connectedCallback() {
     super.connectedCallback();

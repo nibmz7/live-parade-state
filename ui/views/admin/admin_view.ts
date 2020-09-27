@@ -7,25 +7,24 @@ import {
   property
 } from 'lit-element';
 import { Unsubscribe } from 'redux';
-import MockAdminManager from '../../data-mock/mock_admin_manager';
-import { DepartmentStoreState } from '../../data/states/department_state';
+import MockAdminManager from '../../../data-mock/mock_admin_manager';
+import { DepartmentStoreState } from '../../../data/states/department_state';
 import {
   UsersByDepartment,
   UserStoreState
-} from '../../data/states/user_state';
-import { ACTION_ROOT, ApplicationStore } from '../../data/store';
-import Department from '../../model/department';
-import User from '../../model/user';
-import { buttonStyles, cardStyles, globalStyles } from '../global_styles';
-import { ACTION_TYPE } from '../../data/data_manager';
-import Admin from '../../model/admin';
-import '../dialogs/edit_department';
-import '../base/welcome_text';
-import '../dialogs/edit_user';
-import './admin_department';
+} from '../../../data/states/user_state';
+import { ACTION_ROOT, ApplicationStore } from '../../../data/store';
+import Department from '../../../model/department';
+import User from '../../../model/user';
+import { buttonStyles, cardStyles, globalStyles } from '../../global_styles';
+import { ACTION_TYPE } from '../../../data/data_manager';
+import Admin from '../../../model/admin';
 import { ListState } from './admin_department';
-import { onPressed } from '../utils';
-import { shouldElevate } from '../base/welcome_text';
+import { onPressed } from '../../utils';
+import { shouldElevate } from '../../base/welcome_text';
+import '../../dialogs/edit_department';
+import '../../base/welcome_text';
+import './admin_department';
 
 @customElement('admin-view')
 export default class AdminView extends LitElement {
@@ -282,10 +281,15 @@ export default class AdminView extends LitElement {
         }
 
         #department-list {
-          overflow-y: auto;
           max-height: 99%;
-          padding: 30px 30px 80px 30px;
+          overflow-x: hidden;
+          overflow-y: scroll;
           box-sizing: border-box;
+          padding: 30px 30px 80px 30px;
+        }
+
+        #department-list::-webkit-scrollbar {
+          display: none;
         }
 
         admin-department {
