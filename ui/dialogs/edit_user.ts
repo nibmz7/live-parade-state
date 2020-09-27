@@ -19,10 +19,10 @@ import {
   passwordInput,
   PasswordInputState,
   textInput
-} from '../input';
+} from '../base/input';
 import { onPressed } from '../utils';
-import './custom_dialog';
-import { DIALOG_STATE } from './custom_dialog';
+import '../base/custom_dialog';
+import { DIALOG_STATE } from '../base/custom_dialog';
 
 @customElement('edit-user')
 export default class EditUser extends LitElement {

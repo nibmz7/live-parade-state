@@ -1,5 +1,5 @@
 import { html } from 'lit-element';
-import { onPressed } from './utils';
+import { onPressed } from '../utils';
 import { ifDefined } from 'lit-html/directives/if-defined';
 
 export enum INPUT_VALIDITY {

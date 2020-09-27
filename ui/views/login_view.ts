@@ -22,7 +22,7 @@ import {
   INPUT_VALIDITY,
   passwordInput,
   PasswordInputState
-} from '../input';
+} from '../base/input';
 
 declare global {
   interface Window {

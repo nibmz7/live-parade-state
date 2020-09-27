@@ -14,6 +14,7 @@ import { buttonStyles, cardStyles, globalStyles } from '../global_styles';
 import { ACTION_TYPE } from '../../data/data_manager';
 import Admin from '../../model/admin';
 import '../dialogs/edit_department';
+import '../base/welcome_text';
 import '../dialogs/edit_user';
 import { onPressed } from '../utils';
 
@@ -61,13 +62,39 @@ export default class AdminView extends LitElement {
       ACTION_ROOT.DEPARTMENTS,
       (state: DepartmentStoreState) => {
         let type = state.action.type;
-        if (
-          type === ACTION_TYPE.INITIALIZED ||
-          type === ACTION_TYPE.ADDED ||
-          type === ACTION_TYPE.MODIFIED ||
-          type === ACTION_TYPE.REMOVED
-        ) {
-          this.departments = state.items;
+        switch (type) {
+          case ACTION_TYPE.INITIALIZED: {
+            this.departments = state.items;
+            this.departments.map((item) => {
+              this.users[item.id] = [];
+              this.listState[item.id] = { items: {}, size: 0 };
+            });
+            break;
+          }
+          case ACTION_TYPE.ADDED: {
+            const department = state.action.payload as Department;
+            this.departments = state.items;
+            this.listState = {
+              ...this.listState,
+              [department.id]: { items: {}, size: 0 }
+            };
+            this.users = {
+              ...this.users,
+              [department.id]: []
+            };
+            break;
+          }
+          case ACTION_TYPE.MODIFIED: {
+            this.departments = state.items;
+            break;
+          }
+          case ACTION_TYPE.REMOVED: {
+            const department = state.action.payload as Department;
+            const { [department.id]: value, ...listState } = this.listState;
+            this.listState = listState;
+            this.departments = state.items;
+            break;
+          }
         }
       }
     );
@@ -258,7 +285,7 @@ export default class AdminView extends LitElement {
             </button>
             <div id="list" style="height:${height}rem;">
               ${repeat(
-                Object.values(users),
+                users,
                 (user) => user.uid,
                 (user) => userTemplate(department, user, length)
               )}
@@ -267,7 +294,9 @@ export default class AdminView extends LitElement {
         </div>
       `;
     };
-    return html`<div id="root">
+    return html` <div id="root">
+      <welcome-text>Hi, admin user!</welcome-text>
+
       <div class="departments">${this.departments.map(departmentTemplate)}</div>
 
       <button id="add-department" solid @click="${this.onEditDepartment()}">
@@ -331,7 +360,7 @@ export default class AdminView extends LitElement {
         .departments {
           overflow-y: auto;
           max-height: 99%;
-          padding: 8px 30px 80px 30px;
+          padding: 30px 30px 80px 30px;
           box-sizing: border-box;
         }
 

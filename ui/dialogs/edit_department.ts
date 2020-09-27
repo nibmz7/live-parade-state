@@ -8,9 +8,9 @@ import {
   globalStyles,
   inputStyles
 } from '../global_styles';
-import { InputState, INPUT_VALIDITY, textInput } from '../input';
-import './custom_dialog';
-import { DIALOG_STATE } from './custom_dialog';
+import { InputState, INPUT_VALIDITY, textInput } from '../base/input';
+import '../base/custom_dialog';
+import { DIALOG_STATE } from '../base/custom_dialog';
 
 @customElement('edit-department')
 export default class EditDepartment extends LitElement {
