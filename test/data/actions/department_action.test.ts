@@ -31,7 +31,7 @@ describe('Department actions', () => {
   it('Department request error', () => {
     let addAction = ACTION_DEPARTMENT.requestAdd('New Department');
     let error = MockError.DepartmentRequest(addAction);
-    let errorAction = ACTION_DEPARTMENT.error(error);
+    let errorAction = ACTION_DEPARTMENT.requestError(error);
     let expectedAction: DepartmentAction = {
       id: errorAction.id,
       root: ACTION_ROOT.DEPARTMENTS,

@@ -29,7 +29,7 @@ describe('User actions', () => {
   it('User request error', () => {
     let addAction = ACTION_USER.requestAdd(MockModel.User);
     let error = MockError.UserRequest(addAction);
-    let errorAction = ACTION_USER.error(error);
+    let errorAction = ACTION_USER.requestError(error);
     let expectedAction: UserAction = {
       id: errorAction.id,
       root: ACTION_ROOT.USERS,

@@ -33,7 +33,7 @@ export default abstract class StatusManager extends DataManager {
         type: 'Request failed',
         message: 'Failed to connect to database'
       };
-      ApplicationStore.dispatch(ACTION_USER.error(error));
+      ApplicationStore.dispatch(ACTION_USER.requestError(error));
       return;
     }
     this.requestModifyUser(state);

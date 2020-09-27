@@ -29,6 +29,7 @@ import { shouldElevate } from '../../base/welcome_text';
 import '../../dialogs/edit_department';
 import '../../base/welcome_text';
 import './admin_department';
+import './request_log';
 
 @customElement('admin-view')
 export default class AdminView extends LitElement {
@@ -188,6 +189,7 @@ export default class AdminView extends LitElement {
     };
 
     return html`<div id="root">
+      <request-log></request-log>
       <welcome-text>Hi, admin user!</welcome-text>
 
       <div

@@ -5,7 +5,8 @@ import { MockModel } from './mock_data';
 import { UserStoreState } from '../data/states/user_state';
 import User, { UserBase } from '../model/user';
 import AdminManager from '../data/admin_manager';
-import { generateActionId } from '../data/store';
+import { ApplicationStore, generateActionId } from '../data/store';
+import ACTION_USER from '../data/actions/user_action';
 
 export default class MockAdminManager extends AdminManager {
   constructor() {
@@ -47,6 +48,8 @@ export default class MockAdminManager extends AdminManager {
     let user = new User({ uid: `user-${generateActionId()}`, ...userBase });
     setTimeout(() => {
       this.userOnChange(user, ACTION_TYPE.ADDED);
+      let action = ACTION_USER.requestSuccessful(state.action);
+      ApplicationStore.dispatch(action);
     }, 2000);
   }
 
@@ -54,6 +57,8 @@ export default class MockAdminManager extends AdminManager {
     setTimeout(() => {
       let user = state.action.payload as User;
       this.userOnChange(new User(user), ACTION_TYPE.MODIFIED);
+      let action = ACTION_USER.requestSuccessful(state.action);
+      ApplicationStore.dispatch(action);
     }, 2000);
   }
 
@@ -61,6 +66,8 @@ export default class MockAdminManager extends AdminManager {
     setTimeout(() => {
       let user = state.action.payload as User;
       this.userOnChange(new User(user), ACTION_TYPE.REMOVED);
+      let action = ACTION_USER.requestSuccessful(state.action);
+      ApplicationStore.dispatch(action);
     }, 2000);
   }
 }

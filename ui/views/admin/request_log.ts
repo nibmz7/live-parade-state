@@ -13,7 +13,11 @@ import '../../base/welcome_text';
 import './admin_department';
 import { ACTION_TYPE } from '../../../data/data_manager';
 
-const REQUEST_ACTIONS = [ACTION_TYPE.REQUEST_ADD, ACTION_TYPE.REQUEST_MODIFY, ACTION_TYPE.REQUEST_REMOVE];
+const REQUEST_ACTIONS = [
+  ACTION_TYPE.REQUEST_ADD,
+  ACTION_TYPE.REQUEST_MODIFY,
+  ACTION_TYPE.REQUEST_REMOVE
+];
 
 @customElement('request-log')
 export default class RequestLog extends LitElement {
@@ -32,8 +36,11 @@ export default class RequestLog extends LitElement {
   private usersListener: DataStoreListener = async (state: UserStoreState) => {
     const type = state.action.type;
     if (type === ACTION_TYPE.INITIALIZED) return;
-    if(REQUEST_ACTIONS.includes(type)) {
-        
+    if (REQUEST_ACTIONS.includes(type)) {
+      console.log('REQUEST ACTIONS');
+    } else if (type === ACTION_TYPE.REQUEST_SUCCESSFUL) {
+      console.log('SUCCESS');
+    } else if (type === ACTION_TYPE.REQUEST_ERROR) {
     }
     console.log(type);
   };

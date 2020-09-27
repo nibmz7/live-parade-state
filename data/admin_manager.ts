@@ -46,7 +46,7 @@ export default abstract class AdminManager extends DataManager {
         type: 'Request failed',
         message: 'Failed to connect to database'
       };
-      ApplicationStore.dispatch(ACTION_DEPARTMENT.error(error));
+      ApplicationStore.dispatch(ACTION_DEPARTMENT.requestError(error));
       return;
     }
     switch (state.action.type) {
@@ -70,7 +70,7 @@ export default abstract class AdminManager extends DataManager {
         type: 'Request failed',
         message: 'Failed to connect to database'
       };
-      ApplicationStore.dispatch(ACTION_USER.error(error));
+      ApplicationStore.dispatch(ACTION_USER.requestError(error));
       return;
     }
     switch (state.action.type) {
