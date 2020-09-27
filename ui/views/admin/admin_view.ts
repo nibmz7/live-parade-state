@@ -13,7 +13,11 @@ import {
   UsersByDepartment,
   UserStoreState
 } from '../../../data/states/user_state';
-import { ACTION_ROOT, ApplicationStore } from '../../../data/store';
+import {
+  ACTION_ROOT,
+  ApplicationStore,
+  DataStoreListener
+} from '../../../data/store';
 import Department from '../../../model/department';
 import User from '../../../model/user';
 import { buttonStyles, cardStyles, globalStyles } from '../../global_styles';
@@ -43,165 +47,115 @@ export default class AdminView extends LitElement {
     [departmentId: string]: ListState;
   } = {};
 
+  private departmentsListener: DataStoreListener = (
+    state: DepartmentStoreState
+  ) => {
+    const type = state.action.type;
+    this.departments = state.items;
+    switch (type) {
+      case ACTION_TYPE.INITIALIZED: {
+        this.departments.map((item) => {
+          this.users[item.id] = [];
+          this.listState[item.id] = { items: {}, length: 0 };
+        });
+        break;
+      }
+      case ACTION_TYPE.ADDED: {
+        const department = state.action.payload as Department;
+        this.listState = {
+          ...this.listState,
+          [department.id]: { items: {}, length: 0 }
+        };
+        this.users = {
+          ...this.users,
+          [department.id]: []
+        };
+        break;
+      }
+      case ACTION_TYPE.REMOVED: {
+        const department = state.action.payload as Department;
+        const { [department.id]: value, ...listState } = this.listState;
+        this.listState = listState;
+        break;
+      }
+    }
+  };
+
+  private usersListener: DataStoreListener = async (state: UserStoreState) => {
+    const type = state.action.type;
+
+    const updateListState = (departmentid: string, users: Array<User>) => {
+      const items = {};
+      const length = users.length;
+      users.map((item, index) => {
+        const type = ACTION_TYPE.INITIALIZED;
+        items[item.uid] = { index, type };
+      });
+      this.listState = {
+        ...this.listState,
+        [departmentid]: {
+          items,
+          length
+        }
+      };
+    };
+
+    if (type === ACTION_TYPE.INITIALIZED) {
+      for (const [departmentid, userArray] of Object.entries(state.items)) {
+        updateListState(departmentid, userArray);
+      }
+      this.users = {
+        ...this.users,
+        ...state.items
+      };
+      return;
+    }
+
+    const user = state.action.payload as User;
+    const departmentid = user.departmentid;
+    const userArray = state.items[user.departmentid].slice();
+
+    this.users = {
+      ...this.users,
+      [user.departmentid]: userArray
+    };
+
+    switch (type) {
+      case ACTION_TYPE.ADDED: {
+        updateListState(departmentid, userArray);
+        this.listState[departmentid].items[user.uid].type = ACTION_TYPE.ADDED;
+
+        break;
+      }
+      case ACTION_TYPE.MODIFIED: {
+        await new Promise((resolve) => requestAnimationFrame(() => resolve()));
+        updateListState(departmentid, userArray);
+        this.listState[departmentid].items[user.uid].type =
+          ACTION_TYPE.MODIFIED;
+
+        break;
+      }
+      case ACTION_TYPE.REMOVED: {
+        const userState = this.listState[departmentid].items[user.uid];
+        updateListState(departmentid, userArray);
+        userArray.splice(userState.index, 0, user);
+        userState.type = ACTION_TYPE.REMOVED;
+        this.listState[departmentid].items[user.uid] = userState;
+
+        break;
+      }
+    }
+  };
+
   connectedCallback() {
     super.connectedCallback();
     this.departmentsUnsubscribe = ApplicationStore.listen(
       ACTION_ROOT.DEPARTMENTS,
-      (state: DepartmentStoreState) => {
-        let type = state.action.type;
-        switch (type) {
-          case ACTION_TYPE.INITIALIZED: {
-            this.departments = state.items;
-            this.departments.map((item) => {
-              this.users[item.id] = [];
-              this.listState[item.id] = { items: {}, length: 0 };
-            });
-            break;
-          }
-          case ACTION_TYPE.ADDED: {
-            const department = state.action.payload as Department;
-            this.departments = state.items;
-            this.listState = {
-              ...this.listState,
-              [department.id]: { items: {}, length: 0 }
-            };
-            this.users = {
-              ...this.users,
-              [department.id]: []
-            };
-            break;
-          }
-          case ACTION_TYPE.MODIFIED: {
-            this.departments = state.items;
-            break;
-          }
-          case ACTION_TYPE.REMOVED: {
-            const department = state.action.payload as Department;
-            const { [department.id]: value, ...listState } = this.listState;
-            this.listState = listState;
-            this.departments = state.items;
-            break;
-          }
-        }
-      }
+      this.departmentsListener
     );
-
     this.usersUnsubscribe = ApplicationStore.listen(
       ACTION_ROOT.USERS,
-      async (state: UserStoreState) => {
-        let type = state.action.type;
-        switch (type) {
-          case ACTION_TYPE.INITIALIZED: {
-            for (const [departmentid, userArray] of Object.entries(
-              state.items
-            )) {
-              const items = {};
-              userArray.map((item, index) => {
-                const type = ACTION_TYPE.INITIALIZED;
-                items[item.uid] = { index, type };
-              });
-              this.listState[departmentid] = {
-                items,
-                length: userArray.length
-              };
-            }
-            this.users = {
-              ...this.users,
-              ...state.items
-            };
-            break;
-          }
-          case ACTION_TYPE.ADDED: {
-            const items = {};
-            const user = state.action.payload as User;
-            const departmentUsers = state.items[user.departmentid].slice();
-
-            departmentUsers.map((item, index) => {
-              const type =
-                item.uid === user.uid
-                  ? ACTION_TYPE.ADDED
-                  : ACTION_TYPE.INITIALIZED;
-              items[item.uid] = { index, type };
-            });
-
-            this.users = {
-              ...this.users,
-              [user.departmentid]: departmentUsers
-            };
-
-            this.listState = {
-              ...this.listState,
-              [user.departmentid]: {
-                items,
-                length: departmentUsers.length
-              }
-            };
-            break;
-          }
-          case ACTION_TYPE.MODIFIED: {
-            const items = {};
-            const user = state.action.payload as User;
-            const departmentUsers = state.items[user.departmentid].slice();
-
-            departmentUsers.map((item, index) => {
-              const type =
-                item.uid === user.uid
-                  ? ACTION_TYPE.MODIFIED
-                  : ACTION_TYPE.INITIALIZED;
-              items[item.uid] = { index, type };
-            });
-
-            this.users = {
-              ...this.users,
-              [user.departmentid]: departmentUsers
-            };
-
-            await new Promise((resolve) =>
-              requestAnimationFrame(() => resolve())
-            );
-
-            this.listState = {
-              ...this.listState,
-              [user.departmentid]: {
-                items,
-                length: departmentUsers.length
-              }
-            };
-
-            break;
-          }
-          case ACTION_TYPE.REMOVED: {
-            const items = {};
-            const user = state.action.payload as User;
-            const userState = this.listState[user.departmentid].items[user.uid];
-            const departmentUsers = state.items[user.departmentid].slice();
-
-            departmentUsers.map((item, index) => {
-              const type = ACTION_TYPE.INITIALIZED;
-              items[item.uid] = { index, type };
-            });
-            departmentUsers.splice(userState.index, 0, user);
-
-            items[user.uid] = {
-              ...userState,
-              type: ACTION_TYPE.REMOVED
-            };
-
-            this.users = {
-              ...this.users,
-              [user.departmentid]: departmentUsers
-            };
-
-            this.listState = {
-              ...this.listState,
-              [user.departmentid]: {
-                items,
-                length: departmentUsers.length - 1
-              }
-            };
-          }
-        }
-      }
+      this.usersListener
     );
     this.adminManager.subscribe();
   }
