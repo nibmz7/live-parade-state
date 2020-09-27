@@ -1,6 +1,7 @@
 import { LitElement, html, customElement, css, property } from 'lit-element';
 import { buttonStyles, globalStyles } from '../global_styles';
-import { onScroll } from '../utils';
+import { onPressed, onScroll } from '../utils';
+import '../dialogs/sign_out';
 
 export const shouldElevate = (welcomeText, container) =>
   onScroll(() => {
@@ -27,14 +28,19 @@ export default class CustomDialog extends LitElement {
 
   render() {
     return html`<button
-      tabindex="0"
-      @click="${() => (this.showSignOutDialog = true)}"
-      aria-label="Open sign out dialog"
-      plain
-      ?elevate="${this.elevate}"
-    >
-      <slot></slot>
-    </button>`;
+        tabindex="0"
+        @click="${onPressed(() => (this.showSignOutDialog = true))}"
+        aria-label="Open sign out dialog"
+        plain
+        ?elevate="${this.elevate}"
+      >
+        <slot></slot>
+      </button>
+      ${this.showSignOutDialog
+        ? html`<sign-out
+            @close="${() => (this.showSignOutDialog = false)}"
+          ></sign-out>`
+        : ''}`;
   }
 
   static get styles() {
