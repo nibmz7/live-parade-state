@@ -16,6 +16,7 @@ export type DepartmentPayload =
   | Department
   | DepartmentName
   | Array<Department>
+  | DepartmentAction
   | DepartmentActionError
   | undefined;
 

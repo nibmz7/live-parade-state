@@ -1,10 +1,6 @@
 import { ACTION_ROOT, generateActionId } from '../store';
 import { ACTION_TYPE } from '../data_manager';
-import {
-  UserAction,
-  UserPayload,
-  UserActionError
-} from '../states/user_state';
+import { UserAction, UserPayload, UserActionError } from '../states/user_state';
 import User, { UserBase } from '../../model/user';
 
 const makeAction = (type: ACTION_TYPE, payload: UserPayload): UserAction => ({
@@ -26,7 +22,9 @@ const ACTION_USER = {
     makeAction(ACTION_TYPE.REQUEST_MODIFY, user),
   requestRemove: (user: User): UserAction =>
     makeAction(ACTION_TYPE.REQUEST_REMOVE, user),
-  error: (actionError: UserActionError) =>
+  requestSuccessful: (action: UserAction) =>
+    makeAction(ACTION_TYPE.REQUEST_SUCCESSFUL, action),
+  requestError: (actionError: UserActionError) =>
     makeAction(ACTION_TYPE.REQUEST_ERROR, actionError)
 };
 

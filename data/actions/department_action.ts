@@ -32,7 +32,9 @@ const ACTION_DEPARTMENT = {
     makeAction(ACTION_TYPE.REQUEST_MODIFY, department),
   requestRemove: (department: Department): DepartmentAction =>
     makeAction(ACTION_TYPE.REQUEST_REMOVE, department),
-  error: (actionError: DepartmentActionError) =>
+  requestSuccessful: (action: DepartmentAction) =>
+    makeAction(ACTION_TYPE.REQUEST_SUCCESSFUL, action),
+  requestError: (actionError: DepartmentActionError) =>
     makeAction(ACTION_TYPE.REQUEST_ERROR, actionError)
 };
 
