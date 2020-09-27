@@ -58,11 +58,13 @@ const ModelBranch: Branch = {
 const ModelDepartment1: Department = { id: 'dep-123', name: 'Manpower Branch' };
 const ModelDepartment2: Department = { id: 'dep-456', name: 'Logistics Branch' };
 const ModelDepartment3: Department = { id: 'dep-789', name: 'Accounting Branch' };
+const ModelDepartment4: Department = { id: 'dep-321', name: 'Signal Wing' };
 
 const ModelDepartmentArray: Array<Department> = [
   ModelDepartment1,
   ModelDepartment2,
-  ModelDepartment3
+  ModelDepartment3,
+  ModelDepartment4
 ];
 
 const ModelUser1 = new User({

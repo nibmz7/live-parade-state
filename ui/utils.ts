@@ -26,3 +26,23 @@ export const onPressed = (
     }
   };
 };
+
+export const onScroll = (callback: (e: Event) => any, debounce = 500) => {
+  let isRunning = false;
+  let timer;
+  return (e: Event) => {
+    if (isRunning) {
+      clearTimeout(timer);
+      timer = setTimeout(() => {
+        isRunning = false;
+        callback(e);
+      }, debounce);
+    } else {
+      isRunning = true;
+      callback(e);
+      timer = setTimeout(() => {
+        isRunning = false;
+      }, debounce);
+    }
+  };
+};

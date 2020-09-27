@@ -1,4 +1,4 @@
-import { LitElement, html, customElement, css } from 'lit-element';
+import { LitElement, html, customElement, css, query } from 'lit-element';
 import { repeat } from 'lit-html/directives/repeat';
 import { Unsubscribe } from 'redux';
 import MockAdminManager from '../../data-mock/mock_admin_manager';
@@ -17,9 +17,12 @@ import '../dialogs/edit_department';
 import '../base/welcome_text';
 import '../dialogs/edit_user';
 import { onPressed } from '../utils';
+import { shouldElevate } from '../base/welcome_text';
 
 @customElement('admin-view')
 export default class AdminView extends LitElement {
+  @query('#departments-list') _departmentsList;
+  @query('welcome-text') _welcomeText;
   private departmentsUnsubscribe?: Unsubscribe;
   private usersUnsubscribe?: Unsubscribe;
   private branch = (ApplicationStore.getAuth().action.payload as Admin).branch;
@@ -244,6 +247,7 @@ export default class AdminView extends LitElement {
       user: User,
       length: number
     ) => {
+      console.log('rerender');
       const itemState = this.listState[department.id].items[user.uid];
       return html`
         <div
@@ -264,11 +268,11 @@ export default class AdminView extends LitElement {
     };
 
     const departmentTemplate = (department: Department) => {
-      const users = this.users[department.id];
+      const users = this.users[department.id] || [];
       const length = this.listState[department.id].size;
       const height = length * 3.5;
       return html`
-        <div class="department" id="${department.id}">
+        <div class="department">
           <div class="header">
             <h3>${department.name}</h3>
             <button
@@ -294,10 +298,16 @@ export default class AdminView extends LitElement {
         </div>
       `;
     };
-    return html` <div id="root">
+    return html`<div id="root">
       <welcome-text>Hi, admin user!</welcome-text>
 
-      <div class="departments">${this.departments.map(departmentTemplate)}</div>
+      <div
+        id="departments-list"
+        class="departments"
+        @scroll="${shouldElevate(this._welcomeText, this._departmentsList)}"
+      >
+        ${this.departments.map(departmentTemplate)}
+      </div>
 
       <button id="add-department" solid @click="${this.onEditDepartment()}">
         Add department

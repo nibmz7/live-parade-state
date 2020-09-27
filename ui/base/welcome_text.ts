@@ -1,9 +1,29 @@
 import { LitElement, html, customElement, css, property } from 'lit-element';
 import { buttonStyles, globalStyles } from '../global_styles';
+import { onScroll } from '../utils';
+
+export const shouldElevate = (welcomeText, container) =>
+  onScroll(() => {
+    let hasScrolled = false;
+    const element = container as HTMLElement;
+    if (element.scrollTop > 0) hasScrolled = true;
+    welcomeText.dispatchEvent(
+      new CustomEvent('has-scrolled', { detail: hasScrolled })
+    );
+  });
 
 @customElement('welcome-text')
 export default class CustomDialog extends LitElement {
   @property({ type: Boolean }) showSignOutDialog = false;
+  @property({ type: Boolean }) elevate = false;
+
+  connectedCallback() {
+    super.connectedCallback();
+    this.addEventListener(
+      'has-scrolled',
+      (e: any) => (this.elevate = e.detail)
+    );
+  }
 
   render() {
     return html`<button
@@ -11,6 +31,7 @@ export default class CustomDialog extends LitElement {
       @click="${() => (this.showSignOutDialog = true)}"
       aria-label="Open sign out dialog"
       plain
+      ?elevate="${this.elevate}"
     >
       <slot></slot>
     </button>`;
@@ -34,8 +55,8 @@ export default class CustomDialog extends LitElement {
           color: var(--color-primary-dark);
           border-radius: 0px;
         }
-        #root.elevation {
-          box-shadow: 0px 1px 2px 1px #928d8d4f;
+        button[elevate] {
+          box-shadow: rgba(0, 0, 0, 0.1) 0px 1px;
         }
       `
     ];
