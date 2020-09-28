@@ -74,7 +74,7 @@ export default class ViewSwitcher extends LitElement {
         case VIEW_TYPES.AUTH:
           return html`<login-view @signed-in="${this.signedIn}"></login-view>`;
         case VIEW_TYPES.ADMIN:
-          return html`<admin-view></admin-view>`;
+          return html`<admin-view @signed-out="${this.signedOut}"></admin-view>`;
         case VIEW_TYPES.USER:
           return html`<div>User signed In</div>`;
         default:

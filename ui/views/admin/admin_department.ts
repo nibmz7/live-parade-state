@@ -139,7 +139,7 @@ export default class AdminDepartment extends LitElement {
               .branch=${this.branch}
               .department=${this.department}
               .user=${this.selectedUser}
-              ?editing=${this.selectedUser}
+              .editing=${!!this.selectedUser}
               @close="${this.closeEditUser}"
             ></edit-user>
           `
