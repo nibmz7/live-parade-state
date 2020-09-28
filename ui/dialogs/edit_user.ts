@@ -122,15 +122,19 @@ export default class EditUser extends LitElement {
     });
   }
 
-  reset() {
+  onInputFocus() {
     this.errorState = {
       ...this.errorState,
       visible: false
     };
+    this.dialogState = DIALOG_STATE.STALLING;
   }
 
   render() {
-    return html`<custom-dialog .state="${this.dialogState}">
+    return html`<custom-dialog
+      .state="${this.dialogState}"
+      @reset="${() => (this.dialogState = DIALOG_STATE.OPENED)}"
+    >
       <div id="root" tabindex="0" class="selectable">
         <p id="department-name">${this.department!.name}</p>
 
@@ -157,7 +161,7 @@ export default class EditUser extends LitElement {
                 ...this.rankState,
                 validity: INPUT_VALIDITY.PENDING
               };
-              this.reset();
+              this.onInputFocus();
             },
             (state) => {
               let isValid = Rank.isValid(state.value.toUpperCase());
@@ -180,7 +184,7 @@ export default class EditUser extends LitElement {
                 ...this.nameState,
                 validity: INPUT_VALIDITY.PENDING
               };
-              this.reset();
+              this.onInputFocus();
             },
             (state) => (this.nameState = state),
             {
@@ -199,7 +203,7 @@ export default class EditUser extends LitElement {
                 ...this.emailState,
                 validity: INPUT_VALIDITY.PENDING
               };
-              this.reset();
+              this.onInputFocus();
             },
             (state) => (this.emailState = state),
             {
@@ -220,7 +224,7 @@ export default class EditUser extends LitElement {
                 ...this.passwordState,
                 validity: INPUT_VALIDITY.PENDING
               };
-              this.reset();
+              this.onInputFocus();
             },
             (state) => (this.passwordState = state),
             () => {}
