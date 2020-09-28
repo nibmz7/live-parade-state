@@ -1,4 +1,4 @@
-import { LitElement, html, customElement, css } from 'lit-element';
+import { LitElement, html, customElement, css, property } from 'lit-element';
 import ACTION_DEPARTMENT from '../../data/actions/department_action';
 import { ApplicationStore } from '../../data/store';
 import Department from '../../model/department';
@@ -8,28 +8,16 @@ import {
   globalStyles,
   inputStyles
 } from '../global_styles';
-import { InputState, INPUT_VALIDITY, textInput } from '../base/input';
+import { InputStateDefault, INPUT_VALIDITY, textInput } from '../base/input';
 import '../base/custom_dialog';
 import { DIALOG_STATE } from '../base/custom_dialog';
 
 @customElement('edit-department')
 export default class EditDepartment extends LitElement {
-  private department?: Department;
-  private editing = false;
-  private nameState: InputState = {
-    value: '',
-    validity: INPUT_VALIDITY.PENDING
-  };
-  private dialogState = DIALOG_STATE.OPENING;
-
-  static get properties() {
-    return {
-      department: { type: Object },
-      editing: { type: Boolean, reflect: true },
-      dialogState: { type: Number },
-      nameState: { type: Object }
-    };
-  }
+  @property({ type: Object }) department?: Department;
+  @property({ type: Object }) nameState = InputStateDefault();
+  @property({ type: Number }) dialogState = DIALOG_STATE.OPENING;
+  @property({ type: Boolean }) editing = false;
 
   connectedCallback() {
     super.connectedCallback();
@@ -37,6 +25,13 @@ export default class EditDepartment extends LitElement {
   }
 
   submit() {
+    if (this.nameState.value.length === 0) {
+      this.nameState = {
+        ...this.nameState,
+        validity: INPUT_VALIDITY.INVALID
+      };
+      return;
+    }
     if (this.editing) {
       let action = ACTION_DEPARTMENT.requestModify({
         ...this.department!,
