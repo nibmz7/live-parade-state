@@ -189,6 +189,9 @@ export default class AdminView extends LitElement {
 
       <request-log></request-log>
 
+      ${this.departments.length === 0
+        ? html`<p class="empty">No departments found</p>`
+        : ''}
       ${this.showAddDepartment
         ? html`<edit-department
             @close="${this.closeAddDepartment}"
@@ -240,6 +243,17 @@ export default class AdminView extends LitElement {
 
         admin-department:last-of-type {
           margin-bottom: 0px;
+        }
+
+        .empty {
+          position: absolute;
+          margin: auto;
+          width: fit-content;
+          height: fit-content;
+          top: 0;
+          left: 0;
+          right: 0;
+          bottom: 0;
         }
       `
     ];
