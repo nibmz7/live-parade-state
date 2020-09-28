@@ -20,7 +20,7 @@ export class UserBase {
   readonly departmentid: string;
 
   constructor(props: UserBaseProps) {
-    this.email = props.email;
+    this.email = props.email.toLowerCase();
     this.name = props.name;
     this.regular = props.regular;
     this.rank = props.rank;

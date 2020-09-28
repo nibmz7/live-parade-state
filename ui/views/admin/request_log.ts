@@ -167,13 +167,17 @@ export default class RequestLog extends LitElement {
       </div>`;
     };
 
-    return html`<div id="root">
+    const content = html`<div id="root">
       ${repeat(
         Object.values(this.requests),
         (request) => request.id,
         requestTemplate
       )}
     </div>`;
+
+    const isEmpty = Object.keys(this.requests).length === 0;
+
+    return html`${isEmpty ? '' : content}`;
   }
 
   static get styles() {
@@ -185,11 +189,11 @@ export default class RequestLog extends LitElement {
         #root {
           width: 100%;
           max-height: 30%;
-          bottom: 80px;
+          bottom: 65px;
           position: absolute;
           overflow-x: hidden;
           overflow-y: auto;
-          padding: 10px 30px;
+          padding: 10px 20px;
           box-sizing: border-box;
           display: flex;
           flex-direction: column-reverse;
@@ -203,11 +207,38 @@ export default class RequestLog extends LitElement {
           height: 2.2rem;
           margin-top: 10px;
           position: relative;
+          border-radius: 5px;
           animation: item-appear-in 0.3s;
+          transition: height 0.3s;
+        }
+
+        .content[error] {
+          height: 3.4rem;
+        }
+
+        .content[error] p,
+        .content[success] p {
+          padding-right: 25px;
+        }
+
+        .content[success] .request {
+          background-color: var(--color-success);
+        }
+
+        .content[error] .request {
+          background-color: var(--color-error);
+          height: 3.4rem;
+        }
+
+        .content[error] .request .message {
+          font-weight: 700;
         }
 
         .request {
+          height: 2.2rem;
           position: absolute;
+          box-sizing: border-box;
+          flex-direction: column;
           width: 100%;
           color: white;
           background-color: var(--color-pending);
@@ -217,26 +248,12 @@ export default class RequestLog extends LitElement {
           padding: 0.5rem;
           border-radius: 5px;
           font-weight: 500;
-          transition: background-color 0.3s;
-          height: 2.2rem;
-          box-sizing: border-box;
-        }
-
-        .content[success] .request {
-          background-color: var(--color-success);
-        }
-
-        .content[error] .request {
-          background-color: var(--color-error);
-        }
-
-        .content[error] .request .message {
-          font-weight: 700;
+          transition: background-color 0.3s, height 0.3s;
         }
 
         button.dismiss {
           position: absolute;
-          right: 10px;
+          right: 5px;
           top: 0;
           bottom: 0;
           font-weight: 700;
@@ -247,9 +264,13 @@ export default class RequestLog extends LitElement {
 
         .error {
           margin-top: 4px;
+          font-size: 0.8rem;
         }
 
         p {
+          overflow: hidden;
+          text-overflow: ellipsis;
+          white-space: nowrap;
           margin: 0;
           line-height: 1.2rem;
         }
