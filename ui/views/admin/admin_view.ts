@@ -38,8 +38,8 @@ export default class AdminView extends LitElement {
   private branch = (ApplicationStore.getAuth().action.payload as Admin).branch;
   private adminManager = new MockAdminManager();
 
-  @query('#department-list') _departmentsList;
-  @query('welcome-text') _welcomeText;
+  @query('#department-list') _departmentsList!: HTMLElement;
+  @query('welcome-text') _welcomeText!: HTMLElement;
 
   @property({ type: Boolean }) showAddDepartment = false;
   @property({ type: Array }) departments: Array<Department> = [];

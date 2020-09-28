@@ -1,4 +1,11 @@
-import { LitElement, html, customElement, css, property } from 'lit-element';
+import {
+  LitElement,
+  html,
+  customElement,
+  css,
+  property,
+  query
+} from 'lit-element';
 import MockAuthManager from '../../data-mock/mock_auth_manager';
 import { ACTION_ROOT, ApplicationStore } from '../../data/store';
 import { AUTH_STATE, AuthStoreState } from '../../data/states/auth_state';
@@ -17,6 +24,7 @@ const enum VIEW_TYPES {
 
 @customElement('view-switcher')
 export default class ViewSwitcher extends LitElement {
+  @query('#root') _root!: HTMLElement;
   @property({ type: Boolean, reflect: true }) splashscreen = true;
   @property({ type: Boolean, reflect: true }) initialized = false;
   @property({ type: Number }) viewType: VIEW_TYPES = VIEW_TYPES.UNINITALIZED;
@@ -45,8 +53,9 @@ export default class ViewSwitcher extends LitElement {
     if (this.visible) {
       this.visible = false;
       await new Promise((resolve) => {
-        let root = this.shadowRoot?.getElementById('root');
-        root?.addEventListener('animationend', () => resolve(), { once: true });
+        this._root.addEventListener('animationend', () => resolve(), {
+          once: true
+        });
       });
     }
   }
@@ -74,7 +83,9 @@ export default class ViewSwitcher extends LitElement {
         case VIEW_TYPES.AUTH:
           return html`<login-view @signed-in="${this.signedIn}"></login-view>`;
         case VIEW_TYPES.ADMIN:
-          return html`<admin-view @signed-out="${this.signedOut}"></admin-view>`;
+          return html`<admin-view
+            @signed-out="${this.signedOut}"
+          ></admin-view>`;
         case VIEW_TYPES.USER:
           return html`<div>User signed In</div>`;
         default:
