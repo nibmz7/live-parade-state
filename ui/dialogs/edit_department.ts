@@ -51,8 +51,22 @@ export default class EditDepartment extends LitElement {
     this.dialogState = DIALOG_STATE.CLOSING;
   }
 
+  onInputFocus() {
+    console.log('STALLING');
+    this.dialogState = DIALOG_STATE.STALLING;
+  }
+
+  onInputBlur() {
+    // console.log('sdsd');
+    // this.dialogState = DIALOG_STATE.OPENED;
+    // this.nameState = { ...this.nameState, validity: INPUT_VALIDITY.PENDING };
+  }
+
   render() {
-    return html`<custom-dialog .state="${this.dialogState}">
+    return html`<custom-dialog
+      .state="${this.dialogState}"
+      @reset="${() => (this.dialogState = DIALOG_STATE.OPENED)}"
+    >
       <div id="root" tabindex="0" class="selectable">
         <div class="header">
           <h3>Department</h3>
@@ -69,10 +83,18 @@ export default class EditDepartment extends LitElement {
             : ''}
         </div>
 
-        ${textInput(this.nameState, (state) => (this.nameState = state), {
-          placeholder: 'e.g. Log Branch',
-          label: 'Department name'
-        })}
+        ${textInput(
+          this.nameState,
+          () => this.onInputFocus(),
+          (state) => {
+            this.nameState = state;
+            this.onInputBlur();
+          },
+          {
+            placeholder: 'e.g. Log Branch',
+            label: 'Department name'
+          }
+        )}
 
         <button
           solid

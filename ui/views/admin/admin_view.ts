@@ -6,7 +6,6 @@ import {
   query,
   property
 } from 'lit-element';
-import { Unsubscribe } from 'redux';
 import MockAdminManager from '../../../data-mock/mock_admin_manager';
 import { DepartmentStoreState } from '../../../data/states/department_state';
 import {

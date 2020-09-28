@@ -1,23 +1,16 @@
-import { LitElement, html, customElement, css } from 'lit-element';
+import { LitElement, html, customElement, css, property } from 'lit-element';
 import { cardStyles, fadeAnimation, globalStyles } from '../global_styles';
 
 export enum DIALOG_STATE {
   OPENING,
   OPENED,
-  CLOSING
+  CLOSING,
+  STALLING
 }
 
 @customElement('custom-dialog')
 export default class CustomDialog extends LitElement {
-  private state = DIALOG_STATE.OPENING;
-
-  static get properties() {
-    return { state: { type: Number } };
-  }
-
-  connectedCallback() {
-    super.connectedCallback();
-  }
+  @property({ type: Number }) state = DIALOG_STATE.OPENING;
 
   firstUpdated() {
     let dialog = this.shadowRoot?.getElementById('dialog');
@@ -35,7 +28,11 @@ export default class CustomDialog extends LitElement {
   }
 
   close() {
-    if (this.state === DIALOG_STATE.OPENED) this.state = DIALOG_STATE.CLOSING;
+    console.log(this.state);
+    if (this.state === DIALOG_STATE.STALLING) {
+      this.dispatchEvent(new Event('reset'));
+    } else if (this.state === DIALOG_STATE.OPENED)
+      this.state = DIALOG_STATE.CLOSING;
   }
 
   render() {
@@ -45,15 +42,26 @@ export default class CustomDialog extends LitElement {
       class="selectable"
       ?hide="${this.state === DIALOG_STATE.CLOSING}"
       ?show="${this.state === DIALOG_STATE.OPENING}"
-      ?ready="${this.state === DIALOG_STATE.OPENED}"
-      @click="${this.close}"
+      ?ready="${this.state === DIALOG_STATE.OPENED ||
+      this.state === DIALOG_STATE.STALLING}"
       aria-label="Close dialog"
+      @click="${this.close}"
     >
       <div
         id="dialog"
         class="card"
-        @click="${(e: Event) => e.stopPropagation()}"
         aria-label="Dialog"
+        @click="${(e: Event) => {
+          e.stopPropagation();
+          console.log(this.state + 'ddd');
+          if (this.state === DIALOG_STATE.STALLING) {
+            const isInput = (e.composedPath()[0] as HTMLElement).tagName
+              .toLowerCase()
+              .includes('input');
+            if (isInput) return;
+            this.dispatchEvent(new Event('reset'));
+          }
+        }}"
       >
         <slot></slot>
       </div>
@@ -111,7 +119,7 @@ export default class CustomDialog extends LitElement {
 
         #root[ready] > #dialog {
           pointer-events: auto;
-          transition: transform .3s;
+          transition: transform 0.3s;
         }
 
         @keyframes scale-in {

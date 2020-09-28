@@ -28,7 +28,7 @@ export const PasswordStateDefault = (): PasswordInputState => ({
   visible: false
 });
 
-const updateInputValue = (callback: (state: InputState) => void) => {
+const getInputValue = (callback: (state: InputState) => void) => {
   return (e: Event) => {
     let input = e.target as HTMLInputElement;
     let inputValue = input.value;
@@ -44,14 +44,14 @@ const updateInputValue = (callback: (state: InputState) => void) => {
 
 export const textInput = (
   inputState: InputState,
-  setInputState: (state: InputState) => void,
+  onFocus: () => void,
+  onBlur: (state: InputState) => void,
   options?: {
     placeholder?: string;
     label?: string;
     id?: string;
     changeText?: (text: string) => string;
-  },
-  reset?: () => void
+  }
 ) => {
   const placeholder = options?.placeholder || '';
   const label = options?.label || '';
@@ -61,15 +61,6 @@ export const textInput = (
       let input = e.currentTarget as HTMLInputElement;
       input.value = options.changeText(input.value);
     }
-  };
-
-  const updateValue = updateInputValue((state) => {
-    setInputState(state);
-  });
-
-  const inputReset = () => {
-    setInputState({ ...inputState, validity: INPUT_VALIDITY.PENDING });
-    reset?.();
   };
 
   return html`
@@ -84,8 +75,8 @@ export const textInput = (
       value="${inputState.value}"
       ?invalid="${inputState.validity === INPUT_VALIDITY.INVALID}"
       ?valid="${inputState.validity === INPUT_VALIDITY.VALID}"
-      @focus="${inputReset}"
-      @blur="${updateValue}"
+      @focus="${onFocus}"
+      @blur="${getInputValue(onBlur)}"
       @input="${oninput}"
     />
   `;

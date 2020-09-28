@@ -20,15 +20,22 @@
 <body>
     <view-switcher splashscreen></view-switcher>
     <script>
-        const screenHeight = window.innerHeight;
-        const screenWidth = window.innerWidth;
+        let screenHeight;
+        let screenWidth;
 
-        document.body.style.height = screenHeight + 'px';
-        document.body.style.width = screenWidth + 'px';
+        const setScreenHeight = () => {
+            screenHeight = window.innerHeight;
+            screenWidth = window.innerWidth;
+            document.body.style.height = screenHeight + 'px';
+            document.body.style.width = screenWidth + 'px';
+        }
+        setScreenHeight()
+
         window.onresize = () => {
-            let offsetHeight = (window.innerHeight - screenHeight)/2;
+            const windowHeight = window.innerHeight;
+            if (windowHeight > screenHeight) setScreenHeight();
+            let offsetHeight = (windowHeight - screenHeight) / 2;
             document.body.style.setProperty('--offset-height', offsetHeight + 'px');
-            console.log(offsetHeight); 
         }
     </script>
 </body>
