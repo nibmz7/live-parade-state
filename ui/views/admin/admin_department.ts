@@ -64,8 +64,9 @@ export default class AdminDepartment extends LitElement {
   }
 
   firstUpdated() {
-    (this._userList as HTMLElement).onanimationend = (e) => {
+    (this._userList as HTMLElement).onanimationend = (e: Event) => {
       const targetElement = e.composedPath()[0] as HTMLElement;
+      if (!targetElement.hasAttribute('removed')) return;
       const event = new CustomEvent('user-removed', {
         detail: {
           departmentid: this.department.id,
