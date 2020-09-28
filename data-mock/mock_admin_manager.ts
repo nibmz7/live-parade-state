@@ -7,6 +7,7 @@ import User, { UserBase } from '../model/user';
 import AdminManager from '../data/admin_manager';
 import { Action, ApplicationStore, generateActionId } from '../data/store';
 import ACTION_USER from '../data/actions/user_action';
+import ACTION_DEPARTMENT from '../data/actions/department_action';
 
 export default class MockAdminManager extends AdminManager {
   constructor() {
@@ -27,6 +28,8 @@ export default class MockAdminManager extends AdminManager {
       name
     };
     this.departmentOnChange(department, ACTION_TYPE.ADDED);
+    let action = ACTION_DEPARTMENT.requestSuccessful(state.action);
+    ApplicationStore.dispatch(action);
   }
 
   protected requestModifyDepartment(state: DepartmentStoreState): void {
@@ -34,6 +37,8 @@ export default class MockAdminManager extends AdminManager {
       state.action.payload as Department,
       ACTION_TYPE.MODIFIED
     );
+    let action = ACTION_DEPARTMENT.requestSuccessful(state.action);
+    ApplicationStore.dispatch(action);
   }
 
   protected requestRemoveDepartment(state: DepartmentStoreState): void {
@@ -44,6 +49,8 @@ export default class MockAdminManager extends AdminManager {
     );
     let action = ACTION_USER.initialized(users);
     ApplicationStore.dispatch(action);
+    let action2 = ACTION_DEPARTMENT.requestSuccessful(state.action);
+    ApplicationStore.dispatch(action2);
   }
 
   protected requestAddUser(state: UserStoreState): void {
