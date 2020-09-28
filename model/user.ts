@@ -8,6 +8,7 @@ export interface UserBaseProps {
   rank: Rank;
   branchid: string;
   departmentid: string;
+  password?: string;
 }
 
 export class UserBase {
@@ -18,6 +19,7 @@ export class UserBase {
   readonly rank: Rank;
   readonly branchid: string;
   readonly departmentid: string;
+  readonly password?: string;
 
   constructor(props: UserBaseProps) {
     this.email = props.email.toLowerCase();
@@ -26,6 +28,7 @@ export class UserBase {
     this.rank = props.rank;
     this.branchid = props.branchid;
     this.departmentid = props.departmentid;
+    this.password = props.password;
     this.fullname = `${props.rank.text} ${props.name}`;
   }
 }

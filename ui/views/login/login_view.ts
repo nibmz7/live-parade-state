@@ -18,10 +18,10 @@ import ACTION_AUTH from '../../../data/actions/auth_action';
 import { onPressed } from '../../utils';
 import {
   emailInput,
-  InputState,
+  InputStateDefault,
   INPUT_VALIDITY,
   passwordInput,
-  PasswordInputState
+  PasswordStateDefault
 } from '../../base/input';
 
 declare global {
@@ -35,15 +35,8 @@ export class LoginView extends LitElement {
   @property({ type: String }) errorMessage = '';
   @property({ type: Boolean }) errorVisible = false;
   @property({ type: Boolean }) isProcessing = false;
-  @property({ type: Object }) emailState: InputState = {
-    value: '',
-    validity: INPUT_VALIDITY.PENDING
-  };
-  @property({ type: Object }) passwordState: PasswordInputState = {
-    value: '',
-    validity: INPUT_VALIDITY.PENDING,
-    visible: false
-  };
+  @property({ type: Object }) emailState = InputStateDefault();
+  @property({ type: Object }) passwordState = PasswordStateDefault();
 
   connectedCallback() {
     super.connectedCallback();

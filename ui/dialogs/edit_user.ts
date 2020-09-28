@@ -1,4 +1,4 @@
-import { LitElement, html, customElement, css } from 'lit-element';
+import { LitElement, html, customElement, css, property } from 'lit-element';
 import ACTION_USER from '../../data/actions/user_action';
 import { UserAction } from '../../data/states/user_state';
 import { ApplicationStore } from '../../data/store';
@@ -14,10 +14,10 @@ import {
   passwordInputStyles
 } from '../global_styles';
 import {
-  InputState,
+  InputStateDefault,
   INPUT_VALIDITY,
   passwordInput,
-  PasswordInputState,
+  PasswordStateDefault,
   textInput
 } from '../base/input';
 import { onPressed } from '../utils';
@@ -26,49 +26,20 @@ import { DIALOG_STATE } from '../base/custom_dialog';
 
 @customElement('edit-user')
 export default class EditUser extends LitElement {
-  private user?: User;
-  private branch?: Branch;
-  private department?: Department;
-  private editing = false;
-  private errorState = {
+  @property({ type: Object }) user?: User;
+  @property({ type: Object }) branch!: Branch;
+  @property({ type: Object }) department!: Department;
+  @property({ type: Object }) nameState = InputStateDefault();
+  @property({ type: Object }) rankState = InputStateDefault();
+  @property({ type: Object }) emailState = InputStateDefault();
+  @property({ type: Object }) passwordState = PasswordStateDefault();
+  @property({ type: Object }) errorState = {
     message: '',
     visible: false
   };
-  private dialogState = DIALOG_STATE.OPENING;
-  private nameState: InputState = {
-    value: '',
-    validity: INPUT_VALIDITY.PENDING
-  };
-  private rankState: InputState = {
-    value: '',
-    validity: INPUT_VALIDITY.PENDING
-  };
-  private emailState: InputState = {
-    value: '',
-    validity: INPUT_VALIDITY.PENDING
-  };
-  private passwordState: PasswordInputState = {
-    value: '',
-    validity: INPUT_VALIDITY.PENDING,
-    visible: false
-  };
-  private isRegularState = false;
-
-  static get properties() {
-    return {
-      user: { type: Object },
-      branch: { type: Object },
-      department: { type: Object },
-      editing: { type: Boolean, reflect: true },
-      dialogState: { type: Number },
-      nameState: { type: Object },
-      rankState: { type: Object },
-      emailState: { type: Object },
-      passwordState: { type: Object },
-      isRegularState: { type: Boolean },
-      errorState: { type: Object }
-    };
-  }
+  @property({ type: Boolean }) editing = false;
+  @property({ type: Boolean }) isRegularState = false;
+  @property({ type: Number }) dialogState = DIALOG_STATE.OPENING;
 
   connectedCallback() {
     super.connectedCallback();
@@ -129,7 +100,8 @@ export default class EditUser extends LitElement {
           ...data
         });
       } else {
-        let user = new UserBase({ ...data });
+        const password = this.passwordState.value;
+        let user = new UserBase({ ...data, password });
         action = ACTION_USER.requestAdd(user);
       }
 

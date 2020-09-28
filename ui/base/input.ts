@@ -17,6 +17,17 @@ export interface PasswordInputState extends InputState {
   visible: boolean;
 }
 
+export const InputStateDefault = (): InputState => ({
+  value: '',
+  validity: INPUT_VALIDITY.PENDING
+});
+
+export const PasswordStateDefault = (): PasswordInputState => ({
+  value: '',
+  validity: INPUT_VALIDITY.PENDING,
+  visible: false
+});
+
 const updateInputValue = (callback: (state: InputState) => void) => {
   return (e: Event) => {
     let input = e.target as HTMLInputElement;
