@@ -37,10 +37,13 @@ export default class MockAdminManager extends AdminManager {
   }
 
   protected requestRemoveDepartment(state: DepartmentStoreState): void {
-    this.departmentOnChange(
-      state.action.payload as Department,
-      ACTION_TYPE.REMOVED
+    const department = state.action.payload as Department;
+    this.departmentOnChange(department, ACTION_TYPE.REMOVED);
+    const users = ApplicationStore.getUsers().sortedItems.filter(
+      (user) => user.departmentid !== department.id
     );
+    let action = ACTION_USER.initialized(users);
+    ApplicationStore.dispatch(action);
   }
 
   protected requestAddUser(state: UserStoreState): void {
@@ -72,7 +75,7 @@ export default class MockAdminManager extends AdminManager {
       this.userOnChange(new User(user), ACTION_TYPE.MODIFIED);
       let action = ACTION_USER.requestSuccessful(state.action);
       ApplicationStore.dispatch(action);
-    }, 2000);
+    }, 5000);
   }
 
   protected requestRemoveUser(state: UserStoreState): void {

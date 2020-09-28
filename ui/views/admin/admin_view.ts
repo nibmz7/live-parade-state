@@ -54,87 +54,14 @@ export default class AdminView extends LitElement {
     const type = state.action.type;
     if (REQUEST_TYPES.includes(type)) return;
     this.departments = state.items;
-    switch (type) {
-      case ACTION_TYPE.INITIALIZED: {
-        this.departments.map((item) => {
-          this.users[item.id] = [];
-          this.listState[item.id] = { items: {}, length: 0 };
-        });
-        break;
-      }
-      case ACTION_TYPE.ADDED: {
-        const department = state.action.payload as Department;
-        this.listState = {
-          ...this.listState,
-          [department.id]: { items: {}, length: 0 }
-        };
-        this.users = {
-          ...this.users,
-          [department.id]: []
-        };
-        break;
-      }
-      case ACTION_TYPE.REMOVED: {
-        const department = state.action.payload as Department;
-        const { [department.id]: value, ...listState } = this.listState;
-        this.listState = listState;
-        break;
-      }
+    if (type === ACTION_TYPE.REMOVED) {
+      const department = state.action.payload as Department;
+      const { [department.id]: value, ...listState } = this.listState;
+      this.listState = listState;
     }
   };
 
-  private usersListener: DataStoreListener = async (state: UserStoreState) => {
-    const type = state.action.type;
-    if (REQUEST_TYPES.includes(type)) return;
-
-    if (type === ACTION_TYPE.INITIALIZED) {
-      for (const [departmentid, userArray] of Object.entries(state.items)) {
-        this.updateListState(departmentid, userArray);
-      }
-      this.users = {
-        ...this.users,
-        ...state.items
-      };
-      return;
-    }
-
-    const user = state.action.payload as User;
-    const departmentid = user.departmentid;
-    const userArray = state.items[user.departmentid].slice();
-
-    this.users = {
-      ...this.users,
-      [user.departmentid]: userArray
-    };
-
-    switch (type) {
-      case ACTION_TYPE.ADDED: {
-        this.updateListState(departmentid, userArray);
-        this.listState[departmentid].items[user.uid].type = ACTION_TYPE.ADDED;
-
-        break;
-      }
-      case ACTION_TYPE.MODIFIED: {
-        await new Promise((resolve) => requestAnimationFrame(() => resolve()));
-        this.updateListState(departmentid, userArray);
-        this.listState[departmentid].items[user.uid].type =
-          ACTION_TYPE.MODIFIED;
-
-        break;
-      }
-      case ACTION_TYPE.REMOVED: {
-        const userState = this.listState[departmentid].items[user.uid];
-        this.updateListState(departmentid, userArray);
-        userArray.splice(userState.index, 0, user);
-        userState.type = ACTION_TYPE.REMOVED;
-        this.listState[departmentid].items[user.uid] = userState;
-
-        break;
-      }
-    }
-  };
-
-  updateListState(departmentid: string, users: Array<User>) {
+  private updateListState(departmentid: string, users: Array<User>) {
     const items = {};
     const length = users.length;
     users.map((item, index) => {
@@ -149,6 +76,46 @@ export default class AdminView extends LitElement {
       }
     };
   }
+
+  private usersListener: DataStoreListener = async (state: UserStoreState) => {
+    const type = state.action.type;
+    if (REQUEST_TYPES.includes(type)) return;
+    this.users = state.items;
+
+    if (type === ACTION_TYPE.INITIALIZED) {
+      for (const [departmentid, userArray] of Object.entries(state.items)) {
+        this.updateListState(departmentid, userArray);
+      }
+      return;
+    }
+
+    const user = state.action.payload as User;
+    const departmentid = user.departmentid;
+    const userArray = state.items[user.departmentid].slice();
+
+    switch (type) {
+      case ACTION_TYPE.ADDED: {
+        this.updateListState(departmentid, userArray);
+        this.listState[departmentid].items[user.uid].type = ACTION_TYPE.ADDED;
+        break;
+      }
+      case ACTION_TYPE.MODIFIED: {
+        await new Promise((resolve) => requestAnimationFrame(() => resolve()));
+        this.updateListState(departmentid, userArray);
+        this.listState[departmentid].items[user.uid].type =
+          ACTION_TYPE.MODIFIED;
+        break;
+      }
+      case ACTION_TYPE.REMOVED: {
+        const userState = this.listState[departmentid].items[user.uid];
+        this.updateListState(departmentid, userArray);
+        userArray.splice(userState.index, 0, user);
+        userState.type = ACTION_TYPE.REMOVED;
+        this.listState[departmentid].items[user.uid] = userState;
+        break;
+      }
+    }
+  };
 
   connectedCallback() {
     super.connectedCallback();
@@ -197,8 +164,11 @@ export default class AdminView extends LitElement {
       return html`<admin-department
         .branch="${this.branch}"
         .department="${department}"
-        .users="${this.users[department.id]}"
-        .listState="${this.listState[department.id]}"
+        .users="${this.users[department.id] || []}"
+        .listState="${this.listState[department.id] || {
+          items: {},
+          length: 0
+        }}"
         @user-removed="${this.onUserRemoved}"
       ></admin-department>`;
     };
