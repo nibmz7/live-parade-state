@@ -30,13 +30,11 @@ import '../../dialogs/edit_department';
 import '../../base/welcome_text';
 import './admin_department';
 import './request_log';
+import ACTION_AUTH from '../../../data/actions/auth_action';
 
 @customElement('admin-view')
 export default class AdminView extends LitElement {
-  private departmentsUnsubscribe?: Unsubscribe;
-  private usersUnsubscribe?: Unsubscribe;
   private branch = (ApplicationStore.getAuth().action.payload as Admin).branch;
-  private adminManager = new MockAdminManager();
 
   @query('#department-list') _departmentsList!: HTMLElement;
   @query('welcome-text') _welcomeText!: HTMLElement;
@@ -119,22 +117,23 @@ export default class AdminView extends LitElement {
 
   connectedCallback() {
     super.connectedCallback();
-    this.departmentsUnsubscribe = ApplicationStore.listen(
+    const adminManager = new MockAdminManager();
+    const departmentsUnsubscribe = ApplicationStore.listen(
       ACTION_ROOT.DEPARTMENTS,
       this.departmentsListener
     );
-    this.usersUnsubscribe = ApplicationStore.listen(
+    const usersUnsubscribe = ApplicationStore.listen(
       ACTION_ROOT.USERS,
       this.usersListener
     );
-    this.adminManager.subscribe();
-  }
-
-  disconnectedCallback() {
-    super.disconnectedCallback();
-    this.adminManager.unsubscribe();
-    this.departmentsUnsubscribe?.();
-    this.usersUnsubscribe?.();
+    this.addEventListener('signed-out', () => {
+      adminManager.unsubscribe();
+      departmentsUnsubscribe();
+      usersUnsubscribe();
+      const action = ACTION_AUTH.requestSignOut();
+      ApplicationStore.dispatch(action);
+    });
+    adminManager.subscribe();
   }
 
   onAddDepartment() {
@@ -183,15 +182,16 @@ export default class AdminView extends LitElement {
         ${this.departments.map(departmentTemplate)}
       </div>
 
+      ${this.departments.length === 0
+        ? html`<p class="empty">No departments found</p>`
+        : ''}
+
       <button id="add-department" solid @click="${this.onAddDepartment()}">
         Add department
       </button>
 
       <request-log></request-log>
 
-      ${this.departments.length === 0
-        ? html`<p class="empty">No departments found</p>`
-        : ''}
       ${this.showAddDepartment
         ? html`<edit-department
             @close="${this.closeAddDepartment}"
@@ -247,13 +247,13 @@ export default class AdminView extends LitElement {
 
         .empty {
           position: absolute;
-          margin: auto;
-          width: fit-content;
-          height: fit-content;
-          top: 0;
-          left: 0;
-          right: 0;
-          bottom: 0;
+          top: 0px;
+          left: 0px;
+          right: 0px;
+          bottom: 0px;
+          display: flex;
+          justify-content: center;
+          align-items: center;
         }
       `
     ];

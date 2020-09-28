@@ -1,8 +1,6 @@
 import { LitElement, html, customElement, css } from 'lit-element';
 import { buttonStyles, globalStyles } from '../global_styles';
 import '../base/custom_dialog';
-import { ApplicationStore } from '../../data/store';
-import ACTION_AUTH from '../../data/actions/auth_action';
 
 @customElement('sign-out')
 export default class EditDepartment extends LitElement {
@@ -10,8 +8,6 @@ export default class EditDepartment extends LitElement {
     this.dispatchEvent(
       new Event('signed-out', { bubbles: true, composed: true })
     );
-    const action = ACTION_AUTH.requestSignOut();
-    ApplicationStore.dispatch(action);
   }
 
   render() {
