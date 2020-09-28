@@ -20,9 +20,10 @@ import {
 import { UserAction, UserActionError } from '../../../data/states/user_state';
 import User from '../../../model/user';
 import Department from '../../../model/department';
+import { onPressed } from '../../utils';
 
 interface Request {
-  id: ACTION_ID;
+  id: string;
   root: ACTION_ROOT;
   type: ACTION_TYPE;
   message: string;
@@ -91,6 +92,7 @@ export default class RequestLog extends LitElement {
       message = `${actionText} ${rootText} ${itemText}...`;
       id = action.id;
     }
+    id = `request-${id}`;
     this.requests = {
       ...this.requests,
       [id]: {
@@ -122,16 +124,46 @@ export default class RequestLog extends LitElement {
     this.usersUnsubscribe?.();
   }
 
+  onDismiss(id: string) {
+    return onPressed(() => {
+      const element = this.shadowRoot!.getElementById(id)!;
+      element.addEventListener(
+        'animationend',
+        () => {
+          console.log('sdsdsd');
+          const { [id]: omit, ...res } = this.requests;
+          this.requests = res;
+        },
+        { once: true }
+      );
+      element.style.animation = 'item-appear-out .3s';
+    });
+  }
+
   render() {
     const requestTemplate = (request: Request) => {
       const type = request.type;
+      const success = type === ACTION_TYPE.REQUEST_SUCCESSFUL;
+      const error = type === ACTION_TYPE.REQUEST_ERROR;
       return html`<div
-        class="request card"
-        ?success="${type === ACTION_TYPE.REQUEST_SUCCESSFUL}"
-        ?error="${type === ACTION_TYPE.REQUEST_ERROR}"
+        id="${request.id}"
+        class="content card"
+        ?success="${success}"
+        ?error="${error}"
       >
-        <p class="message">${request.message}</p>
-        ${request.error ? html`<p class="error">${request.error}!</p>` : ''}
+        <div class="request">
+          <p class="message">${request.message}</p>
+          ${error ? html`<p class="error">${request.error}!</p>` : ''}
+          ${success || error
+            ? html`<button
+                plain
+                class="dismiss"
+                @click="${this.onDismiss(request.id)}"
+              >
+                X
+              </button>`
+            : ''}
+        </div>
       </div>`;
     };
 
@@ -157,7 +189,7 @@ export default class RequestLog extends LitElement {
           position: absolute;
           overflow-x: hidden;
           overflow-y: auto;
-          padding: 0 30px;
+          padding: 10px 30px;
           box-sizing: border-box;
           display: flex;
           flex-direction: column-reverse;
@@ -167,40 +199,82 @@ export default class RequestLog extends LitElement {
           display: none;
         }
 
-        .request {
+        .content {
+          height: 2.2rem;
           margin-top: 10px;
+          position: relative;
+          animation: item-appear-in 0.3s;
+        }
+
+        .request {
+          position: absolute;
+          width: 100%;
           color: white;
           background-color: var(--color-pending);
           display: flex;
           justify-content: center;
           text-align: center;
-          padding: 10px;
+          padding: 0.5rem;
           border-radius: 5px;
           font-weight: 500;
           transition: background-color 0.3s;
+          height: 2.2rem;
+          box-sizing: border-box;
         }
 
-        .request[success] {
+        .content[success] .request {
           background-color: var(--color-success);
         }
 
-        .request[error] {
+        .content[error] .request {
           background-color: var(--color-error);
         }
 
-        .request[error] .message {
+        .content[error] .request .message {
           font-weight: 700;
         }
 
+        button.dismiss {
+          position: absolute;
+          right: 10px;
+          top: 0;
+          bottom: 0;
+          font-weight: 700;
+          display: flex;
+          align-items: center;
+          color: white;
+        }
+
         .error {
+          margin-top: 4px;
         }
 
         p {
           margin: 0;
+          line-height: 1.2rem;
         }
 
         p::first-letter {
           text-transform: uppercase;
+        }
+
+        @keyframes item-appear-in {
+          from {
+            opacity: 0;
+            height: 0px;
+          }
+          to {
+            opacity: 1;
+            height: 2.2rem;
+          }
+        }
+
+        @keyframes item-appear-out {
+          to {
+            opacity: 0;
+            height: 0rem;
+            margin: 0;
+          }
         }
       `
     ];
