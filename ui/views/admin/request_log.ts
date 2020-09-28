@@ -1,58 +1,45 @@
 import { LitElement, html, customElement, css, property } from 'lit-element';
 import { Unsubscribe } from 'redux';
-import { DepartmentStoreState } from '../../../data/states/department_state';
-import { UserAction, UserStoreState } from '../../../data/states/user_state';
 import {
+  Action,
   ACTION_ROOT,
   ApplicationStore,
-  DataStoreListener
+  DataStoreListener,
+  DataStoreState
 } from '../../../data/store';
 import { buttonStyles, cardStyles, globalStyles } from '../../global_styles';
 import '../../dialogs/edit_department';
 import '../../base/welcome_text';
 import './admin_department';
-import {
-  ACTION_TYPE,
-  REQUEST_ACTIONS,
-  REQUEST_TYPES
-} from '../../../data/data_manager';
+import { REQUEST_TYPES } from '../../../data/data_manager';
+import { repeat } from 'lit-html/directives/repeat';
+import { DepartmentAction } from '../../../data/states/department_state';
+import { UserAction } from '../../../data/states/user_state';
 
 @customElement('request-log')
 export default class RequestLog extends LitElement {
   private departmentsUnsubscribe?: Unsubscribe;
   private usersUnsubscribe?: Unsubscribe;
 
-  @property({ type: Object }) userRequests: { [uid: string]: UserAction } = {};
+  @property({ type: Object }) requests: { [actionid: string]: Action } = {};
 
-  private departmentsListener: DataStoreListener = (
-    state: DepartmentStoreState
+  private dateStoreListener: DataStoreListener = async (
+    state: DataStoreState
   ) => {
-    const type = state.action.type;
-    if (type === ACTION_TYPE.INITIALIZED) return;
-  };
-
-  private usersListener: DataStoreListener = async (state: UserStoreState) => {
-    const type = state.action.type;
-    if (!REQUEST_TYPES.includes(type)) return;
-
-    if (REQUEST_ACTIONS.includes(type)) {
-      console.log('REQUEST ACTIONS');
-    } else if (type === ACTION_TYPE.REQUEST_SUCCESSFUL) {
-      console.log('SUCCESS');
-    } else if (type === ACTION_TYPE.REQUEST_ERROR) {
-      console.log('ERROR');
-    }
+    const action = state.action as DepartmentAction | UserAction;
+    if (!REQUEST_TYPES.includes(action.type)) return;
+    this.requests = { ...this.requests, [action.id]: action };
   };
 
   connectedCallback() {
     super.connectedCallback();
     this.departmentsUnsubscribe = ApplicationStore.listen(
       ACTION_ROOT.DEPARTMENTS,
-      this.departmentsListener
+      this.dateStoreListener
     );
     this.usersUnsubscribe = ApplicationStore.listen(
       ACTION_ROOT.USERS,
-      this.usersListener
+      this.dateStoreListener
     );
   }
 
@@ -63,7 +50,19 @@ export default class RequestLog extends LitElement {
   }
 
   render() {
-    return html`<div id="root"></div>`;
+    const requestTemplate = (action: Action) => {
+      const root =
+        action.root === ACTION_ROOT.DEPARTMENTS ? 'Department' : 'User';
+      return html`<p>${root}</p>`;
+    };
+
+    return html`<div id="root">
+      ${repeat(
+        Object.values(this.requests),
+        (action) => action.id,
+        requestTemplate
+      )}
+    </div>`;
   }
 
   static get styles() {

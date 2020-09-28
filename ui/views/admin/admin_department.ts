@@ -1,4 +1,11 @@
-import { LitElement, html, customElement, css, property } from 'lit-element';
+import {
+  LitElement,
+  html,
+  customElement,
+  css,
+  property,
+  query
+} from 'lit-element';
 import { repeat } from 'lit-html/directives/repeat';
 import Branch from '../../../model/branch';
 import Department from '../../../model/department';
@@ -22,6 +29,8 @@ export interface ListState {
 
 @customElement('admin-department')
 export default class AdminDepartment extends LitElement {
+  @query('#user-list') _userList;
+
   @property({ type: Object }) branch!: Branch;
   @property({ type: Object }) department!: Department;
   @property({ type: Array }) users: Array<User> = [];
@@ -54,6 +63,19 @@ export default class AdminDepartment extends LitElement {
     this.selectedUser = undefined;
   }
 
+  firstUpdated() {
+    (this._userList as HTMLElement).addEventListener('animationend', (e) => {
+      const targetElement = e.composedPath()[0] as HTMLElement;
+      const event = new CustomEvent('user-removed', {
+        detail: {
+          departmentid: this.department.id,
+          userid: targetElement.id
+        }
+      });
+      this.dispatchEvent(event);
+    });
+  }
+
   render() {
     const itemHeight = 3.5;
     const length = this.listState.length;
@@ -63,6 +85,7 @@ export default class AdminDepartment extends LitElement {
       const itemState = this.listState.items[user.uid];
       return html`
         <div
+          id="${user.uid}"
           style="--offset-y:${itemState.index * itemHeight}rem;"
           tabindex="0"
           class="item selectable"
@@ -217,8 +240,7 @@ export default class AdminDepartment extends LitElement {
         }
 
         .item[removed] {
-          padding: 0rem 15px;
-          opacity: 0;
+          animation: item-appear-out 0.3s forwards;
         }
 
         .item[last] {
@@ -245,6 +267,17 @@ export default class AdminDepartment extends LitElement {
           to {
             opacity: 1;
             padding: 0.65rem 15px;
+          }
+        }
+
+        @keyframes item-appear-out {
+          from {
+            opacity: 1;
+            padding: 0.65rem 15px;
+          }
+          to {
+            opacity: 0;
+            padding: 0rem 15px;
           }
         }
 
