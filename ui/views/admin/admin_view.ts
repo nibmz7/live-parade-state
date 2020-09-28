@@ -204,7 +204,6 @@ export default class AdminView extends LitElement {
     };
 
     return html`<div id="root">
-      <request-log></request-log>
       <welcome-text>Hi, admin user!</welcome-text>
 
       <div
@@ -217,6 +216,8 @@ export default class AdminView extends LitElement {
       <button id="add-department" solid @click="${this.onAddDepartment()}">
         Add department
       </button>
+
+      <request-log></request-log>
 
       ${this.showAddDepartment
         ? html`<edit-department

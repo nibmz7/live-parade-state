@@ -86,17 +86,10 @@ class DataStoreImpl implements DataStore {
     return unsubscribe;
   }
 
-  getState() {
-    return this.store.getState();
-  }
-
-  getDepartments() {
-    return this.getState().department;
-  }
-
-  getAuth() {
-    return this.getState().auth;
-  }
+  getState = () => this.store.getState();
+  getDepartments = () => this.getState().department;
+  getUsers = () => this.getState().user;
+  getAuth = () => this.getState().auth;
 }
 
 export const ApplicationStore = new DataStoreImpl();

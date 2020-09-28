@@ -64,7 +64,7 @@ export default class AdminDepartment extends LitElement {
   }
 
   firstUpdated() {
-    (this._userList as HTMLElement).addEventListener('animationend', (e) => {
+    (this._userList as HTMLElement).onanimationend = (e) => {
       const targetElement = e.composedPath()[0] as HTMLElement;
       const event = new CustomEvent('user-removed', {
         detail: {
@@ -73,7 +73,7 @@ export default class AdminDepartment extends LitElement {
         }
       });
       this.dispatchEvent(event);
-    });
+    };
   }
 
   render() {

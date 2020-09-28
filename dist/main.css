@@ -32,6 +32,9 @@ body {
   --color-primary-rgb: 255, 61, 22;
   --color-primary-dark: #df2a05;
   --color-primary-dark-rgb: 223, 42, 5;
+  --color-pending: #7a847d;
+  --color-success: #42a75f;
+  --color-error: #ff3d16;
   --offset-height: 0px;
 }
 

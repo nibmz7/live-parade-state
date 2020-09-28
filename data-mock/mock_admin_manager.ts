@@ -2,10 +2,10 @@ import { ACTION_TYPE, DataResults } from '../data/data_manager';
 import { DepartmentStoreState } from '../data/states/department_state';
 import Department, { DepartmentName } from '../model/department';
 import { MockModel } from './mock_data';
-import { UserStoreState } from '../data/states/user_state';
+import { UserActionError, UserStoreState } from '../data/states/user_state';
 import User, { UserBase } from '../model/user';
 import AdminManager from '../data/admin_manager';
-import { ApplicationStore, generateActionId } from '../data/store';
+import { Action, ApplicationStore, generateActionId } from '../data/store';
 import ACTION_USER from '../data/actions/user_action';
 
 export default class MockAdminManager extends AdminManager {
@@ -44,11 +44,24 @@ export default class MockAdminManager extends AdminManager {
   }
 
   protected requestAddUser(state: UserStoreState): void {
-    let userBase = state.action.payload as UserBase;
-    let user = new User({ uid: `user-${generateActionId()}`, ...userBase });
+    const userBase = state.action.payload as UserBase;
+    const user = new User({ uid: `user-${generateActionId()}`, ...userBase });
     setTimeout(() => {
-      this.userOnChange(user, ACTION_TYPE.ADDED);
-      let action = ACTION_USER.requestSuccessful(state.action);
+      let action: Action;
+      const userExists = ApplicationStore.getUsers().sortedItems.find(
+        (item) => item.email === user.email
+      );
+      if (userExists) {
+        const actionError: UserActionError = {
+          action: state.action,
+          type: 'email unavailable',
+          message: `The email ${user.email} has already been used`
+        };
+        action = ACTION_USER.requestError(actionError);
+      } else {
+        this.userOnChange(user, ACTION_TYPE.ADDED);
+        action = ACTION_USER.requestSuccessful(state.action);
+      }
       ApplicationStore.dispatch(action);
     }, 2000);
   }
