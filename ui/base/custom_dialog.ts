@@ -28,7 +28,6 @@ export default class CustomDialog extends LitElement {
   }
 
   close() {
-    console.log(this.state);
     if (this.state === DIALOG_STATE.STALLING) {
       this.dispatchEvent(new Event('reset'));
     } else if (this.state === DIALOG_STATE.OPENED)
@@ -53,7 +52,6 @@ export default class CustomDialog extends LitElement {
         aria-label="Dialog"
         @click="${(e: Event) => {
           e.stopPropagation();
-          console.log(this.state + 'ddd');
           if (this.state === DIALOG_STATE.STALLING) {
             const isInput = (e.composedPath()[0] as HTMLElement).tagName
               .toLowerCase()

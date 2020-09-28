@@ -117,13 +117,25 @@ export class LoginView extends LitElement {
 
           ${emailInput(
             this.emailState,
-            (state) => (this.emailState = state),
-            () => (this.errorVisible = false)
+            () => {
+              this.emailState = {
+                ...this.emailState,
+                validity: INPUT_VALIDITY.PENDING
+              };
+              this.errorVisible = false;
+            },
+            (state) => (this.emailState = state)
           )}
           ${passwordInput(
             this.passwordState,
+            () => {
+              this.passwordState = {
+                ...this.passwordState,
+                validity: INPUT_VALIDITY.PENDING
+              };
+              this.errorVisible = false;
+            },
             (state) => (this.passwordState = state),
-            () => (this.errorVisible = false),
             (e) => this.onSubmit(e)
           )}
 

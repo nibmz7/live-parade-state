@@ -152,6 +152,13 @@ export default class EditUser extends LitElement {
         <div id="rankname" class="row-box">
           ${textInput(
             this.rankState,
+            () => {
+              this.rankState = {
+                ...this.rankState,
+                validity: INPUT_VALIDITY.PENDING
+              };
+              this.reset();
+            },
             (state) => {
               let isValid = Rank.isValid(state.value.toUpperCase());
               if (state.validity !== INPUT_VALIDITY.PENDING && !isValid) {
@@ -162,32 +169,44 @@ export default class EditUser extends LitElement {
             {
               placeholder: 'Rank',
               label: 'Rank',
-              id: 'rank'
-            },
-            () => this.reset()
+              id: 'rank',
+              changeText: (text: string) => text.replace(/\W/g, '')
+            }
           )}
           ${textInput(
             this.nameState,
+            () => {
+              this.nameState = {
+                ...this.nameState,
+                validity: INPUT_VALIDITY.PENDING
+              };
+              this.reset();
+            },
             (state) => (this.nameState = state),
             {
               placeholder: 'Name',
               label: 'Name',
               id: 'name'
-            },
-            () => this.reset()
+            }
           )}
         </div>
 
         <div id="email" class="row-box">
           ${textInput(
             this.emailState,
+            () => {
+              this.emailState = {
+                ...this.emailState,
+                validity: INPUT_VALIDITY.PENDING
+              };
+              this.reset();
+            },
             (state) => (this.emailState = state),
             {
               placeholder: 'Email',
               label: 'Email',
               changeText: (text: string) => text.replace(/\W/g, '')
-            },
-            () => this.reset()
+            }
           )}
 
           <p>@${this.branch?.domain}</p>
@@ -196,8 +215,15 @@ export default class EditUser extends LitElement {
         <div id="password" class="row-box">
           ${passwordInput(
             this.passwordState,
+            () => {
+              this.passwordState = {
+                ...this.passwordState,
+                validity: INPUT_VALIDITY.PENDING
+              };
+              this.reset();
+            },
             (state) => (this.passwordState = state),
-            () => this.reset()
+            () => {}
           )}
 
           <button

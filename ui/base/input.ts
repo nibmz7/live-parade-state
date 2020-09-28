@@ -84,18 +84,9 @@ export const textInput = (
 
 export const emailInput = (
   inputState: InputState,
-  setInputState: (state: InputState) => void,
-  reset?: () => void
+  onFocus: () => void,
+  onBlur: (state: InputState) => void
 ) => {
-  const updateValue = updateInputValue((state) => {
-    setInputState(state);
-  });
-
-  const inputReset = () => {
-    setInputState({ ...inputState, validity: INPUT_VALIDITY.PENDING });
-    reset?.();
-  };
-
   return html`
     <input
       required
@@ -107,34 +98,25 @@ export const emailInput = (
       value="${inputState.value}"
       ?invalid="${inputState.validity === INPUT_VALIDITY.INVALID}"
       ?valid="${inputState.validity === INPUT_VALIDITY.VALID}"
-      @focus="${inputReset}"
-      @blur="${updateValue}"
+      @focus="${onFocus}"
+      @blur="${getInputValue(onBlur)}"
     />
   `;
 };
 
 export const passwordInput = (
   inputState: PasswordInputState,
-  setInputState: (state: PasswordInputState) => void,
-  reset?: () => void,
-  submit?: (e: Event) => void
+  onFocus: () => void,
+  onBlur: (state: PasswordInputState) => void,
+  submit: (e: Event) => void
 ) => {
-  const updateValue = updateInputValue((state) => {
-    setInputState(state as PasswordInputState);
-  });
-
   const togglePasswordVisiblity = onPressed(
-    () => setInputState({ ...inputState, visible: !inputState.visible }),
+    () => onBlur({ ...inputState, visible: !inputState.visible }),
     {
       autoBlur: false,
       debounce: false
     }
   );
-
-  const inputReset = () => {
-    setInputState({ ...inputState, validity: INPUT_VALIDITY.PENDING });
-    reset?.();
-  };
 
   return html`
     <div class="password-container">
@@ -149,12 +131,12 @@ export const passwordInput = (
         type="${inputState.visible ? 'text' : 'password'}"
         ?invalid="${inputState.validity === INPUT_VALIDITY.INVALID}"
         ?valid="${inputState.validity === INPUT_VALIDITY.VALID}"
-        @focus="${inputReset}"
-        @blur="${updateValue}"
+        @focus="${onFocus}"
+        @blur="${getInputValue((state) => onBlur(state as PasswordInputState))}"
         @keydown="${(e: Event) => {
           let key = (e as KeyboardEvent).key;
           if (key === 'Enter') {
-            submit?.(e);
+            submit(e);
           }
         }}"
       />

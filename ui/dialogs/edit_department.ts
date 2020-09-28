@@ -52,14 +52,7 @@ export default class EditDepartment extends LitElement {
   }
 
   onInputFocus() {
-    console.log('STALLING');
     this.dialogState = DIALOG_STATE.STALLING;
-  }
-
-  onInputBlur() {
-    // console.log('sdsd');
-    // this.dialogState = DIALOG_STATE.OPENED;
-    // this.nameState = { ...this.nameState, validity: INPUT_VALIDITY.PENDING };
   }
 
   render() {
@@ -88,7 +81,6 @@ export default class EditDepartment extends LitElement {
           () => this.onInputFocus(),
           (state) => {
             this.nameState = state;
-            this.onInputBlur();
           },
           {
             placeholder: 'e.g. Log Branch',
