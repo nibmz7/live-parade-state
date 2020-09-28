@@ -39,7 +39,10 @@ export default class EditDepartment extends LitElement {
       });
       ApplicationStore.dispatch(action);
     } else {
-      let action = ACTION_DEPARTMENT.requestAdd(this.nameState.value);
+      let action = ACTION_DEPARTMENT.requestAdd({
+        id: '0',
+        name: this.nameState.value
+      });
       ApplicationStore.dispatch(action);
     }
     this.dialogState = DIALOG_STATE.CLOSING;

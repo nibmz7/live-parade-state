@@ -5,7 +5,7 @@ import {
   ActionError,
   ACTION_ID
 } from '../../data/store';
-import Department, { DepartmentName } from '../../model/department';
+import Department from '../../model/department';
 import { ACTION_TYPE } from '../data_manager';
 
 export interface DepartmentActionError extends ActionError {
@@ -14,7 +14,6 @@ export interface DepartmentActionError extends ActionError {
 
 export type DepartmentPayload =
   | Department
-  | DepartmentName
   | Array<Department>
   | DepartmentAction
   | DepartmentActionError

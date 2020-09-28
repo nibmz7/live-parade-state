@@ -41,7 +41,7 @@ describe('Mock Admin Manager', async () => {
     };
     ApplicationStore.listen(ACTION_ROOT.DEPARTMENTS, callback);
     ApplicationStore.dispatch(
-      ACTION_DEPARTMENT.requestAdd(MockModel.Department.name)
+      ACTION_DEPARTMENT.requestAdd(MockModel.Department)
     );
   });
 

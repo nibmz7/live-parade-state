@@ -24,7 +24,7 @@ body {
   padding: 0;
   height: 100%;
   width: 100%;
-  max-width: 50rem;
+  max-width: 60rem;
   overflow: hidden;
   font-family: 'Quicksand', sans-serif;
   background-color: #fafafa;
@@ -38,7 +38,7 @@ body {
   --offset-height: 0px;
 }
 
-@media all and (min-width: 50rem) {
+@media all and (min-width: 60rem) {
   html {
     background-color: #e4e5e5;
   }

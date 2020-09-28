@@ -1,4 +1,4 @@
-import Department, { DepartmentName } from '../../model/department';
+import Department from '../../model/department';
 import {
   DepartmentAction,
   DepartmentActionError,
@@ -26,8 +26,8 @@ const ACTION_DEPARTMENT = {
     makeAction(ACTION_TYPE.MODIFIED, department),
   removed: (department: Department): DepartmentAction =>
     makeAction(ACTION_TYPE.REMOVED, department),
-  requestAdd: (name: DepartmentName): DepartmentAction =>
-    makeAction(ACTION_TYPE.REQUEST_ADD, name),
+  requestAdd: (department: Department): DepartmentAction =>
+    makeAction(ACTION_TYPE.REQUEST_ADD, department),
   requestModify: (department: Department): DepartmentAction =>
     makeAction(ACTION_TYPE.REQUEST_MODIFY, department),
   requestRemove: (department: Department): DepartmentAction =>

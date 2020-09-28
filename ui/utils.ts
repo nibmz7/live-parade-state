@@ -46,3 +46,6 @@ export const onScroll = (callback: (e: Event) => any, debounce = 500) => {
     }
   };
 };
+
+export const capitalizeFirstLetter = (string: string) =>
+  string.charAt(0).toUpperCase() + string.slice(1);

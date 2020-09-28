@@ -1,20 +1,22 @@
 import { expect } from '@open-wc/testing';
 import ACTION_DEPARTMENT from '../../../data/actions/department_action';
 import { MockModel, MockError } from '../../../data-mock/mock_data';
-import {
-  DepartmentAction
-} from '../../../data/states/department_state';
+import { DepartmentAction } from '../../../data/states/department_state';
 import { ACTION_ROOT } from '../../../data/store';
 import { ACTION_TYPE } from '../../../data/data_manager';
 
 describe('Department actions', () => {
   it('Add department', () => {
-    let action = ACTION_DEPARTMENT.requestAdd('New Department');
+    const department = {
+      id: '0',
+      name: 'New Department'
+    };
+    let action = ACTION_DEPARTMENT.requestAdd(department);
     let expectedAction: DepartmentAction = {
       id: action.id,
       root: ACTION_ROOT.DEPARTMENTS,
       type: ACTION_TYPE.REQUEST_ADD,
-      payload: 'New Department'
+      payload: department
     };
     expect(action).deep.equal(expectedAction);
   });
@@ -29,7 +31,10 @@ describe('Department actions', () => {
     expect(action).deep.equal(expectedAction);
   });
   it('Department request error', () => {
-    let addAction = ACTION_DEPARTMENT.requestAdd('New Department');
+    let addAction = ACTION_DEPARTMENT.requestAdd({
+      id: '0',
+      name: 'New Department'
+    });
     let error = MockError.DepartmentRequest(addAction);
     let errorAction = ACTION_DEPARTMENT.requestError(error);
     let expectedAction: DepartmentAction = {

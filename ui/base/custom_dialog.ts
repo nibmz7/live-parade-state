@@ -87,6 +87,7 @@ export default class CustomDialog extends LitElement {
           justify-content: center;
           background: rgba(0, 0, 0, 0.2);
           backdrop-filter: blur(2px);
+          -webkit-backdrop-filter: blur(2px);
         }
 
         #root[show] {

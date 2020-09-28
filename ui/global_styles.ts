@@ -29,6 +29,14 @@ export const globalStyles = css`
 `;
 
 export const inputStyles = css`
+  input[type='text'],
+  input[type='password'],
+  input[type='email'] {
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+  }
+
   input {
     --color-input-primary: #8899a9;
     --color-input-primary-dark: #34495e;
@@ -159,7 +167,7 @@ export const buttonStyles = css`
   button[solid] {
     color: white;
     background-color: var(--color-primary);
-    transition: background-color .3s, box-shadow .3s;
+    transition: background-color 0.3s, box-shadow 0.3s;
     box-shadow: 0 2px 4px -1px rgba(var(--color-primary-rgb), 0.5);
   }
 
@@ -167,7 +175,7 @@ export const buttonStyles = css`
     --color-primary-dark: rgba(0, 0, 0, 0.1);
     color: var(--color-primary);
     background-color: transparent;
-    transition: background-color .3s;
+    transition: background-color 0.3s;
   }
 
   @media (hover: hover) {

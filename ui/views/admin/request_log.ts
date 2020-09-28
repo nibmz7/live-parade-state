@@ -20,7 +20,7 @@ import {
 import { UserAction, UserActionError } from '../../../data/states/user_state';
 import User from '../../../model/user';
 import Department from '../../../model/department';
-import { onPressed } from '../../utils';
+import { capitalizeFirstLetter, onPressed } from '../../utils';
 
 interface Request {
   id: string;
@@ -74,7 +74,7 @@ export default class RequestLog extends LitElement {
       const requestAction = action.payload as DepartmentAction | UserAction;
       const requestActionText = ACTION_TYPE_TEXT[requestAction.type - 3];
       const itemText = getItemText(root, requestAction);
-      message = `${rootText} ${itemText} ${requestActionText} ${actionText}!`;
+      message = `${rootText} '${itemText}' ${requestActionText} ${actionText}!`;
       id = requestAction.id;
     } else if (action.type === ACTION_TYPE.REQUEST_ERROR) {
       const requestAction = action.payload as
@@ -83,13 +83,13 @@ export default class RequestLog extends LitElement {
       const errorAction = requestAction.action;
       const errorActionText = ACTION_TYPE_TEXT[errorAction.type];
       const itemText = getItemText(root, errorAction);
-      message = `${actionText} ${errorActionText} ${rootText} ${itemText}`;
+      message = `${actionText} ${errorActionText} ${rootText} '${itemText}'`;
       id = errorAction.id;
       payload = errorAction.payload as User | Department;
       error = requestAction.message;
     } else {
       const itemText = getItemText(root, action);
-      message = `${actionText} ${rootText} ${itemText}...`;
+      message = `${actionText} ${rootText} '${itemText}'...`;
       id = action.id;
     }
     id = `request-${id}`;
@@ -152,16 +152,14 @@ export default class RequestLog extends LitElement {
         ?error="${error}"
       >
         <div class="request">
-          <p class="message">${request.message}</p>
+          <p class="message">${capitalizeFirstLetter(request.message)}</p>
           ${error ? html`<p class="error">${request.error}!</p>` : ''}
           ${success || error
             ? html`<button
                 plain
                 class="dismiss"
                 @click="${this.onDismiss(request.id)}"
-              >
-                X
-              </button>`
+              >X</button>`
             : ''}
         </div>
       </div>`;
@@ -252,15 +250,24 @@ export default class RequestLog extends LitElement {
           transition: background-color 0.3s, height 0.3s;
         }
 
+        .message {
+          font-size: 0.9rem;
+        }
+
         button.dismiss {
           position: absolute;
           right: 5px;
-          top: 0;
-          bottom: 0;
+          top: 0px;
+          bottom: 0px;
+          height: 100%;
           font-weight: 700;
+          width: 30px;
           display: flex;
+          justify-content: center;
           align-items: center;
           color: white;
+          margin: 0;
+          padding: 0;
         }
 
         .error {

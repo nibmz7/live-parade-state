@@ -1,6 +1,6 @@
 import { ACTION_TYPE, DataResults } from '../data/data_manager';
 import { DepartmentStoreState } from '../data/states/department_state';
-import Department, { DepartmentName } from '../model/department';
+import Department from '../model/department';
 import { MockModel } from './mock_data';
 import { UserActionError, UserStoreState } from '../data/states/user_state';
 import User, { UserBase } from '../model/user';
@@ -22,14 +22,15 @@ export default class MockAdminManager extends AdminManager {
   }
 
   protected requestAddDepartment(state: DepartmentStoreState): void {
-    let name = state.action.payload as DepartmentName;
-    let department: Department = {
+    let department = state.action.payload as Department;
+    let newDepartment: Department = {
       id: `dep-${generateActionId()}`,
-      name
+      name: department.name
     };
-    this.departmentOnChange(department, ACTION_TYPE.ADDED);
+    this.departmentOnChange(newDepartment, ACTION_TYPE.ADDED);
     let action = ACTION_DEPARTMENT.requestSuccessful(state.action);
     ApplicationStore.dispatch(action);
+    console.log(action);
   }
 
   protected requestModifyDepartment(state: DepartmentStoreState): void {

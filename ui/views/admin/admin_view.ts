@@ -212,14 +212,13 @@ export default class AdminView extends LitElement {
         }
 
         #add-department {
+          width: 50%;
           position: absolute;
           bottom: 10px;
-          left: 0px;
-          right: 0px;
-          margin-left: auto;
-          margin-right: auto;
+          left: 25%;
+          right: 25%;
           font-size: 1.1rem;
-          padding: 15px 50px;
+          padding: 15px 0px;
           border-radius: 50px;
           font-weight: 500;
         }
@@ -229,7 +228,7 @@ export default class AdminView extends LitElement {
           overflow-x: hidden;
           overflow-y: scroll;
           box-sizing: border-box;
-          padding: 30px 30px 80px 30px;
+          padding: 0px 30px;
         }
 
         #department-list::-webkit-scrollbar {
@@ -240,8 +239,12 @@ export default class AdminView extends LitElement {
           margin-bottom: 20px;
         }
 
+        admin-department:first-of-type {
+          margin-top: 30px;
+        }
+
         admin-department:last-of-type {
-          margin-bottom: 0px;
+          margin-bottom: 80px;
         }
 
         .empty {

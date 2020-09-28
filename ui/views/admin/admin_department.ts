@@ -185,6 +185,7 @@ export default class AdminDepartment extends LitElement {
           font-size: 1.3rem;
           border-bottom: 2px dashed var(--color-primary);
           border-radius: 15px 15px 0 0;
+          margin: 0;
         }
 
         #add[empty] {
