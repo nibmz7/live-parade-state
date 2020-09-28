@@ -188,7 +188,7 @@ export default class RequestLog extends LitElement {
       css`
         #root {
           width: 100%;
-          max-height: 30%;
+          max-height: 50%;
           bottom: 65px;
           position: absolute;
           overflow-x: hidden;
@@ -204,6 +204,7 @@ export default class RequestLog extends LitElement {
         }
 
         .content {
+          flex: 0 0 auto;
           height: 2.2rem;
           margin-top: 10px;
           position: relative;
