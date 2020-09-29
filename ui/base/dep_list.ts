@@ -4,9 +4,11 @@ import {
   css,
   query,
   property,
-  TemplateResult
+  TemplateResult,
+  eventOptions
 } from 'lit-element';
-import MockAdminManager from '../../data-mock/mock_admin_manager';
+import ACTION_AUTH from '../../data/actions/auth_action';
+import { ACTION_TYPE, REQUEST_TYPES } from '../../data/data_manager';
 import { DepartmentStoreState } from '../../data/states/department_state';
 import {
   UsersByDepartment,
@@ -17,18 +19,10 @@ import {
   ApplicationStore,
   DataStoreListener
 } from '../../data/store';
+import Admin from '../../model/admin';
 import Department from '../../model/department';
 import User from '../../model/user';
 import { buttonStyles, cardStyles, globalStyles } from '../global_styles';
-import { ACTION_TYPE, REQUEST_TYPES } from '../../data/data_manager';
-import Admin from '../../model/admin';
-import { onPressed } from '../utils';
-import { shouldElevate } from './welcome_text';
-import '../../dialogs/edit_department';
-import '../../base/welcome_text';
-import './admin_dep_item';
-import './request_log';
-import ACTION_AUTH from '../../data/actions/auth_action';
 import { ListState } from './user_list';
 
 export default abstract class DepList extends LitElement {
@@ -36,10 +30,14 @@ export default abstract class DepList extends LitElement {
   @query('#department-list') _departmentsList!: HTMLElement;
   @query('welcome-text') _welcomeText!: HTMLElement;
 
-  @property({ type: Boolean }) showAddDepartment = false;
+  @eventOptions({ passive: true }) _handleOnScroll() {
+    this.elevate = this._departmentsList.scrollTop > 0;
+  }
+
   @property({ type: Array }) departments: Array<Department> = [];
-  @property({ type: Object }) user?: User;
-  @property({ type: Object }) admin?: Admin;
+  @property({ type: Boolean }) elevate = false;
+  @property({ type: Object }) user!: User;
+  @property({ type: Object }) admin!: Admin;
   @property({ type: Object }) users: UsersByDepartment = {};
   @property({ type: Object }) listState: {
     [departmentId: string]: ListState;
@@ -118,7 +116,7 @@ export default abstract class DepList extends LitElement {
     super.connectedCallback();
     this.welcomeTitle = this.admin
       ? 'Hi, admin user!'
-      : `Hi, ${this.user?.fullname!}!`;
+      : `Hi, ${this.user.fullname}!`;
     const departmentsUnsubscribe = ApplicationStore.listen(
       ACTION_ROOT.DEPARTMENTS,
       this.departmentsListener
@@ -153,12 +151,11 @@ export default abstract class DepList extends LitElement {
 
   render() {
     return html`<div id="root">
-      <welcome-text>${this.welcomeTitle}</welcome-text>
+      <welcome-text .elevate="${this.elevate}">
+        ${this.welcomeTitle}
+      </welcome-text>
 
-      <div
-        id="department-list"
-        @scroll="${shouldElevate(this._welcomeText, this._departmentsList)}"
-      >
+      <div id="department-list" @scroll="${this._handleOnScroll}">
         ${this.departments.map(this.depItemTemplate)}
       </div>
 
@@ -194,15 +191,15 @@ export default abstract class DepList extends LitElement {
           display: none;
         }
 
-        admin-dep-item {
+        #department-list > * {
           margin-bottom: 20px;
         }
 
-        admin-dep-item:first-of-type {
+        #department-list > *:first-child {
           margin-top: 30px;
         }
 
-        admin-dep-item:last-of-type {
+        #department-list > *:last-child {
           margin-bottom: 80px;
         }
 

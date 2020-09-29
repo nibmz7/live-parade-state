@@ -1,30 +1,12 @@
 import { LitElement, html, customElement, css, property } from 'lit-element';
 import { buttonStyles, globalStyles } from '../global_styles';
-import { onPressed, onScroll } from '../utils';
+import { onPressed } from '../utils';
 import '../dialogs/sign_out';
-
-export const shouldElevate = (welcomeText, container) =>
-  onScroll(() => {
-    let hasScrolled = false;
-    const element = container as HTMLElement;
-    if (element.scrollTop > 0) hasScrolled = true;
-    welcomeText.dispatchEvent(
-      new CustomEvent('has-scrolled', { detail: hasScrolled })
-    );
-  });
 
 @customElement('welcome-text')
 export default class CustomDialog extends LitElement {
   @property({ type: Boolean }) showSignOutDialog = false;
   @property({ type: Boolean }) elevate = false;
-
-  connectedCallback() {
-    super.connectedCallback();
-    this.addEventListener(
-      'has-scrolled',
-      (e: any) => (this.elevate = e.detail)
-    );
-  }
 
   render() {
     return html`<button
