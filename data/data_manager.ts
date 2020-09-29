@@ -16,6 +16,17 @@ export enum ACTION_TYPE {
   REQUEST_ERROR
 }
 
+export const ACTION_TYPE_TEXT = {
+  [ACTION_TYPE.ADDED]: 'added',
+  [ACTION_TYPE.MODIFIED]: 'updated',
+  [ACTION_TYPE.REMOVED]: 'removed',
+  [ACTION_TYPE.REQUEST_ADD]: 'adding',
+  [ACTION_TYPE.REQUEST_MODIFY]: 'updating',
+  [ACTION_TYPE.REQUEST_REMOVE]: 'removing',
+  [ACTION_TYPE.REQUEST_SUCCESSFUL]: 'successfully',
+  [ACTION_TYPE.REQUEST_ERROR]: 'error'
+};
+
 export const REQUEST_TYPES = [
   ACTION_TYPE.REQUEST_ADD,
   ACTION_TYPE.REQUEST_MODIFY,

@@ -11,7 +11,7 @@ import { buttonStyles, cardStyles, globalStyles } from '../../global_styles';
 import '../../dialogs/edit_department';
 import '../../base/welcome_text';
 import './admin_department';
-import { ACTION_TYPE, REQUEST_TYPES } from '../../../data/data_manager';
+import { ACTION_TYPE, ACTION_TYPE_TEXT, REQUEST_TYPES } from '../../../data/data_manager';
 import { repeat } from 'lit-html/directives/repeat';
 import {
   DepartmentAction,
@@ -30,17 +30,6 @@ interface Request {
   error?: string;
   payload?: User | Department;
 }
-
-const ACTION_TYPE_TEXT = {
-  [ACTION_TYPE.ADDED]: 'added',
-  [ACTION_TYPE.MODIFIED]: 'updated',
-  [ACTION_TYPE.REMOVED]: 'removed',
-  [ACTION_TYPE.REQUEST_ADD]: 'adding',
-  [ACTION_TYPE.REQUEST_MODIFY]: 'updating',
-  [ACTION_TYPE.REQUEST_REMOVE]: 'removing',
-  [ACTION_TYPE.REQUEST_SUCCESSFUL]: 'successfully',
-  [ACTION_TYPE.REQUEST_ERROR]: 'error'
-};
 
 const getItemText = (
   root: ACTION_ROOT,
