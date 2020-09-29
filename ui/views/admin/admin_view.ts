@@ -9,7 +9,6 @@ import './request_log';
 import './admin_dep_item';
 import './admin_dep_list';
 
-
 @customElement('admin-view')
 export default class AdminView extends LitElement {
   private admin = ApplicationStore.getAuth().action.payload as Admin;

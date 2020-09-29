@@ -1,7 +1,4 @@
-import {
-  AuthStoreState,
-  AuthAction
-} from '../states/auth_state';
+import { AuthStoreState, AuthAction } from '../states/auth_state';
 import { ACTION_ROOT, Action } from '../../data/store';
 
 const initialState: AuthStoreState = {

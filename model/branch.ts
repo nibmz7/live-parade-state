@@ -1,5 +1,5 @@
 export default interface Branch {
-    id: string;
-    name?: string;
-    domain: string;
+  id: string;
+  name?: string;
+  domain: string;
 }

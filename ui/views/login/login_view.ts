@@ -185,7 +185,9 @@ export class LoginView extends LitElement {
 
         form {
           width: 70%;
-          transform: translateY(calc(var(--offset-height) - 100px * var(--offset-on)));
+          transform: translateY(
+            calc(var(--offset-height) - 100px * var(--offset-on))
+          );
           transition: transform 0.3s;
         }
 

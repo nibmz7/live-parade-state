@@ -25,7 +25,7 @@ const ranks = {
   'CPL': 43,
   'LCP': 44,
   'PTE': 45,
-  'REC': 46,
+  'REC': 46
 };
 
 export default class Rank {

@@ -9,10 +9,10 @@ export default class Admin {
   constructor(uid: string, email: string, branchName?: string) {
     this.uid = uid;
     this.email = email;
-    this.branch = { 
-        id: uid,
-        domain: email.split('@')[1],
-        name: branchName
+    this.branch = {
+      id: uid,
+      domain: email.split('@')[1],
+      name: branchName
     };
   }
 }

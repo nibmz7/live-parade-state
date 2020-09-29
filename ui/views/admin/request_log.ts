@@ -11,7 +11,11 @@ import { buttonStyles, cardStyles, globalStyles } from '../../global_styles';
 import '../../dialogs/edit_department';
 import '../../base/welcome_text';
 import './admin_dep_item';
-import { ACTION_TYPE, ACTION_TYPE_TEXT, REQUEST_TYPES } from '../../../data/data_manager';
+import {
+  ACTION_TYPE,
+  ACTION_TYPE_TEXT,
+  REQUEST_TYPES
+} from '../../../data/data_manager';
 import { repeat } from 'lit-html/directives/repeat';
 import {
   DepartmentAction,
@@ -148,7 +152,9 @@ export default class RequestLog extends LitElement {
                 plain
                 class="dismiss"
                 @click="${this.onDismiss(request.id)}"
-              >X</button>`
+              >
+                X
+              </button>`
             : ''}
         </div>
       </div>`;

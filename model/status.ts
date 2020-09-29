@@ -42,7 +42,7 @@ export class Status {
   readonly remarks: string;
   readonly updatedby: string;
   readonly timestamp: Date;
-  readonly expired?: Boolean;
+  readonly expired: Boolean;
 
   constructor(status: StatusProperties) {
     this.code = status.code;

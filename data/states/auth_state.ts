@@ -18,11 +18,16 @@ export interface SignInCredentials {
   password: string;
 }
 
-export interface SignInError extends ActionError{
-  action: AuthAction
+export interface SignInError extends ActionError {
+  action: AuthAction;
 }
 
-export type AuthPayload = SignInCredentials | SignInError | User | Admin | undefined;
+export type AuthPayload =
+  | SignInCredentials
+  | SignInError
+  | User
+  | Admin
+  | undefined;
 
 export interface AuthAction extends Action {
   root: ACTION_ROOT.AUTH;
@@ -31,6 +36,6 @@ export interface AuthAction extends Action {
   payload?: AuthPayload;
 }
 
-export interface AuthStoreState extends DataStoreState{
-  action: AuthAction
+export interface AuthStoreState extends DataStoreState {
+  action: AuthAction;
 }

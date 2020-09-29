@@ -27,7 +27,7 @@ import { ListState } from './base_user_list';
 
 export default abstract class BaseDepList extends LitElement {
   private welcomeTitle!: string;
-  
+
   @query('#department-list') _departmentsList!: HTMLElement;
   @query('welcome-text') _welcomeText!: HTMLElement;
 

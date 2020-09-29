@@ -20,7 +20,6 @@ export default class AdminDepList extends BaseDepList {
   }
 
   depItemTemplate = (department: Department) => {
-    console.log(this.users[department.id]);
     return html`<admin-dep-item
       .branch="${this.branch}"
       .department="${department}"
