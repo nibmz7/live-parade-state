@@ -13,6 +13,7 @@ import {
   DepartmentActionError
 } from '../data/states/department_state';
 import { UserAction, UserActionError } from '../data/states/user_state';
+import Status from '../model/status';
 
 export const MockAuth = {
   UserCredentials: {
@@ -56,8 +57,14 @@ const ModelBranch: Branch = {
 };
 
 const ModelDepartment1: Department = { id: 'dep-123', name: 'Manpower Branch' };
-const ModelDepartment2: Department = { id: 'dep-456', name: 'Logistics Branch' };
-const ModelDepartment3: Department = { id: 'dep-789', name: 'Accounting Branch' };
+const ModelDepartment2: Department = {
+  id: 'dep-456',
+  name: 'Logistics Branch'
+};
+const ModelDepartment3: Department = {
+  id: 'dep-789',
+  name: 'Accounting Branch'
+};
 const ModelDepartment4: Department = { id: 'dep-321', name: 'Signal Wing' };
 
 const ModelDepartmentArray: Array<Department> = [
@@ -67,6 +74,19 @@ const ModelDepartmentArray: Array<Department> = [
   ModelDepartment4
 ];
 
+function randomInt(max) {
+  return Math.floor(Math.random() * Math.floor(max));
+}
+
+const makeStatus = () =>
+  new Status({
+    code: randomInt(17),
+    remarks: '',
+    expired: randomInt(7) >= 3,
+    updatedby: 'Admin',
+    timestamp: new Date()
+  });
+
 const ModelUser1 = new User({
   uid: 'user-101',
   name: 'John',
@@ -74,7 +94,9 @@ const ModelUser1 = new User({
   regular: false,
   rank: new Rank('CPL'),
   branchid: ModelBranch.id,
-  departmentid: ModelDepartment1.id
+  departmentid: ModelDepartment1.id,
+  morning: makeStatus(),
+  afternoon: makeStatus()
 });
 const ModelUser2 = new User({
   uid: 'user-201',
@@ -83,7 +105,9 @@ const ModelUser2 = new User({
   regular: true,
   rank: new Rank('MAJ'),
   branchid: ModelBranch.id,
-  departmentid: ModelDepartment2.id
+  departmentid: ModelDepartment2.id,
+  morning: makeStatus(),
+  afternoon: makeStatus()
 });
 const ModelUser22 = new User({
   uid: 'user-202',
@@ -92,7 +116,9 @@ const ModelUser22 = new User({
   regular: false,
   rank: new Rank('PTE'),
   branchid: ModelBranch.id,
-  departmentid: ModelDepartment2.id
+  departmentid: ModelDepartment2.id,
+  morning: makeStatus(),
+  afternoon: makeStatus()
 });
 const ModelUser3 = new User({
   uid: 'user-301',
@@ -101,10 +127,17 @@ const ModelUser3 = new User({
   regular: false,
   rank: new Rank('PTE'),
   branchid: ModelBranch.id,
-  departmentid: ModelDepartment3.id
+  departmentid: ModelDepartment3.id,
+  morning: makeStatus(),
+  afternoon: makeStatus()
 });
 
-const ModelUserArray: Array<User> = [ModelUser1, ModelUser2, ModelUser22, ModelUser3];
+const ModelUserArray: Array<User> = [
+  ModelUser1,
+  ModelUser2,
+  ModelUser22,
+  ModelUser3
+];
 
 export const MockModel = {
   Rank: ModelRank,

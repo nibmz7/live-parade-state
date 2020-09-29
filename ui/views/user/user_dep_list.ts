@@ -1,14 +1,11 @@
-import { html, customElement, property } from 'lit-element';
+import { html, customElement } from 'lit-element';
 import MockAdminManager from '../../../data-mock/mock_admin_manager';
 import Department from '../../../model/department';
-import Branch from '../../../model/branch';
 import BaseDepList from '../../base/base_dep_list';
 
-@customElement('admin-dep-list')
-export default class AdminDepList extends BaseDepList {
+@customElement('user-dep-list')
+export default class UserDepList extends BaseDepList {
   private adminManager = new MockAdminManager();
-
-  @property({ type: Object }) branch!: Branch;
 
   connectedCallback() {
     super.connectedCallback();
@@ -19,12 +16,8 @@ export default class AdminDepList extends BaseDepList {
     this.adminManager.unsubscribe();
   }
 
-  listStateItemUpdated() {}
-  listStateUpdated() {}
-
   depItemTemplate = (department: Department) => {
-    return html`<admin-dep-item
-      .branch="${this.branch}"
+    return html`<user-dep-item
       .department="${department}"
       .users="${this.users[department.id] || []}"
       .listState="${this.listState[department.id] || {
@@ -32,6 +25,6 @@ export default class AdminDepList extends BaseDepList {
         length: 0
       }}"
       @user-removed="${this.onUserRemoved}"
-    ></admin-dep-item>`;
+    ></user-dep-item>`;
   };
 }

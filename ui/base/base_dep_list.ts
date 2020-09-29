@@ -44,6 +44,10 @@ export default abstract class BaseDepList extends LitElement {
     [departmentId: string]: ListState;
   } = {};
 
+
+  abstract depItemTemplate(department: Department): TemplateResult;
+  abstract cleanup(): void;
+
   private departmentsListener: DataStoreListener = (
     state: DepartmentStoreState
   ) => {
@@ -146,9 +150,6 @@ export default abstract class BaseDepList extends LitElement {
       [departmentid]: userArray
     };
   }
-
-  abstract depItemTemplate(department: Department): TemplateResult;
-  abstract cleanup(): void;
 
   render() {
     return html`<div id="root">

@@ -51,6 +51,8 @@ export class Status {
     this.timestamp = status.timestamp;
     this.expired = status.expired;
   }
+
+  static isPresent = (code: number) => code === 1;
 }
 
 export default Status;

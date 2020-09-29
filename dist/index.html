@@ -17,9 +17,11 @@
     <script src="ui/views/view_switcher.js" type="module"></script>
 </head>
 
-<body ontouchstart>
+<body>
     <view-switcher splashscreen></view-switcher>
     <script>
+        document.body.addEventListener('touchstart', {}, { passive: true });
+
         let screenHeight;
         let screenWidth;
         let halfScreenHeight;

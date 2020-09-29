@@ -14,6 +14,7 @@ import { Unsubscribe } from 'redux';
 import Admin from '../../model/admin';
 import './login/login_view';
 import './admin/admin_view';
+import './user/user_view';
 
 const enum VIEW_TYPES {
   UNINITALIZED,
@@ -87,7 +88,7 @@ export default class ViewSwitcher extends LitElement {
             @signed-out="${this.signedOut}"
           ></admin-view>`;
         case VIEW_TYPES.USER:
-          return html`<div>User signed In</div>`;
+          return html`<user-view @signed-out="${this.signedOut}"></user-view>`;
         default:
           return ``;
       }

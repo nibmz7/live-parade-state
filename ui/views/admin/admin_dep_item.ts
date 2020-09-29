@@ -1,20 +1,10 @@
 import { css, customElement, html, LitElement, property } from 'lit-element';
-import { ACTION_TYPE } from '../../../data/data_manager';
 import Branch from '../../../model/branch';
 import Department from '../../../model/department';
 import User from '../../../model/user';
+import { ListState } from '../../base/base_user_list';
 import { buttonStyles, cardStyles, globalStyles } from '../../global_styles';
 import { onPressed } from '../../utils';
-
-export interface ListState {
-  items: {
-    [userid: string]: {
-      index: number;
-      type: ACTION_TYPE;
-    };
-  };
-  length: number;
-}
 
 @customElement('admin-dep-item')
 export default class AdminDepItem extends LitElement {

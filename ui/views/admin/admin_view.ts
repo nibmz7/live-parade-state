@@ -3,11 +3,13 @@ import { ApplicationStore } from '../../../data/store';
 import { buttonStyles, cardStyles, globalStyles } from '../../global_styles';
 import Admin from '../../../model/admin';
 import { onPressed } from '../../utils';
+import '../../dialogs/edit_user';
 import '../../dialogs/edit_department';
 import '../../base/welcome_text';
 import './request_log';
 import './admin_dep_item';
 import './admin_dep_list';
+import './admin_user_list';
 
 @customElement('admin-view')
 export default class AdminView extends LitElement {
