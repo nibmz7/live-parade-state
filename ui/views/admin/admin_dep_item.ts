@@ -22,12 +22,12 @@ export interface ListState {
 
 @customElement('admin-dep-item')
 export default class AdminDepItem extends LitElement {
+  @property({ type: Array }) users: Array<User> = [];
   @property({ type: Object }) branch!: Branch;
   @property({ type: Object }) department!: Department;
-  @property({ type: Array }) users: Array<User> = [];
   @property({ type: Object }) listState: ListState = { items: {}, length: 0 };
-  @property({ type: Boolean }) showEditDepartment: Boolean = false;
   @property({ type: Object }) selectedUser?: User;
+  @property({ type: Boolean }) showEditDepartment: Boolean = false;
   @property({ type: Boolean }) showEditUser = false;
 
   onEditDepartment() {
@@ -151,108 +151,6 @@ export default class AdminDepItem extends LitElement {
         #add[empty] {
           border-bottom: none;
           border-radius: 15px;
-        }
-
-        #user-list {
-          position: relative;
-          transition: height 0.3s;
-        }
-
-        .item {
-          width: 100%;
-          position: absolute;
-          box-sizing: border-box;
-          height: 3.5rem;
-          padding: 0.65rem 15px;
-          opacity: 1;
-          transform: translateY(var(--offset-y));
-          transition: all 0.3s;
-          cursor: pointer;
-        }
-
-        .item p {
-          margin: 0;
-        }
-
-        .item #primary-text {
-          text-transform: capitalize;
-          color: #323232;
-          font-weight: 500;
-          font-size: 1rem;
-          line-height: 1.2rem;
-        }
-
-        .item[regular] #primary-text {
-          color: var(--color-primary);
-        }
-
-        .item #secondary-text {
-          color: #878787;
-          font-size: 0.8rem;
-          line-height: 1rem;
-          font-weight: 400;
-        }
-
-        .item[added] {
-          animation: item-appear-in 0.3s;
-        }
-
-        .item[modified] {
-          animation: flash 1s 2;
-        }
-
-        .item[removed] {
-          animation: item-appear-out 0.3s forwards;
-        }
-
-        .item[last] {
-          border-bottom-left-radius: 15px;
-          border-bottom-right-radius: 15px;
-        }
-
-        .item:focus,
-        .item:active {
-          background-color: rgba(0, 0, 0, 0.1);
-        }
-
-        @media (hover: hover) {
-          .item:hover {
-            background-color: rgba(0, 0, 0, 0.1);
-          }
-        }
-
-        @keyframes item-appear-in {
-          from {
-            opacity: 0;
-            padding: 0rem 15px;
-          }
-          to {
-            opacity: 1;
-            padding: 0.65rem 15px;
-          }
-        }
-
-        @keyframes item-appear-out {
-          from {
-            opacity: 1;
-            padding: 0.65rem 15px;
-          }
-          to {
-            opacity: 0;
-            padding: 0rem 15px;
-          }
-        }
-
-        @keyframes flash {
-          0% {
-            background-color: white;
-          }
-          50% {
-            background-color: rgba(255, 56, 56, 0.18);
-          }
-          100% {
-            background-color: white;
-          }
         }
       `
     ];

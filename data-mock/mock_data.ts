@@ -87,8 +87,8 @@ const ModelUser2 = new User({
 });
 const ModelUser22 = new User({
   uid: 'user-202',
-  name: 'John',
-  email: 'john3@lol.com',
+  name: 'Jim',
+  email: 'jim@lol.com',
   regular: false,
   rank: new Rank('PTE'),
   branchid: ModelBranch.id,
@@ -111,7 +111,7 @@ export const MockModel = {
   Branch: ModelBranch,
   Department: ModelDepartment1,
   DepartmentArray: ModelDepartmentArray,
-  User: ModelUser1,
+  User: ModelUser22,
   UserArray: ModelUserArray,
   Users: {
     [ModelDepartment1.id]: [ModelUser1],
