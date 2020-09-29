@@ -22,14 +22,14 @@ import User from '../../../model/user';
 import { buttonStyles, cardStyles, globalStyles } from '../../global_styles';
 import { ACTION_TYPE, REQUEST_TYPES } from '../../../data/data_manager';
 import Admin from '../../../model/admin';
-import { ListState } from './admin_department';
 import { onPressed } from '../../utils';
 import { shouldElevate } from '../../base/welcome_text';
 import '../../dialogs/edit_department';
 import '../../base/welcome_text';
-import './admin_department';
+import './admin_dep_item';
 import './request_log';
 import ACTION_AUTH from '../../../data/actions/auth_action';
+import { ListState } from '../../base/user_list';
 
 @customElement('admin-view')
 export default class AdminView extends LitElement {
@@ -159,7 +159,7 @@ export default class AdminView extends LitElement {
 
   render() {
     const departmentTemplate = (department: Department) => {
-      return html`<admin-department
+      return html`<admin-dep-item
         .branch="${this.branch}"
         .department="${department}"
         .users="${this.users[department.id] || []}"
@@ -168,7 +168,7 @@ export default class AdminView extends LitElement {
           length: 0
         }}"
         @user-removed="${this.onUserRemoved}"
-      ></admin-department>`;
+      ></admin-dep-item>`;
     };
 
     return html`<div id="root">

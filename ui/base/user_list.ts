@@ -39,7 +39,9 @@ export default abstract class UserList extends LitElement {
       const event = new CustomEvent('user-removed', {
         detail: {
           userid: targetElement.id
-        }
+        },
+        bubbles: true,
+        composed: true
       });
       this.dispatchEvent(event);
     };
@@ -47,7 +49,11 @@ export default abstract class UserList extends LitElement {
 
   onUserSelected(user: User) {
     return onPressed(() => {
-      const event = new CustomEvent('user-selected', { detail: user });
+      const event = new CustomEvent('user-selected', {
+        detail: { user },
+        bubbles: true,
+        composed: true
+      });
       this.dispatchEvent(event);
     });
   }

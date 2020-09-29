@@ -25,6 +25,10 @@ export default class AdminUserList extends UserList {
           color: var(--color-primary);
         }
 
+        .user p {
+          margin: 0;
+        }
+
         .fullname {
           text-transform: capitalize;
           color: #323232;

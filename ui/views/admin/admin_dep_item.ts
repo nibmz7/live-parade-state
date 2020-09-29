@@ -1,10 +1,4 @@
-import {
-  LitElement,
-  html,
-  customElement,
-  css,
-  property
-} from 'lit-element';
+import { LitElement, html, customElement, css, property } from 'lit-element';
 import Branch from '../../../model/branch';
 import Department from '../../../model/department';
 import User from '../../../model/user';
@@ -26,9 +20,8 @@ export interface ListState {
   length: number;
 }
 
-@customElement('admin-department')
-export default class AdminDepartment extends LitElement {
-
+@customElement('admin-dep-item')
+export default class AdminDepItem extends LitElement {
   @property({ type: Object }) branch!: Branch;
   @property({ type: Object }) department!: Department;
   @property({ type: Array }) users: Array<User> = [];
@@ -43,9 +36,9 @@ export default class AdminDepartment extends LitElement {
     });
   }
 
-  onEditUser(user?: User) {
+  onAddUser() {
     return onPressed(() => {
-      this.selectedUser = user;
+      this.selectedUser = undefined;
       this.showEditUser = true;
     });
   }
@@ -61,6 +54,11 @@ export default class AdminDepartment extends LitElement {
     this.selectedUser = undefined;
   }
 
+  onEditUser(e: CustomEvent) {
+    this.selectedUser = e.detail.user;
+    this.showEditUser = true;
+  }
+
   render() {
     return html`<div id="root">
       <div class="header">
@@ -74,8 +72,8 @@ export default class AdminDepartment extends LitElement {
         <button
           id="add"
           plain
-          @click="${this.onEditUser()}"
-          ?empty="${length === 0}"
+          @click="${this.onAddUser()}"
+          ?empty="${this.listState.length === 0}"
         >
           Add user
         </button>
@@ -84,32 +82,28 @@ export default class AdminDepartment extends LitElement {
           .listItemHeight="${3.5}"
           .users="${this.users}"
           .listState="${this.listState}"
-        >
-        <div>
-        </div>
-          <p id="primary-text" slot="fullname"></p>
-          <p id="secondary-text" slot="email"></p>
-        </user-list>
-      </div>
+          @user-selected="${this.onEditUser}"
+        ></admin-user-list>
 
-      ${this.showEditDepartment
-        ? html`<edit-department
-            editing
-            .department=${this.department}
-            @close="${this.closeEditDepartment}"
-          ></edit-department>`
-        : ''}
-      ${this.showEditUser
-        ? html`
-            <edit-user
-              .branch=${this.branch}
+        ${this.showEditDepartment
+          ? html`<edit-department
+              editing
               .department=${this.department}
-              .user=${this.selectedUser}
-              .editing=${!!this.selectedUser}
-              @close="${this.closeEditUser}"
-            ></edit-user>
-          `
-        : ''}
+              @close="${this.closeEditDepartment}"
+            ></edit-department>`
+          : ''}
+        ${this.showEditUser
+          ? html`
+              <edit-user
+                .branch=${this.branch}
+                .department=${this.department}
+                .user=${this.selectedUser}
+                .editing=${!!this.selectedUser}
+                @close="${this.closeEditUser}"
+              ></edit-user>
+            `
+          : ''}
+      </div>
     </div>`;
   }
 

@@ -10,7 +10,7 @@ import {
 import { buttonStyles, cardStyles, globalStyles } from '../../global_styles';
 import '../../dialogs/edit_department';
 import '../../base/welcome_text';
-import './admin_department';
+import './admin_dep_item';
 import { ACTION_TYPE, ACTION_TYPE_TEXT, REQUEST_TYPES } from '../../../data/data_manager';
 import { repeat } from 'lit-html/directives/repeat';
 import {
