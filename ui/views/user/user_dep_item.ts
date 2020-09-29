@@ -20,6 +20,17 @@ export default class UserDepItem extends LitElement {
     console.log(user);
   }
 
+  connectedCallback() {
+    super.connectedCallback();
+    this.addEventListener(
+      'toggle-am',
+      () => {
+        console.log('toggling');
+      },
+      { capture: true }
+    );
+  }
+
   render() {
     let regular = 0;
     let nsf = 0;

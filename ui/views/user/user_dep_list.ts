@@ -1,4 +1,4 @@
-import { html, customElement } from 'lit-element';
+import { html, customElement, property } from 'lit-element';
 import MockAdminManager from '../../../data-mock/mock_admin_manager';
 import Department from '../../../model/department';
 import BaseDepList from '../../base/base_dep_list';
@@ -6,6 +6,8 @@ import BaseDepList from '../../base/base_dep_list';
 @customElement('user-dep-list')
 export default class UserDepList extends BaseDepList {
   private adminManager = new MockAdminManager();
+
+  @property({ type: Boolean }) isMorning = true;
 
   connectedCallback() {
     super.connectedCallback();
@@ -24,6 +26,7 @@ export default class UserDepList extends BaseDepList {
         items: {},
         length: 0
       }}"
+      .isMorning="${this.isMorning}"
       @user-removed="${this.onUserRemoved}"
     ></user-dep-item>`;
   };

@@ -13,6 +13,7 @@ export default class UserView extends LitElement {
   private user = ApplicationStore.getAuth().action.payload as User;
 
   @property({ type: Boolean }) showSummary = false;
+  @property({ type: Boolean }) isMorning = true;
 
   viewSummary() {
     return onPressed(() => {
@@ -24,17 +25,38 @@ export default class UserView extends LitElement {
     this.showSummary = false;
   }
 
+  toggleAm() {
+    return onPressed(() => {
+      this.isMorning = !this.isMorning;
+    });
+  }
+
   render() {
     return html`<div id="root">
-      <user-dep-list .user="${this.user}"></user-dep-list>
+      <user-dep-list
+        .user="${this.user}"
+        .isMorning="${this.isMorning}"
+      ></user-dep-list>
 
       <button id="view-summary" solid @click="${this.viewSummary()}">
         View Summary
       </button>
 
       <div class="time-selector">
-        <button solid>AM</button>
-        <button outline>PM</button>
+        <button
+          ?solid="${this.isMorning}"
+          ?outline="${!this.isMorning}"
+          @click="${this.toggleAm()}"
+        >
+          AM
+        </button>
+        <button
+          ?solid="${!this.isMorning}"
+          ?outline="${this.isMorning}"
+          @click="${this.toggleAm()}"
+        >
+          PM
+        </button>
       </div>
     </div>`;
   }
@@ -75,6 +97,16 @@ export default class UserView extends LitElement {
           height: 2.5rem;
           font-weight: 600;
           padding: 8px;
+          transition: none;
+          border: 2px solid var(--color-primary);
+        }
+
+        .time-selector > button,
+        .time-selector > button:hover,
+        .time-selector > button:focus,
+        .time-selector > button:active {
+          box-shadow: 0 4px 6px -1px rgba(var(--color-primary-rgb), 0.2),
+            0 2px 4px -1px rgba(var(--color-primary-rgb), 0.12);
         }
 
         .time-selector > button:first-child {
