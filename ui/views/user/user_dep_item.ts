@@ -1,4 +1,3 @@
-import { user } from 'firebase-functions/lib/providers/auth';
 import { css, customElement, html, LitElement, property } from 'lit-element';
 import Branch from '../../../model/branch';
 import Department from '../../../model/department';
@@ -15,6 +14,11 @@ export default class UserDepItem extends LitElement {
   @property({ type: Object }) listState: ListState = { items: {}, length: 0 };
   @property({ type: Object }) selectedUser?: User;
   @property({ type: Boolean }) isMorning = true;
+
+  onUserSelected(e: CustomEvent) {
+    const user = e.detail.user as User;
+    console.log(user);
+  }
 
   render() {
     let regular = 0;
@@ -41,7 +45,7 @@ export default class UserDepItem extends LitElement {
           .listItemHeight="${4.6}"
           .users="${this.users}"
           .listState="${this.listState}"
-          @user-selected="${() => console.log('dssd')}"
+          @user-selected="${this.onUserSelected}"
         ></user-list>
       </div>
     </div>`;

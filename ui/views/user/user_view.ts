@@ -31,6 +31,11 @@ export default class UserView extends LitElement {
       <button id="view-summary" solid @click="${this.viewSummary()}">
         View Summary
       </button>
+
+      <div class="time-selector">
+        <button solid>AM</button>
+        <button outline>PM</button>
+      </div>
     </div>`;
   }
 
@@ -50,12 +55,34 @@ export default class UserView extends LitElement {
           width: 50%;
           position: absolute;
           bottom: 10px;
-          left: 25%;
-          right: 25%;
+          left: 15%;
           font-size: 1.1rem;
           padding: 15px 0px;
           border-radius: 50px;
           font-weight: 500;
+        }
+
+        .time-selector {
+          display: flex;
+          position: fixed;
+          z-index: 98;
+          right: 10px;
+          bottom: 10px;
+        }
+
+        .time-selector > button {
+          box-sizing: border-box;
+          height: 2.5rem;
+          font-weight: 600;
+          padding: 8px;
+        }
+
+        .time-selector > button:first-child {
+          border-radius: 35px 0 0 35px;
+        }
+
+        .time-selector > button:last-child {
+          border-radius: 0 35px 35px 0;
         }
       `
     ];
