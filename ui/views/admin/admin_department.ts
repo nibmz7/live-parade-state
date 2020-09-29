@@ -3,10 +3,8 @@ import {
   html,
   customElement,
   css,
-  property,
-  query
+  property
 } from 'lit-element';
-import { repeat } from 'lit-html/directives/repeat';
 import Branch from '../../../model/branch';
 import Department from '../../../model/department';
 import User from '../../../model/user';
@@ -16,6 +14,7 @@ import { onPressed } from '../../utils';
 import '../../dialogs/edit_department';
 import '../../dialogs/edit_user';
 import '../../base/welcome_text';
+import './admin_user_list';
 
 export interface ListState {
   items: {
@@ -29,7 +28,6 @@ export interface ListState {
 
 @customElement('admin-department')
 export default class AdminDepartment extends LitElement {
-  @query('#user-list') _userList;
 
   @property({ type: Object }) branch!: Branch;
   @property({ type: Object }) department!: Department;
@@ -63,46 +61,7 @@ export default class AdminDepartment extends LitElement {
     this.selectedUser = undefined;
   }
 
-  firstUpdated() {
-    (this._userList as HTMLElement).onanimationend = (e: Event) => {
-      const targetElement = e.composedPath()[0] as HTMLElement;
-      if (!targetElement.hasAttribute('removed')) return;
-      const event = new CustomEvent('user-removed', {
-        detail: {
-          departmentid: this.department.id,
-          userid: targetElement.id
-        }
-      });
-      this.dispatchEvent(event);
-    };
-  }
-
   render() {
-    const itemHeight = 3.5;
-    const length = this.listState.length;
-    const height = length * itemHeight;
-
-    const userTemplate = (user: User) => {
-      const itemState = this.listState.items[user.uid];
-      return html`
-        <div
-          id="${user.uid}"
-          style="--offset-y:${itemState.index * itemHeight}rem;"
-          tabindex="0"
-          class="item selectable"
-          ?regular="${user.regular}"
-          ?added="${itemState.type === ACTION_TYPE.ADDED}"
-          ?modified="${itemState.type === ACTION_TYPE.MODIFIED}"
-          ?removed="${itemState.type === ACTION_TYPE.REMOVED}"
-          ?last="${itemState.index === length - 1}"
-          @click="${this.onEditUser(user)}"
-        >
-          <p id="primary-text">${user.fullname}</p>
-          <p id="secondary-text">${user.email}</p>
-        </div>
-      `;
-    };
-
     return html`<div id="root">
       <div class="header">
         <h3>${this.department.name}</h3>
@@ -121,9 +80,16 @@ export default class AdminDepartment extends LitElement {
           Add user
         </button>
 
-        <div id="user-list" style="height:${height}rem;">
-          ${repeat(this.users, (user) => user.uid, userTemplate)}
+        <admin-user-list
+          .listItemHeight="${3.5}"
+          .users="${this.users}"
+          .listState="${this.listState}"
+        >
+        <div>
         </div>
+          <p id="primary-text" slot="fullname"></p>
+          <p id="secondary-text" slot="email"></p>
+        </user-list>
       </div>
 
       ${this.showEditDepartment
