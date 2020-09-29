@@ -22,20 +22,32 @@
     <script>
         let screenHeight;
         let screenWidth;
+        let halfScreenHeight;
 
         const setScreenHeight = () => {
             screenHeight = window.innerHeight;
             screenWidth = window.innerWidth;
+            halfScreenHeight = screenHeight / 2;
             document.body.style.height = screenHeight + 'px';
             document.body.style.width = screenWidth + 'px';
         }
         setScreenHeight()
 
         window.onresize = () => {
+            let offsetHeight = 0;
+            let offsetOn = 0;
             const windowHeight = window.innerHeight;
             if (windowHeight > screenHeight) setScreenHeight();
-            let offsetHeight = (windowHeight - screenHeight) / 2;
+            if (windowHeight < screenHeight) {
+                const keyboardHeight = screenHeight - windowHeight;
+                if (keyboardHeight < halfScreenHeight)
+                    offsetHeight = keyboardHeight - halfScreenHeight;
+                else offsetHeight = halfScreenHeight - keyboardHeight;
+                if (offsetHeight > -50) offsetHeight = offsetHeight * 2;
+                offsetOn = 1;
+            }
             document.body.style.setProperty('--offset-height', offsetHeight + 'px');
+            document.body.style.setProperty('--offset-on', offsetOn);
         }
     </script>
 </body>
