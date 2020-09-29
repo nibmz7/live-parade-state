@@ -83,7 +83,7 @@ export default class MockAdminManager extends AdminManager {
       this.userOnChange(new User(user), ACTION_TYPE.MODIFIED);
       let action = ACTION_USER.requestSuccessful(state.action);
       ApplicationStore.dispatch(action);
-    }, 5000);
+    }, 2000);
   }
 
   protected requestRemoveUser(state: UserStoreState): void {

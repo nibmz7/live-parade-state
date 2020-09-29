@@ -224,7 +224,7 @@ export default class AdminView extends LitElement {
         }
 
         #department-list {
-          max-height: 99%;
+          max-height: 99.9%;
           overflow-x: hidden;
           overflow-y: scroll;
           box-sizing: border-box;
@@ -235,15 +235,15 @@ export default class AdminView extends LitElement {
           display: none;
         }
 
-        admin-department {
+        admin-dep-item {
           margin-bottom: 20px;
         }
 
-        admin-department:first-of-type {
+        admin-dep-item:first-of-type {
           margin-top: 30px;
         }
 
-        admin-department:last-of-type {
+        admin-dep-item:last-of-type {
           margin-bottom: 80px;
         }
 
