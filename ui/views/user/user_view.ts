@@ -2,11 +2,13 @@ import { LitElement, html, customElement, css, property } from 'lit-element';
 import { ApplicationStore } from '../../../data/store';
 import { buttonStyles, cardStyles, globalStyles } from '../../global_styles';
 import { onPressed } from '../../utils';
+import User from '../../../model/user';
 import '../../base/welcome_text';
 import './user_dep_item';
 import './user_dep_list';
 import './user_list';
-import User from '../../../model/user';
+import '../../base/toggle_am';
+import '../../dialogs/edit_status';
 
 @customElement('user-view')
 export default class UserView extends LitElement {
@@ -26,9 +28,7 @@ export default class UserView extends LitElement {
   }
 
   toggleAm() {
-    return onPressed(() => {
-      this.isMorning = !this.isMorning;
-    });
+    this.isMorning = !this.isMorning;
   }
 
   render() {
@@ -42,22 +42,7 @@ export default class UserView extends LitElement {
         View Summary
       </button>
 
-      <div class="time-selector">
-        <button
-          ?solid="${this.isMorning}"
-          ?outline="${!this.isMorning}"
-          @click="${this.toggleAm()}"
-        >
-          AM
-        </button>
-        <button
-          ?solid="${!this.isMorning}"
-          ?outline="${this.isMorning}"
-          @click="${this.toggleAm()}"
-        >
-          PM
-        </button>
-      </div>
+      <toggle-am @toggle-am="${this.toggleAm}"></toggle-am>
     </div>`;
   }
 
@@ -84,37 +69,11 @@ export default class UserView extends LitElement {
           font-weight: 500;
         }
 
-        .time-selector {
-          display: flex;
+        toggle-am {
           position: fixed;
           z-index: 98;
           right: 10px;
           bottom: 10px;
-        }
-
-        .time-selector > button {
-          box-sizing: border-box;
-          height: 2.5rem;
-          font-weight: 600;
-          padding: 8px;
-          transition: none;
-          border: 2px solid var(--color-primary);
-        }
-
-        .time-selector > button,
-        .time-selector > button:hover,
-        .time-selector > button:focus,
-        .time-selector > button:active {
-          box-shadow: 0 4px 6px -1px rgba(var(--color-primary-rgb), 0.2),
-            0 2px 4px -1px rgba(var(--color-primary-rgb), 0.12);
-        }
-
-        .time-selector > button:first-child {
-          border-radius: 35px 0 0 35px;
-        }
-
-        .time-selector > button:last-child {
-          border-radius: 0 35px 35px 0;
         }
       `
     ];

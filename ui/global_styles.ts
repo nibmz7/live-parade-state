@@ -209,4 +209,12 @@ export const buttonStyles = css`
   button[plain]:active {
     background-color: var(--color-primary-dark);
   }
+
+  button[static],
+  button[static]:hover,
+  button[static]:focus,
+  button[static]:active {
+    box-shadow: 0 4px 6px -1px rgba(var(--color-primary-rgb), 0.2),
+      0 2px 4px -1px rgba(var(--color-primary-rgb), 0.12);
+  }
 `;

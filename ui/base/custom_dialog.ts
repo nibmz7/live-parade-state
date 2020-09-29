@@ -1,4 +1,11 @@
-import { LitElement, html, customElement, css, property } from 'lit-element';
+import {
+  LitElement,
+  html,
+  customElement,
+  css,
+  property,
+  query
+} from 'lit-element';
 import { cardStyles, fadeAnimation, globalStyles } from '../global_styles';
 
 export enum DIALOG_STATE {
@@ -11,20 +18,20 @@ export enum DIALOG_STATE {
 @customElement('custom-dialog')
 export default class CustomDialog extends LitElement {
   @property({ type: Number }) state = DIALOG_STATE.OPENING;
+  @query('.dialog') _dialog!: HTMLElement;
 
   firstUpdated() {
-    let dialog = this.shadowRoot?.getElementById('dialog');
     let listener = () => {
       if (this.state === DIALOG_STATE.OPENING) {
         this.state = DIALOG_STATE.OPENED;
       } else if (this.state === DIALOG_STATE.CLOSING) {
-        dialog?.removeEventListener('animationend', listener);
+        this._dialog.removeEventListener('animationend', listener);
         this.dispatchEvent(
           new Event('close', { bubbles: true, composed: true })
         );
       }
     };
-    dialog?.addEventListener('animationend', listener);
+    this._dialog.addEventListener('animationend', listener);
   }
 
   close() {
@@ -47,8 +54,7 @@ export default class CustomDialog extends LitElement {
       @click="${this.close}"
     >
       <div
-        id="dialog"
-        class="card"
+        class="dialog card"
         aria-label="Dialog"
         @click="${(e: Event) => {
           e.stopPropagation();
@@ -102,7 +108,7 @@ export default class CustomDialog extends LitElement {
           animation: fade-out 0.3s;
         }
 
-        #dialog {
+        .dialog {
           width: 100%;
           box-sizing: border-box;
           border-radius: 5px;
@@ -112,15 +118,15 @@ export default class CustomDialog extends LitElement {
           pointer-events: none;
         }
 
-        #root[show] > #dialog {
+        #root[show] > .dialog {
           animation: scale-in 0.5s;
         }
 
-        #root[hide] > #dialog {
+        #root[hide] > .dialog {
           animation: scale-out 0.3s;
         }
 
-        #root[ready] > #dialog {
+        #root[ready] > .dialog {
           pointer-events: auto;
           transition: transform 0.3s;
         }

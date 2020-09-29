@@ -16,19 +16,7 @@ export default class UserDepItem extends LitElement {
   @property({ type: Boolean }) isMorning = true;
 
   onUserSelected(e: CustomEvent) {
-    const user = e.detail.user as User;
-    console.log(user);
-  }
-
-  connectedCallback() {
-    super.connectedCallback();
-    this.addEventListener(
-      'toggle-am',
-      () => {
-        console.log('toggling');
-      },
-      { capture: true }
-    );
+    this.selectedUser = e.detail.user as User;
   }
 
   render() {
@@ -43,23 +31,30 @@ export default class UserDepItem extends LitElement {
       }
     });
     return html`<div id="root">
-      <div class="header">
-        <h3>${this.department.name}</h3>
+        <div class="header">
+          <h3>${this.department.name}</h3>
+        </div>
+
+        <div class="card">
+          <h4 class="summary" ?empty="${this.listState.length === 0}">
+            ${regular + nsf} Total ~ ${regular} Regular + ${nsf} Nsf
+          </h4>
+
+          <user-list
+            .listItemHeight="${4.6}"
+            .users="${this.users}"
+            .listState="${this.listState}"
+            @user-selected="${this.onUserSelected}"
+          ></user-list>
+        </div>
       </div>
 
-      <div class="card">
-        <h4 class="summary" ?empty="${this.listState.length === 0}">
-          ${regular + nsf} Total ~ ${regular} Regular + ${nsf} Nsf
-        </h4>
-
-        <user-list
-          .listItemHeight="${4.6}"
-          .users="${this.users}"
-          .listState="${this.listState}"
-          @user-selected="${this.onUserSelected}"
-        ></user-list>
-      </div>
-    </div>`;
+      ${this.selectedUser
+        ? html`<edit-status
+            .user="${this.selectedUser}"
+            @close="${() => (this.selectedUser = undefined)}"
+          ></edit-status>`
+        : ''} `;
   }
 
   static get styles() {
