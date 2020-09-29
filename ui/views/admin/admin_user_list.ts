@@ -1,10 +1,10 @@
 import { css, customElement } from 'lit-element';
 import { html } from 'lit-html';
 import User from '../../../model/user';
-import UserList from '../../base/user_list';
+import BaseUserList from '../../base/base_user_list';
 
 @customElement('admin-user-list')
-export default class AdminUserList extends UserList {
+export default class AdminUserList extends BaseUserList {
   userItemTemplate(user: User) {
     return html`
       <p class="fullname">${user.fullname}</p>

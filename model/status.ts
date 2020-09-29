@@ -16,7 +16,7 @@ export const STATUSES = [
   { name: 'AO', fullName: 'ATTACHED OUT', category: 5 },
   { name: 'OA', fullName: 'OVERSEAS ATTACHMENT', category: 5 },
   { name: 'OOC', fullName: 'OUT OF CAMP', category: 6 },
-  { name: 'OTHERS', fullName: 'OTHERS', category: 6 },
+  { name: 'OTHERS', fullName: 'OTHERS', category: 6 }
 ];
 
 export const STATUS_CATEGORY = [
@@ -26,7 +26,7 @@ export const STATUS_CATEGORY = [
   'MC/MA',
   'OIL/LEAVE',
   'AO/OA',
-  'OOC/OTHERS',
+  'OOC/OTHERS'
 ];
 
 export interface StatusProperties {
@@ -34,13 +34,22 @@ export interface StatusProperties {
   remarks: string;
   updatedby: string;
   timestamp: Date;
+  expired: boolean;
 }
 
 export class Status {
-  readonly status: StatusProperties;
+  readonly code: number;
+  readonly remarks: string;
+  readonly updatedby: string;
+  readonly timestamp: Date;
+  readonly expired?: Boolean;
 
   constructor(status: StatusProperties) {
-    this.status = status;
+    this.code = status.code;
+    this.remarks = status.remarks;
+    this.updatedby = status.updatedby;
+    this.timestamp = status.timestamp;
+    this.expired = status.expired;
   }
 }
 

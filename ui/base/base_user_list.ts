@@ -1,19 +1,9 @@
-import {
-  LitElement,
-  html,
-  css,
-  property,
-  query,
-  TemplateResult
-} from 'lit-element';
-import { repeat } from 'lit-html/directives/repeat';
-import '../dialogs/edit_department';
-import '../dialogs/edit_user';
-import '../base/welcome_text';
-import { ACTION_TYPE, ACTION_TYPE_TEXT } from '../../data/data_manager';
-import User from '../../model/user';
-import { onPressed } from '../utils';
-import { globalStyles } from '../global_styles';
+import { css, html, LitElement, property, query, TemplateResult } from "lit-element";
+import { repeat } from "lit-html/directives/repeat";
+import { ACTION_TYPE, ACTION_TYPE_TEXT } from "../../data/data_manager";
+import User from "../../model/user";
+import { globalStyles } from "../global_styles";
+import { onPressed } from "../utils";
 
 export interface ListState {
   items: {
@@ -25,7 +15,7 @@ export interface ListState {
   length: number;
 }
 
-export default abstract class UserList extends LitElement {
+export default abstract class BaseUserList extends LitElement {
   @query('#user-list') _userList;
 
   @property({ type: Number }) listItemHeight = 0;

@@ -5,9 +5,10 @@ import Admin from '../../../model/admin';
 import { onPressed } from '../../utils';
 import '../../dialogs/edit_department';
 import '../../base/welcome_text';
-import './admin_dep_item';
 import './request_log';
+import './admin_dep_item';
 import './admin_dep_list';
+
 
 @customElement('admin-view')
 export default class AdminView extends LitElement {

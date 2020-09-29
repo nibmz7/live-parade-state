@@ -5,7 +5,6 @@ import { ApplicationStore } from '../../data/store';
 import Branch from '../../model/branch';
 import Department from '../../model/department';
 import Rank from '../../model/rank';
-import User, { UserBase } from '../../model/user';
 import {
   buttonStyles,
   cardStyles,
@@ -23,6 +22,7 @@ import {
 import { onPressed } from '../utils';
 import '../base/custom_dialog';
 import { DIALOG_STATE } from '../base/custom_dialog';
+import User, { UserBase } from '../../model/user';
 
 @customElement('edit-user')
 export default class EditUser extends LitElement {

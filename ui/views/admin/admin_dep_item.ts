@@ -1,14 +1,10 @@
-import { LitElement, html, customElement, css, property } from 'lit-element';
-import Branch from '../../../model/branch';
-import Department from '../../../model/department';
-import User from '../../../model/user';
-import { buttonStyles, cardStyles, globalStyles } from '../../global_styles';
-import { ACTION_TYPE } from '../../../data/data_manager';
-import { onPressed } from '../../utils';
-import '../../dialogs/edit_department';
-import '../../dialogs/edit_user';
-import '../../base/welcome_text';
-import './admin_user_list';
+import { css, customElement, html, LitElement, property } from "lit-element";
+import { ACTION_TYPE } from "../../../data/data_manager";
+import Branch from "../../../model/branch";
+import Department from "../../../model/department";
+import User from "../../../model/user";
+import { buttonStyles, cardStyles, globalStyles } from "../../global_styles";
+import { onPressed } from "../../utils";
 
 export interface ListState {
   items: {

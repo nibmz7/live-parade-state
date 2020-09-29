@@ -23,10 +23,11 @@ import Admin from '../../model/admin';
 import Department from '../../model/department';
 import User from '../../model/user';
 import { buttonStyles, cardStyles, globalStyles } from '../global_styles';
-import { ListState } from './user_list';
+import { ListState } from './base_user_list';
 
-export default abstract class DepList extends LitElement {
+export default abstract class BaseDepList extends LitElement {
   private welcomeTitle!: string;
+  
   @query('#department-list') _departmentsList!: HTMLElement;
   @query('welcome-text') _welcomeText!: HTMLElement;
 
