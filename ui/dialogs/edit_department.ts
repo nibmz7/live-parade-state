@@ -116,6 +116,10 @@ export default class EditDepartment extends LitElement {
       cardStyles,
       inputStyles,
       css`
+        custom-dialog {
+          --offset-item-height: calc(50px * var(--offset-on));
+        }
+
         #root {
           display: flex;
           flex-direction: column;

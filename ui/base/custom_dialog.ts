@@ -72,6 +72,10 @@ export default class CustomDialog extends LitElement {
       cardStyles,
       fadeAnimation,
       css`
+        :host {
+          --offset-item-height: 0px;
+        }
+
         #root {
           position: absolute;
           top: 0;
@@ -104,7 +108,7 @@ export default class CustomDialog extends LitElement {
           border-radius: 5px;
           padding: 15px 20px;
           transform: perspective(100px) translateZ(0px)
-            translateY(var(--offset-height));
+            translateY(calc(var(--offset-height) - var(--offset-item-height)));
           pointer-events: none;
         }
 

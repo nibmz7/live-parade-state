@@ -280,6 +280,10 @@ export default class EditUser extends LitElement {
       inputStyles,
       passwordInputStyles,
       css`
+        custom-dialog {
+          --offset-item-height: calc(100px * var(--offset-on));
+        }
+
         #root {
           display: flex;
           flex-direction: row;

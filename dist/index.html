@@ -43,7 +43,6 @@
                 if (keyboardHeight < halfScreenHeight)
                     offsetHeight = keyboardHeight - halfScreenHeight;
                 else offsetHeight = halfScreenHeight - keyboardHeight;
-                if (offsetHeight > -50) offsetHeight = offsetHeight * 2;
                 offsetOn = 1;
             }
             document.body.style.setProperty('--offset-height', offsetHeight + 'px');
