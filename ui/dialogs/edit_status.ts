@@ -266,10 +266,10 @@ export default class EditStatus extends LitElement {
 
         .verify-buttons > .processing {
           position: absolute;
-          top: 0;
-          left: 0;
-          height: 100%;
-          width: 100%;
+          top: -5px;
+          bottom: -5px;
+          right: -5px;
+          left: -5px;
           display: flex;
           justify-content: center;
           align-items: center;
@@ -277,13 +277,16 @@ export default class EditStatus extends LitElement {
           color: white;
           border-radius: 5px;
           pointer-events: none;
+          box-shadow: 0 2px 4px -1px rgba(var(--color-primary-rgb), 0.5);
+          transform: scale(0);
           opacity: 0;
-          transition: 0.3s all;
+          transition: opacity 0.3s, transform 0.3s;
         }
 
         .verify-buttons > .processing[show] {
           pointer-events: inherit;
           opacity: 1;
+          transform: scale(1);
         }
 
         .updated-by {
