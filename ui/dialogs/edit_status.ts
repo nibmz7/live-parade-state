@@ -51,7 +51,6 @@ export default class EditStatus extends LitElement {
     this.updatedByName = ApplicationStore.getUsers().users[
       userStatus.updatedby
     ].fullname;
-    this.isProcessing = false;
   }
 
   private usersListener = async (state: UserStoreState) => {
@@ -61,6 +60,7 @@ export default class EditStatus extends LitElement {
     if (user.uid !== this.uid) return;
     this.selectedUser = user;
     this.resetStatus();
+    this.isProcessing = false;
   };
 
   connectedCallback() {
@@ -168,7 +168,7 @@ export default class EditStatus extends LitElement {
             BOTH AM & PM
           </button>
           <button class="specific" solid @click="${this.submitOnly()}">
-            AM ONLY
+            ${this.isMorning ? 'AM' : 'PM'} ONLY
           </button>
           <div class="processing" ?show="${this.isProcessing}">
             Processing...
