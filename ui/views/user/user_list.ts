@@ -6,6 +6,8 @@ import BaseUserList from '../../base/base_user_list';
 
 @customElement('user-list')
 export default class UserList extends BaseUserList {
+  listItemHeight = 4.6;
+
   statusTemplate(status: Status, prefix: string) {
     const statusText = STATUSES[status.code].name;
     const hasRemarks = status.remarks.trim().length > 0;

@@ -5,6 +5,7 @@ import BaseUserList from '../../base/base_user_list';
 
 @customElement('admin-user-list')
 export default class AdminUserList extends BaseUserList {
+  listItemHeight = 3.5;
   userItemTemplate(user: User) {
     return html`
       <p class="fullname">${user.fullname}</p>
@@ -16,6 +17,9 @@ export default class AdminUserList extends BaseUserList {
     return [
       ...super.styles,
       css`
+        .user {
+          height: 3.5rem;
+        }
         .user[last] {
           border-bottom-left-radius: 15px;
           border-bottom-right-radius: 15px;

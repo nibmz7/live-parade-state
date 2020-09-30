@@ -109,7 +109,7 @@ export default class EditStatus extends LitElement {
       buttonStyles,
       css`
         custom-dialog {
-          --offset-item-height: calc(150px * var(--offset-on));
+          --offset-item-height: 150px;
         }
 
         toggle-am {

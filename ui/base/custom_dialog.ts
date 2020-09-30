@@ -79,7 +79,12 @@ export default class CustomDialog extends LitElement {
       fadeAnimation,
       css`
         :host {
+          --offset-on: 0;
           --offset-item-height: 0px;
+          --total-offset-height: calc(
+            var(--offset-height) - var(--offset-item-height)
+          );
+          --offset-dialog: calc(var(--total-offset-height) * var(--offset-on));
         }
 
         #root {
@@ -113,8 +118,9 @@ export default class CustomDialog extends LitElement {
           box-sizing: border-box;
           border-radius: 5px;
           padding: 15px 20px;
+          perspective: 100px;
           transform: perspective(100px) translateZ(0px)
-            translateY(calc(var(--offset-height) - var(--offset-item-height)));
+            translateY(var(--offset-dialog));
           pointer-events: none;
         }
 
@@ -132,24 +138,19 @@ export default class CustomDialog extends LitElement {
         }
 
         @keyframes scale-in {
-          0% {
+          from {
             transform: perspective(100px) translateZ(10px)
-              translateY(var(--offset-height));
+              translateY(var(--offset-dialog));
           }
-          100% {
-            transform: perspective(100px) translateZ(0px)
-              translateY(var(--offset-height));
+          to {
+            transform: perspective(100px) translateZ(0px);
           }
         }
 
         @keyframes scale-out {
-          0% {
-            transform: perspective(100px) translateZ(0px)
-              translateY(var(--offset-height));
-          }
-          100% {
+          to {
             transform: perspective(100px) translateZ(10px)
-              translateY(var(--offset-height));
+              translateY(var(--offset-dialog));
           }
         }
       `

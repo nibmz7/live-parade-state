@@ -19,9 +19,6 @@ export default class AdminDepList extends BaseDepList {
     this.adminManager.unsubscribe();
   }
 
-  listStateItemUpdated() {}
-  listStateUpdated() {}
-
   depItemTemplate = (department: Department) => {
     return html`<admin-dep-item
       .branch="${this.branch}"

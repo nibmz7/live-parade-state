@@ -65,7 +65,6 @@ export default class AdminDepItem extends LitElement {
         </button>
 
         <admin-user-list
-          .listItemHeight="${3.5}"
           .users="${this.users}"
           .listState="${this.listState}"
           @user-selected="${this.onEditUser}"

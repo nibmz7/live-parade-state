@@ -41,7 +41,6 @@ export default class UserDepItem extends LitElement {
           </h4>
 
           <user-list
-            .listItemHeight="${4.6}"
             .users="${this.users}"
             .listState="${this.listState}"
             @user-selected="${this.onUserSelected}"
