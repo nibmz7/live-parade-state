@@ -281,7 +281,7 @@ export default class EditUser extends LitElement {
       passwordInputStyles,
       css`
         custom-dialog {
-          --offset-item-height: calc(100px * var(--offset-on));
+          --offset-item-height: 140px;
         }
 
         #root {

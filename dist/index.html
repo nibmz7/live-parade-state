@@ -24,12 +24,12 @@
 
         let screenHeight;
         let screenWidth;
-        let halfScreenHeight;
+        let midPointHeight;
 
         const setScreenHeight = () => {
             screenHeight = window.innerHeight;
             screenWidth = window.innerWidth;
-            halfScreenHeight = screenHeight / 2;
+            midPointHeight = screenHeight / 2;
             document.body.style.height = screenHeight + 'px';
             document.body.style.width = screenWidth + 'px';
         }
@@ -42,9 +42,8 @@
             if (windowHeight > screenHeight) setScreenHeight();
             if (windowHeight < screenHeight) {
                 const keyboardHeight = screenHeight - windowHeight;
-                if (keyboardHeight < halfScreenHeight)
-                    offsetHeight = keyboardHeight - halfScreenHeight;
-                else offsetHeight = halfScreenHeight - keyboardHeight;
+                const leftoverHeight = windowHeight / 2;
+                const offsetHeight = leftoverHeight + keyboardHeight - midPointHeight;
                 offsetOn = 1;
             }
             document.body.style.setProperty('--offset-height', offsetHeight + 'px');

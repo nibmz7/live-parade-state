@@ -117,7 +117,7 @@ export default class EditDepartment extends LitElement {
       inputStyles,
       css`
         custom-dialog {
-          --offset-item-height: calc(50px * var(--offset-on));
+          --offset-item-height: 110px;
         }
 
         #root {
