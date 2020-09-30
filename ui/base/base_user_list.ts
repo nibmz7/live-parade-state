@@ -32,23 +32,32 @@ export interface ListState {
   length: number;
 }
 
+const ListStateDefault = () => ({ items: {}, length: 0 });
+
 export default abstract class BaseUserList extends LitElement {
   private usersUnsubscribe?: Unsubscribe;
 
   @query('#user-list') _userList;
 
-  @property({ type: Number }) listItemHeight = 0;
   @property({ type: Array }) users: Array<User> = [];
   @property({ type: Object }) department!: Department;
-  @property({ type: Object }) listState: ListState = { items: {}, length: 0 };
+  @property({ type: Object }) listState: ListState = ListStateDefault();
+
+  abstract userItemTemplate(user: User): TemplateResult;
+  abstract get listItemHeight(): number;
 
   private init = () => {
     const departmentid = this.department.id;
     const items = ApplicationStore.getUsers().items;
-    if (!(departmentid in items)) return;
-    const userArray = items[departmentid].slice();
+    let userArray: Array<User>;
+    if (!(departmentid in items)) {
+      userArray = [];
+      this.listState = ListStateDefault();
+    } else {
+      userArray = items[departmentid].slice();
+      this.updateListState(userArray);
+    }
     this.users = userArray;
-    this.updateListState(userArray);
     this.onListChanged(userArray);
   };
 
@@ -79,10 +88,7 @@ export default abstract class BaseUserList extends LitElement {
     const departmentid = this.department.id;
     if (!(departmentid in state.items)) return;
 
-    if (type === ACTION_TYPE.INITIALIZED) {
-      this.init();
-      return;
-    }
+    if (type === ACTION_TYPE.INITIALIZED) return;
 
     const user = state.action.payload as User;
     if (user.departmentid !== departmentid) return;
@@ -112,7 +118,6 @@ export default abstract class BaseUserList extends LitElement {
 
   connectedCallback() {
     super.connectedCallback();
-    this.init();
     this.usersUnsubscribe = ApplicationStore.listen(
       ACTION_ROOT.USERS,
       this.usersListener
@@ -132,6 +137,13 @@ export default abstract class BaseUserList extends LitElement {
     };
   }
 
+  shouldUpdate(changedProperties: Map<any, any>) {
+    if (changedProperties.has('department')) {
+      this.init();
+    }
+    return true;
+  }
+
   onUserSelected(user: User) {
     return onPressed(() => {
       const event = new CustomEvent('user-selected', {
@@ -148,8 +160,6 @@ export default abstract class BaseUserList extends LitElement {
     this.updateListState(userArray);
     this.users = userArray;
   }
-
-  abstract userItemTemplate(user: User): TemplateResult;
 
   render() {
     const length = this.listState.length;

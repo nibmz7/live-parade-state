@@ -44,7 +44,6 @@ export default class AdminDepItem extends LitElement {
   }
 
   onListChanged(e: CustomEvent) {
-    console.log(e);
     const users = e.detail.users as Array<User>;
     this.isEmpty = users.length === 0;
   }

@@ -44,6 +44,7 @@ export default abstract class BaseDepList extends LitElement {
     const type = state.action.type;
     if (REQUEST_TYPES.includes(type)) return;
     this.departments = state.items;
+    // console.log(this.departments);
   };
 
   connectedCallback() {
