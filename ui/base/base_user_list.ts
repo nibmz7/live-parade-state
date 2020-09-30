@@ -134,8 +134,24 @@ export default abstract class BaseUserList extends LitElement {
   firstUpdated() {
     (this._userList as HTMLElement).onanimationend = (e: Event) => {
       const targetElement = e.composedPath()[0] as HTMLElement;
-      if (!targetElement.hasAttribute('removed')) return;
-      this.onUserRemoved(targetElement.id);
+      if (targetElement.hasAttribute('state')) {
+        const uid = targetElement.id;
+        const type = targetElement.getAttribute('state');
+        if (type === 'added' || type === 'updated') {
+          const itemState = this.listState.items[uid];
+          this.listState = {
+            ...this.listState,
+            items: {
+              ...this.listState.items,
+              [uid]: { ...itemState, type: ACTION_TYPE.INITIALIZED }
+            }
+          };
+        } else if (type === 'removed') {
+          const userArray = this.users.filter((user) => user.uid != uid);
+          this.updateListState(userArray);
+          this.users = userArray;
+        }
+      }
     };
   }
 
@@ -155,12 +171,6 @@ export default abstract class BaseUserList extends LitElement {
       });
       this.dispatchEvent(event);
     });
-  }
-
-  onUserRemoved(uid: string) {
-    const userArray = this.users.filter((user) => user.uid != uid);
-    this.updateListState(userArray);
-    this.users = userArray;
   }
 
   render() {
