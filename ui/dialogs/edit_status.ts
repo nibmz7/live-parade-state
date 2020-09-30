@@ -43,7 +43,9 @@ export default class EditStatus extends LitElement {
       ? this.user.morning!
       : this.user.afternoon!;
     this.statusToEdit = new Status(userStatus);
-    this.updatedByName = ApplicationStore.getUsers().fullnames[this.user.uid];
+    this.updatedByName = ApplicationStore.getUsers().fullnames[
+      userStatus.updatedby
+    ];
   }
 
   connectedCallback() {
