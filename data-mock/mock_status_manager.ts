@@ -6,13 +6,20 @@ import User from '../model/user';
 import ACTION_USER from '../data/actions/user_action';
 import { ApplicationStore } from '../data/store';
 import Department from '../model/department';
+import Status from '../model/status';
 
 export default class MockStatusManager extends StatusManager {
   protected requestModifyUser(state: UserStoreState): void {
     setTimeout(() => {
-      const user = new User(state.action.payload as User);
+      const userToUpdate = new User(state.action.payload as User);
+      const userData = ApplicationStore.getUsers().users[userToUpdate.uid];
+      const morning = new Status(userToUpdate.morning || userData.morning!);
+      const afternoon = new Status(
+        userToUpdate.afternoon || userData.afternoon!
+      );
+      const newUser = new User({ ...userData, morning, afternoon });
       const action = ACTION_USER.requestSuccessful(state.action);
-      this.userOnChange(user, ACTION_TYPE.MODIFIED);
+      this.userOnChange(newUser, ACTION_TYPE.MODIFIED);
       ApplicationStore.dispatch(action);
     }, 2000);
   }

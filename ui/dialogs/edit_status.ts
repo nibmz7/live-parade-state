@@ -37,7 +37,7 @@ export default class EditStatus extends LitElement {
     this.dialogState = DIALOG_STATE.STALLING;
   }
 
-  onInputBlur(e) {
+  onInputBlur(e: Event) {
     const input = e.target as HTMLInputElement;
     const remarks = input.value;
     this.statusToEdit = { ...this.statusToEdit, remarks };
@@ -89,24 +89,34 @@ export default class EditStatus extends LitElement {
     });
   }
 
+  requestUpdateStatus(submitAll: boolean) {
+    if (this.isProcessing) return;
+    this.isProcessing = true;
+    const updatedby = this.authUser.uid;
+    const status = new Status({
+      ...this.statusToEdit,
+      updatedby,
+      date: new Date(),
+      expired: false
+    });
+    const user = new User({
+      ...this.selectedUser,
+      morning: submitAll ? status : this.isMorning ? status : undefined,
+      afternoon: submitAll ? status : !this.isMorning ? status : undefined
+    });
+    const action = ACTION_USER.requestModify(user);
+    ApplicationStore.dispatch(action);
+  }
+
+  submitOnly() {
+    return onPressed(() => {
+      this.requestUpdateStatus(false);
+    });
+  }
+
   submitBoth() {
     return onPressed(() => {
-      if (this.isProcessing) return;
-      this.isProcessing = true;
-      const updatedby = this.authUser.uid;
-      const status = new Status({
-        ...this.statusToEdit,
-        updatedby,
-        date: new Date(),
-        expired: false
-      });
-      const user = new User({
-        ...this.selectedUser,
-        afternoon: status,
-        morning: status
-      });
-      const action = ACTION_USER.requestModify(user);
-      ApplicationStore.dispatch(action);
+      this.requestUpdateStatus(true);
     });
   }
 
@@ -157,7 +167,9 @@ export default class EditStatus extends LitElement {
           <button class="all" solid @click="${this.submitBoth()}">
             BOTH AM & PM
           </button>
-          <button class="specific" solid>AM ONLY</button>
+          <button class="specific" solid @click="${this.submitOnly()}">
+            AM ONLY
+          </button>
           <div class="processing" ?show="${this.isProcessing}">
             Processing...
           </div>
