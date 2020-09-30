@@ -18,7 +18,8 @@ export enum DIALOG_STATE {
 @customElement('custom-dialog')
 export default class CustomDialog extends LitElement {
   @property({ type: Number }) state = DIALOG_STATE.OPENING;
-  @query('.dialog') _dialog!: HTMLElement;
+  @property({ type: Boolean }) closePrompt = false;
+  @query('#dialog') _dialog!: HTMLElement;
 
   firstUpdated() {
     let listener = () => {
@@ -34,9 +35,14 @@ export default class CustomDialog extends LitElement {
     this._dialog.addEventListener('animationend', listener);
   }
 
+  reset() {
+    this.closePrompt = true;
+    this.dispatchEvent(new Event('reset'));
+  }
+
   close() {
     if (this.state === DIALOG_STATE.STALLING) {
-      this.dispatchEvent(new Event('reset'));
+      this.reset();
     } else if (this.state === DIALOG_STATE.OPENED)
       this.state = DIALOG_STATE.CLOSING;
   }
@@ -54,6 +60,7 @@ export default class CustomDialog extends LitElement {
       @click="${this.close}"
     >
       <div
+        id="dialog"
         class="dialog card"
         aria-label="Dialog"
         @click="${(e: Event) => {
@@ -63,11 +70,17 @@ export default class CustomDialog extends LitElement {
               .toLowerCase()
               .includes('input');
             if (isInput) return;
-            this.dispatchEvent(new Event('reset'));
+            this.reset();
           }
         }}"
       >
         <slot></slot>
+
+        ${this.closePrompt
+          ? html` <div class="close-prompt" @click="${this.close}">
+              <p>Tap again to close</p>
+            </div>`
+          : ''}
       </div>
     </div>`;
   }
@@ -84,6 +97,23 @@ export default class CustomDialog extends LitElement {
             var(--offset-height) - var(--offset-item-height)
           );
           --offset-dialog: calc(var(--total-offset-height) * var(--offset-on));
+        }
+
+        .close-prompt {
+          position: absolute;
+          left: 0;
+          right: 0;
+          bottom: -20%;
+          text-align: center;
+          pointer-events: auto;
+          animation: fade-in 0.3s;
+        }
+
+        .close-prompt > p {
+          padding: 10px;
+          border-radius: 30px;
+          background: rgba(0, 0, 0, 0.1);
+          display: inline-block;
         }
 
         #root {
