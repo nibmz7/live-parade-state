@@ -49,9 +49,10 @@ export class Status {
     this.remarks = status.remarks;
     this.updatedby = status.updatedby;
     this.date = status.date;
-    this.expired = status.expired
-      ? status.expired
-      : Status.isSameDay(status.date);
+    this.expired =
+      status.expired === undefined
+        ? Status.isSameDay(status.date)
+        : status.expired;
   }
 
   static isPresent = (code: number) => code === 1;

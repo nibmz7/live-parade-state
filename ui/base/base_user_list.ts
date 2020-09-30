@@ -214,7 +214,7 @@ export default abstract class BaseUserList extends LitElement {
           animation: item-appear-in 0.3s;
         }
 
-        .user[state='modified'] {
+        .user[state='updated'] {
           animation: flash 1s 2;
         }
 

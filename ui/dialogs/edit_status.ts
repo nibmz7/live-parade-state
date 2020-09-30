@@ -5,8 +5,11 @@ import { DIALOG_STATE } from '../base/custom_dialog';
 import User from '../../model/user';
 import Status, { STATUSES } from '../../model/status';
 import { onPressed } from '../utils';
-import { ApplicationStore } from '../../data/store';
+import { ACTION_ROOT, ApplicationStore } from '../../data/store';
 import ACTION_USER from '../../data/actions/user_action';
+import { Unsubscribe } from 'redux';
+import { ACTION_TYPE } from '../../data/data_manager';
+import { UserStoreState } from '../../data/states/user_state';
 
 const getTimestamp = (date: Date) => {
   let dateString = date.toString();
@@ -19,11 +22,13 @@ const getTimestamp = (date: Date) => {
 
 @customElement('edit-status')
 export default class EditStatus extends LitElement {
+  private usersUnsubscribe?: Unsubscribe;
   private authUser = ApplicationStore.getAuth().action.payload as User;
 
-  @property({ type: Object }) user!: User;
-  @property({ type: Object }) statusToEdit!: Status;
+  @property({ type: String }) uid!: string;
   @property({ type: String }) updatedByName = '';
+  @property({ type: Object }) selectedUser!: User;
+  @property({ type: Object }) statusToEdit!: Status;
   @property({ type: Boolean }) isMorning = true;
   @property({ type: Boolean }) isProcessing = false;
   @property({ type: Number }) dialogState = DIALOG_STATE.OPENING;
@@ -44,17 +49,37 @@ export default class EditStatus extends LitElement {
 
   resetStatus() {
     const userStatus = this.isMorning
-      ? this.user.morning!
-      : this.user.afternoon!;
+      ? this.selectedUser.morning!
+      : this.selectedUser.afternoon!;
     this.statusToEdit = new Status(userStatus);
     this.updatedByName = ApplicationStore.getUsers().users[
       userStatus.updatedby
     ].fullname;
+    this.isProcessing = false;
   }
+
+  private usersListener = async (state: UserStoreState) => {
+    const type = state.action.type;
+    if (type !== ACTION_TYPE.MODIFIED) return;
+    const user = state.action.payload as User;
+    if (user.uid !== this.uid) return;
+    this.selectedUser = user;
+    this.resetStatus();
+  };
 
   connectedCallback() {
     super.connectedCallback();
+    this.selectedUser = ApplicationStore.getUsers().users[this.uid];
     this.resetStatus();
+    this.usersUnsubscribe = ApplicationStore.listen(
+      ACTION_ROOT.USERS,
+      this.usersListener
+    );
+  }
+
+  disconnectedCallback() {
+    this.usersUnsubscribe?.();
+    super.disconnectedCallback();
   }
 
   toggleAm() {
@@ -70,6 +95,8 @@ export default class EditStatus extends LitElement {
 
   submitBoth() {
     return onPressed(() => {
+      if(this.isProcessing) return;
+      this.isProcessing = true;
       const updatedby = this.authUser.uid;
       const status = new Status({
         ...this.statusToEdit,
@@ -78,7 +105,7 @@ export default class EditStatus extends LitElement {
         expired: false
       });
       const user = new User({
-        ...this.user,
+        ...this.selectedUser,
         afternoon: status,
         morning: status
       });
@@ -88,6 +115,7 @@ export default class EditStatus extends LitElement {
   }
 
   render() {
+    console.log('rerender');
     return html`<custom-dialog
       .state="${this.dialogState}"
       @reset="${() => (this.dialogState = DIALOG_STATE.OPENED)}"
@@ -97,7 +125,7 @@ export default class EditStatus extends LitElement {
           [Expired] - Please verify again
         </div>
         <div class="header">
-          <h4 class="name">${this.user.fullname}</h4>
+          <h4 class="name">${this.selectedUser.fullname}</h4>
           <toggle-am
             @toggle-am="${this.toggleAm}"
             .isMorning="${this.isMorning}"
