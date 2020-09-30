@@ -48,7 +48,7 @@ export default abstract class BaseUserList extends LitElement {
 
   private init = () => {
     const departmentid = this.department.id;
-    const items = ApplicationStore.getUsers().items;
+    const items = ApplicationStore.getUsers().sortedUsersByDepartment;
     let userArray: Array<User>;
     if (!(departmentid in items)) {
       userArray = [];
@@ -86,14 +86,14 @@ export default abstract class BaseUserList extends LitElement {
     if (REQUEST_TYPES.includes(type)) return;
 
     const departmentid = this.department.id;
-    if (!(departmentid in state.items)) return;
+    if (!(departmentid in state.sortedUsersByDepartment)) return;
 
     if (type === ACTION_TYPE.INITIALIZED) return;
 
     const user = state.action.payload as User;
     if (user.departmentid !== departmentid) return;
 
-    const userArray = state.items[this.department.id].slice();
+    const userArray = state.sortedUsersByDepartment[this.department.id].slice();
     this.users = userArray;
     let deletedUserState: ItemState;
 
@@ -113,7 +113,9 @@ export default abstract class BaseUserList extends LitElement {
     }
     this.listState.items[user.uid].type = type;
 
-    this.onListChanged(state.items[this.department.id].slice());
+    this.onListChanged(
+      state.sortedUsersByDepartment[this.department.id].slice()
+    );
   };
 
   connectedCallback() {

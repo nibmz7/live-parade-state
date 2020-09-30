@@ -45,7 +45,7 @@ export default class MockAdminManager extends AdminManager {
   protected requestRemoveDepartment(state: DepartmentStoreState): void {
     const department = state.action.payload as Department;
     this.departmentOnChange(department, ACTION_TYPE.REMOVED);
-    const users = ApplicationStore.getUsers().sortedItems.filter(
+    const users = ApplicationStore.getUsers().sortedUsers.filter(
       (user) => user.departmentid !== department.id
     );
     let action = ACTION_USER.initialized(users);
@@ -59,7 +59,7 @@ export default class MockAdminManager extends AdminManager {
     const user = new User({ uid: `user-${generateActionId()}`, ...userBase });
     setTimeout(() => {
       let action: Action;
-      const userExists = ApplicationStore.getUsers().sortedItems.find(
+      const userExists = ApplicationStore.getUsers().sortedUsers.find(
         (item) => item.email === user.email
       );
       if (userExists) {

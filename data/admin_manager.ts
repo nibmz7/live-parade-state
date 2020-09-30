@@ -12,9 +12,6 @@ import { Unsubscribe } from 'redux';
 export default abstract class AdminManager extends DataManager {
   private unsubscribeDepartment?: Unsubscribe;
   private unsubscribeUser?: Unsubscribe;
-  constructor() {
-    super();
-  }
 
   protected abstract requestAddDepartment(state: DepartmentStoreState): void;
   protected abstract requestModifyDepartment(state: DepartmentStoreState): void;

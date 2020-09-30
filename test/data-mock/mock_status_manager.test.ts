@@ -26,7 +26,7 @@ describe('Mock status manager', () => {
       ACTION_ROOT.USERS,
       (state: UserStoreState, unsubscribe: Unsubscribe) => {
         if (state.action.type === ACTION_TYPE.INITIALIZED) {
-          expect(state.items).to.eql(MockModel.Users);
+          expect(state.sortedUsers).to.eql(MockModel.Users);
           unsubscribe();
           done();
         }

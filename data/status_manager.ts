@@ -7,13 +7,6 @@ import { Unsubscribe } from 'redux';
 export default abstract class StatusManager extends DataManager {
   private unsubscribeUser?: Unsubscribe;
 
-  constructor() {
-    super();
-    ApplicationStore.listen(ACTION_ROOT.USERS, (state) =>
-      this.userOnRequest(state)
-    );
-  }
-
   protected startRequestListening(): void {
     this.unsubscribeUser = ApplicationStore.listen(ACTION_ROOT.USERS, (state) =>
       this.userOnRequest(state)

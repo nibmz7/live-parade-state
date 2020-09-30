@@ -36,12 +36,12 @@ export default class CustomDialog extends LitElement {
   }
 
   reset() {
-    this.closePrompt = true;
     this.dispatchEvent(new Event('reset'));
   }
 
   close() {
     if (this.state === DIALOG_STATE.STALLING) {
+      this.closePrompt = true;
       this.reset();
     } else if (this.state === DIALOG_STATE.OPENED)
       this.state = DIALOG_STATE.CLOSING;
@@ -103,14 +103,15 @@ export default class CustomDialog extends LitElement {
           position: absolute;
           left: 0;
           right: 0;
-          bottom: -20%;
+          bottom: -100px;
           text-align: center;
           pointer-events: auto;
-          animation: fade-in 0.3s;
+          animation: fade-in 0.5s;
         }
 
         .close-prompt > p {
           padding: 10px;
+          font-weight: 500;
           border-radius: 30px;
           background: rgba(0, 0, 0, 0.1);
           display: inline-block;

@@ -34,7 +34,7 @@ export interface StatusProperties {
   remarks: string;
   updatedby: string;
   date: Date;
-  expired: boolean;
+  expired?: boolean;
 }
 
 export class Status {
@@ -49,10 +49,30 @@ export class Status {
     this.remarks = status.remarks;
     this.updatedby = status.updatedby;
     this.date = status.date;
-    this.expired = status.expired;
+    this.expired = status.expired
+      ? status.expired
+      : Status.isSameDay(status.date);
   }
 
   static isPresent = (code: number) => code === 1;
+
+  static isSameDay(statusDate: Date) {
+    const date = new Date();
+    const dayDifference = statusDate.getDate() - date.getDate();
+    const isSameDayBeforeSix =
+      dayDifference === 0 && statusDate.getHours() < 17 && date.getHours() < 17;
+    const isSameDayAfterSix =
+      dayDifference === 0 && statusDate.getHours() > 17 && date.getHours() > 17;
+    const isPrevDayAfterSix =
+      dayDifference === -1 &&
+      statusDate.getHours() > 17 &&
+      date.getHours() < 17;
+    return (
+      date.getFullYear() === statusDate.getFullYear() &&
+      date.getMonth() === statusDate.getMonth() &&
+      (isSameDayBeforeSix || isSameDayAfterSix || isPrevDayAfterSix)
+    );
+  }
 }
 
 export default Status;

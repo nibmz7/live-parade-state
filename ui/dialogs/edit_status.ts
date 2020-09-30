@@ -6,6 +6,7 @@ import User from '../../model/user';
 import Status, { STATUSES } from '../../model/status';
 import { onPressed } from '../utils';
 import { ApplicationStore } from '../../data/store';
+import ACTION_USER from '../../data/actions/user_action';
 
 const getTimestamp = (date: Date) => {
   let dateString = date.toString();
@@ -18,13 +19,14 @@ const getTimestamp = (date: Date) => {
 
 @customElement('edit-status')
 export default class EditStatus extends LitElement {
+  private authUser = ApplicationStore.getAuth().action.payload as User;
+
   @property({ type: Object }) user!: User;
-  @property({ type: String }) remarks = '';
-  @property({ type: Number }) dialogState = DIALOG_STATE.OPENING;
+  @property({ type: Object }) statusToEdit!: Status;
+  @property({ type: String }) updatedByName = '';
   @property({ type: Boolean }) isMorning = true;
   @property({ type: Boolean }) isProcessing = false;
-  @property({ type: Object }) statusToEdit!: Status;
-  private updatedByName = '';
+  @property({ type: Number }) dialogState = DIALOG_STATE.OPENING;
 
   submit() {
     this.dialogState = DIALOG_STATE.CLOSING;
@@ -35,7 +37,9 @@ export default class EditStatus extends LitElement {
   }
 
   onInputBlur(e) {
-    console.log(e);
+    const input = e.target as HTMLInputElement;
+    const remarks = input.value;
+    this.statusToEdit = { ...this.statusToEdit, remarks };
   }
 
   resetStatus() {
@@ -43,9 +47,9 @@ export default class EditStatus extends LitElement {
       ? this.user.morning!
       : this.user.afternoon!;
     this.statusToEdit = new Status(userStatus);
-    this.updatedByName = ApplicationStore.getUsers().fullnames[
+    this.updatedByName = ApplicationStore.getUsers().users[
       userStatus.updatedby
-    ];
+    ].fullname;
   }
 
   connectedCallback() {
@@ -61,6 +65,25 @@ export default class EditStatus extends LitElement {
   statusChanged(code: number) {
     return onPressed(() => {
       this.statusToEdit = { ...this.statusToEdit, code };
+    });
+  }
+
+  submitBoth() {
+    return onPressed(() => {
+      const updatedby = this.authUser.uid;
+      const status = new Status({
+        ...this.statusToEdit,
+        updatedby,
+        date: new Date(),
+        expired: false
+      });
+      const user = new User({
+        ...this.user,
+        afternoon: status,
+        morning: status
+      });
+      const action = ACTION_USER.requestModify(user);
+      ApplicationStore.dispatch(action);
     });
   }
 
@@ -102,11 +125,14 @@ export default class EditStatus extends LitElement {
             placeholder="EVENT, WORK, POOPING etc."
             @focus="${this.onInputFocus}"
             @blur="${this.onInputBlur}"
+            value="${this.statusToEdit.remarks}"
           />
         </div>
 
         <div class="verify-buttons">
-          <button class="all" solid>BOTH AM & PM</button>
+          <button class="all" solid @click="${this.submitBoth()}">
+            BOTH AM & PM
+          </button>
           <button class="specific" solid>AM ONLY</button>
           <div class="processing" ?show="${this.isProcessing}">
             Processing...

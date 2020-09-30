@@ -31,7 +31,7 @@ export interface UserAction extends Action {
 
 export interface UserStoreState extends DataStoreState {
   action: UserAction;
-  items: UsersByDepartment;
-  sortedItems: Array<User>;
-  fullnames: { [uid: string]: string };
+  users: { [uid: string]: User };
+  sortedUsers: Array<User>;
+  sortedUsersByDepartment: UsersByDepartment;
 }
