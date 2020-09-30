@@ -9,6 +9,7 @@ import {
 import {
   buttonStyles,
   cardStyles,
+  fadeAnimation,
   globalStyles,
   slideAnimation
 } from '../../global_styles';
@@ -42,10 +43,11 @@ export default class SummaryView extends LitElement {
   }
 
   render() {
-    return html`<div id="root" ?close="${this.shouldClose}">
-      <button id="close" solid @click="${this.close()}">X</button>
-      <button id="download" solid>Download file</button>
-    </div>`;
+    return html` <div class="scrim" ?close="${this.shouldClose}"></div>
+      <div id="root" ?close="${this.shouldClose}">
+        <button id="close" solid @click="${this.close()}">X</button>
+        <button id="download" solid>Download file</button>
+      </div>`;
   }
 
   static get styles() {
@@ -54,7 +56,22 @@ export default class SummaryView extends LitElement {
       buttonStyles,
       cardStyles,
       slideAnimation,
+      fadeAnimation,
       css`
+        .scrim {
+          position: absolute;
+          top: 0;
+          bottom: 0;
+          left: 0;
+          right: 0;
+          background: #0000004a;
+          animation: fade-in 1s cubic-bezier(0.77, 0, 0.175, 1);
+        }
+
+        .scrim[close] {
+          animation: fade-out 0.8s 0.1s cubic-bezier(0.77, 0, 0.175, 1);
+        }
+
         #root {
           overflow: hidden;
           position: absolute;
@@ -66,7 +83,7 @@ export default class SummaryView extends LitElement {
           z-index: 20;
           animation: slide-in-from-right 1s cubic-bezier(0.77, 0, 0.175, 1)
             backwards;
-          box-shadow: -1px 0 6px -3px #00000096;
+          box-shadow: rgb(0 0 0 / 20%) -2px 0px 6px -3px;
         }
 
         #root[close] {
