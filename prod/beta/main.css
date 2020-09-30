@@ -1,0 +1,78 @@
+@font-face {
+  font-family: 'Quicksand';
+  font-style: normal;
+  font-weight: 300 700;
+  font-display: swap;
+  src: url(https://fonts.gstatic.com/s/quicksand/v20/6xKtdSZaM9iE8KbpRA_hK1QN.woff2)
+    format('woff2');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA,
+    U+02DC, U+2000-206F, U+2074, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215,
+    U+FEFF, U+FFFD;
+}
+
+html {
+  margin: 0;
+  height: 100%;
+  width: 100%;
+  -webkit-user-select: none;
+  user-select: none;
+  -webkit-tap-highlight-color: transparent;
+}
+
+body {
+  margin: 0;
+  padding: 0;
+  height: 100%;
+  width: 100%;
+  max-width: 60rem;
+  overflow: hidden;
+  font-family: 'Quicksand', sans-serif;
+  background-color: #fafafa;
+  --color-primary: #ff3d16;
+  --color-primary-rgb: 255, 61, 22;
+  --color-primary-dark: #df2a05;
+  --color-primary-dark-rgb: 223, 42, 5;
+  --color-pending: #7a847d;
+  --color-success: #42a75f;
+  --color-error: #ff3d16;
+  --offset-height: 0px;
+  --offset-on: 0;
+}
+
+@media all and (min-width: 60rem) {
+  html {
+    background-color: #e4e5e5;
+  }
+  body {
+    margin: auto;
+    box-shadow: #817e7e91 0px 0px 5px 0px inset;
+  }
+}
+
+view-switcher[splashscreen]::after {
+  color: var(--color-primary);
+  position: absolute;
+  width: 40px;
+  height: 40px;
+  top: 40%;
+  left: 25%;
+  margin: -20px 0 0 -20px;
+  font-weight: 900;
+  font-size: 3rem;
+  letter-spacing: 1px;
+  content: 'Live Parade State';
+  text-shadow: 1px 1px 4px rgba(var(--color-primary-dark-rgb), 0.4);
+}
+
+view-switcher[initialized]::after {
+  animation: fade-out 0.5s;
+}
+
+@keyframes fade-out {
+  from {
+    opacity: 1;
+  }
+  to {
+    opacity: 0;
+  }
+}

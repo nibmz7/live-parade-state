@@ -121,7 +121,6 @@ export default class EditStatus extends LitElement {
   }
 
   render() {
-    console.log('rerender');
     return html`<custom-dialog
       .state="${this.dialogState}"
       @reset="${() => (this.dialogState = DIALOG_STATE.OPENED)}"

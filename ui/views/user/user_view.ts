@@ -9,6 +9,7 @@ import './user_dep_list';
 import './user_list';
 import '../../base/toggle_am';
 import '../../dialogs/edit_status';
+import './summary_view';
 
 @customElement('user-view')
 export default class UserView extends LitElement {
@@ -42,6 +43,10 @@ export default class UserView extends LitElement {
         View Summary
       </button>
 
+      ${this.showSummary
+        ? html`<summary-view @on-close="${this.closeSummary}"></summary-view>`
+        : ''}
+
       <toggle-am @toggle-am="${this.toggleAm}"></toggle-am>
     </div>`;
   }
@@ -53,6 +58,7 @@ export default class UserView extends LitElement {
       cardStyles,
       css`
         #root {
+          overflow: hidden;
           height: 100%;
           width: 100%;
           position: relative;
@@ -70,7 +76,7 @@ export default class UserView extends LitElement {
         }
 
         toggle-am {
-          position: fixed;
+          position: absolute;
           z-index: 98;
           right: 10px;
           bottom: 10px;

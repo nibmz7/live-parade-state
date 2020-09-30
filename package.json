@@ -37,6 +37,7 @@
     "serve": "es-dev-server",
     "test": "karma start",
     "test:watch": "karma start --auto-watch=true --single-run=false",
+    "build:dist": "webpack",
     "build": "tsc",
     "build:watch": "tsc --watch",
     "build:tests": "tsc --build test --watch",

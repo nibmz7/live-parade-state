@@ -1,7 +1,7 @@
 *.tsbuildinfo
 js/
 test/js
-prod/main.js
+prod/**/*.js
 
 # Logs
 
