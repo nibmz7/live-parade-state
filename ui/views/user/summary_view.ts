@@ -18,6 +18,10 @@ import {
 } from '../../global_styles';
 import { onPressed } from '../../utils';
 
+interface StatusCodes {
+  [type: string]: Array<User>;
+}
+
 @customElement('summary-view')
 export default class SummaryView extends LitElement {
   private isOpening = true;
@@ -25,8 +29,32 @@ export default class SummaryView extends LitElement {
   @query('#root') _root!: HTMLElement;
 
   @property({ type: Boolean }) shouldClose = false;
-  @property({ type: Array }) users = ApplicationStore.getUsers().sortedUsers;
+  @property({ type: Array }) users!: Array<User>;
   @property({ type: Number }) selectedCode = 0;
+  @property({ type: Object }) statusCodes!: StatusCodes;
+
+  private init() {
+    this.users = ApplicationStore.getUsers().sortedUsers.slice();
+    const statusCodes: { [type: string]: Array<User> } = {};
+    this.users.map((user) => {
+      const status = user.morning!;
+      if (!(user.morning!.code in statusCodes)) statusCodes[status.code] = [];
+      statusCodes[status.code].push(user);
+    });
+    this.statusCodes = statusCodes;
+    this.selectedCode = Number(Object.keys(statusCodes)[0]);
+  }
+
+  connectedCallback() {
+    this.init();
+    super.connectedCallback();
+  }
+
+  codeChanged(code: number) {
+    return onPressed(() => {
+      this.selectedCode = code;
+    });
+  }
 
   firstUpdated() {
     const onClose = (e: AnimationEvent) => {
@@ -48,23 +76,34 @@ export default class SummaryView extends LitElement {
   }
 
   render() {
-    const statusCodes: { [type: string]: Array<User> } = {};
-    this.users.map((user) => {
-      const status = user.morning!;
-      if (!(user.morning!.code in statusCodes)) statusCodes[status.code] = [];
-      statusCodes[status.code].push(user);
-    });
-    const selectedCode = Object.keys(statusCodes)[0];
     return html` <div class="scrim" ?close="${this.shouldClose}"></div>
       <div id="root" ?close="${this.shouldClose}">
         <div class="status-selector">
-          ${Object.keys(statusCodes).map((code) => {
-            const count = statusCodes[code].length;
+          ${Object.keys(this.statusCodes).map((code) => {
+            const count = this.statusCodes[code].length;
             return html`
-              <button outline ?selected="${code === selectedCode}">
+              <button
+                outline
+                ?selected="${Number(code) === this.selectedCode}"
+                @click=${this.codeChanged(Number(code))}
+              >
                 ${STATUSES[code].name} (${count})
               </button>
             `;
+          })}
+        </div>
+
+        <div id="user-list" class="card">
+          ${this.statusCodes[this.selectedCode].map((user) => {
+            return html`<div class="user">
+              <p class="fullname" ?regular="${user.regular}">
+                ${user.fullname}
+              </p>
+              <p class="remarks">
+                ${user.morning!.remarks}
+                ${user.morning!.expired ? html`<span>-- Expired</span>` : ''}
+              </p>
+            </div>`;
           })}
         </div>
 
@@ -88,13 +127,50 @@ export default class SummaryView extends LitElement {
           column-gap: 10px;
         }
         .status-selector > button {
+          font-size: 0.8rem;
           border-radius: 35px;
-          padding: 8px 15px;
+          padding: 5px 10px;
+          line-height: 0.8rem;
         }
 
         .status-selector > button[selected] {
           background-color: var(--color-primary);
           color: white;
+        }
+
+        #user-list {
+          margin-top: 20px;
+          border-radius: 15px;
+        }
+
+        .user {
+          padding: 0.65rem 15px;
+        }
+
+        .user p {
+          margin: 0;
+        }
+
+        .fullname {
+          text-transform: capitalize;
+          color: #323232;
+          font-weight: 500;
+        }
+
+        .fullname[regular] {
+          color: var(--color-primary);
+        }
+
+        .remarks {
+          color: #878787;
+          font-size: 0.8rem;
+          font-weight: 400;
+        }
+
+        .remarks span {
+          color: var(--color-error);
+          font-weight: 500;
+          text-transform: capitalize;
         }
 
         .scrim {
