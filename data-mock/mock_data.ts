@@ -89,6 +89,19 @@ const makeStatus = () =>
     date: new Date()
   });
 
+const makeUser = (name: string, depId: string, rank: string) =>
+  new User({
+    uid: `user-${randomInt(999)}`,
+    name: 'John',
+    email: `${name}@lol.com`,
+    regular: randomInt(7) >= 3,
+    rank: new Rank(rank),
+    branchid: ModelBranch.id,
+    departmentid: depId,
+    morning: makeStatus(),
+    afternoon: makeStatus()
+  });
+
 const ModelUser1 = new User({
   uid: 'user-101',
   name: 'John',
@@ -138,7 +151,17 @@ const ModelUserArray: Array<User> = [
   ModelUser1,
   ModelUser2,
   ModelUser22,
-  ModelUser3
+  ModelUser3,
+  makeUser('lily', 'dep-123', 'LTC'),
+  makeUser('joe', 'dep-123', 'LCP'),
+  makeUser('bob', 'dep-123', '1WO'),
+  makeUser('joyce', 'dep-456', '1SG'),
+  makeUser('bill', 'dep-456', 'LCP'),
+  makeUser('sam', 'dep-456', 'CPL'),
+  makeUser('ruby', 'dep-789', 'MSG'),
+  makeUser('paula', 'dep-789', 'REC'),
+  makeUser('rob', 'dep-789', 'PTE'),
+  makeUser('lucas', 'dep-321', 'MG')
 ];
 
 export const MockModel = {

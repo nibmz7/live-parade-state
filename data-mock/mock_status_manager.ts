@@ -25,6 +25,7 @@ export default class MockStatusManager extends StatusManager {
   }
 
   protected async connectDB(): Promise<DataResults> {
+    console.log(MockModel.UserArray);
     let userDepartment!: Department;
     const departments = MockModel.DepartmentArray.filter((item) => {
       let isUserDepartment = item.id === this.authUser.departmentid;

@@ -6,6 +6,9 @@ import {
   property,
   query
 } from 'lit-element';
+import { ApplicationStore } from '../../../data/store';
+import { STATUSES } from '../../../model/status';
+import User from '../../../model/user';
 import {
   buttonStyles,
   cardStyles,
@@ -22,6 +25,8 @@ export default class SummaryView extends LitElement {
   @query('#root') _root!: HTMLElement;
 
   @property({ type: Boolean }) shouldClose = false;
+  @property({ type: Array }) users = ApplicationStore.getUsers().sortedUsers;
+  @property({ type: Number }) selectedCode = 0;
 
   firstUpdated() {
     const onClose = (e: AnimationEvent) => {
@@ -43,8 +48,26 @@ export default class SummaryView extends LitElement {
   }
 
   render() {
+    const statusCodes: { [type: string]: Array<User> } = {};
+    this.users.map((user) => {
+      const status = user.morning!;
+      if (!(user.morning!.code in statusCodes)) statusCodes[status.code] = [];
+      statusCodes[status.code].push(user);
+    });
+    const selectedCode = Object.keys(statusCodes)[0];
     return html` <div class="scrim" ?close="${this.shouldClose}"></div>
       <div id="root" ?close="${this.shouldClose}">
+        <div class="status-selector">
+          ${Object.keys(statusCodes).map((code) => {
+            const count = statusCodes[code].length;
+            return html`
+              <button outline ?selected="${code === selectedCode}">
+                ${STATUSES[code].name} (${count})
+              </button>
+            `;
+          })}
+        </div>
+
         <button id="close" solid @click="${this.close()}">X</button>
         <button id="download" solid>Download file</button>
       </div>`;
@@ -58,6 +81,22 @@ export default class SummaryView extends LitElement {
       slideAnimation,
       fadeAnimation,
       css`
+        .status-selector {
+          display: flex;
+          flex-wrap: wrap;
+          row-gap: 10px;
+          column-gap: 10px;
+        }
+        .status-selector > button {
+          border-radius: 35px;
+          padding: 8px 15px;
+        }
+
+        .status-selector > button[selected] {
+          background-color: var(--color-primary);
+          color: white;
+        }
+
         .scrim {
           position: absolute;
           top: 0;
@@ -73,6 +112,7 @@ export default class SummaryView extends LitElement {
         }
 
         #root {
+          padding: 30px;
           overflow: hidden;
           position: absolute;
           top: 0;

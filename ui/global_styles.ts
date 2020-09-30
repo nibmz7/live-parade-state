@@ -196,7 +196,9 @@ export const buttonStyles = css`
     color: var(--color-primary);
     border: 2px solid var(--color-primary);
     --color-primary-dark: rgb(228 228 228);
-    transition: background-color 0.3s, box-shadow 0.3s;
+    box-shadow: 0 4px 6px -1px rgba(var(--color-primary-rgb), 0.2),
+      0 2px 4px -1px rgba(var(--color-primary-rgb), 0.12);
+    transition: background-color 0.3s, box-shadow 0.3s, color 0.3s;
   }
 
   @media (hover: hover) {
