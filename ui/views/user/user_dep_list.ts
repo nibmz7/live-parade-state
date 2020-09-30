@@ -18,8 +18,9 @@ export default class UserDepList extends BaseDepList {
     this.statusManager.unsubscribe();
   }
 
-  depItemTemplate = (department: Department) => {
+  depItemTemplate = (department: Department, index: number) => {
     return html`<user-dep-item
+      .index="${index}"
       .department="${department}"
       .isMorning="${this.isMorning}"
     ></user-dep-item>`;

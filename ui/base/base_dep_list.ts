@@ -35,7 +35,7 @@ export default abstract class BaseDepList extends LitElement {
   @property({ type: Object }) user!: User;
   @property({ type: Object }) admin!: Admin;
 
-  abstract depItemTemplate(department: Department): TemplateResult;
+  abstract depItemTemplate(department: Department, index: number): TemplateResult;
   abstract cleanup(): void;
 
   private departmentsListener: DataStoreListener = (

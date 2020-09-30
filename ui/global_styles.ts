@@ -1,5 +1,18 @@
 import { css } from 'lit-element';
 
+export const slideAnimation = css`
+  @keyframes slide-in {
+    from {
+      opacity: calc(1 - var(--should-fade));
+      transform: translateY(var(--offset-y));
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0px);
+    }
+  }
+`;
+
 export const fadeAnimation = css`
   @keyframes fade-in {
     from {

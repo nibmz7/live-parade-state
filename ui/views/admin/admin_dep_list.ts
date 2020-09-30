@@ -19,10 +19,11 @@ export default class AdminDepList extends BaseDepList {
     this.adminManager.unsubscribe();
   }
 
-  depItemTemplate = (department: Department) => {
+  depItemTemplate = (department: Department, index: number) => {
     return html`<admin-dep-item
       .branch="${this.branch}"
       .department="${department}"
+      .index=${index}
     ></admin-dep-item>`;
   };
 }

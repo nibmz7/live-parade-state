@@ -2,7 +2,7 @@ import { css, customElement, html, LitElement, property } from 'lit-element';
 import Department from '../../../model/department';
 import Status from '../../../model/status';
 import User from '../../../model/user';
-import { buttonStyles, cardStyles, globalStyles } from '../../global_styles';
+import { buttonStyles, cardStyles, globalStyles, slideAnimation } from '../../global_styles';
 
 interface PresentCount {
   regular: number;
@@ -11,6 +11,7 @@ interface PresentCount {
 
 @customElement('user-dep-item')
 export default class UserDepItem extends LitElement {
+  @property({ type: Number }) index = 0;
   @property({ type: Object }) department!: Department;
   @property({ type: Object }) selectedUser?: User;
   @property({ type: Boolean }) isMorning = true;
@@ -50,7 +51,7 @@ export default class UserDepItem extends LitElement {
       : this.presentCount.pm;
     const regular = presentCount.regular;
     const nsf = presentCount.nsf;
-    return html`<div id="root">
+    return html`<div id="root" style="--anim-delay:${this.index / 10 + 0.2}s;">
         <div class="header">
           <h3>${this.department.name}</h3>
         </div>
@@ -81,10 +82,15 @@ export default class UserDepItem extends LitElement {
       globalStyles,
       buttonStyles,
       cardStyles,
+      slideAnimation,
       css`
         #root {
           width: 100%;
           margin: inherit;
+          --offset-y: 100px;
+          --should-fade: 1;
+          animation: slide-in .5s backwards;
+          animation-delay: var(--anim-delay);
         }
 
         .header {

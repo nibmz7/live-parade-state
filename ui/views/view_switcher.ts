@@ -114,7 +114,7 @@ export default class ViewSwitcher extends LitElement {
         }
 
         #root[fade-out] {
-          animation: fade-out 0.3s;
+          animation: fade-out 0.5s;
         }
       `
     ];

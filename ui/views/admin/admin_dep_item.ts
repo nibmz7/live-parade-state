@@ -2,7 +2,7 @@ import { css, customElement, html, LitElement, property } from 'lit-element';
 import Branch from '../../../model/branch';
 import Department from '../../../model/department';
 import User from '../../../model/user';
-import { buttonStyles, cardStyles, globalStyles } from '../../global_styles';
+import { buttonStyles, cardStyles, globalStyles, slideAnimation } from '../../global_styles';
 import { onPressed } from '../../utils';
 
 @customElement('admin-dep-item')
@@ -13,6 +13,7 @@ export default class AdminDepItem extends LitElement {
   @property({ type: Boolean }) showEditDepartment: Boolean = false;
   @property({ type: Boolean }) showEditUser = false;
   @property({ type: Boolean }) isEmpty = true;
+  @property({ type: Number }) index = 0;
 
   onEditDepartment() {
     return onPressed(() => {
@@ -49,7 +50,7 @@ export default class AdminDepItem extends LitElement {
   }
 
   render() {
-    return html`<div id="root">
+    return html`<div id="root" style="--anim-delay:${this.index / 10 + 0.2}s;">
       <div class="header">
         <h3>${this.department.name}</h3>
         <button id="edit" plain @click="${this.onEditDepartment()}">
@@ -98,12 +99,17 @@ export default class AdminDepItem extends LitElement {
   static get styles() {
     return [
       globalStyles,
+      slideAnimation,
       buttonStyles,
       cardStyles,
       css`
         #root {
+          --offset-y: 10px;
+          --should-fade: 1;
           width: 100%;
           margin: inherit;
+          animation: slide-in 0.5s backwards;
+          animation-delay: var(--anim-delay);
         }
 
         .header {

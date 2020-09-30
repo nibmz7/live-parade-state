@@ -1,6 +1,6 @@
 import { LitElement, html, customElement, css, property } from 'lit-element';
 import { ApplicationStore } from '../../../data/store';
-import { buttonStyles, cardStyles, globalStyles } from '../../global_styles';
+import { buttonStyles, cardStyles, globalStyles, slideAnimation } from '../../global_styles';
 import Admin from '../../../model/admin';
 import { onPressed } from '../../utils';
 import '../../dialogs/edit_user';
