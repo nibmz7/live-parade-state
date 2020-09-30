@@ -79,7 +79,6 @@ export default class CustomDialog extends LitElement {
       fadeAnimation,
       css`
         :host {
-          --offset-on: 0;
           --offset-item-height: 0px;
           --total-offset-height: calc(
             var(--offset-height) - var(--offset-item-height)

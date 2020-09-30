@@ -36,6 +36,7 @@ body {
   --color-success: #42a75f;
   --color-error: #ff3d16;
   --offset-height: 0px;
+  --offset-on: 0;
 }
 
 @media all and (min-width: 60rem) {
