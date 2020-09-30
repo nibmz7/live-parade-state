@@ -91,16 +91,16 @@ export default class CustomDialog extends LitElement {
           top: 0;
           left: 0;
           z-index: 99;
-          height: 100%;
           width: 100%;
+          height: 100%;
           padding: 0 15px;
-          overflow: hidden;
-          box-sizing: border-box;
           display: flex;
+          overflow: hidden;
           align-items: center;
+          box-sizing: border-box;
           justify-content: center;
-          background: rgba(0, 0, 0, 0.2);
           backdrop-filter: blur(2px);
+          background: rgba(0, 0, 0, 0.2);
           -webkit-backdrop-filter: blur(2px);
         }
 
@@ -109,7 +109,7 @@ export default class CustomDialog extends LitElement {
         }
 
         #root[hide] {
-          animation: fade-out 0.3s;
+          animation: fade-out 0.5s;
         }
 
         .dialog {
@@ -117,10 +117,9 @@ export default class CustomDialog extends LitElement {
           box-sizing: border-box;
           border-radius: 5px;
           padding: 15px 20px;
-          perspective: 100px;
+          pointer-events: none;
           transform: perspective(100px) translateZ(0px)
             translateY(var(--offset-dialog));
-          pointer-events: none;
         }
 
         #root[show] > .dialog {
@@ -128,7 +127,7 @@ export default class CustomDialog extends LitElement {
         }
 
         #root[hide] > .dialog {
-          animation: scale-out 0.3s;
+          animation: scale-out 0.5s;
         }
 
         #root[ready] > .dialog {

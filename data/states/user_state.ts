@@ -33,4 +33,5 @@ export interface UserStoreState extends DataStoreState {
   action: UserAction;
   items: UsersByDepartment;
   sortedItems: Array<User>;
+  fullnames: { [uid: string]: string };
 }

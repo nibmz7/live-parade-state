@@ -5,6 +5,16 @@ import { DIALOG_STATE } from '../base/custom_dialog';
 import User from '../../model/user';
 import Status, { STATUSES } from '../../model/status';
 import { onPressed } from '../utils';
+import { ApplicationStore } from '../../data/store';
+
+const getTimestamp = (date: Date) => {
+  let dateString = date.toString();
+  const index = dateString.indexOf(' (');
+  if (index !== -1) {
+    dateString = dateString.substr(0, index);
+  }
+  return dateString;
+};
 
 @customElement('edit-status')
 export default class EditStatus extends LitElement {
@@ -13,7 +23,8 @@ export default class EditStatus extends LitElement {
   @property({ type: Number }) dialogState = DIALOG_STATE.OPENING;
   @property({ type: Boolean }) isMorning = true;
   @property({ type: Boolean }) isProcessing = false;
-  @property({ type: Object }) userStatus!: Status;
+  @property({ type: Object }) statusToEdit!: Status;
+  private updatedByName = '';
 
   submit() {
     this.dialogState = DIALOG_STATE.CLOSING;
@@ -28,9 +39,11 @@ export default class EditStatus extends LitElement {
   }
 
   resetStatus() {
-    this.userStatus = this.isMorning
+    const userStatus = this.isMorning
       ? this.user.morning!
       : this.user.afternoon!;
+    this.statusToEdit = new Status(userStatus);
+    this.updatedByName = ApplicationStore.getUsers().fullnames[this.user.uid];
   }
 
   connectedCallback() {
@@ -45,7 +58,7 @@ export default class EditStatus extends LitElement {
 
   statusChanged(code: number) {
     return onPressed(() => {
-      this.userStatus = { ...this.userStatus, code };
+      this.statusToEdit = { ...this.statusToEdit, code };
     });
   }
 
@@ -55,7 +68,7 @@ export default class EditStatus extends LitElement {
       @reset="${() => (this.dialogState = DIALOG_STATE.OPENED)}"
     >
       <div id="root" tabindex="0" class="selectable">
-        <div class="expired" ?show="${this.userStatus.expired}">
+        <div class="expired" ?show="${this.statusToEdit.expired}">
           [Expired] - Please verify again
         </div>
         <div class="header">
@@ -70,8 +83,8 @@ export default class EditStatus extends LitElement {
           ${STATUSES.map((statusType, index) => {
             return html`<button
               static
-              ?outline="${this.userStatus.code !== index}"
-              ?solid="${this.userStatus.code === index}"
+              ?outline="${this.statusToEdit.code !== index}"
+              ?solid="${this.statusToEdit.code === index}"
               @click="${this.statusChanged(index)}"
             >
               ${statusType.name}
@@ -98,7 +111,10 @@ export default class EditStatus extends LitElement {
           </div>
         </div>
 
-        <div id="comment"></div>
+        <div class="updated-by">
+          Last verified by <span>${this.updatedByName}</span> on
+          ${getTimestamp(this.statusToEdit.date)}
+        </div>
       </div>
     </custom-dialog>`;
   }
@@ -216,6 +232,16 @@ export default class EditStatus extends LitElement {
         .verify-buttons > .processing[show] {
           pointer-events: inherit;
           opacity: 1;
+        }
+
+        .updated-by {
+          font-size: 0.6rem;
+          white-space: pre-line;
+          text-align: center;
+        }
+
+        .updated-by > span {
+          font-weight: 600;
         }
       `
     ];

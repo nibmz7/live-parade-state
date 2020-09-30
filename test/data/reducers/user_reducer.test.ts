@@ -11,7 +11,8 @@ describe('User reducer', () => {
     let expectedResult: UserStoreState = {
       action,
       items: {},
-      sortedItems: []
+      sortedItems: [],
+      fullnames: {}
     };
     expect(reduce).deep.equal(expectedResult);
   });
@@ -23,7 +24,8 @@ describe('User reducer', () => {
     let expectedResult: UserStoreState = {
       action,
       items: { [mockUser.departmentid]: [mockUser] },
-      sortedItems: [mockUser]
+      sortedItems: [mockUser],
+      fullnames: { [mockUser.uid]: mockUser.fullname }
     };
     expect(reduce).deep.equal(expectedResult);
   });
@@ -34,13 +36,15 @@ describe('User reducer', () => {
     let initialState = {
       action,
       items: { [mockUser.departmentid]: [mockUser] },
-      sortedItems: [mockUser]
+      sortedItems: [mockUser],
+      fullnames: { [mockUser.uid]: mockUser.fullname }
     };
     let reduce = user(initialState, action);
     let expectedResult: UserStoreState = {
       action,
-      items: {[mockUser.departmentid]: []},
-      sortedItems: []
+      items: { [mockUser.departmentid]: [] },
+      sortedItems: [],
+      fullnames: {}
     };
     expect(reduce).deep.equal(expectedResult);
   });

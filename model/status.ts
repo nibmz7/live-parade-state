@@ -33,7 +33,7 @@ export interface StatusProperties {
   code: number;
   remarks: string;
   updatedby: string;
-  timestamp: Date;
+  date: Date;
   expired: boolean;
 }
 
@@ -41,14 +41,14 @@ export class Status {
   readonly code: number;
   readonly remarks: string;
   readonly updatedby: string;
-  readonly timestamp: Date;
-  readonly expired: Boolean;
+  readonly date: Date;
+  readonly expired: boolean;
 
   constructor(status: StatusProperties) {
     this.code = status.code;
     this.remarks = status.remarks;
     this.updatedby = status.updatedby;
-    this.timestamp = status.timestamp;
+    this.date = status.date;
     this.expired = status.expired;
   }
 

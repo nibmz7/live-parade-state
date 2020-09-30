@@ -78,13 +78,15 @@ function randomInt(max) {
   return Math.floor(Math.random() * Math.floor(max));
 }
 
+const userIds = ['user-101', 'user-201', 'user-202', 'user-301', 'admin'];
+
 const makeStatus = () =>
   new Status({
     code: randomInt(17),
     remarks: '',
     expired: randomInt(7) >= 3,
-    updatedby: 'Admin',
-    timestamp: new Date()
+    updatedby: userIds[randomInt(4)],
+    date: new Date()
   });
 
 const ModelUser1 = new User({

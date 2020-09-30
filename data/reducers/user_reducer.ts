@@ -14,7 +14,8 @@ const initialState: UserStoreState = {
     id: 0
   },
   items: {},
-  sortedItems: []
+  sortedItems: [],
+  fullnames: {}
 };
 
 export const user = (
@@ -36,17 +37,20 @@ export const user = (
     let users = action.payload as Array<User>;
     users.sort(User.compare);
     let usersByDepartment: UsersByDepartment = {};
+    let fullnames = {};
     for (let user of users) {
       if (user.departmentid in usersByDepartment)
         usersByDepartment[user.departmentid].push(user);
       else usersByDepartment[user.departmentid] = [user];
+      fullnames[user.uid] = user.fullname;
     }
-    return { action, items: usersByDepartment, sortedItems: users };
+    return { action, items: usersByDepartment, sortedItems: users, fullnames };
   }
 
   const user = new User(action.payload as User);
   let items: UsersByDepartment;
   let sortedItems: Array<User>;
+  let fullnames = {};
 
   const setData = (users: Array<User>, sortedUsers: Array<User>) => {
     items = {
@@ -72,21 +76,25 @@ export const user = (
 
   switch (type) {
     case ACTION_TYPE.ADDED: {
-      let users = state.items[user.departmentid]?.slice() || [];
-      let sortedUsers = state.sortedItems.slice();
+      const users = state.items[user.departmentid]?.slice() || [];
+      const sortedUsers = state.sortedItems.slice();
       addUser(users, sortedUsers);
       setData(users, sortedUsers);
+      fullnames = { ...state.fullnames, [user.uid]: user.fullname };
       break;
     }
     case ACTION_TYPE.MODIFIED: {
-      let { users, sortedUsers } = removeUser();
+      const { users, sortedUsers } = removeUser();
       addUser(users, sortedUsers);
       setData(users, sortedUsers);
+      fullnames = { ...state.fullnames, [user.uid]: user.fullname };
       break;
     }
     case ACTION_TYPE.REMOVED: {
-      let { users, sortedUsers } = removeUser();
+      const { users, sortedUsers } = removeUser();
       setData(users, sortedUsers);
+      const { [user.uid]: omit, ...others } = state.fullnames;
+      fullnames = others;
       break;
     }
     default: {
@@ -97,5 +105,5 @@ export const user = (
   }
 
   //@ts-ignore
-  return { action, items, sortedItems };
+  return { action, items, sortedItems, fullnames };
 };
