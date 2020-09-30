@@ -16,6 +16,8 @@ import { onPressed } from '../../utils';
 
 @customElement('summary-view')
 export default class SummaryView extends LitElement {
+  private isOpening = true;
+
   @query('#root') _root!: HTMLElement;
 
   @property({ type: Boolean }) shouldClose = false;
@@ -26,13 +28,16 @@ export default class SummaryView extends LitElement {
         this.removeEventListener('animationend', onClose);
         this.dispatchEvent(new Event('on-close'));
       }
+      if (e.animationName === 'slide-in') {
+        this.isOpening = false;
+      }
     };
     this._root.addEventListener('animationend', onClose);
   }
 
   close() {
     return onPressed(() => {
-      this.shouldClose = true;
+      if (!this.isOpening) this.shouldClose = true;
     });
   }
 
@@ -65,7 +70,8 @@ export default class SummaryView extends LitElement {
         }
 
         #root[close] {
-          animation: slide-out-to-right 0.8s .1s cubic-bezier(0.77, 0, 0.175, 1);
+          animation: slide-out-to-right 0.8s 0.1s
+            cubic-bezier(0.77, 0, 0.175, 1);
         }
 
         #root[close] > button {
@@ -93,7 +99,7 @@ export default class SummaryView extends LitElement {
           left: 10px;
           padding: 7px 15px;
           border-radius: 35px;
-          animation-delay: 1s;
+          animation-delay: 0.8s;
         }
 
         #download {
@@ -102,7 +108,7 @@ export default class SummaryView extends LitElement {
           left: 27%;
           padding: 15px;
           border-radius: 35px;
-          animation-delay: 1.1s;
+          animation-delay: 0.9s;
         }
 
         @keyframes slide-out {
