@@ -23,12 +23,6 @@ export default class AdminDepList extends BaseDepList {
     return html`<admin-dep-item
       .branch="${this.branch}"
       .department="${department}"
-      .users="${this.users[department.id] || []}"
-      .listState="${this.listState[department.id] || {
-        items: {},
-        length: 0
-      }}"
-      @user-removed="${this.onUserRemoved}"
     ></admin-dep-item>`;
   };
 }

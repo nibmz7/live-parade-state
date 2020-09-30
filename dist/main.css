@@ -64,6 +64,10 @@ view-switcher[splashscreen]::after {
   text-shadow: 1px 1px 4px rgba(var(--color-primary-dark-rgb), 0.4);
 }
 
+view-switcher[initialized]::after {
+  animation: fade-out 0.5s;
+}
+
 @keyframes fade-out {
   from {
     opacity: 1;

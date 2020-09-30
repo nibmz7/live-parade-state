@@ -1,39 +1,134 @@
-import { css, html, LitElement, property, query, TemplateResult } from "lit-element";
-import { repeat } from "lit-html/directives/repeat";
-import { ACTION_TYPE, ACTION_TYPE_TEXT } from "../../data/data_manager";
-import User from "../../model/user";
-import { globalStyles } from "../global_styles";
-import { onPressed } from "../utils";
+import {
+  css,
+  html,
+  LitElement,
+  property,
+  query,
+  TemplateResult
+} from 'lit-element';
+import { repeat } from 'lit-html/directives/repeat';
+import { Unsubscribe } from 'redux';
+import {
+  ACTION_TYPE,
+  ACTION_TYPE_TEXT,
+  REQUEST_TYPES
+} from '../../data/data_manager';
+import { UserStoreState } from '../../data/states/user_state';
+import { ACTION_ROOT, ApplicationStore } from '../../data/store';
+import Department from '../../model/department';
+import User from '../../model/user';
+import { globalStyles } from '../global_styles';
+import { onPressed } from '../utils';
+
+export interface ItemState {
+  index: number;
+  type: ACTION_TYPE;
+}
 
 export interface ListState {
   items: {
-    [userid: string]: {
-      index: number;
-      type: ACTION_TYPE;
-    };
+    [userid: string]: ItemState;
   };
   length: number;
 }
 
 export default abstract class BaseUserList extends LitElement {
+  private usersUnsubscribe?: Unsubscribe;
+
   @query('#user-list') _userList;
 
   @property({ type: Number }) listItemHeight = 0;
   @property({ type: Array }) users: Array<User> = [];
+  @property({ type: Object }) department!: Department;
   @property({ type: Object }) listState: ListState = { items: {}, length: 0 };
+
+  private init = () => {
+    const departmentid = this.department.id;
+    const items = ApplicationStore.getUsers().items;
+    if (!(departmentid in items)) return;
+    const userArray = items[departmentid].slice();
+    this.users = userArray;
+    this.updateListState(userArray);
+    this.onListChanged(userArray);
+  };
+
+  private onListChanged = (users: Array<User>) => {
+    const event = new CustomEvent('list-changed', {
+      detail: { users }
+    });
+    this.dispatchEvent(event);
+  };
+
+  private updateListState = (users: Array<User>) => {
+    const items = {};
+    const length = users.length;
+    users.map((item, index) => {
+      const type = ACTION_TYPE.INITIALIZED;
+      items[item.uid] = { index, type };
+    });
+    this.listState = {
+      items,
+      length
+    };
+  };
+
+  private usersListener = async (state: UserStoreState) => {
+    const type = state.action.type;
+    if (REQUEST_TYPES.includes(type)) return;
+
+    const departmentid = this.department.id;
+    if (!(departmentid in state.items)) return;
+
+    if (type === ACTION_TYPE.INITIALIZED) {
+      this.init();
+      return;
+    }
+
+    const user = state.action.payload as User;
+    if (user.departmentid !== departmentid) return;
+
+    const userArray = state.items[this.department.id].slice();
+    this.users = userArray;
+    let deletedUserState: ItemState;
+
+    if (type === ACTION_TYPE.REMOVED) {
+      deletedUserState = this.listState.items[user.uid];
+    }
+
+    if (type === ACTION_TYPE.MODIFIED) {
+      await new Promise((resolve) => requestAnimationFrame(() => resolve()));
+    }
+
+    this.updateListState(userArray);
+
+    if (type === ACTION_TYPE.REMOVED) {
+      userArray.splice(deletedUserState!.index, 0, user);
+      this.listState.items[user.uid] = deletedUserState!;
+    }
+    this.listState.items[user.uid].type = type;
+
+    this.onListChanged(state.items[this.department.id].slice());
+  };
+
+  connectedCallback() {
+    super.connectedCallback();
+    this.init();
+    this.usersUnsubscribe = ApplicationStore.listen(
+      ACTION_ROOT.USERS,
+      this.usersListener
+    );
+  }
+
+  disconnectedCallback() {
+    this.usersUnsubscribe?.();
+    super.disconnectedCallback();
+  }
 
   firstUpdated() {
     (this._userList as HTMLElement).onanimationend = (e: Event) => {
       const targetElement = e.composedPath()[0] as HTMLElement;
       if (!targetElement.hasAttribute('removed')) return;
-      const event = new CustomEvent('user-removed', {
-        detail: {
-          userid: targetElement.id
-        },
-        bubbles: true,
-        composed: true
-      });
-      this.dispatchEvent(event);
+      this.onUserRemoved(targetElement.id);
     };
   }
 
@@ -46,6 +141,12 @@ export default abstract class BaseUserList extends LitElement {
       });
       this.dispatchEvent(event);
     });
+  }
+
+  onUserRemoved(uid: string) {
+    const userArray = this.users.filter((user) => user.uid != uid);
+    this.updateListState(userArray);
+    this.users = userArray;
   }
 
   abstract userItemTemplate(user: User): TemplateResult;

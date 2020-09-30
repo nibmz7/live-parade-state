@@ -1,49 +1,69 @@
 import { css, customElement, html, LitElement, property } from 'lit-element';
-import Branch from '../../../model/branch';
 import Department from '../../../model/department';
 import Status from '../../../model/status';
 import User from '../../../model/user';
-import { ListState } from '../../base/base_user_list';
 import { buttonStyles, cardStyles, globalStyles } from '../../global_styles';
+
+interface PresentCount {
+  regular: number;
+  nsf: number;
+}
 
 @customElement('user-dep-item')
 export default class UserDepItem extends LitElement {
-  @property({ type: Array }) users: Array<User> = [];
-  @property({ type: Object }) branch!: Branch;
   @property({ type: Object }) department!: Department;
-  @property({ type: Object }) listState: ListState = { items: {}, length: 0 };
   @property({ type: Object }) selectedUser?: User;
   @property({ type: Boolean }) isMorning = true;
+  @property({ type: Boolean }) isEmpty = true;
+  @property({ type: Object }) presentCount: {
+    am: PresentCount;
+    pm: PresentCount;
+  } = {
+    am: { regular: 0, nsf: 0 },
+    pm: { regular: 0, nsf: 0 }
+  };
 
   onUserSelected(e: CustomEvent) {
     this.selectedUser = e.detail.user as User;
   }
 
-  render() {
-    let regular = 0;
-    let nsf = 0;
-    this.users.map((user) => {
-      let status: Status;
-      if (this.isMorning) status = user.morning!;
-      else status = user.afternoon!;
-      if (Status.isPresent(status.code)) {
-        user.regular ? regular++ : nsf++;
+  onListChanged(e: CustomEvent) {
+    const users = e.detail.users as Array<User>;
+    users.map((user) => {
+      const amCount = { regular: 0, nsf: 0 };
+      const pmCount = { regular: 0, nsf: 0 };
+
+      if (Status.isPresent(user.morning!.code)) {
+        user.regular ? amCount.regular++ : amCount.nsf++;
       }
+      if (Status.isPresent(user.afternoon!.code)) {
+        user.regular ? pmCount.regular++ : pmCount.nsf++;
+      }
+      this.presentCount = { am: amCount, pm: pmCount };
     });
+    this.isEmpty = users.length === 0;
+  }
+
+  render() {
+    const presentCount = this.isMorning
+      ? this.presentCount.am
+      : this.presentCount.pm;
+    const regular = presentCount.regular;
+    const nsf = presentCount.nsf;
     return html`<div id="root">
         <div class="header">
           <h3>${this.department.name}</h3>
         </div>
 
         <div class="card">
-          <h4 class="summary" ?empty="${this.listState.length === 0}">
+          <h4 class="summary" ?empty="${this.isEmpty}">
             ${regular + nsf} Total ~ ${regular} Regular + ${nsf} Nsf
           </h4>
 
           <user-list
-            .users="${this.users}"
-            .listState="${this.listState}"
+            .department="${this.department}"
             @user-selected="${this.onUserSelected}"
+            @list-changed="${this.onListChanged}"
           ></user-list>
         </div>
       </div>

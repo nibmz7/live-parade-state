@@ -6,6 +6,7 @@ import BaseUserList from '../../base/base_user_list';
 @customElement('admin-user-list')
 export default class AdminUserList extends BaseUserList {
   listItemHeight = 3.5;
+  
   userItemTemplate(user: User) {
     return html`
       <p class="fullname">${user.fullname}</p>

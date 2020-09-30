@@ -8,12 +8,8 @@ import {
   eventOptions
 } from 'lit-element';
 import ACTION_AUTH from '../../data/actions/auth_action';
-import { ACTION_TYPE, REQUEST_TYPES } from '../../data/data_manager';
+import { REQUEST_TYPES } from '../../data/data_manager';
 import { DepartmentStoreState } from '../../data/states/department_state';
-import {
-  UsersByDepartment,
-  UserStoreState
-} from '../../data/states/user_state';
 import {
   ACTION_ROOT,
   ApplicationStore,
@@ -23,7 +19,6 @@ import Admin from '../../model/admin';
 import Department from '../../model/department';
 import User from '../../model/user';
 import { buttonStyles, cardStyles, globalStyles } from '../global_styles';
-import { ListState } from './base_user_list';
 
 export default abstract class BaseDepList extends LitElement {
   private welcomeTitle!: string;
@@ -39,11 +34,6 @@ export default abstract class BaseDepList extends LitElement {
   @property({ type: Boolean }) elevate = false;
   @property({ type: Object }) user!: User;
   @property({ type: Object }) admin!: Admin;
-  @property({ type: Object }) users: UsersByDepartment = {};
-  @property({ type: Object }) listState: {
-    [departmentId: string]: ListState;
-  } = {};
-
 
   abstract depItemTemplate(department: Department): TemplateResult;
   abstract cleanup(): void;
@@ -54,67 +44,6 @@ export default abstract class BaseDepList extends LitElement {
     const type = state.action.type;
     if (REQUEST_TYPES.includes(type)) return;
     this.departments = state.items;
-    if (type === ACTION_TYPE.REMOVED) {
-      const department = state.action.payload as Department;
-      const { [department.id]: value, ...listState } = this.listState;
-      this.listState = listState;
-    }
-  };
-
-  private updateListState(departmentid: string, users: Array<User>) {
-    const items = {};
-    const length = users.length;
-    users.map((item, index) => {
-      const type = ACTION_TYPE.INITIALIZED;
-      items[item.uid] = { index, type };
-    });
-    this.listState = {
-      ...this.listState,
-      [departmentid]: {
-        items,
-        length
-      }
-    };
-  }
-
-  private usersListener: DataStoreListener = async (state: UserStoreState) => {
-    const type = state.action.type;
-    if (REQUEST_TYPES.includes(type)) return;
-    this.users = state.items;
-
-    if (type === ACTION_TYPE.INITIALIZED) {
-      for (const [departmentid, userArray] of Object.entries(state.items)) {
-        this.updateListState(departmentid, userArray);
-      }
-      return;
-    }
-
-    const user = state.action.payload as User;
-    const departmentid = user.departmentid;
-    const userArray = state.items[user.departmentid].slice();
-
-    switch (type) {
-      case ACTION_TYPE.ADDED: {
-        this.updateListState(departmentid, userArray);
-        this.listState[departmentid].items[user.uid].type = ACTION_TYPE.ADDED;
-        break;
-      }
-      case ACTION_TYPE.MODIFIED: {
-        await new Promise((resolve) => requestAnimationFrame(() => resolve()));
-        this.updateListState(departmentid, userArray);
-        this.listState[departmentid].items[user.uid].type =
-          ACTION_TYPE.MODIFIED;
-        break;
-      }
-      case ACTION_TYPE.REMOVED: {
-        const userState = this.listState[departmentid].items[user.uid];
-        this.updateListState(departmentid, userArray);
-        userArray.splice(userState.index, 0, user);
-        userState.type = ACTION_TYPE.REMOVED;
-        this.listState[departmentid].items[user.uid] = userState;
-        break;
-      }
-    }
   };
 
   connectedCallback() {
@@ -126,29 +55,13 @@ export default abstract class BaseDepList extends LitElement {
       ACTION_ROOT.DEPARTMENTS,
       this.departmentsListener
     );
-    const usersUnsubscribe = ApplicationStore.listen(
-      ACTION_ROOT.USERS,
-      this.usersListener
-    );
-    this.addEventListener('signed-out', () => {
+    const onSignedOut = () => {
       departmentsUnsubscribe();
-      usersUnsubscribe();
       this.cleanup();
       const action = ACTION_AUTH.requestSignOut();
       ApplicationStore.dispatch(action);
-    });
-  }
-
-  onUserRemoved(e: Event) {
-    const { departmentid, userid } = (e as CustomEvent).detail;
-    const userArray = this.users[departmentid].filter(
-      (user) => user.uid != userid
-    );
-    this.updateListState(departmentid, userArray);
-    this.users = {
-      ...this.users,
-      [departmentid]: userArray
     };
+    this.addEventListener('signed-out', onSignedOut, { once: true });
   }
 
   render() {

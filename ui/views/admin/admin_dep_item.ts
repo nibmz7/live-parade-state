@@ -2,19 +2,17 @@ import { css, customElement, html, LitElement, property } from 'lit-element';
 import Branch from '../../../model/branch';
 import Department from '../../../model/department';
 import User from '../../../model/user';
-import { ListState } from '../../base/base_user_list';
 import { buttonStyles, cardStyles, globalStyles } from '../../global_styles';
 import { onPressed } from '../../utils';
 
 @customElement('admin-dep-item')
 export default class AdminDepItem extends LitElement {
-  @property({ type: Array }) users: Array<User> = [];
   @property({ type: Object }) branch!: Branch;
   @property({ type: Object }) department!: Department;
-  @property({ type: Object }) listState: ListState = { items: {}, length: 0 };
   @property({ type: Object }) selectedUser?: User;
   @property({ type: Boolean }) showEditDepartment: Boolean = false;
   @property({ type: Boolean }) showEditUser = false;
+  @property({ type: Boolean }) isEmpty = true;
 
   onEditDepartment() {
     return onPressed(() => {
@@ -45,6 +43,12 @@ export default class AdminDepItem extends LitElement {
     this.showEditUser = true;
   }
 
+  onListChanged(e: CustomEvent) {
+    console.log(e);
+    const users = e.detail.users as Array<User>;
+    this.isEmpty = users.length === 0;
+  }
+
   render() {
     return html`<div id="root">
       <div class="header">
@@ -59,15 +63,15 @@ export default class AdminDepItem extends LitElement {
           id="add"
           plain
           @click="${this.onAddUser()}"
-          ?empty="${this.listState.length === 0}"
+          ?empty="${this.isEmpty}"
         >
           Add user
         </button>
 
         <admin-user-list
-          .users="${this.users}"
-          .listState="${this.listState}"
+          .department="${this.department}"
           @user-selected="${this.onEditUser}"
+          @list-changed="${this.onListChanged}"
         ></admin-user-list>
 
         ${this.showEditDepartment

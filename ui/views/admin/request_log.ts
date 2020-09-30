@@ -120,15 +120,11 @@ export default class RequestLog extends LitElement {
   onDismiss(id: string) {
     return onPressed(() => {
       const element = this.shadowRoot!.getElementById(id)!;
-      element.addEventListener(
-        'animationend',
-        () => {
-          console.log('sdsdsd');
-          const { [id]: omit, ...res } = this.requests;
-          this.requests = res;
-        },
-        { once: true }
-      );
+      const onDismissed = () => {
+        const { [id]: omit, ...res } = this.requests;
+        this.requests = res;
+      };
+      element.addEventListener('animationend', onDismissed, { once: true });
       element.style.animation = 'item-appear-out .3s';
     });
   }
