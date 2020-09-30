@@ -33,10 +33,6 @@ export default class EditStatus extends LitElement {
   @property({ type: Boolean }) isProcessing = false;
   @property({ type: Number }) dialogState = DIALOG_STATE.OPENING;
 
-  submit() {
-    this.dialogState = DIALOG_STATE.CLOSING;
-  }
-
   onInputFocus() {
     this.dialogState = DIALOG_STATE.STALLING;
   }
@@ -95,7 +91,7 @@ export default class EditStatus extends LitElement {
 
   submitBoth() {
     return onPressed(() => {
-      if(this.isProcessing) return;
+      if (this.isProcessing) return;
       this.isProcessing = true;
       const updatedby = this.authUser.uid;
       const status = new Status({

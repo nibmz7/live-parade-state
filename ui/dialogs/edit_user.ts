@@ -81,6 +81,7 @@ export default class EditUser extends LitElement {
 
   submit() {
     return onPressed(() => {
+      if (this.dialogState === DIALOG_STATE.STALLING) return;
       this.checkValidity();
       if (this.errorState.visible) return;
 
