@@ -9,8 +9,8 @@ export default class MockAuthManager extends AuthManager {
 
   protected async initialize() {
     // this.signOut();
-    // this.signIn(MockModel.Admin);
-    this.signIn(MockModel.User);
+    this.signIn(MockModel.Admin);
+    // this.signIn(MockModel.User);
   }
 
   protected async signInWithCredentials(action: AuthAction) {

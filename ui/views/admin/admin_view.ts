@@ -13,7 +13,7 @@ import './admin_user_list';
 
 @customElement('admin-view')
 export default class AdminView extends LitElement {
-  private admin = ApplicationStore.getAuth().action.payload as Admin;
+  private admin = ApplicationStore.auth.action.payload as Admin;
   private branch = this.admin.branch;
 
   @property({ type: Boolean }) showAddDepartment = false;

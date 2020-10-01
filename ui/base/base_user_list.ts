@@ -48,7 +48,7 @@ export default abstract class BaseUserList extends LitElement {
 
   private init = () => {
     const departmentid = this.department.id;
-    const items = ApplicationStore.getUsers().sortedUsersByDepartment;
+    const items = ApplicationStore.users.sortedUsersByDepartment;
     let userArray: Array<User>;
     if (!(departmentid in items)) {
       userArray = [];

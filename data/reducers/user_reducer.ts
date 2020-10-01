@@ -13,7 +13,7 @@ const InitialState = (): UserStoreState => ({
     type: 0,
     id: 0
   },
-  users: {},
+  usersById: {},
   sortedUsers: [],
   sortedUsersByDepartment: {}
 });
@@ -33,7 +33,7 @@ export const user = (
   }
 
   if (type === ACTION_TYPE.INITIALIZED) {
-    const users = {};
+    const usersById = {};
     const sortedUsers = (action.payload as Array<User>).slice();
     const sortedUsersByDepartment: UsersByDepartment = {};
     sortedUsers.sort(User.compare);
@@ -41,14 +41,14 @@ export const user = (
       if (user.departmentid in sortedUsersByDepartment)
         sortedUsersByDepartment[user.departmentid].push(user);
       else sortedUsersByDepartment[user.departmentid] = [user];
-      users[user.uid] = user;
+      usersById[user.uid] = user;
     }
-    return { action, users, sortedUsers, sortedUsersByDepartment };
+    return { action, usersById, sortedUsers, sortedUsersByDepartment };
   }
 
   const user = new User(action.payload as User);
   const depid = user.departmentid;
-  let users: { [uid: string]: User } = {};
+  let usersById: { [uid: string]: User } = {};
   let sortedUsers: Array<User>;
   let sortedUsersByDepartment: UsersByDepartment;
 
@@ -58,7 +58,7 @@ export const user = (
       [depid]: departmentUsers
     };
     sortedUsers = allUsers;
-    users = { ...state.users, [user.uid]: user };
+    usersById = { ...state.usersById, [user.uid]: user };
   };
 
   const addUser = (depUsers: Array<User>, allUsers: Array<User>) => {
@@ -93,12 +93,12 @@ export const user = (
     case ACTION_TYPE.REMOVED: {
       const { depUsers, allUsers } = removeUser();
       setData(depUsers, allUsers);
-      const { [user.uid]: omit, ...others } = users;
-      users = others;
+      const { [user.uid]: omit, ...others } = usersById;
+      usersById = others;
       break;
     }
     default: {
-      users = state.users;
+      usersById = state.usersById;
       sortedUsers = state.sortedUsers;
       sortedUsersByDepartment = state.sortedUsersByDepartment;
       break;

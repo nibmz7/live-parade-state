@@ -34,7 +34,7 @@ export default class SummaryView extends LitElement {
   @property({ type: Object }) statusCodes!: StatusCodes;
 
   private init() {
-    this.users = ApplicationStore.getUsers().sortedUsers.slice();
+    this.users = ApplicationStore.users.sortedUsers.slice();
     const statusCodes: { [type: string]: Array<User> } = {};
     this.users.map((user) => {
       const status = user.morning!;
@@ -94,6 +94,7 @@ export default class SummaryView extends LitElement {
         </div>
 
         <div id="user-list" class="card">
+          <h4 id="header">7 Total ~ 0 Regular + 1 Nsf</h4>
           ${this.statusCodes[this.selectedCode].map((user) => {
             return html`<div class="user">
               <p class="fullname" ?regular="${user.regular}">
@@ -120,6 +121,14 @@ export default class SummaryView extends LitElement {
       slideAnimation,
       fadeAnimation,
       css`
+        #header {
+          margin: 0px;
+          text-align: center;
+          padding: 10px;
+          border-bottom: 2px dashed rgb(66, 59, 57);
+          font-weight: 600;
+        }
+
         .status-selector {
           display: flex;
           flex-wrap: wrap;

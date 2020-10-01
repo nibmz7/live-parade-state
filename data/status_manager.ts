@@ -6,7 +6,7 @@ import { Unsubscribe } from 'redux';
 import User from '../model/user';
 
 export default abstract class StatusManager extends DataManager {
-  protected authUser = ApplicationStore.getAuth().action.payload as User;
+  protected authUser = ApplicationStore.auth.action.payload as User;
   private unsubscribeUser?: Unsubscribe;
 
   protected startRequestListening(): void {

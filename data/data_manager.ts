@@ -76,7 +76,7 @@ export abstract class DataManager {
   }
 
   userOnChange(user: User, type: ACTION_TYPE) {
-    const departments = ApplicationStore.getDepartments().items;
+    const departments = ApplicationStore.departments.items;
     if (!departments.find((dep) => dep.id === user.departmentid)) return;
     switch (type) {
       case ACTION_TYPE.ADDED:

@@ -47,7 +47,7 @@ describe('Mock Admin Manager', async () => {
 
   it('Request modify department', (done) => {
     let modifiedDepartment: Department = {
-      ...ApplicationStore.getDepartments().items[0],
+      ...ApplicationStore.departments.items[0],
       name: 'Modified branch'
     };
     let callback = (data: DepartmentStoreState, unsubscribe: Unsubscribe) => {
@@ -76,7 +76,7 @@ describe('Mock Admin Manager', async () => {
     ApplicationStore.listen(ACTION_ROOT.DEPARTMENTS, callback);
     ApplicationStore.dispatch(
       ACTION_DEPARTMENT.requestRemove(
-        ApplicationStore.getDepartments().items[0]
+        ApplicationStore.departments.items[0]
       )
     );
   });

@@ -23,7 +23,7 @@ const getTimestamp = (date: Date) => {
 @customElement('edit-status')
 export default class EditStatus extends LitElement {
   private usersUnsubscribe?: Unsubscribe;
-  private authUser = ApplicationStore.getAuth().action.payload as User;
+  private authUser = ApplicationStore.auth.action.payload as User;
 
   @property({ type: String }) uid!: string;
   @property({ type: String }) updatedByName = '';
@@ -48,7 +48,7 @@ export default class EditStatus extends LitElement {
       ? this.selectedUser.morning!
       : this.selectedUser.afternoon!;
     this.statusToEdit = new Status(userStatus);
-    this.updatedByName = ApplicationStore.getUsers().users[
+    this.updatedByName = ApplicationStore.users.usersById[
       userStatus.updatedby
     ].fullname;
   }
@@ -65,7 +65,7 @@ export default class EditStatus extends LitElement {
 
   connectedCallback() {
     super.connectedCallback();
-    this.selectedUser = ApplicationStore.getUsers().users[this.uid];
+    this.selectedUser = ApplicationStore.users.usersById[this.uid];
     this.resetStatus();
     this.usersUnsubscribe = ApplicationStore.listen(
       ACTION_ROOT.USERS,

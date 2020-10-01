@@ -130,8 +130,8 @@ export default class CustomDialog extends LitElement {
           align-items: center;
           box-sizing: border-box;
           justify-content: center;
-          backdrop-filter: blur(2px);
           background: rgba(0, 0, 0, 0.2);
+          backdrop-filter: blur(2px);
           -webkit-backdrop-filter: blur(2px);
         }
 

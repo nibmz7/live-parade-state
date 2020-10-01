@@ -26,6 +26,8 @@ import User, { UserBase } from '../../model/user';
 
 @customElement('edit-user')
 export default class EditUser extends LitElement {
+  private departments = ApplicationStore.departments.items;
+
   @property({ type: Object }) user?: User;
   @property({ type: Object }) branch!: Branch;
   @property({ type: Object }) department!: Department;
@@ -39,6 +41,7 @@ export default class EditUser extends LitElement {
   };
   @property({ type: Boolean }) editing = false;
   @property({ type: Boolean }) isRegularState = false;
+  @property({ type: Boolean }) showDepartmentSelector = false;
   @property({ type: Number }) dialogState = DIALOG_STATE.OPENING;
 
   connectedCallback() {
@@ -137,7 +140,12 @@ export default class EditUser extends LitElement {
       @reset="${() => (this.dialogState = DIALOG_STATE.OPENED)}"
     >
       <div id="root" tabindex="0" class="selectable">
-        <p id="department-name">${this.department!.name}</p>
+        <p
+          id="department-name"
+          @click="${() => (this.showDepartmentSelector = true)}"
+        >
+          ${this.department!.name}
+        </p>
 
         <div class="header">
           <h3>${this.editing ? 'Edit' : 'Add'} User</h3>
@@ -269,6 +277,20 @@ export default class EditUser extends LitElement {
         <p class="error card" ?show=${this.errorState.visible}>
           ${this.errorState.message}
         </p>
+
+        ${this.showDepartmentSelector
+          ? html`
+              <div class="department-selector">
+                <div class="card">
+                  ${this.departments.map((item) => {
+                    return html`<p class="selectable" tabindex="0">
+                      ${item.name}
+                    </p>`;
+                  })}
+                </div>
+              </div>
+            `
+          : ''}
       </div>
     </custom-dialog>`;
   }
@@ -280,9 +302,45 @@ export default class EditUser extends LitElement {
       cardStyles,
       inputStyles,
       passwordInputStyles,
+      fade
       css`
         custom-dialog {
           --offset-item-height: 140px;
+        }
+
+        .department-selector {
+          position: absolute;
+          top: 0;
+          bottom: 0;
+          left: 0;
+          right: 0;
+          background: #00000057;
+          border-radius: 5px;
+          display: flex;
+          flex-direction: column;
+          justify-content: center;
+          padding: 10px;
+        }
+
+        .department-selector .card {
+          border-radius: 5px;
+        }
+
+        .department-selector p {
+          margin: 0;
+          padding: 20px;
+          transition: background-color 0.3s;
+        }
+
+        @media (hover: hover) {
+          .department-selector p:hover {
+            background-color: rgba(0, 0, 0, 0.1);
+          }
+        }
+
+        .department-selector p:active,
+        .department-selector p:focus {
+          background-color: rgba(0, 0, 0, 0.1);
         }
 
         #root {

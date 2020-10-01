@@ -12,7 +12,7 @@ export default class MockStatusManager extends StatusManager {
   protected requestModifyUser(state: UserStoreState): void {
     setTimeout(() => {
       const userToUpdate = new User(state.action.payload as User);
-      const userData = ApplicationStore.getUsers().users[userToUpdate.uid];
+      const userData = ApplicationStore.users.usersById[userToUpdate.uid];
       const morning = new Status(userToUpdate.morning || userData.morning!);
       const afternoon = new Status(
         userToUpdate.afternoon || userData.afternoon!

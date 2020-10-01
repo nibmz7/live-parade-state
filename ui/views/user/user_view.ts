@@ -13,7 +13,7 @@ import './summary_view';
 
 @customElement('user-view')
 export default class UserView extends LitElement {
-  private user = ApplicationStore.getAuth().action.payload as User;
+  private user = ApplicationStore.auth.action.payload as User;
 
   @property({ type: Boolean }) showSummary = false;
   @property({ type: Boolean }) isMorning = true;

@@ -68,7 +68,7 @@ export default class ViewSwitcher extends LitElement {
   }
 
   signedIn() {
-    let user = ApplicationStore.getAuth().action.payload;
+    let user = ApplicationStore.auth.action.payload;
     (user as Admin).isAdmin
       ? this.showView(VIEW_TYPES.ADMIN)
       : this.showView(VIEW_TYPES.USER);

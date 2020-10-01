@@ -10,7 +10,7 @@ describe('User reducer', () => {
     let reduce = user(undefined, action);
     let expectedResult: UserStoreState = {
       action,
-      users: {},
+      usersById: {},
       sortedUsers: [],
       sortedUsersByDepartment: {}
     };
@@ -23,7 +23,7 @@ describe('User reducer', () => {
     let reduce = user(undefined, action);
     let expectedResult: UserStoreState = {
       action,
-      users: { [mockUser.uid]: mockUser },
+      usersById: { [mockUser.uid]: mockUser },
       sortedUsers: [mockUser],
       sortedUsersByDepartment: { [mockUser.departmentid]: [mockUser] }
     };
@@ -35,14 +35,14 @@ describe('User reducer', () => {
     let action = ACTION_USER.removed(mockUser);
     let initialState = {
       action,
-      users: { [mockUser.uid]: mockUser },
+      usersById: { [mockUser.uid]: mockUser },
       sortedUsers: [mockUser],
       sortedUsersByDepartment: { [mockUser.departmentid]: [mockUser] }
     };
     let reduce = user(initialState, action);
     let expectedResult: UserStoreState = {
       action,
-      users: {},
+      usersById: {},
       sortedUsers: [],
       sortedUsersByDepartment: { [mockUser.departmentid]: [] }
     };
