@@ -7,7 +7,7 @@ import {
   query
 } from 'lit-element';
 import { ApplicationStore } from '../../../data/store';
-import { STATUSES } from '../../../model/status';
+import Status, { STATUSES } from '../../../model/status';
 import User from '../../../model/user';
 import {
   buttonStyles,
@@ -19,8 +19,14 @@ import {
 import { onPressed } from '../../utils';
 
 interface StatusCodes {
-  [type: string]: Array<User>;
+  [type: string]: {
+    users: Array<User>;
+    regular: number;
+    nsf: number;
+  };
 }
+
+const PRESENT_REMARKS = 99;
 
 @customElement('summary-view')
 export default class SummaryView extends LitElement {
@@ -40,11 +46,22 @@ export default class SummaryView extends LitElement {
 
   private init() {
     this.users = ApplicationStore.users.sortedUsers.slice();
-    const statusCodes: { [type: string]: Array<User> } = {};
+    const statusCodes: StatusCodes = {};
     this.users.map((user) => {
       const status = user.morning!;
-      if (!(user.morning!.code in statusCodes)) statusCodes[status.code] = [];
-      statusCodes[status.code].push(user);
+      let code = user.morning!.expired ? 0 : status.code;
+      if (Status.isPresent(code) && status.remarks.length > 0) {
+        code = PRESENT_REMARKS;
+      }
+      if (!(code in statusCodes)) {
+        statusCodes[code] = {
+          users: [],
+          regular: 0,
+          nsf: 0
+        };
+      }
+      statusCodes[code].users.push(user);
+      user.regular ? statusCodes[code].regular++ : statusCodes[code].nsf++;
     });
     this.statusCodes = statusCodes;
     this.selectedCode = Number(Object.keys(statusCodes)[0]);
@@ -90,29 +107,33 @@ export default class SummaryView extends LitElement {
   }
 
   render() {
+    const status = this.statusCodes[this.selectedCode];
+    const regular = status.regular;
+    const nsf = status.nsf;
+    const total = regular + nsf;
     return html` <div class="scrim" ?close="${this.shouldClose}"></div>
       <div id="root" ?close="${this.shouldClose}">
         <h4>Summary - ${this.users.length} Total</h4>
 
         <div class="status-selector">
           ${Object.keys(this.statusCodes).map((code) => {
-            const count = this.statusCodes[code].length;
+            const count = this.statusCodes[code].users.length;
             return html`
               <button
                 outline
                 ?selected="${Number(code) === this.selectedCode}"
                 @click=${this.codeChanged(Number(code))}
               >
-                ${STATUSES[code].name} (${count})
+                ${STATUSES[code]?.name || 'PRESENT (REMARKS)'} (${count})
               </button>
             `;
           })}
         </div>
 
         <div id="status-card" class="card">
-          <h4 id="header">7 Total ~ 0 Regular + 1 Nsf</h4>
+          <h4 id="header">${total} Total ~ ${regular} Regular + ${nsf} Nsf</h4>
           <div id="user-list">
-            ${this.statusCodes[this.selectedCode].map((user) => {
+            ${status.users.map((user) => {
               return html`<div class="user">
                 <p class="fullname" ?regular="${user.regular}">
                   ${user.fullname}
