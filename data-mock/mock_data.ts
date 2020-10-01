@@ -82,7 +82,7 @@ const userIds = ['user-101', 'user-201', 'user-202', 'user-301', 'admin'];
 
 const makeStatus = () =>
   new Status({
-    code: randomInt(17),
+    code: randomInt(5),
     remarks: '',
     expired: randomInt(7) >= 3,
     updatedby: userIds[randomInt(4)],

@@ -78,6 +78,8 @@ export default class SummaryView extends LitElement {
   render() {
     return html` <div class="scrim" ?close="${this.shouldClose}"></div>
       <div id="root" ?close="${this.shouldClose}">
+        <h4>Summary - ${this.users.length} Total</h4>
+
         <div class="status-selector">
           ${Object.keys(this.statusCodes).map((code) => {
             const count = this.statusCodes[code].length;
@@ -125,8 +127,14 @@ export default class SummaryView extends LitElement {
           margin: 0px;
           text-align: center;
           padding: 10px;
-          border-bottom: 2px dashed rgb(66, 59, 57);
+          background: var(--color-primary);
+          border-radius: 15px 15px 0 0;
+          color: white;
           font-weight: 600;
+        }
+
+        #root > h4 {
+          margin-top: 0;
         }
 
         .status-selector {
@@ -150,6 +158,9 @@ export default class SummaryView extends LitElement {
         #user-list {
           margin-top: 20px;
           border-radius: 15px;
+          justify-content: end;
+          overflow: hidden;
+          transition: height 0.5s;
         }
 
         .user {
@@ -189,11 +200,7 @@ export default class SummaryView extends LitElement {
           left: 0;
           right: 0;
           background: #0000004a;
-          animation: fade-in 1s cubic-bezier(0.77, 0, 0.175, 1);
-        }
-
-        .scrim[close] {
-          animation: fade-out 0.8s 0.1s cubic-bezier(0.77, 0, 0.175, 1);
+          animation: fade-in 0.5s;
         }
 
         #root {
@@ -206,14 +213,16 @@ export default class SummaryView extends LitElement {
           right: 0;
           background: white;
           z-index: 20;
-          animation: slide-in-from-right 1s cubic-bezier(0.77, 0, 0.175, 1)
-            backwards;
+          animation: slide-in-from-right 0.5s backwards;
           box-shadow: rgb(0 0 0 / 20%) -2px 0px 6px -3px;
         }
 
+        .scrim[close] {
+          animation: fade-out 0.5s 0.3s;
+        }
+
         #root[close] {
-          animation: slide-out-to-right 0.8s 0.1s
-            cubic-bezier(0.77, 0, 0.175, 1);
+          animation: slide-out-to-right 0.5s 0.3s;
         }
 
         #root[close] > button {
@@ -230,6 +239,10 @@ export default class SummaryView extends LitElement {
 
         button {
           font-weight: 500;
+        }
+
+        #close,
+        #download {
           --should-fade: 0;
           --offset-y: 150%;
           animation: slide-in 0.5s backwards;
@@ -241,7 +254,7 @@ export default class SummaryView extends LitElement {
           left: 10px;
           padding: 7px 15px;
           border-radius: 35px;
-          animation-delay: 0.8s;
+          animation-delay: 0.5s;
         }
 
         #download {
@@ -250,7 +263,7 @@ export default class SummaryView extends LitElement {
           left: 27%;
           padding: 15px;
           border-radius: 35px;
-          animation-delay: 0.9s;
+          animation-delay: 0.6s;
         }
 
         @keyframes slide-out {
