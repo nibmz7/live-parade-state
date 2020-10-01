@@ -1,4 +1,11 @@
-import { LitElement, html, customElement, css, property } from 'lit-element';
+import {
+  LitElement,
+  html,
+  customElement,
+  css,
+  property,
+  query
+} from 'lit-element';
 import ACTION_USER from '../../data/actions/user_action';
 import { UserAction } from '../../data/states/user_state';
 import { ApplicationStore } from '../../data/store';
@@ -8,6 +15,7 @@ import Rank from '../../model/rank';
 import {
   buttonStyles,
   cardStyles,
+  fadeAnimation,
   globalStyles,
   inputStyles,
   passwordInputStyles
@@ -28,6 +36,8 @@ import User, { UserBase } from '../../model/user';
 export default class EditUser extends LitElement {
   private departments = ApplicationStore.departments.items;
 
+  @query('#department-selector') _departmentSelector!: HTMLElement;
+
   @property({ type: Object }) user?: User;
   @property({ type: Object }) branch!: Branch;
   @property({ type: Object }) department!: Department;
@@ -42,6 +52,7 @@ export default class EditUser extends LitElement {
   @property({ type: Boolean }) editing = false;
   @property({ type: Boolean }) isRegularState = false;
   @property({ type: Boolean }) showDepartmentSelector = false;
+  @property({ type: Boolean }) hideDepartmentSelector = false;
   @property({ type: Number }) dialogState = DIALOG_STATE.OPENING;
 
   connectedCallback() {
@@ -280,10 +291,28 @@ export default class EditUser extends LitElement {
 
         ${this.showDepartmentSelector
           ? html`
-              <div class="department-selector">
+              <div
+                id="department-selector"
+                ?hide="${this.hideDepartmentSelector}"
+              >
                 <div class="card">
                   ${this.departments.map((item) => {
-                    return html`<p class="selectable" tabindex="0">
+                    return html`<p
+                      class="selectable"
+                      tabindex="0"
+                      @click="${() => {
+                        this.department = item;
+                        this._departmentSelector.addEventListener(
+                          'animationend',
+                          () => {
+                            this.showDepartmentSelector = false;
+                            this.hideDepartmentSelector = false;
+                          },
+                          { once: true }
+                        );
+                        this.hideDepartmentSelector = true;
+                      }}"
+                    >
                       ${item.name}
                     </p>`;
                   })}
@@ -302,13 +331,13 @@ export default class EditUser extends LitElement {
       cardStyles,
       inputStyles,
       passwordInputStyles,
-      fade
+      fadeAnimation,
       css`
         custom-dialog {
           --offset-item-height: 140px;
         }
 
-        .department-selector {
+        #department-selector {
           position: absolute;
           top: 0;
           bottom: 0;
@@ -320,26 +349,31 @@ export default class EditUser extends LitElement {
           flex-direction: column;
           justify-content: center;
           padding: 10px;
+          animation: fade-in 0.5s;
         }
 
-        .department-selector .card {
+        #department-selector[hide] {
+          animation: fade-out 0.5s;
+        }
+
+        #department-selector .card {
           border-radius: 5px;
         }
 
-        .department-selector p {
+        #department-selector p {
           margin: 0;
           padding: 20px;
           transition: background-color 0.3s;
         }
 
         @media (hover: hover) {
-          .department-selector p:hover {
+          #department-selector p:hover {
             background-color: rgba(0, 0, 0, 0.1);
           }
         }
 
-        .department-selector p:active,
-        .department-selector p:focus {
+        #department-selector p:active,
+        #department-selector p:focus {
           background-color: rgba(0, 0, 0, 0.1);
         }
 
