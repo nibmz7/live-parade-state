@@ -106,5 +106,5 @@ export const user = (
   }
 
   //@ts-ignore
-  return { action, users, sortedUsers, sortedUsersByDepartment };
+  return { action, usersById, sortedUsers, sortedUsersByDepartment };
 };

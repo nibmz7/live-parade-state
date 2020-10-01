@@ -78,12 +78,21 @@ export abstract class DataManager {
   userOnChange(user: User, type: ACTION_TYPE) {
     const departments = ApplicationStore.departments.items;
     if (!departments.find((dep) => dep.id === user.departmentid)) return;
+    const cachedUser = ApplicationStore.users.usersById[user.uid];
     switch (type) {
       case ACTION_TYPE.ADDED:
         ApplicationStore.dispatch(ACTION_USER.added(user));
         break;
       case ACTION_TYPE.MODIFIED:
-        ApplicationStore.dispatch(ACTION_USER.modified(user));
+        {
+          if (cachedUser.departmentid !== user.departmentid) {
+            ApplicationStore.dispatch(
+              ACTION_USER.removed(new User(cachedUser))
+            );
+            ApplicationStore.dispatch(ACTION_USER.added(user));
+          }
+          ApplicationStore.dispatch(ACTION_USER.modified(user));
+        }
         break;
       case ACTION_TYPE.REMOVED:
         ApplicationStore.dispatch(ACTION_USER.removed(user));
