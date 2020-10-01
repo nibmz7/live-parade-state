@@ -25,13 +25,18 @@ interface StatusCodes {
 @customElement('summary-view')
 export default class SummaryView extends LitElement {
   private isOpening = true;
+  private initialHeight = 0;
 
   @query('#root') _root!: HTMLElement;
+  @query('#header') _header!: HTMLElement;
+  @query('#status-card', true) _statusCard!: HTMLElement;
+  @query('#user-list', true) _userList!: HTMLElement;
 
   @property({ type: Boolean }) shouldClose = false;
   @property({ type: Array }) users!: Array<User>;
   @property({ type: Number }) selectedCode = 0;
   @property({ type: Object }) statusCodes!: StatusCodes;
+  @property({ type: Number }) listHeight = 0;
 
   private init() {
     this.users = ApplicationStore.users.sortedUsers.slice();
@@ -56,7 +61,15 @@ export default class SummaryView extends LitElement {
     });
   }
 
+  close() {
+    return onPressed(() => {
+      if (!this.isOpening) this.shouldClose = true;
+    });
+  }
+
   firstUpdated() {
+    this.initialHeight = this._header.clientHeight;
+    this._statusCard.style.height = `${this.initialHeight}px`;
     const onClose = (e: AnimationEvent) => {
       if (e.animationName === 'slide-out-to-right') {
         this.removeEventListener('animationend', onClose);
@@ -69,10 +82,11 @@ export default class SummaryView extends LitElement {
     this._root.addEventListener('animationend', onClose);
   }
 
-  close() {
-    return onPressed(() => {
-      if (!this.isOpening) this.shouldClose = true;
-    });
+  updated(changedProperties: Map<any, any>) {
+    if (changedProperties.has('selectedCode')) {
+      const height = this._userList.scrollHeight;
+      this._statusCard.style.height = `${this.initialHeight + height}px`;
+    }
   }
 
   render() {
@@ -95,19 +109,21 @@ export default class SummaryView extends LitElement {
           })}
         </div>
 
-        <div id="user-list" class="card">
+        <div id="status-card" class="card">
           <h4 id="header">7 Total ~ 0 Regular + 1 Nsf</h4>
-          ${this.statusCodes[this.selectedCode].map((user) => {
-            return html`<div class="user">
-              <p class="fullname" ?regular="${user.regular}">
-                ${user.fullname}
-              </p>
-              <p class="remarks">
-                ${user.morning!.remarks}
-                ${user.morning!.expired ? html`<span>-- Expired</span>` : ''}
-              </p>
-            </div>`;
-          })}
+          <div id="user-list">
+            ${this.statusCodes[this.selectedCode].map((user) => {
+              return html`<div class="user">
+                <p class="fullname" ?regular="${user.regular}">
+                  ${user.fullname}
+                </p>
+                <p class="remarks">
+                  ${user.morning!.remarks}
+                  ${user.morning!.expired ? html`<span>-- Expired</span>` : ''}
+                </p>
+              </div>`;
+            })}
+          </div>
         </div>
 
         <button id="close" solid @click="${this.close()}">X</button>
@@ -123,6 +139,10 @@ export default class SummaryView extends LitElement {
       slideAnimation,
       fadeAnimation,
       css`
+        #user-list {
+          height: 0;
+        }
+
         #header {
           margin: 0px;
           text-align: center;
@@ -155,7 +175,7 @@ export default class SummaryView extends LitElement {
           color: white;
         }
 
-        #user-list {
+        #status-card {
           margin-top: 20px;
           border-radius: 15px;
           justify-content: end;
