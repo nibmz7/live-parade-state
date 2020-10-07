@@ -175,6 +175,7 @@ export const buttonStyles = css`
     border-radius: 5px;
     cursor: pointer;
     border: none;
+    margin: 0;
   }
 
   button[solid] {

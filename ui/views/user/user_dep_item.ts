@@ -51,7 +51,7 @@ export default class UserDepItem extends LitElement {
       : this.presentCount.pm;
     const regular = presentCount.regular;
     const nsf = presentCount.nsf;
-    return html`<div id="root" style="--anim-delay:${this.index / 10 + 0.2}s;">
+    return html`<div id="root" style="--anim-delay:${this.index * 2 / 10}s;">
         <div class="header">
           <h3>${this.department.name}</h3>
         </div>
@@ -89,7 +89,7 @@ export default class UserDepItem extends LitElement {
           margin: inherit;
           --offset-y: 100px;
           --should-fade: 1;
-          animation: slide-in .5s backwards;
+          animation: slide-in .5s both;
           animation-delay: var(--anim-delay);
         }
 

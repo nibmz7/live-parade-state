@@ -49,7 +49,7 @@ body {
   }
 }
 
-view-switcher {
+view-switcher[splashscreen] {
   position: relative;
   display: block;
   height: 100%;

@@ -56,7 +56,7 @@ export default class ToggleAM extends LitElement {
           height: inherit;
           font-weight: 600;
           padding: var(--padding-button);
-          border: 2px solid var(--color-primary);
+          border: 2px solid var(--color-primary);          
         }
 
         button:first-child {

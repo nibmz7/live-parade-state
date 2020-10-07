@@ -26,7 +26,30 @@ interface StatusCodes {
   };
 }
 
-const PRESENT_REMARKS = 99;
+const CODE_NOT_SET = 'a-0';
+const CODE_PRESENT = 'a-1';
+const CODE_PRESENT_REMARKS = 'a-11';
+const CODE_EXPIRED = 'a-00';
+
+const STATUS_NAMES = {
+  ...STATUSES.reduce((acc, status, index) => {
+    acc[`a-${index}`] = status.name;
+    return acc;
+  }, {}),
+  [CODE_EXPIRED]: 'EXPIRED',
+  [CODE_PRESENT_REMARKS]: 'PRESENT (REMARKS)'
+};
+
+console.log(STATUS_NAMES);
+
+const StatusCodeDefault = () => ({ users: [], regular: 0, nsf: 0 });
+
+const StatusCodesDefault = () => ({
+  [CODE_NOT_SET]: StatusCodeDefault(),
+  [CODE_EXPIRED]: StatusCodeDefault(),
+  [CODE_PRESENT]: StatusCodeDefault(),
+  [CODE_PRESENT_REMARKS]: StatusCodeDefault()
+});
 
 @customElement('summary-view')
 export default class SummaryView extends LitElement {
@@ -38,33 +61,34 @@ export default class SummaryView extends LitElement {
   @query('#status-card', true) _statusCard!: HTMLElement;
   @query('#user-list', true) _userList!: HTMLElement;
 
-  @property({ type: Boolean }) shouldClose = false;
   @property({ type: Array }) users!: Array<User>;
-  @property({ type: Number }) selectedCode = 0;
   @property({ type: Object }) statusCodes!: StatusCodes;
-  @property({ type: Number }) listHeight = 0;
+  @property({ type: String }) listHeight!: string;
+  @property({ type: String }) selectedCode!: string;
+  @property({ type: Boolean }) isMorning = true;
+  @property({ type: Boolean }) shouldClose = false;
 
   private init() {
     this.users = ApplicationStore.users.sortedUsers.slice();
-    const statusCodes: StatusCodes = {};
+    const statusCodes = StatusCodesDefault();
     this.users.map((user) => {
-      const status = user.morning!;
-      let code = user.morning!.expired ? 0 : status.code;
-      if (Status.isPresent(code) && status.remarks.length > 0) {
-        code = PRESENT_REMARKS;
+      const status = this.isMorning ? user.morning! : user.afternoon!;
+      let code = `a-${status.code}`;
+      if (status.expired) code = CODE_EXPIRED;
+      else if (Status.isPresent(status.code) && status.remarks.length > 0) {
+        code = CODE_PRESENT_REMARKS;
       }
       if (!(code in statusCodes)) {
-        statusCodes[code] = {
-          users: [],
-          regular: 0,
-          nsf: 0
-        };
+        statusCodes[code] = StatusCodeDefault();
       }
       statusCodes[code].users.push(user);
       user.regular ? statusCodes[code].regular++ : statusCodes[code].nsf++;
     });
     this.statusCodes = statusCodes;
-    this.selectedCode = Number(Object.keys(statusCodes)[0]);
+    for (const key of Object.keys(statusCodes)) {
+      if (statusCodes[key].users.length === 0) delete statusCodes[key];
+    }
+    this.selectedCode = Object.keys(statusCodes)[0];
   }
 
   connectedCallback() {
@@ -72,7 +96,7 @@ export default class SummaryView extends LitElement {
     super.connectedCallback();
   }
 
-  codeChanged(code: number) {
+  codeChanged(code: string) {
     return onPressed(() => {
       this.selectedCode = code;
     });
@@ -121,10 +145,10 @@ export default class SummaryView extends LitElement {
             return html`
               <button
                 outline
-                ?selected="${Number(code) === this.selectedCode}"
-                @click=${this.codeChanged(Number(code))}
+                ?selected="${code === this.selectedCode}"
+                @click=${this.codeChanged(code)}
               >
-                ${STATUSES[code]?.name || 'PRESENT (REMARKS)'} (${count})
+                ${STATUS_NAMES[code]} (${count})
               </button>
             `;
           })}

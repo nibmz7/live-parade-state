@@ -40,6 +40,7 @@ export default class CustomDialog extends LitElement {
           box-shadow: none;
           background: #faf5fab8;
           backdrop-filter: blur(2px);
+          -webkit-backdrop-filter: blur(2px);
           color: var(--color-primary-dark);
           border-radius: 0px;
         }
