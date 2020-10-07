@@ -7,6 +7,7 @@ import AuthUser from '../model/auth_user';
 
 export default abstract class StatusManager extends DataManager {
   protected authUser = ApplicationStore.auth.action.payload as AuthUser;
+  protected branch = this.authUser.branch;
   private unsubscribeUser?: Unsubscribe;
 
   protected startRequestListening(): void {

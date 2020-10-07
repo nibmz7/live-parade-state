@@ -30,7 +30,6 @@ export default class MockAdminManager extends AdminManager {
     this.departmentOnChange(newDepartment, ACTION_TYPE.ADDED);
     let action = ACTION_DEPARTMENT.requestSuccessful(state.action);
     ApplicationStore.dispatch(action);
-    console.log(action);
   }
 
   protected requestModifyDepartment(state: DepartmentStoreState): void {

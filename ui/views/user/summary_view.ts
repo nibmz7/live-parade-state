@@ -65,6 +65,7 @@ export default class SummaryView extends LitElement {
   @query('#stats') _stats!: HTMLElement;
   @query('#status-card', true) _statusCard!: HTMLElement;
   @query('#user-list', true) _userList!: HTMLElement;
+  @query('#status-selector', true) _statusSelector!: HTMLElement;
 
   @property({ type: Array }) statsCount!: number[];
   @property({ type: Array }) users!: Array<User>;
@@ -144,7 +145,9 @@ export default class SummaryView extends LitElement {
   updated(changedProperties: Map<any, any>) {
     if (changedProperties.has('selectedCode')) {
       const height = this._userList.scrollHeight;
+      const offsetY = this._statusSelector.clientHeight + 20;
       this._statusCard.style.height = `${this.initialHeight + height}px`;
+      this._statusCard.style.setProperty('--offset-y', `${offsetY}px`);
     }
   }
 
@@ -176,7 +179,7 @@ export default class SummaryView extends LitElement {
       <div id="root" ?close="${this.shouldClose}">
         <h4>Summary - ${this.users.length} Total</h4>
 
-        <div class="status-selector">
+        <div id="status-selector">
           ${Object.keys(this.statusCodes).map((code) => {
             const count = this.statusCodes[code].users.length;
             return html`
@@ -191,21 +194,25 @@ export default class SummaryView extends LitElement {
           })}
         </div>
 
-        <div id="status-card" class="card">
-          <h4 id="header">${total} Total ~ ${regular} Regular + ${nsf} Nsf</h4>
-          <div id="user-list">
-            ${status.users.map((user) => {
-              const status = this.isMorning ? user.morning! : user.afternoon!;
-              return html`<div class="user">
-                <p class="fullname" ?regular="${user.regular}">
-                  ${user.fullname}
-                </p>
-                <p class="remarks">
-                  ${status.remarks}
-                  ${status.expired ? html`<span>-- Expired</span>` : ''}
-                </p>
-              </div>`;
-            })}
+        <div id="status-card-container">
+          <div id="status-card" class="card">
+            <h4 id="header">
+              ${total} Total ~ ${regular} Regular + ${nsf} Nsf
+            </h4>
+            <div id="user-list">
+              ${status.users.map((user) => {
+                const status = this.isMorning ? user.morning! : user.afternoon!;
+                return html`<div class="user">
+                  <p class="fullname" ?regular="${user.regular}">
+                    ${user.fullname}
+                  </p>
+                  <p class="remarks">
+                    ${status.remarks}
+                    ${status.expired ? html`<span>-- Expired</span>` : ''}
+                  </p>
+                </div>`;
+              })}
+            </div>
           </div>
         </div>
 
@@ -223,7 +230,9 @@ export default class SummaryView extends LitElement {
               >
                 <div class="card">
                   ${STATUS_CATEGORY.map((name, index) => {
-                    return html`<p>${name}: <span>${this.statsCount[index]}</span></p>`;
+                    return html`<p>
+                      ${name}: <span>${this.statsCount[index]}</span>
+                    </p>`;
                   })}
                 </div>
               </div>
@@ -288,33 +297,49 @@ export default class SummaryView extends LitElement {
         }
 
         #root > h4 {
-          margin-top: 0;
+          margin-top: 30px;
+          margin-left: 30px;
         }
 
-        .status-selector {
+        #status-selector {
           display: flex;
           flex-wrap: wrap;
           row-gap: 10px;
           column-gap: 10px;
+          position: absolute;
+          z-index: 50;
+          margin-left: 30px;
         }
-        .status-selector > button {
+        #status-selector > button {
           font-size: 0.8rem;
           border-radius: 35px;
           padding: 5px 10px;
           line-height: 0.8rem;
         }
 
-        .status-selector > button[selected] {
+        #status-selector > button[selected] {
           background-color: var(--color-primary);
           color: white;
         }
 
+        #status-card-container {
+          max-height: 100%;
+          overflow-x: hidden;
+          overflow-y: auto;
+          padding: 0 30px;
+        }
+
         #status-card {
+          --offset-y: 0px;
           margin-top: 20px;
           border-radius: 15px;
           justify-content: end;
-          overflow: hidden;
           transition: height 0.5s;
+          transform: translateY(var(--offset-y));
+        }
+
+        #status-card {
+          margin-bottom: calc(var(--offset-y) + 30px);
         }
 
         .user {
@@ -358,7 +383,6 @@ export default class SummaryView extends LitElement {
         }
 
         #root {
-          padding: 30px;
           overflow: hidden;
           position: absolute;
           top: 0;

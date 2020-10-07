@@ -1,22 +1,36 @@
 import AuthManager from '../data/auth_manager';
 import { SignInCredentials, AuthAction } from '../data/states/auth_state';
-import Admin from '../model/admin';
-import User from '../model/user';
+import AuthUser from '../model/auth_user';
+
+const errorMessages = {
+  'auth/invalid-email': 'Invalid email address!',
+  'auth/user-disabled': 'The user has been disabled!',
+  'auth/user-not-found': `User doesn't exist!`,
+  'auth/wrong-password': 'You have entered a wrong password!'
+};
 
 export default class FBAuthManager extends AuthManager {
-  private auth = window.firebase.auth();
+  private auth!: firebase.auth.Auth;
 
   protected async initialize() {
-    this.auth.onAuthStateChanged((user) => {
+    this.auth = window.firebase.auth();
+    this.auth.onAuthStateChanged(async (user) => {
       if (user) {
-        const {uid, email} = user;
-        let authUser: Admin;
-        if(this.isAdmin(email)) {
-          authUser = new Admin(uid, email!);
+        const { uid, email } = user;
+        let authUser: AuthUser;
+        if (this.isAdmin(email)) {
+          authUser = new AuthUser({ uid, email: email! });
         } else {
-          authUser = new
+          const idTokenResult = await user.getIdTokenResult();
+          const { branchid, departmentid } = idTokenResult.claims;
+          authUser = new AuthUser({
+            uid,
+            email: email!,
+            branchid,
+            departmentid
+          });
         }
-        var uid = user.uid;
+        this.signIn(authUser);
       } else {
         this.signOut();
       }
@@ -27,14 +41,12 @@ export default class FBAuthManager extends AuthManager {
     const { email, password } = action.payload as SignInCredentials;
     this.auth.signInWithEmailAndPassword(email, password).catch((error) => {
       const errorCode = error.code;
-      const errorMessage = error.message;
+      const signInError = {
+        action,
+        type: errorCode,
+        message: errorMessages[errorCode]
+      };
+      this.signInError(signInError);
     });
-    // if (credentials.email.includes('error')) {
-    //   this.signInError(MockError.SignIn(action));
-    //   return;
-    // }
-    // this.isAdmin(credentials.email)
-    //   ? this.signIn(MockModel.Admin)
-    //   : this.signIn(MockModel.User);
   }
 }

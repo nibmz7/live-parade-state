@@ -3,7 +3,7 @@ import Branch from './branch';
 interface AuthUserProps {
   readonly uid: string;
   readonly email: string;
-  readonly branchid: string;
+  readonly branchid?: string;
   readonly departmentid?: string;
 }
 
@@ -19,7 +19,7 @@ export default class AuthUser {
     this.uid = props.uid;
     this.email = props.email;
     this.branch = {
-      id: props.branchid,
+      id: props.branchid || props.uid,
       domain: props.email.split('@')[1]
     };
     this.departmentid = props.departmentid;
