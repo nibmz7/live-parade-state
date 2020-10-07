@@ -2,8 +2,6 @@ import StatusManager from '../data/status_manager';
 import { UserStoreState } from '../data/states/user_state';
 import { ACTION_TYPE, DataResults } from '../data/data_manager';
 import User from '../model/user';
-import ACTION_USER from '../data/actions/user_action';
-import { ApplicationStore } from '../data/store';
 import Department from '../model/department';
 import Status from '../model/status';
 import Rank from '../model/rank';
@@ -21,18 +19,32 @@ export default class FBStatusManager extends StatusManager {
   private repositoryUnsubscribe?: any;
 
   protected requestModifyUser(state: UserStoreState): void {
-    setTimeout(() => {
-      const userToUpdate = new User(state.action.payload as User);
-      const userData = ApplicationStore.users.usersById[userToUpdate.uid];
-      const morning = new Status(userToUpdate.morning || userData.morning!);
-      const afternoon = new Status(
-        userToUpdate.afternoon || userData.afternoon!
-      );
-      const newUser = new User({ ...userData, morning, afternoon });
-      const action = ACTION_USER.requestSuccessful(state.action);
-      this.userOnChange(newUser, ACTION_TYPE.MODIFIED);
-      ApplicationStore.dispatch(action);
-    }, 2000);
+    const MakeStatus = (status: Status) => ({
+      code: status.code,
+      remarks: status.remarks,
+      updatedby: this.authUser.uid,
+      timestamp: window.firebase.firestore.FieldValue.serverTimestamp()
+    });
+    const userToUpdate = new User(state.action.payload as User);
+    const morning = userToUpdate.morning;
+    const afternoon = userToUpdate.afternoon;
+    const userRef = this.db.doc(
+      `branches/${this.branch.id}/repository/${userToUpdate.uid}`
+    );
+    if (morning && !afternoon) {
+      userRef.update({ 'data.status.am': {...MakeStatus(morning)} });
+    }
+    if (afternoon && !morning) {
+      userRef.update({ 'data.status.pm': {...MakeStatus(afternoon)} });
+    }
+    if (morning && afternoon) {
+      userRef.update({
+        'data.status': {
+          am: MakeStatus(morning),
+          pm: MakeStatus(afternoon)
+        }
+      });
+    }
   }
 
   unsubscribe() {
@@ -50,7 +62,7 @@ export default class FBStatusManager extends StatusManager {
       uid: doc.id,
       rank: new Rank(data.rank),
       morning: new Status({ ...morning, date: morning.timestamp.toDate() }),
-      afternoon: new Status({ ...morning, date: afternoon.timestamp.toDate() })
+      afternoon: new Status({ ...afternoon, date: afternoon.timestamp.toDate() })
     });
   }
 
@@ -60,12 +72,14 @@ export default class FBStatusManager extends StatusManager {
 
   protected connectDB(): Promise<DataResults> {
     this.db = window.firebase.firestore();
+    this.db.enablePersistence({ synchronizeTabs: true });
     let initialLoad = true;
     const branchid = this.branch.id;
     const repository = this.db.collection(`branches/${branchid}/repository`);
     return new Promise<DataResults>((resolve) => {
       const onSnapshotListener = (snapshot: FirestoreSnapshot) => {
         if (initialLoad) {
+          initialLoad = false;
           const users: User[] = [];
           const departments: Department[] = [];
           let userDepartment!: Department;
@@ -73,7 +87,7 @@ export default class FBStatusManager extends StatusManager {
             const type = change.doc.data().type;
             if (type === 'user') {
               const user = this.getUser(change.doc);
-              if(!user) return;
+              if (!user) return;
               users.push(user!);
             } else {
               const department = this.getDepartment(change.doc);
@@ -90,8 +104,8 @@ export default class FBStatusManager extends StatusManager {
             const changeType = FirestoreDocChanges[change.type];
             if (dataType === 'user') {
               const user = this.getUser(change.doc);
-              if(!user) return;
-              this.userOnChange(user!, changeType);
+              if (!user) return;
+              this.userOnChange(user, changeType);
             } else {
               const department = this.getDepartment(change.doc);
               this.departmentOnChange(department, changeType);

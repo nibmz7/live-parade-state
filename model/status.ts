@@ -51,7 +51,7 @@ export class Status {
     this.date = status.date;
     this.expired =
       status.expired === undefined
-        ? Status.isSameDay(status.date)
+        ? !Status.isSameDay(status.date)
         : status.expired;
   }
 

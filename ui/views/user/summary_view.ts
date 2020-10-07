@@ -145,9 +145,14 @@ export default class SummaryView extends LitElement {
   updated(changedProperties: Map<any, any>) {
     if (changedProperties.has('selectedCode')) {
       const height = this._userList.scrollHeight;
-      const offsetY = this._statusSelector.clientHeight + 20;
+      const offsetY = this._statusSelector.clientHeight;
+      const marginBottom = offsetY - 70 > 0 ? offsetY - 70 : 0;
       this._statusCard.style.height = `${this.initialHeight + height}px`;
       this._statusCard.style.setProperty('--offset-y', `${offsetY}px`);
+      this._statusCard.style.setProperty(
+        '--margin-bottom',
+        `${marginBottom}px`
+      );
     }
   }
 
@@ -264,7 +269,7 @@ export default class SummaryView extends LitElement {
         }
 
         #stats[hide] {
-          animation: fade-out 0.5s;
+          animation: fade-out 0.3s;
         }
 
         #stats .card {
@@ -297,8 +302,12 @@ export default class SummaryView extends LitElement {
         }
 
         #root > h4 {
-          margin-top: 30px;
-          margin-left: 30px;
+          margin-top: 1.8rem;
+          margin-left: 1.8rem;
+          margin-bottom: 1.2rem;
+          line-height: 2rem;
+          z-index: 50;
+          position: absolute;
         }
 
         #status-selector {
@@ -308,9 +317,10 @@ export default class SummaryView extends LitElement {
           column-gap: 10px;
           position: absolute;
           z-index: 50;
-          margin-left: 30px;
-          margin-right: 30px;
+          margin: 0 1.8rem;
+          padding-top: 5rem;
         }
+
         #status-selector > button {
           font-size: 0.8rem;
           border-radius: 35px;
@@ -327,20 +337,18 @@ export default class SummaryView extends LitElement {
           height: 100%;
           overflow-x: hidden;
           overflow-y: auto;
-          padding: 0 30px;
+          padding: 0 1.8rem;
         }
 
         #status-card {
           --offset-y: 0px;
-          margin-top: 20px;
+          --margin-bottom: 0px;
+          margin-top: 1.2rem;
           border-radius: 15px;
           justify-content: end;
-          transition: height 0.5s;
+          transition: height 0.5s, transform 0.5s;
           transform: translateY(var(--offset-y));
-        }
-
-        #status-card {
-          margin-bottom: calc(var(--offset-y) + 30px);
+          margin-bottom: var(--margin-bottom);
         }
 
         .user {

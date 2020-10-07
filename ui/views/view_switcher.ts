@@ -13,13 +13,15 @@ import { Unsubscribe } from 'redux';
 import './login/login_view';
 import './admin/admin_view';
 import './user/user_view';
-import MockAuthManager from '../../data-mock/mock_auth_manager';
 import AuthUser from '../../model/auth_user';
 import { DataManager } from '../../data/data_manager';
 import MockAdminManager from '../../data-mock/mock_admin_manager';
-import MockStatusManager from '../../data-mock/mock_status_manager';
 import FBAuthManager from '../../data-firebase/fb_auth_manager';
 import FBStatusManager from '../../data-firebase/fb_status_manager';
+//@ts-ignore
+import MockStatusManager from '../../data-mock/mock_status_manager';
+//@ts-ignore
+import MockAuthManager from '../../data-mock/mock_auth_manager';
 
 const enum VIEW_TYPES {
   UNINITALIZED,
