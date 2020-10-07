@@ -7,13 +7,10 @@ import {
   query
 } from 'lit-element';
 import { Unsubscribe } from 'redux';
-import MockAdminManager from '../../../data-mock/mock_admin_manager';
-import { makeUser } from '../../../data-mock/mock_data';
-import ACTION_USER from '../../../data/actions/user_action';
 import { REQUEST_TYPES } from '../../../data/data_manager';
 import { UserStoreState } from '../../../data/states/user_state';
 import { ACTION_ROOT, ApplicationStore } from '../../../data/store';
-import Status, { STATUSES } from '../../../model/status';
+import Status, { STATUSES, STATUS_CATEGORY } from '../../../model/status';
 import User from '../../../model/user';
 import {
   buttonStyles,
@@ -55,6 +52,8 @@ const StatusCodesDefault = () => ({
   [CODE_PRESENT_REMARKS]: StatusCodeDefault()
 });
 
+const StatsCountDefault = () => new Array(STATUS_CATEGORY.length).fill(0);
+
 @customElement('summary-view')
 export default class SummaryView extends LitElement {
   private isOpening = true;
@@ -66,18 +65,22 @@ export default class SummaryView extends LitElement {
   @query('#status-card', true) _statusCard!: HTMLElement;
   @query('#user-list', true) _userList!: HTMLElement;
 
+  @property({ type: Array }) statsCount!: number[];
   @property({ type: Array }) users!: Array<User>;
   @property({ type: Object }) statusCodes!: StatusCodes;
   @property({ type: String }) listHeight!: string;
   @property({ type: String }) selectedCode!: string;
-  @property({ type: Boolean }) isMorning = true;
+  @property({ type: Boolean }) isMorning!: boolean;
   @property({ type: Boolean }) shouldClose = false;
 
   private init() {
     this.users = ApplicationStore.users.sortedUsers.slice();
     const statusCodes = StatusCodesDefault();
     this.users.map((user) => {
+      this.statsCount = StatsCountDefault();
       const status = this.isMorning ? user.morning! : user.afternoon!;
+      const categoryCode = STATUSES[status.code].category;
+      this.statsCount[categoryCode]++;
       let code = `a-${status.code}`;
       if (status.expired) code = CODE_EXPIRED;
       else if (Status.isPresent(status.code) && status.remarks.length > 0) {
@@ -97,7 +100,7 @@ export default class SummaryView extends LitElement {
   }
 
   connectedCallback() {
-    this.init();
+    super.connectedCallback();
     this.usersUnsubscribe = ApplicationStore.listen(
       ACTION_ROOT.USERS,
       (state: UserStoreState) => {
@@ -105,13 +108,6 @@ export default class SummaryView extends LitElement {
         this.init();
       }
     );
-    setTimeout(() => {
-      let action = ACTION_USER.added(
-        makeUser('lolol', '3838484', 'dep-123', 'LCP')
-      );
-      ApplicationStore.dispatch(action);
-    }, 2000);
-    super.connectedCallback();
   }
 
   codeChanged(code: string) {
@@ -147,9 +143,13 @@ export default class SummaryView extends LitElement {
       const height = this._userList.scrollHeight;
       this._statusCard.style.height = `${this.initialHeight + height}px`;
     }
+  }
+
+  shouldUpdate(changedProperties: Map<any, any>) {
     if (changedProperties.has('isMorning')) {
       this.init();
     }
+    return true;
   }
 
   render() {
@@ -195,7 +195,7 @@ export default class SummaryView extends LitElement {
         </div>
 
         <button id="close" solid @click="${this.close()}">X</button>
-        <button id="download" solid>View Statistics</button>
+        <button id="view-stats" solid>View Statistics</button>
       </div>`;
   }
 
@@ -321,7 +321,7 @@ export default class SummaryView extends LitElement {
           animation-delay: 0s;
         }
 
-        #root[close] > #download {
+        #root[close] > #view-stats {
           animation-delay: 0.1s;
         }
 
@@ -330,7 +330,7 @@ export default class SummaryView extends LitElement {
         }
 
         #close,
-        #download {
+        #view-stats {
           --should-fade: 0;
           --offset-y: 150%;
           animation: slide-in 0.5s backwards;
@@ -345,7 +345,7 @@ export default class SummaryView extends LitElement {
           animation-delay: 0.5s;
         }
 
-        #download {
+        #view-stats {
           position: absolute;
           bottom: 10px;
           left: 27%;
