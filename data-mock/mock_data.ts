@@ -89,10 +89,15 @@ const makeStatus = () =>
     date: new Date()
   });
 
-const makeUser = (name: string, depId: string, rank: string) =>
+export const makeUser = (
+  name: string,
+  uid: string,
+  depId: string,
+  rank: string
+) =>
   new User({
-    uid: `user-${randomInt(999)}`,
-    name: 'John',
+    uid: `user-${uid}`,
+    name,
     email: `${name}@lol.com`,
     regular: randomInt(7) >= 3,
     rank: new Rank(rank),
@@ -152,16 +157,16 @@ const ModelUserArray: Array<User> = [
   ModelUser2,
   ModelUser22,
   ModelUser3,
-  makeUser('lily', 'dep-123', 'LTC'),
-  makeUser('joe', 'dep-123', 'LCP'),
-  makeUser('bob', 'dep-123', '1WO'),
-  makeUser('joyce', 'dep-456', '1SG'),
-  makeUser('bill', 'dep-456', 'LCP'),
-  makeUser('sam', 'dep-456', 'CPL'),
-  makeUser('ruby', 'dep-789', 'MSG'),
-  makeUser('paula', 'dep-789', 'REC'),
-  makeUser('rob', 'dep-789', 'PTE'),
-  makeUser('lucas', 'dep-321', 'MG')
+  makeUser('lily', '1234', 'dep-123', 'LTC'),
+  makeUser('joe', '12344', 'dep-123', 'LCP'),
+  makeUser('bob', '123444', 'dep-123', '1WO'),
+  makeUser('joyce', '4568', 'dep-456', '1SG'),
+  makeUser('bill', '4566', 'dep-456', 'LCP'),
+  makeUser('sam', '45666', 'dep-456', 'CPL'),
+  makeUser('ruby', '78910', 'dep-789', 'MSG'),
+  makeUser('paula', '78999', 'dep-789', 'REC'),
+  makeUser('rob', '7899919', 'dep-789', 'PTE'),
+  makeUser('lucas', '781929', 'dep-321', 'MG')
 ];
 
 export const MockModel = {

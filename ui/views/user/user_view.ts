@@ -44,7 +44,10 @@ export default class UserView extends LitElement {
       </button>
 
       ${this.showSummary
-        ? html`<summary-view @on-close="${this.closeSummary}"></summary-view>`
+        ? html`<summary-view
+            @on-close="${this.closeSummary}"
+            .isMorning="${this.isMorning}"
+          ></summary-view>`
         : ''}
 
       <toggle-am @toggle-am="${this.toggleAm}"></toggle-am>

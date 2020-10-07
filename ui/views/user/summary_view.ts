@@ -6,7 +6,13 @@ import {
   property,
   query
 } from 'lit-element';
-import { ApplicationStore } from '../../../data/store';
+import { Unsubscribe } from 'redux';
+import MockAdminManager from '../../../data-mock/mock_admin_manager';
+import { makeUser } from '../../../data-mock/mock_data';
+import ACTION_USER from '../../../data/actions/user_action';
+import { REQUEST_TYPES } from '../../../data/data_manager';
+import { UserStoreState } from '../../../data/states/user_state';
+import { ACTION_ROOT, ApplicationStore } from '../../../data/store';
 import Status, { STATUSES } from '../../../model/status';
 import User from '../../../model/user';
 import {
@@ -40,8 +46,6 @@ const STATUS_NAMES = {
   [CODE_PRESENT_REMARKS]: 'PRESENT (REMARKS)'
 };
 
-console.log(STATUS_NAMES);
-
 const StatusCodeDefault = () => ({ users: [], regular: 0, nsf: 0 });
 
 const StatusCodesDefault = () => ({
@@ -55,6 +59,7 @@ const StatusCodesDefault = () => ({
 export default class SummaryView extends LitElement {
   private isOpening = true;
   private initialHeight = 0;
+  private usersUnsubscribe?: Unsubscribe;
 
   @query('#root') _root!: HTMLElement;
   @query('#header') _header!: HTMLElement;
@@ -93,6 +98,19 @@ export default class SummaryView extends LitElement {
 
   connectedCallback() {
     this.init();
+    this.usersUnsubscribe = ApplicationStore.listen(
+      ACTION_ROOT.USERS,
+      (state: UserStoreState) => {
+        if (REQUEST_TYPES.includes(state.action.type)) return;
+        this.init();
+      }
+    );
+    setTimeout(() => {
+      let action = ACTION_USER.added(
+        makeUser('lolol', '3838484', 'dep-123', 'LCP')
+      );
+      ApplicationStore.dispatch(action);
+    }, 2000);
     super.connectedCallback();
   }
 
@@ -104,6 +122,7 @@ export default class SummaryView extends LitElement {
 
   close() {
     return onPressed(() => {
+      this.usersUnsubscribe?.();
       if (!this.isOpening) this.shouldClose = true;
     });
   }
@@ -127,6 +146,9 @@ export default class SummaryView extends LitElement {
     if (changedProperties.has('selectedCode')) {
       const height = this._userList.scrollHeight;
       this._statusCard.style.height = `${this.initialHeight + height}px`;
+    }
+    if (changedProperties.has('isMorning')) {
+      this.init();
     }
   }
 
@@ -158,13 +180,14 @@ export default class SummaryView extends LitElement {
           <h4 id="header">${total} Total ~ ${regular} Regular + ${nsf} Nsf</h4>
           <div id="user-list">
             ${status.users.map((user) => {
+              const status = this.isMorning ? user.morning! : user.afternoon!;
               return html`<div class="user">
                 <p class="fullname" ?regular="${user.regular}">
                   ${user.fullname}
                 </p>
                 <p class="remarks">
-                  ${user.morning!.remarks}
-                  ${user.morning!.expired ? html`<span>-- Expired</span>` : ''}
+                  ${status.remarks}
+                  ${status.expired ? html`<span>-- Expired</span>` : ''}
                 </p>
               </div>`;
             })}
