@@ -309,6 +309,7 @@ export default class SummaryView extends LitElement {
           position: absolute;
           z-index: 50;
           margin-left: 30px;
+          margin-right: 30px;
         }
         #status-selector > button {
           font-size: 0.8rem;
@@ -323,7 +324,7 @@ export default class SummaryView extends LitElement {
         }
 
         #status-card-container {
-          max-height: 100%;
+          height: 100%;
           overflow-x: hidden;
           overflow-y: auto;
           padding: 0 30px;
