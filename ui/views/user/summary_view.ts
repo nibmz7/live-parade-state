@@ -62,6 +62,7 @@ export default class SummaryView extends LitElement {
 
   @query('#root') _root!: HTMLElement;
   @query('#header') _header!: HTMLElement;
+  @query('#stats') _stats!: HTMLElement;
   @query('#status-card', true) _statusCard!: HTMLElement;
   @query('#user-list', true) _userList!: HTMLElement;
 
@@ -72,12 +73,14 @@ export default class SummaryView extends LitElement {
   @property({ type: String }) selectedCode!: string;
   @property({ type: Boolean }) isMorning!: boolean;
   @property({ type: Boolean }) shouldClose = false;
+  @property({ type: Boolean }) showStats = false;
+  @property({ type: Boolean }) fadeOutStats = false;
 
   private init() {
+    this.statsCount = StatsCountDefault();
     this.users = ApplicationStore.users.sortedUsers.slice();
     const statusCodes = StatusCodesDefault();
     this.users.map((user) => {
-      this.statsCount = StatsCountDefault();
       const status = this.isMorning ? user.morning! : user.afternoon!;
       const categoryCode = STATUSES[status.code].category;
       this.statsCount[categoryCode]++;
@@ -152,6 +155,18 @@ export default class SummaryView extends LitElement {
     return true;
   }
 
+  hideStats() {
+    this._stats.addEventListener(
+      'animationend',
+      () => {
+        this.showStats = false;
+        this.fadeOutStats = false;
+      },
+      { once: true }
+    );
+    this.fadeOutStats = true;
+  }
+
   render() {
     const status = this.statusCodes[this.selectedCode];
     const regular = status.regular;
@@ -195,7 +210,25 @@ export default class SummaryView extends LitElement {
         </div>
 
         <button id="close" solid @click="${this.close()}">X</button>
-        <button id="view-stats" solid>View Statistics</button>
+        <button id="view-stats" solid @click="${() => (this.showStats = true)}">
+          View Statistics
+        </button>
+
+        ${this.showStats
+          ? html`
+              <div
+                id="stats"
+                @click="${this.hideStats}"
+                ?hide="${this.fadeOutStats}"
+              >
+                <div class="card">
+                  ${STATUS_CATEGORY.map((name, index) => {
+                    return html`<p>${name}: <span>${this.statsCount[index]}</span></p>`;
+                  })}
+                </div>
+              </div>
+            `
+          : ''}
       </div>`;
   }
 
@@ -207,6 +240,39 @@ export default class SummaryView extends LitElement {
       slideAnimation,
       fadeAnimation,
       css`
+        #stats {
+          animation: fade-in 0.5s;
+          background: rgba(0, 0, 0, 0.1);
+          position: absolute;
+          top: 0;
+          bottom: 0;
+          left: 0;
+          right: 0;
+          display: flex;
+          justify-content: center;
+          align-items: center;
+          padding: 40px;
+        }
+
+        #stats[hide] {
+          animation: fade-out 0.5s;
+        }
+
+        #stats .card {
+          width: 100%;
+          padding: 10px 30px;
+          border-radius: 5px;
+        }
+
+        #stats p {
+          font-weight: bold;
+          margin: 10px 0 10px 0;
+        }
+
+        #stats p span {
+          color: var(--color-primary);
+        }
+
         #user-list {
           height: 0;
         }

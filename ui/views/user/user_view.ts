@@ -43,14 +43,14 @@ export default class UserView extends LitElement {
         View Summary
       </button>
 
+      <toggle-am @toggle-am="${this.toggleAm}"></toggle-am>
+
       ${this.showSummary
         ? html`<summary-view
             @on-close="${this.closeSummary}"
             .isMorning="${this.isMorning}"
           ></summary-view>`
         : ''}
-
-      <toggle-am @toggle-am="${this.toggleAm}"></toggle-am>
     </div>`;
   }
 
@@ -80,7 +80,7 @@ export default class UserView extends LitElement {
 
         toggle-am {
           position: absolute;
-          z-index: 98;
+          z-index: 21;
           right: 10px;
           bottom: 10px;
         }
