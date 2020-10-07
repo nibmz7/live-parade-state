@@ -140,7 +140,7 @@ export default class CustomDialog extends LitElement {
         }
 
         #root[hide] {
-          animation: fade-out 0.5s;
+          animation: fade-out 0.3s;
         }
 
         .dialog {
@@ -158,7 +158,7 @@ export default class CustomDialog extends LitElement {
         }
 
         #root[hide] > .dialog {
-          animation: scale-out 0.5s;
+          animation: scale-out 0.3s;
         }
 
         #root[ready] > .dialog {

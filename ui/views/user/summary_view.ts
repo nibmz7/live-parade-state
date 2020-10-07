@@ -148,7 +148,7 @@ export default class SummaryView extends LitElement {
         </div>
 
         <button id="close" solid @click="${this.close()}">X</button>
-        <button id="download" solid>Download file</button>
+        <button id="download" solid>View Statistics</button>
       </div>`;
   }
 
