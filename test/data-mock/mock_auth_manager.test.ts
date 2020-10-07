@@ -5,6 +5,7 @@ import ACTION_AUTH from '../../data/actions/auth_action';
 import MockAuthManager from '../../data-mock/mock_auth_manager';
 import { MockAuth, MockModel, MockError } from '../../data-mock/mock_data';
 import { Unsubscribe } from 'redux';
+import AuthUser from '../../model/auth_user';
 
 describe('Mock Auth Manager', () => {
   before(() => {
@@ -39,6 +40,7 @@ describe('Mock Auth Manager', () => {
   });
 
   it('Sign In with User', (done) => {
+    const authUser = new AuthUser({...MockModel.User});
     let action = ACTION_AUTH.requestSignIn(MockAuth.UserCredentials);
 
     let callback = (auth: AuthStoreState, unsubscribe: Unsubscribe) => {
@@ -48,7 +50,7 @@ describe('Mock Auth Manager', () => {
           id: auth.action.id,
           root: ACTION_ROOT.AUTH,
           type: AUTH_STATE.SIGNED_IN,
-          payload: MockModel.User
+          payload: authUser
         }
       };
       expect(auth).deep.equal(expectedState);
@@ -61,6 +63,7 @@ describe('Mock Auth Manager', () => {
   });
 
   it('Sign In with Admin', (done) => {
+    const authUser = new AuthUser({...MockModel.User});
     let action = ACTION_AUTH.requestSignIn(MockAuth.AdminCredentials);
 
     let callback = (auth: AuthStoreState, unsubscribe: Unsubscribe) => {
@@ -70,7 +73,7 @@ describe('Mock Auth Manager', () => {
           id: auth.action.id,
           root: ACTION_ROOT.AUTH,
           type: AUTH_STATE.SIGNED_IN,
-          payload: MockModel.Admin
+          payload: authUser
         }
       };
       expect(auth).deep.equal(expectedState);

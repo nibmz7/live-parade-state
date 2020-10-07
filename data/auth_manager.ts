@@ -1,5 +1,3 @@
-import User from '../model/user';
-import Admin from '../model/admin';
 import { ApplicationStore, ACTION_ROOT } from '../data/store';
 import {
   AUTH_STATE,
@@ -8,6 +6,7 @@ import {
   AuthAction
 } from '../data/states/auth_state';
 import ACTION_AUTH from './actions/auth_action';
+import AuthUser from '../model/auth_user';
 
 export default abstract class AuthManager {
   constructor() {
@@ -32,7 +31,7 @@ export default abstract class AuthManager {
     ApplicationStore.dispatch(action);
   }
 
-  protected signIn(user: User | Admin) {
+  protected signIn(user: AuthUser) {
     let action = ACTION_AUTH.userSignedIn(user);
     ApplicationStore.dispatch(action);
   }

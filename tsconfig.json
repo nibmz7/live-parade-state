@@ -19,9 +19,11 @@
     "rootDir": ".",
     "outDir": "./dist"
   },
+  "files": ["./node_modules/firebase/index.d.ts"],
   "include": [
     "./model/**/*.ts",
     "./data/**/*.ts",
+    "./data-firebase/**/*.ts",
     "./data-mock/**/*.ts",
     "./ui/**/*.ts",
     "./test/**/*.ts"

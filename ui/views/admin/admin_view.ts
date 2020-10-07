@@ -1,7 +1,5 @@
 import { LitElement, html, customElement, css, property } from 'lit-element';
-import { ApplicationStore } from '../../../data/store';
 import { buttonStyles, cardStyles, globalStyles } from '../../global_styles';
-import Admin from '../../../model/admin';
 import { onPressed } from '../../utils';
 import '../../dialogs/edit_user';
 import '../../dialogs/edit_department';
@@ -13,8 +11,6 @@ import './admin_user_list';
 
 @customElement('admin-view')
 export default class AdminView extends LitElement {
-  private admin = ApplicationStore.auth.action.payload as Admin;
-  private branch = this.admin.branch;
 
   @property({ type: Boolean }) showAddDepartment = false;
 
@@ -30,10 +26,7 @@ export default class AdminView extends LitElement {
 
   render() {
     return html`<div id="root">
-      <admin-dep-list
-        .branch="${this.branch}"
-        .admin="${this.admin}"
-      ></admin-dep-list>
+      <admin-dep-list></admin-dep-list>
 
       <button id="add-department" solid @click="${this.onAddDepartment()}">
         Add department

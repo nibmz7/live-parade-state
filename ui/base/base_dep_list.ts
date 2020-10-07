@@ -15,13 +15,13 @@ import {
   ApplicationStore,
   DataStoreListener
 } from '../../data/store';
-import Admin from '../../model/admin';
+import AuthUser from '../../model/auth_user';
 import Department from '../../model/department';
-import User from '../../model/user';
 import { buttonStyles, cardStyles, globalStyles } from '../global_styles';
 
 export default abstract class BaseDepList extends LitElement {
   private welcomeTitle!: string;
+  private authUser = ApplicationStore.auth.action.payload as AuthUser;
 
   @query('#department-list') _departmentsList!: HTMLElement;
   @query('welcome-text') _welcomeText!: HTMLElement;
@@ -32,11 +32,11 @@ export default abstract class BaseDepList extends LitElement {
 
   @property({ type: Array }) departments: Array<Department> = [];
   @property({ type: Boolean }) elevate = false;
-  @property({ type: Object }) user!: User;
-  @property({ type: Object }) admin!: Admin;
 
-  abstract depItemTemplate(department: Department, index: number): TemplateResult;
-  abstract cleanup(): void;
+  abstract depItemTemplate(
+    department: Department,
+    index: number
+  ): TemplateResult;
 
   private departmentsListener: DataStoreListener = (
     state: DepartmentStoreState
@@ -47,21 +47,25 @@ export default abstract class BaseDepList extends LitElement {
   };
 
   connectedCallback() {
-    super.connectedCallback();
-    this.welcomeTitle = this.admin
-      ? 'Hi, admin user!'
-      : `Hi, ${this.user.fullname}!`;
+    if (this.authUser.isAdmin) {
+      this.welcomeTitle = 'Hi, admin user!';
+    } else {
+      const fullname =
+        ApplicationStore.users.usersById[this.authUser.uid].fullname;
+      this.welcomeTitle = `Hi, ${fullname}!`;
+    }
+    this.departments = ApplicationStore.departments.items.slice();
     const departmentsUnsubscribe = ApplicationStore.listen(
       ACTION_ROOT.DEPARTMENTS,
       this.departmentsListener
     );
     const onSignedOut = () => {
       departmentsUnsubscribe();
-      this.cleanup();
       const action = ACTION_AUTH.requestSignOut();
       ApplicationStore.dispatch(action);
     };
     this.addEventListener('signed-out', onSignedOut, { once: true });
+    super.connectedCallback();
   }
 
   render() {

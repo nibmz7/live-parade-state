@@ -9,7 +9,6 @@ import {
 import ACTION_USER from '../../data/actions/user_action';
 import { UserAction } from '../../data/states/user_state';
 import { ApplicationStore } from '../../data/store';
-import Branch from '../../model/branch';
 import Department from '../../model/department';
 import Rank from '../../model/rank';
 import {
@@ -31,15 +30,17 @@ import { onPressed } from '../utils';
 import '../base/custom_dialog';
 import { DIALOG_STATE } from '../base/custom_dialog';
 import User, { UserBase } from '../../model/user';
+import AuthUser from '../../model/auth_user';
 
 @customElement('edit-user')
 export default class EditUser extends LitElement {
+  private authUser = ApplicationStore.auth.action.payload as AuthUser;
+  private branch = this.authUser.branch;
   private departments = ApplicationStore.departments.items;
 
   @query('#department-selector') _departmentSelector!: HTMLElement;
 
   @property({ type: Object }) user?: User;
-  @property({ type: Object }) branch!: Branch;
   @property({ type: Object }) department!: Department;
   @property({ type: Object }) nameState = InputStateDefault();
   @property({ type: Object }) rankState = InputStateDefault();
@@ -101,10 +102,10 @@ export default class EditUser extends LitElement {
 
       const name = this.nameState.value;
       const rank = new Rank(this.rankState.value);
-      const email = this.emailState.value + '@' + this.branch?.domain;
+      const email = this.emailState.value + '@' + this.branch.domain;
       const regular = this.isRegularState;
       const departmentid = this.department!.id;
-      const branchid = this.branch!.id;
+      const branchid = this.branch.id;
 
       let data = { name, rank, email, regular, branchid, departmentid };
       let action: UserAction;
@@ -233,7 +234,7 @@ export default class EditUser extends LitElement {
             }
           )}
 
-          <p>@${this.branch?.domain}</p>
+          <p>@${this.branch.domain}</p>
         </div>
 
         <div id="password" class="row-box">

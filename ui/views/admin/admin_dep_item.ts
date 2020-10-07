@@ -1,5 +1,4 @@
 import { css, customElement, html, LitElement, property } from 'lit-element';
-import Branch from '../../../model/branch';
 import Department from '../../../model/department';
 import User from '../../../model/user';
 import { buttonStyles, cardStyles, globalStyles, slideAnimation } from '../../global_styles';
@@ -7,7 +6,6 @@ import { onPressed } from '../../utils';
 
 @customElement('admin-dep-item')
 export default class AdminDepItem extends LitElement {
-  @property({ type: Object }) branch!: Branch;
   @property({ type: Object }) department!: Department;
   @property({ type: Object }) selectedUser?: User;
   @property({ type: Boolean }) showEditDepartment: Boolean = false;
@@ -84,7 +82,6 @@ export default class AdminDepItem extends LitElement {
         ${this.showEditUser
           ? html`
               <edit-user
-                .branch=${this.branch}
                 .department=${this.department}
                 .user=${this.selectedUser}
                 .editing=${!!this.selectedUser}

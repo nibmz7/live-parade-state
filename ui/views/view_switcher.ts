@@ -6,15 +6,18 @@ import {
   property,
   query
 } from 'lit-element';
-import MockAuthManager from '../../data-mock/mock_auth_manager';
 import { ACTION_ROOT, ApplicationStore } from '../../data/store';
 import { AUTH_STATE, AuthStoreState } from '../../data/states/auth_state';
 import { fadeAnimation } from '../global_styles';
 import { Unsubscribe } from 'redux';
-import Admin from '../../model/admin';
 import './login/login_view';
 import './admin/admin_view';
 import './user/user_view';
+import MockAuthManager from '../../data-mock/mock_auth_manager';
+import AuthUser from '../../model/auth_user';
+import { DataManager } from '../../data/data_manager';
+import MockAdminManager from '../../data-mock/mock_admin_manager';
+import MockStatusManager from '../../data-mock/mock_status_manager';
 
 const enum VIEW_TYPES {
   UNINITALIZED,
@@ -25,6 +28,7 @@ const enum VIEW_TYPES {
 
 @customElement('view-switcher')
 export default class ViewSwitcher extends LitElement {
+  private dataManager?: DataManager;
   @query('#root') _root!: HTMLElement;
   @property({ type: Boolean, reflect: true }) splashscreen = true;
   @property({ type: Boolean, reflect: true }) initialized = false;
@@ -68,13 +72,18 @@ export default class ViewSwitcher extends LitElement {
   }
 
   signedIn() {
-    let user = ApplicationStore.auth.action.payload;
-    (user as Admin).isAdmin
+    let user = ApplicationStore.auth.action.payload as AuthUser;
+    this.dataManager = user.isAdmin ? new MockAdminManager() : new MockStatusManager();
+    this.dataManager.subscribe().then(() => {
+      user.isAdmin
       ? this.showView(VIEW_TYPES.ADMIN)
       : this.showView(VIEW_TYPES.USER);
+    })
   }
 
   signedOut() {
+    this.dataManager?.unsubscribe();
+    this.dataManager = undefined;
     this.showView(VIEW_TYPES.AUTH);
   }
 

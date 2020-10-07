@@ -6,8 +6,7 @@ import {
   SignInError,
   AuthPayload
 } from '../states/auth_state';
-import Admin from '../../model/admin';
-import User from '../../model/user';
+import AuthUser from '../../model/auth_user';
 
 const makeAction = (type: AUTH_STATE, payload: AuthPayload): AuthAction => ({
   id: generateActionId(),
@@ -21,7 +20,7 @@ const ACTION_AUTH = {
     makeAction(AUTH_STATE.REQUEST_SIGN_IN, credentials),
   requestSignOut: (): AuthAction =>
     makeAction(AUTH_STATE.REQUEST_SIGN_OUT, undefined),
-  userSignedIn: (user: User | Admin): AuthAction =>
+  userSignedIn: (user: AuthUser): AuthAction =>
     makeAction(AUTH_STATE.SIGNED_IN, user),
   userSignedOut: (): AuthAction => makeAction(AUTH_STATE.SIGNED_OUT, undefined),
   signInFailed: (error: SignInError): AuthAction =>

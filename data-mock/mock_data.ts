@@ -7,7 +7,6 @@ import {
 } from '../data/states/auth_state';
 import Department from '../model/department';
 import User from '../model/user';
-import Admin from '../model/admin';
 import {
   DepartmentAction,
   DepartmentActionError
@@ -181,5 +180,5 @@ export const MockModel = {
     [ModelDepartment2.id]: [ModelUser2, ModelUser22],
     [ModelDepartment3.id]: [ModelUser3]
   },
-  Admin: new Admin('321', 'admin@lol.com')
+  Admin: { uid: '321', branchid: '321', email: 'admin@lol.com' }
 };

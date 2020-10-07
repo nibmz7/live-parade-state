@@ -1,5 +1,6 @@
 import AuthManager from '../data/auth_manager';
 import { SignInCredentials, AuthAction } from '../data/states/auth_state';
+import AuthUser from '../model/auth_user';
 import { MockModel, MockError } from './mock_data';
 
 export default class MockAuthManager extends AuthManager {
@@ -10,7 +11,8 @@ export default class MockAuthManager extends AuthManager {
   protected async initialize() {
     // this.signOut();
     // this.signIn(MockModel.Admin);
-    this.signIn(MockModel.User);
+    const authUser = new AuthUser({ ...MockModel.User });
+    this.signIn(authUser);
   }
 
   protected async signInWithCredentials(action: AuthAction) {
@@ -19,8 +21,10 @@ export default class MockAuthManager extends AuthManager {
       this.signInError(MockError.SignIn(action));
       return;
     }
-    this.isAdmin(credentials.email)
-      ? this.signIn(MockModel.Admin)
-      : this.signIn(MockModel.User);
+    let authUser: AuthUser;
+    if (this.isAdmin(credentials.email))
+      authUser = new AuthUser({ ...MockModel.Admin });
+      else authUser = new AuthUser({ ...MockModel.User });
+    this.signIn(authUser);
   }
 }
