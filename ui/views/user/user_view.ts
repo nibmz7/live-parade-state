@@ -16,12 +16,7 @@ export default class UserView extends LitElement {
   private user = ApplicationStore.auth.action.payload as User;
 
   @property({ type: Boolean }) showSummary = false;
-  @property({ type: Boolean }) isMorning = true;
-
-  constructor() {
-    super();
-    this.isMorning = new Date().getHours() < 12;
-  }
+  @property({ type: Boolean }) isMorning = new Date().getHours() < 12;
 
   viewSummary() {
     return onPressed(() => {
