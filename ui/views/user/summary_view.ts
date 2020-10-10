@@ -72,10 +72,10 @@ export default class SummaryView extends LitElement {
   @property({ type: String }) listHeight!: string;
   @property({ type: String }) selectedCode!: string;
   @property({ type: Boolean }) isMorning!: boolean;
-  @property({ type: Boolean }) shouldClose = false;
   @property({ type: Boolean }) showStats = false;
   @property({ type: Boolean }) fadeOutStats = false;
-  @property({ type: Boolean }) isOpening = true;
+  @property({ type: Boolean }) closeView = false;
+  @property({ type: Boolean }) openingView = true;
 
   private init() {
     this.statsCount = StatsCountDefault();
@@ -123,7 +123,7 @@ export default class SummaryView extends LitElement {
   close() {
     return onPressed(() => {
       this.usersUnsubscribe?.();
-      if (!this.isOpening) this.shouldClose = true;
+      if (!this.openingView) this.closeView = true;
     });
   }
 
@@ -136,23 +136,21 @@ export default class SummaryView extends LitElement {
         this.dispatchEvent(new Event('on-close'));
       }
       if (e.animationName === 'slide-in') {
-        this.isOpening = false;
+        this.openingView = false;
       }
     };
     this._root.addEventListener('animationend', onClose);
   }
 
   updated(changedProperties: Map<any, any>) {
-    if (changedProperties.has('selectedCode')) {
+    const selectedCodeChanged = changedProperties.has('selectedCode');
+    const isMorningChanged = changedProperties.has('isMorning');
+
+    if (selectedCodeChanged || isMorningChanged) {
       const height = this._userList.scrollHeight;
       const offsetY = this._statusSelector.clientHeight;
-      const marginBottom = offsetY - 40 > 0 ? offsetY - 40 : 0;
       this._statusCard.style.height = `${this.initialHeight + height}px`;
       this._statusCard.style.setProperty('--offset-y', `${offsetY}px`);
-      this._statusCard.style.setProperty(
-        '--margin-bottom',
-        `${marginBottom}px`
-      );
     }
   }
 
@@ -180,8 +178,8 @@ export default class SummaryView extends LitElement {
     const regular = status.regular;
     const nsf = status.nsf;
     const total = regular + nsf;
-    return html` <div class="scrim" ?close="${this.shouldClose}"></div>
-      <div id="root" ?close="${this.shouldClose}">
+    return html` <div class="scrim" ?close="${this.closeView}"></div>
+      <div id="root" ?close="${this.closeView}">
         <h4>Summary - ${this.users.length} Total</h4>
 
         <div id="status-selector">
@@ -200,7 +198,7 @@ export default class SummaryView extends LitElement {
         </div>
 
         <div id="status-card-container">
-          <div id="status-card" class="card" ?loading="${this.isOpening}">
+          <div id="status-card" class="card" ?loading="${this.openingView}">
             <h4 id="header">
               ${total} Total ~ ${regular} Regular + ${nsf} Nsf
             </h4>
@@ -346,13 +344,12 @@ export default class SummaryView extends LitElement {
 
         #status-card {
           --offset-y: 0px;
-          --margin-bottom: 0px;
-          margin-top: 1.2rem;
+          margin-top: 1rem;
           border-radius: 15px;
           justify-content: end;
           transition: height 0.5s, transform 0.5s;
           transform: translateY(var(--offset-y));
-          margin-bottom: var(--margin-bottom);
+          margin-bottom: 70px;
         }
 
         #status-card[loading] {
