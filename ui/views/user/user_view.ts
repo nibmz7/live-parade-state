@@ -18,6 +18,11 @@ export default class UserView extends LitElement {
   @property({ type: Boolean }) showSummary = false;
   @property({ type: Boolean }) isMorning = true;
 
+  constructor() {
+    super();
+    this.isMorning = new Date().getHours() < 12;
+  }
+
   viewSummary() {
     return onPressed(() => {
       this.showSummary = true;

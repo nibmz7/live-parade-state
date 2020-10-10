@@ -66,6 +66,7 @@ export default class SummaryView extends LitElement {
   @query('#status-card', true) _statusCard!: HTMLElement;
   @query('#user-list', true) _userList!: HTMLElement;
   @query('#header', true) _header!: HTMLElement;
+  @query('#status-card-container', true) _statusCardContainer!: HTMLElement;
 
   @property({ type: Array }) statsCount!: number[];
   @property({ type: Array }) users!: Array<User>;
@@ -163,7 +164,7 @@ export default class SummaryView extends LitElement {
       const height = this._userList.scrollHeight;
       const offsetY = this._header.clientHeight;
       this._statusCard.style.height = `${this.initialHeight + height}px`;
-      this._statusCard.style.setProperty('--offset-y', `${offsetY}px`);
+      this._statusCardContainer.style.setProperty('--offset-y', `${offsetY}px`);
     }
   }
 
@@ -220,6 +221,8 @@ export default class SummaryView extends LitElement {
               })}
             </div>
           </div>
+
+          <div class="padding"></div>
         </div>
 
         <button id="close" solid @click="${this.close()}">X</button>
@@ -339,19 +342,25 @@ export default class SummaryView extends LitElement {
           overflow-x: hidden;
           overflow-y: auto;
           padding: 0 1.8rem;
+          --offset-y: 0px;
         }
 
         #status-card-container::-webkit-scrollbar {
           display: none;
         }
 
+        #status-card-container .padding {
+          content: '';
+          height: var(--offset-y);
+          display: block;
+        }
+
         #status-card {
-          --offset-y: 0px;
           margin-top: 1rem;
           border-radius: 15px;
-          justify-content: end;
           transition: height 0.5s, transform 0.5s;
           transform: translateY(var(--offset-y));
+          justify-content: start;
           margin-bottom: 70px;
         }
 
