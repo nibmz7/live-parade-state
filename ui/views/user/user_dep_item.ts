@@ -2,7 +2,12 @@ import { css, customElement, html, LitElement, property } from 'lit-element';
 import Department from '../../../model/department';
 import Status from '../../../model/status';
 import User from '../../../model/user';
-import { buttonStyles, cardStyles, globalStyles, slideAnimation } from '../../global_styles';
+import {
+  buttonStyles,
+  cardStyles,
+  globalStyles,
+  slideAnimation
+} from '../../global_styles';
 
 interface PresentCount {
   regular: number;
@@ -30,18 +35,17 @@ export default class UserDepItem extends LitElement {
 
   onListChanged(e: CustomEvent) {
     const users = e.detail.users as Array<User>;
+    const amCount = { regular: 0, nsf: 0 };
+    const pmCount = { regular: 0, nsf: 0 };
     users.map((user) => {
-      const amCount = { regular: 0, nsf: 0 };
-      const pmCount = { regular: 0, nsf: 0 };
-
       if (Status.isPresent(user.morning!.code)) {
         user.regular ? amCount.regular++ : amCount.nsf++;
       }
       if (Status.isPresent(user.afternoon!.code)) {
         user.regular ? pmCount.regular++ : pmCount.nsf++;
       }
-      this.presentCount = { am: amCount, pm: pmCount };
     });
+    this.presentCount = { am: amCount, pm: pmCount };
     this.isEmpty = users.length === 0;
   }
 
@@ -51,7 +55,7 @@ export default class UserDepItem extends LitElement {
       : this.presentCount.pm;
     const regular = presentCount.regular;
     const nsf = presentCount.nsf;
-    return html`<div id="root" style="--anim-delay:${this.index * 2 / 10}s;">
+    return html`<div id="root" style="--anim-delay:${(this.index * 2) / 10}s;">
         <div class="header">
           <h3>${this.department.name}</h3>
         </div>
@@ -89,7 +93,7 @@ export default class UserDepItem extends LitElement {
           margin: inherit;
           --offset-y: 100px;
           --should-fade: 1;
-          animation: slide-in .5s both;
+          animation: slide-in 0.5s both;
           animation-delay: var(--anim-delay);
         }
 
