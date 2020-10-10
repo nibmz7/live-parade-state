@@ -56,7 +56,6 @@ const StatsCountDefault = () => new Array(STATUS_CATEGORY.length).fill(0);
 
 @customElement('summary-view')
 export default class SummaryView extends LitElement {
-  private isOpening = true;
   private initialHeight = 0;
   private usersUnsubscribe?: Unsubscribe;
 
@@ -76,6 +75,7 @@ export default class SummaryView extends LitElement {
   @property({ type: Boolean }) shouldClose = false;
   @property({ type: Boolean }) showStats = false;
   @property({ type: Boolean }) fadeOutStats = false;
+  @property({ type: Boolean }) isOpening = true;
 
   private init() {
     this.statsCount = StatsCountDefault();
@@ -146,7 +146,7 @@ export default class SummaryView extends LitElement {
     if (changedProperties.has('selectedCode')) {
       const height = this._userList.scrollHeight;
       const offsetY = this._statusSelector.clientHeight;
-      const marginBottom = offsetY - 70 > 0 ? offsetY - 70 : 0;
+      const marginBottom = offsetY - 40 > 0 ? offsetY - 40 : 0;
       this._statusCard.style.height = `${this.initialHeight + height}px`;
       this._statusCard.style.setProperty('--offset-y', `${offsetY}px`);
       this._statusCard.style.setProperty(
@@ -200,7 +200,7 @@ export default class SummaryView extends LitElement {
         </div>
 
         <div id="status-card-container">
-          <div id="status-card" class="card">
+          <div id="status-card" class="card" ?loading="${this.isOpening}">
             <h4 id="header">
               ${total} Total ~ ${regular} Regular + ${nsf} Nsf
             </h4>
@@ -254,6 +254,180 @@ export default class SummaryView extends LitElement {
       slideAnimation,
       fadeAnimation,
       css`
+        button {
+          font-weight: 500;
+        }
+
+        .scrim {
+          position: absolute;
+          top: 0;
+          bottom: 0;
+          left: 0;
+          right: 0;
+          background: #0000004a;
+          animation: fade-in 0.5s;
+        }
+
+        .scrim[close] {
+          animation: fade-out 0.5s 0.3s;
+        }
+
+        #root[close] {
+          animation: slide-out-to-right 0.5s 0.3s;
+        }
+
+        #root[close] > button {
+          animation: slide-out 0.3s forwards;
+        }
+
+        #root[close] > #close {
+          animation-delay: 0s;
+        }
+
+        #root[close] > #view-stats {
+          animation-delay: 0.1s;
+        }
+
+        #root {
+          overflow: hidden;
+          position: absolute;
+          top: 0;
+          bottom: 0;
+          left: 0;
+          right: 0;
+          background: white;
+          z-index: 20;
+          animation: slide-in-from-right 0.5s backwards;
+          box-shadow: rgb(0 0 0 / 20%) -2px 0px 6px -3px;
+        }
+
+        #root > h4 {
+          margin-top: 1.8rem;
+          margin-left: 1.8rem;
+          margin-bottom: 1.2rem;
+          line-height: 2rem;
+          z-index: 50;
+          position: absolute;
+        }
+
+        #status-selector {
+          display: flex;
+          flex-wrap: wrap;
+          position: absolute;
+          z-index: 50;
+          margin: 0 1.8rem;
+          padding-top: 5rem;
+        }
+
+        #status-selector > button {
+          font-size: 0.8rem;
+          border-radius: 35px;
+          padding: 5px 10px;
+          line-height: 0.8rem;
+          margin-bottom: 10px;
+          margin-right: 10px;
+        }
+
+        #status-selector > button[selected] {
+          background-color: var(--color-primary);
+          color: white;
+        }
+
+        #status-card-container {
+          height: 100%;
+          overflow-x: hidden;
+          overflow-y: auto;
+          padding: 0 1.8rem;
+        }
+
+        #status-card-container::-webkit-scrollbar {
+          display: none;
+        }
+
+        #status-card {
+          --offset-y: 0px;
+          --margin-bottom: 0px;
+          margin-top: 1.2rem;
+          border-radius: 15px;
+          justify-content: end;
+          transition: height 0.5s, transform 0.5s;
+          transform: translateY(var(--offset-y));
+          margin-bottom: var(--margin-bottom);
+        }
+
+        #status-card[loading] {
+          transition: none;
+        }
+
+        #status-card #header {
+          margin: 0px;
+          text-align: center;
+          padding: 10px;
+          background: var(--color-primary);
+          border-radius: 15px 15px 0 0;
+          color: white;
+          font-weight: 600;
+        }
+
+        #status-card #user-list {
+          height: 0;
+        }
+
+        #user-list .user {
+          padding: 0.65rem 15px;
+        }
+
+        .user p {
+          margin: 0;
+        }
+
+        .user .fullname {
+          text-transform: capitalize;
+          color: #323232;
+          font-weight: 500;
+        }
+
+        .user .fullname[regular] {
+          color: var(--color-primary);
+        }
+
+        .user .remarks {
+          color: #878787;
+          font-size: 0.8rem;
+          font-weight: 400;
+        }
+
+        .user .remarks span {
+          color: var(--color-error);
+          font-weight: 500;
+          text-transform: capitalize;
+        }
+
+        #close,
+        #view-stats {
+          --should-fade: 0;
+          --offset-y: 150%;
+          animation: slide-in 0.5s backwards;
+        }
+
+        #close {
+          position: absolute;
+          bottom: 10px;
+          left: 10px;
+          padding: 7px 15px;
+          border-radius: 35px;
+          animation-delay: 0.5s;
+        }
+
+        #view-stats {
+          position: absolute;
+          bottom: 10px;
+          left: 27%;
+          padding: 15px;
+          border-radius: 35px;
+          animation-delay: 0.6s;
+        }
+
         #stats {
           animation: fade-in 0.5s;
           background: rgba(0, 0, 0, 0.1);
@@ -285,172 +459,6 @@ export default class SummaryView extends LitElement {
 
         #stats p span {
           color: var(--color-primary);
-        }
-
-        #user-list {
-          height: 0;
-        }
-
-        #header {
-          margin: 0px;
-          text-align: center;
-          padding: 10px;
-          background: var(--color-primary);
-          border-radius: 15px 15px 0 0;
-          color: white;
-          font-weight: 600;
-        }
-
-        #root > h4 {
-          margin-top: 1.8rem;
-          margin-left: 1.8rem;
-          margin-bottom: 1.2rem;
-          line-height: 2rem;
-          z-index: 50;
-          position: absolute;
-        }
-
-        #status-selector {
-          display: flex;
-          flex-wrap: wrap;
-          row-gap: 10px;
-          column-gap: 10px;
-          position: absolute;
-          z-index: 50;
-          margin: 0 1.8rem;
-          padding-top: 5rem;
-        }
-
-        #status-selector > button {
-          font-size: 0.8rem;
-          border-radius: 35px;
-          padding: 5px 10px;
-          line-height: 0.8rem;
-        }
-
-        #status-selector > button[selected] {
-          background-color: var(--color-primary);
-          color: white;
-        }
-
-        #status-card-container {
-          height: 100%;
-          overflow-x: hidden;
-          overflow-y: auto;
-          padding: 0 1.8rem;
-        }
-
-        #status-card {
-          --offset-y: 0px;
-          --margin-bottom: 0px;
-          margin-top: 1.2rem;
-          border-radius: 15px;
-          justify-content: end;
-          transition: height 0.5s, transform 0.5s;
-          transform: translateY(var(--offset-y));
-          margin-bottom: var(--margin-bottom);
-        }
-
-        .user {
-          padding: 0.65rem 15px;
-        }
-
-        .user p {
-          margin: 0;
-        }
-
-        .fullname {
-          text-transform: capitalize;
-          color: #323232;
-          font-weight: 500;
-        }
-
-        .fullname[regular] {
-          color: var(--color-primary);
-        }
-
-        .remarks {
-          color: #878787;
-          font-size: 0.8rem;
-          font-weight: 400;
-        }
-
-        .remarks span {
-          color: var(--color-error);
-          font-weight: 500;
-          text-transform: capitalize;
-        }
-
-        .scrim {
-          position: absolute;
-          top: 0;
-          bottom: 0;
-          left: 0;
-          right: 0;
-          background: #0000004a;
-          animation: fade-in 0.5s;
-        }
-
-        #root {
-          overflow: hidden;
-          position: absolute;
-          top: 0;
-          bottom: 0;
-          left: 0;
-          right: 0;
-          background: white;
-          z-index: 20;
-          animation: slide-in-from-right 0.5s backwards;
-          box-shadow: rgb(0 0 0 / 20%) -2px 0px 6px -3px;
-        }
-
-        .scrim[close] {
-          animation: fade-out 0.5s 0.3s;
-        }
-
-        #root[close] {
-          animation: slide-out-to-right 0.5s 0.3s;
-        }
-
-        #root[close] > button {
-          animation: slide-out 0.3s forwards;
-        }
-
-        #root[close] > #close {
-          animation-delay: 0s;
-        }
-
-        #root[close] > #view-stats {
-          animation-delay: 0.1s;
-        }
-
-        button {
-          font-weight: 500;
-        }
-
-        #close,
-        #view-stats {
-          --should-fade: 0;
-          --offset-y: 150%;
-          animation: slide-in 0.5s backwards;
-        }
-
-        #close {
-          position: absolute;
-          bottom: 10px;
-          left: 10px;
-          padding: 7px 15px;
-          border-radius: 35px;
-          animation-delay: 0.5s;
-        }
-
-        #view-stats {
-          position: absolute;
-          bottom: 10px;
-          left: 27%;
-          padding: 15px;
-          border-radius: 35px;
-          animation-delay: 0.6s;
         }
 
         @keyframes slide-out {

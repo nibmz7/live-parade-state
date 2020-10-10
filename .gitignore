@@ -3,6 +3,8 @@ js/
 test/js
 prod/**/*.js
 
+add_users
+
 # Logs
 
 logs

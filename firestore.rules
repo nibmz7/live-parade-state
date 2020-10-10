@@ -20,7 +20,7 @@ service cloud.firestore {
       function validateStatus(data) {
         return  data.size() == 4
                 && data.code >= 0 && data.code <= 17
-                && data.remarks is string && data.remarks.size() < 20
+                && data.remarks is string && data.remarks.size() < 30
                 && data.updatedby == request.auth.uid
                 && data.timestamp == request.time;
       }

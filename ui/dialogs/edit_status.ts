@@ -50,7 +50,7 @@ export default class EditStatus extends LitElement {
     this.statusToEdit = new Status(userStatus);
     this.updatedByName = ApplicationStore.users.usersById[
       userStatus.updatedby
-    ].fullname;
+    ]?.fullname || 'Admin';
   }
 
   private usersListener = async (state: UserStoreState) => {

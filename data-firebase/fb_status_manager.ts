@@ -60,6 +60,7 @@ export default class FBStatusManager extends StatusManager {
     return new User({
       ...data,
       uid: doc.id,
+      branchid: this.branch.id,
       rank: new Rank(data.rank),
       morning: new Status({ ...morning, date: morning.timestamp.toDate() }),
       afternoon: new Status({ ...afternoon, date: afternoon.timestamp.toDate() })
