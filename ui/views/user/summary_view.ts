@@ -40,7 +40,8 @@ const STATUS_NAMES = {
     return acc;
   }, {}),
   [CODE_EXPIRED]: 'EXPIRED',
-  [CODE_PRESENT_REMARKS]: 'PRESENT (REMARKS)'
+  [CODE_PRESENT_REMARKS]: 'PRESENT (AWAY)',
+  [CODE_PRESENT]: 'PRESENT (FALL-IN)'
 };
 
 const StatusCodeDefault = () => ({ users: [], regular: 0, nsf: 0 });
@@ -60,11 +61,11 @@ export default class SummaryView extends LitElement {
   private usersUnsubscribe?: Unsubscribe;
 
   @query('#root') _root!: HTMLElement;
-  @query('#header') _header!: HTMLElement;
+  @query('#status-count') _statusCount!: HTMLElement;
   @query('#stats') _stats!: HTMLElement;
   @query('#status-card', true) _statusCard!: HTMLElement;
   @query('#user-list', true) _userList!: HTMLElement;
-  @query('#status-selector', true) _statusSelector!: HTMLElement;
+  @query('#header', true) _header!: HTMLElement;
 
   @property({ type: Array }) statsCount!: number[];
   @property({ type: Array }) users!: Array<User>;
@@ -127,8 +128,20 @@ export default class SummaryView extends LitElement {
     });
   }
 
+  hideStats() {
+    this._stats.addEventListener(
+      'animationend',
+      () => {
+        this.showStats = false;
+        this.fadeOutStats = false;
+      },
+      { once: true }
+    );
+    this.fadeOutStats = true;
+  }
+
   firstUpdated() {
-    this.initialHeight = this._header.clientHeight;
+    this.initialHeight = this._statusCount.clientHeight;
     this._statusCard.style.height = `${this.initialHeight}px`;
     const onClose = (e: AnimationEvent) => {
       if (e.animationName === 'slide-out-to-right') {
@@ -148,7 +161,7 @@ export default class SummaryView extends LitElement {
 
     if (selectedCodeChanged || isMorningChanged) {
       const height = this._userList.scrollHeight;
-      const offsetY = this._statusSelector.clientHeight;
+      const offsetY = this._header.clientHeight;
       this._statusCard.style.height = `${this.initialHeight + height}px`;
       this._statusCard.style.setProperty('--offset-y', `${offsetY}px`);
     }
@@ -161,18 +174,6 @@ export default class SummaryView extends LitElement {
     return true;
   }
 
-  hideStats() {
-    this._stats.addEventListener(
-      'animationend',
-      () => {
-        this.showStats = false;
-        this.fadeOutStats = false;
-      },
-      { once: true }
-    );
-    this.fadeOutStats = true;
-  }
-
   render() {
     const status = this.statusCodes[this.selectedCode];
     const regular = status.regular;
@@ -180,26 +181,28 @@ export default class SummaryView extends LitElement {
     const total = regular + nsf;
     return html` <div class="scrim" ?close="${this.closeView}"></div>
       <div id="root" ?close="${this.closeView}">
-        <h4>Summary - ${this.users.length} Total</h4>
+        <div id="header">
+          <h4>Summary - ${this.users.length} Total</h4>
 
-        <div id="status-selector">
-          ${Object.keys(this.statusCodes).map((code) => {
-            const count = this.statusCodes[code].users.length;
-            return html`
-              <button
-                outline
-                ?selected="${code === this.selectedCode}"
-                @click=${this.codeChanged(code)}
-              >
-                ${STATUS_NAMES[code]} (${count})
-              </button>
-            `;
-          })}
+          <div id="status-selector">
+            ${Object.keys(this.statusCodes).map((code) => {
+              const count = this.statusCodes[code].nsf;
+              return html`
+                <button
+                  outline
+                  ?selected="${code === this.selectedCode}"
+                  @click=${this.codeChanged(code)}
+                >
+                  ${STATUS_NAMES[code]} (${count})
+                </button>
+              `;
+            })}
+          </div>
         </div>
 
         <div id="status-card-container">
           <div id="status-card" class="card" ?loading="${this.openingView}">
-            <h4 id="header">
+            <h4 id="status-count">
               ${total} Total ~ ${regular} Regular + ${nsf} Nsf
             </h4>
             <div id="user-list">
@@ -299,22 +302,22 @@ export default class SummaryView extends LitElement {
           box-shadow: rgb(0 0 0 / 20%) -2px 0px 6px -3px;
         }
 
-        #root > h4 {
-          margin-top: 1.8rem;
-          margin-left: 1.8rem;
-          margin-bottom: 1.2rem;
-          line-height: 2rem;
-          z-index: 50;
+        #header {
+          padding: 0 1.8rem;
           position: absolute;
+          z-index: 50;
         }
 
-        #status-selector {
+        #header h4 {
+          margin-top: 1.8rem;
+          margin-bottom: 1.2rem;
+          line-height: 2rem;
+        }
+
+        #header #status-selector {
           display: flex;
           flex-wrap: wrap;
-          position: absolute;
-          z-index: 50;
-          margin: 0 1.8rem;
-          padding-top: 5rem;
+          margin: 0 -10px;
         }
 
         #status-selector > button {
@@ -323,7 +326,7 @@ export default class SummaryView extends LitElement {
           padding: 5px 10px;
           line-height: 0.8rem;
           margin-bottom: 10px;
-          margin-right: 10px;
+          margin-left: 10px;
         }
 
         #status-selector > button[selected] {
@@ -356,7 +359,7 @@ export default class SummaryView extends LitElement {
           transition: none;
         }
 
-        #status-card #header {
+        #status-card #status-count {
           margin: 0px;
           text-align: center;
           padding: 10px;
@@ -437,6 +440,7 @@ export default class SummaryView extends LitElement {
           justify-content: center;
           align-items: center;
           padding: 40px;
+          z-index: 51;
         }
 
         #stats[hide] {
