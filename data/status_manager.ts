@@ -3,11 +3,8 @@ import { UserStoreState, UserActionError } from './states/user_state';
 import { ApplicationStore, ACTION_ROOT } from './store';
 import ACTION_USER from './actions/user_action';
 import { Unsubscribe } from 'redux';
-import AuthUser from '../model/auth_user';
 
 export default abstract class StatusManager extends DataManager {
-  protected authUser = ApplicationStore.auth.action.payload as AuthUser;
-  protected branch = this.authUser.branch;
   private unsubscribeUser?: Unsubscribe;
 
   protected startRequestListening(): void {

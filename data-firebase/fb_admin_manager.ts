@@ -9,7 +9,7 @@ import ACTION_USER from '../data/actions/user_action';
 import ACTION_DEPARTMENT from '../data/actions/department_action';
 import FirestoreDBListener from './fb_db_listener';
 
-export default class MockAdminManager extends AdminManager {
+export default class FBAdminManager extends AdminManager {
   private db!: firebase.firestore.Firestore;
   private repositoryUnsubscribe?: any;
 

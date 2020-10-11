@@ -3,6 +3,7 @@ import Department from '../model/department';
 import ACTION_DEPARTMENT from './actions/department_action';
 import ACTION_USER from './actions/user_action';
 import User from '../model/user';
+import AuthUser from '../model/auth_user';
 
 export enum ACTION_TYPE {
   INITIALIZED,
@@ -53,6 +54,8 @@ export interface DataResults {
 }
 
 export abstract class DataManager {
+  protected authUser = ApplicationStore.auth.action.payload as AuthUser;
+  protected branch = this.authUser.branch;
   protected isDbConnected = false;
 
   constructor() {}
@@ -101,7 +104,7 @@ export abstract class DataManager {
   }
 
   async subscribe() {
-    let results = await this.connectDB();
+    const results = await this.connectDB();
     const actionDepartment = ACTION_DEPARTMENT.initialized(results.departments);
     const actionUser = ACTION_USER.initialized(results.users);
     ApplicationStore.dispatch(actionDepartment);

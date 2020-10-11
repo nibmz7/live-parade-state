@@ -58,7 +58,7 @@ export default function FirestoreDBListener(context) {
             } else departments.push(department);
           }
         }
-        departments.unshift(userDepartment);
+        if (userDepartment) departments.unshift(userDepartment);
         resolve({ departments, users });
       } else {
         for (let change of snapshot.docChanges()) {
