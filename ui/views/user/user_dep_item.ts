@@ -76,6 +76,7 @@ export default class UserDepItem extends LitElement {
       ${this.selectedUser
         ? html`<edit-status
             .uid="${this.selectedUser.uid}"
+            .isMorning="${this.isMorning}"
             @close="${() => (this.selectedUser = undefined)}"
           ></edit-status>`
         : ''} `;

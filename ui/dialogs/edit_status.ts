@@ -48,9 +48,9 @@ export default class EditStatus extends LitElement {
       ? this.selectedUser.morning!
       : this.selectedUser.afternoon!;
     this.statusToEdit = new Status(userStatus);
-    this.updatedByName = ApplicationStore.users.usersById[
-      userStatus.updatedby
-    ]?.fullname || 'Admin';
+    this.updatedByName =
+      ApplicationStore.users.usersById[userStatus.updatedby]?.fullname ||
+      'Admin';
   }
 
   private usersListener = async (state: UserStoreState) => {
@@ -62,6 +62,17 @@ export default class EditStatus extends LitElement {
     this.resetStatus();
     this.isProcessing = false;
   };
+
+  toggleAm() {
+    this.isMorning = !this.isMorning;
+    this.resetStatus();
+  }
+
+  statusChanged(code: number) {
+    return onPressed(() => {
+      this.statusToEdit = { ...this.statusToEdit, code };
+    });
+  }
 
   connectedCallback() {
     super.connectedCallback();
@@ -76,17 +87,6 @@ export default class EditStatus extends LitElement {
   disconnectedCallback() {
     this.usersUnsubscribe?.();
     super.disconnectedCallback();
-  }
-
-  toggleAm() {
-    this.isMorning = !this.isMorning;
-    this.resetStatus();
-  }
-
-  statusChanged(code: number) {
-    return onPressed(() => {
-      this.statusToEdit = { ...this.statusToEdit, code };
-    });
   }
 
   requestUpdateStatus(submitAll: boolean) {
