@@ -15,15 +15,6 @@ import './admin/admin_view';
 import './user/user_view';
 import AuthUser from '../../model/auth_user';
 import { DataManager } from '../../data/data_manager';
-import FBAuthManager from '../../data-firebase/fb_auth_manager';
-import FBStatusManager from '../../data-firebase/fb_status_manager';
-import FBAdminManager from '../../data-firebase/fb_admin_manager';
-
-declare global {
-  interface Window {
-    offsetOn: boolean;
-  }
-}
 
 const enum VIEW_TYPES {
   UNINITALIZED,
@@ -34,6 +25,7 @@ const enum VIEW_TYPES {
 
 @customElement('view-switcher')
 export default class ViewSwitcher extends LitElement {
+  private application = window.application;
   private dataManager?: DataManager;
   @query('#root') _root!: HTMLElement;
   @property({ type: Boolean, reflect: true }) splashscreen = true;
@@ -57,7 +49,7 @@ export default class ViewSwitcher extends LitElement {
         unsubscribe();
       }
     );
-    new FBAuthManager();
+    this.application.getAuthManager();
   }
 
   async hideView() {
@@ -80,8 +72,8 @@ export default class ViewSwitcher extends LitElement {
   signedIn() {
     const user = ApplicationStore.auth.action.payload as AuthUser;
     this.dataManager = user.isAdmin
-      ? new FBAdminManager()
-      : new FBStatusManager();
+      ? this.application.getAdminManager()
+      : this.application.getStatusManager();
     this.dataManager.subscribe().then(() => {
       user.isAdmin
         ? this.showView(VIEW_TYPES.ADMIN)
