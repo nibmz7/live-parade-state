@@ -70,23 +70,8 @@ export default class EditStatus extends LitElement {
 
   statusChanged(code: number) {
     return onPressed(() => {
-      this.statusToEdit = { ...this.statusToEdit, code };
+      this.statusToEdit = { ...this.statusToEdit, code, remarks: '' };
     });
-  }
-
-  connectedCallback() {
-    super.connectedCallback();
-    this.selectedUser = ApplicationStore.users.usersById[this.uid];
-    this.resetStatus();
-    this.usersUnsubscribe = ApplicationStore.listen(
-      ACTION_ROOT.USERS,
-      this.usersListener
-    );
-  }
-
-  disconnectedCallback() {
-    this.usersUnsubscribe?.();
-    super.disconnectedCallback();
   }
 
   requestUpdateStatus(submitAll: boolean) {
@@ -118,6 +103,21 @@ export default class EditStatus extends LitElement {
     return onPressed(() => {
       this.requestUpdateStatus(true);
     });
+  }
+
+  connectedCallback() {
+    super.connectedCallback();
+    this.selectedUser = ApplicationStore.users.usersById[this.uid];
+    this.resetStatus();
+    this.usersUnsubscribe = ApplicationStore.listen(
+      ACTION_ROOT.USERS,
+      this.usersListener
+    );
+  }
+
+  disconnectedCallback() {
+    this.usersUnsubscribe?.();
+    super.disconnectedCallback();
   }
 
   render() {

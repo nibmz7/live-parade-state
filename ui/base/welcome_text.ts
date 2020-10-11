@@ -56,8 +56,8 @@ export default class CustomDialog extends LitElement {
           border-radius: 0px;
         }
         button[elevate] {
-          /* box-shadow: rgba(0, 0, 0, 0.1) 0px 1px; */
           box-shadow: rgba(0, 0, 0, 0.1) 0px 1px 5px;
+          background-color: rgb(153 153 153 / 10%);
         }
       `
     ];
