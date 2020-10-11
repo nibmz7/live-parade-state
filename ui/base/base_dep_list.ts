@@ -4,8 +4,7 @@ import {
   css,
   query,
   property,
-  TemplateResult,
-  eventOptions
+  TemplateResult
 } from 'lit-element';
 import ACTION_AUTH from '../../data/actions/auth_action';
 import { REQUEST_TYPES } from '../../data/data_manager';
@@ -23,15 +22,11 @@ export default abstract class BaseDepList extends LitElement {
   private welcomeTitle!: string;
   private authUser = ApplicationStore.auth.action.payload as AuthUser;
 
-  @query('#department-list') _departmentsList!: HTMLElement;
-  @query('welcome-text') _welcomeText!: HTMLElement;
-
-  @eventOptions({ passive: true }) _handleOnScroll() {
-    this.elevate = this._departmentsList.scrollTop > 0;
-  }
+  @query('welcome-text', true) _welcomeText!: HTMLElement;
+  @query('#scrollable', true) _scrollable!: HTMLElement;
+  @query('#gap', true) _gap!: HTMLElement;
 
   @property({ type: Array }) departments: Array<Department> = [];
-  @property({ type: Boolean }) elevate = false;
 
   abstract depItemTemplate(
     department: Department,
@@ -68,14 +63,32 @@ export default abstract class BaseDepList extends LitElement {
     super.connectedCallback();
   }
 
+  firstUpdated() {
+    let options = {
+      root: this._scrollable,
+      rootMargin: '1px',
+      threshold: 1
+    };
+
+    const callback = () => {
+      const shouldElevate = this._scrollable.scrollTop > 1;
+      const event = new CustomEvent('elevate', { detail: shouldElevate });
+      this._welcomeText.dispatchEvent(event);
+    };
+
+    const observer = new IntersectionObserver(callback, options);
+    observer.observe(this._gap);
+  }
+
   render() {
     return html`<div id="root">
-      <welcome-text .elevate="${this.elevate}">
-        ${this.welcomeTitle}
-      </welcome-text>
+      <welcome-text> ${this.welcomeTitle} </welcome-text>
 
-      <div id="department-list" @scroll="${this._handleOnScroll}">
-        ${this.departments.map(this.depItemTemplate)}
+      <div id="scrollable">
+        <div id="gap"></div>
+        <div id="department-list">
+          ${this.departments.map(this.depItemTemplate)}
+        </div>
       </div>
 
       ${this.departments.length === 0
@@ -98,24 +111,29 @@ export default abstract class BaseDepList extends LitElement {
           position: relative;
         }
 
-        #department-list {
+        #scrollable {
           max-height: 99.9%;
           overflow-x: hidden;
           overflow-y: scroll;
+        }
+
+        #scrollable::-webkit-scrollbar {
+          display: none;
+        }
+
+        #scrollable #gap {
+          content: '';
+          height: 30px;
+          display: block;
+        }
+
+        #department-list {
           box-sizing: border-box;
           padding: 0px 30px;
         }
 
-        #department-list::-webkit-scrollbar {
-          display: none;
-        }
-
         #department-list > * {
           margin-bottom: 20px;
-        }
-
-        #department-list > *:first-child {
-          margin-top: 30px;
         }
 
         #department-list > *:last-child {

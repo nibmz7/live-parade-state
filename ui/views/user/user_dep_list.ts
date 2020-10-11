@@ -7,6 +7,7 @@ export default class UserDepList extends BaseDepList {
   @property({ type: Boolean }) isMorning = true;
 
   depItemTemplate = (department: Department, index: number) => {
+    console.log('ddsds');
     return html`<user-dep-item
       .index="${index}"
       .department="${department}"

@@ -8,8 +8,15 @@ export default class CustomDialog extends LitElement {
   @property({ type: Boolean }) showSignOutDialog = false;
   @property({ type: Boolean }) elevate = false;
 
+  firstUpdated() {
+    this.addEventListener('elevate', (e) => {
+      this.elevate = (e as CustomEvent).detail;
+    });
+  }
+
   render() {
     return html`<button
+        id="welcome-text"
         tabindex="0"
         @click="${onPressed(() => (this.showSignOutDialog = true))}"
         aria-label="Open sign out dialog"
@@ -18,6 +25,7 @@ export default class CustomDialog extends LitElement {
       >
         <slot></slot>
       </button>
+
       ${this.showSignOutDialog
         ? html`<sign-out
             @close="${() => (this.showSignOutDialog = false)}"
@@ -30,6 +38,9 @@ export default class CustomDialog extends LitElement {
       globalStyles,
       buttonStyles,
       css`
+        #welcome-text {
+          transition: box-shadow 0.5s, background-color 0.5s;
+        }
         button {
           position: absolute;
           width: 100%;
@@ -45,7 +56,8 @@ export default class CustomDialog extends LitElement {
           border-radius: 0px;
         }
         button[elevate] {
-          box-shadow: rgba(0, 0, 0, 0.1) 0px 1px;
+          /* box-shadow: rgba(0, 0, 0, 0.1) 0px 1px; */
+          box-shadow: rgba(0, 0, 0, 0.1) 0px 1px 5px;
         }
       `
     ];
