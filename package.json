@@ -32,14 +32,12 @@
     "webpack-cli": "^3.3.11"
   },
   "scripts": {
-    "build-old": "npx webpack --config webpack.config.js",
-    "start-dev-server": "firebase serve --host 0.0.0.0",
-    "start-emulators": "firebase emulators:start --import=./firestore-db",
     "deploy:hosting": "firebase deploy --only hosting",
-    "serve": "es-dev-server",
+    "start:dev-server": "es-dev-server",
+    "start:emulators": "firebase emulators:start --import=./firestore-db",
     "test": "karma start",
     "test:watch": "karma start --auto-watch=true --single-run=false",
-    "build:dist": "webpack",
+    "build:prod": "webpack",
     "build": "tsc",
     "build:watch": "tsc --watch",
     "build:tests": "tsc --build test --watch",

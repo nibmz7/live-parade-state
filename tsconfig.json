@@ -17,7 +17,7 @@
     "experimentalDecorators": true,
     "moduleResolution": "node",
     "rootDir": ".",
-    "outDir": "./dist"
+    "outDir": "dev"
   },
   "files": ["./node_modules/firebase/index.d.ts"],
   "include": [

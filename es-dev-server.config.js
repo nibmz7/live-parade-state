@@ -3,7 +3,7 @@ module.exports = {
   watch: true,
   nodeResolve: true,
   open: true,
-  appIndex: 'dist/index.html',
+  appIndex: 'dev/index.html',
   moduleDirs: ["node_modules"],
   compatibility: 'none'
 };

@@ -14,9 +14,9 @@ yarn-debug.log*
 yarn-error.log*
 firebase-debug.log*
 
-dist/**/*.js
-dist/**/*.ts
-dist/**/*.map
+dev/**/*.js
+dev/**/*.ts
+dev/**/*.map
 
 
 firestore-database

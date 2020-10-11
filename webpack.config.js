@@ -1,5 +1,5 @@
 const path = require('path');
-const MAIN_DIR = 'prod'
+const MAIN_DIR = 'prod';
 
 module.exports = {
   entry: './dist/main.js',
