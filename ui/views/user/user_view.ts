@@ -33,6 +33,7 @@ export default class UserView extends LitElement {
   }
 
   render() {
+    console.log(this.isMorning);
     return html`<div id="root">
       <user-dep-list
         .user="${this.user}"
@@ -43,7 +44,10 @@ export default class UserView extends LitElement {
         View Summary
       </button>
 
-      <toggle-am @toggle-am="${this.toggleAm}"></toggle-am>
+      <toggle-am
+        @toggle-am="${this.toggleAm}"
+        .isMorning="${this.isMorning}"
+      ></toggle-am>
 
       ${this.showSummary
         ? html`<summary-view
