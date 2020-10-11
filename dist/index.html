@@ -44,6 +44,7 @@
                 const offsetHeight = leftoverHeight + keyboardHeight - midPointHeight;
                 offsetOn = 1;
             }
+            window.offsetOn = offsetOn === 1;
             document.body.style.setProperty('--offset-height', offsetHeight + 'px');
             document.body.style.setProperty('--offset-on', offsetOn);
         }

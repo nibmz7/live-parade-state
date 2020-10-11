@@ -65,7 +65,7 @@ export default class CustomDialog extends LitElement {
         aria-label="Dialog"
         @click="${(e: Event) => {
           e.stopPropagation();
-          if (this.state === DIALOG_STATE.STALLING) {
+          if (this.state === DIALOG_STATE.STALLING && window.offsetOn) {
             const isInput = (e.composedPath()[0] as HTMLElement).tagName
               .toLowerCase()
               .includes('input');

@@ -40,9 +40,8 @@ service cloud.firestore {
 
       function validateDepartmentData() {
         return isAdmin() 
-                && request.resource.data.keys().hasOnly(['type','data'])
-                && request.resource.data.data.size() == 1
-                && request.resource.data.data.name is string;
+                && request.resource.data.keys().hasOnly(['type','name'])
+                && request.resource.data.name is string;
       }
 
       function allowDepartmentUpdate() {

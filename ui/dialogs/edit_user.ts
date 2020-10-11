@@ -96,7 +96,7 @@ export default class EditUser extends LitElement {
 
   submit() {
     return onPressed(() => {
-      if (this.dialogState === DIALOG_STATE.STALLING) return;
+      if (this.dialogState === DIALOG_STATE.STALLING && window.offsetOn) return;
       this.checkValidity();
       if (this.errorState.visible) return;
 
@@ -127,7 +127,19 @@ export default class EditUser extends LitElement {
   }
 
   changePassword() {
-    return onPressed(() => {});
+    return onPressed(() => {
+      if (this.passwordState.validity !== INPUT_VALIDITY.VALID) {
+        this.showError('Please enter a valid password!');
+        return;
+      }
+      const password = this.passwordState.value;
+      const action = ACTION_USER.requestModify({
+        ...this.user!,
+        password
+      });
+      ApplicationStore.dispatch(action);
+      this.passwordState.value = '';
+    });
   }
 
   delete() {

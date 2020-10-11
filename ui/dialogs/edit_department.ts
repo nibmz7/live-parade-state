@@ -25,7 +25,7 @@ export default class EditDepartment extends LitElement {
   }
 
   submit() {
-    if (this.dialogState === DIALOG_STATE.STALLING) return;
+    if (this.dialogState === DIALOG_STATE.STALLING && window.offsetOn) return;
     if (this.nameState.value.length === 0) {
       this.nameState = {
         ...this.nameState,

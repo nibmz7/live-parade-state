@@ -19,6 +19,12 @@ import FBAuthManager from '../../data-firebase/fb_auth_manager';
 import FBStatusManager from '../../data-firebase/fb_status_manager';
 import FBAdminManager from '../../data-firebase/fb_admin_manager';
 
+declare global {
+  interface Window {
+    offsetOn: boolean;
+  }
+}
+
 const enum VIEW_TYPES {
   UNINITALIZED,
   AUTH,
@@ -73,12 +79,14 @@ export default class ViewSwitcher extends LitElement {
 
   signedIn() {
     const user = ApplicationStore.auth.action.payload as AuthUser;
-    this.dataManager = user.isAdmin ? new FBAdminManager() : new FBStatusManager();
+    this.dataManager = user.isAdmin
+      ? new FBAdminManager()
+      : new FBStatusManager();
     this.dataManager.subscribe().then(() => {
       user.isAdmin
-      ? this.showView(VIEW_TYPES.ADMIN)
-      : this.showView(VIEW_TYPES.USER);
-    })
+        ? this.showView(VIEW_TYPES.ADMIN)
+        : this.showView(VIEW_TYPES.USER);
+    });
   }
 
   signedOut() {

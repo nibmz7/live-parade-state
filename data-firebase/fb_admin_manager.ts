@@ -12,12 +12,7 @@ import {
 } from '../data/states/user_state';
 import User, { UserBase } from '../model/user';
 import AdminManager from '../data/admin_manager';
-import {
-  Action,
-  ActionError,
-  ApplicationStore,
-  generateActionId
-} from '../data/store';
+import { Action, ActionError, ApplicationStore } from '../data/store';
 import ACTION_USER from '../data/actions/user_action';
 import ACTION_DEPARTMENT from '../data/actions/department_action';
 import FirestoreDBListener from './fb_db_listener';
@@ -79,7 +74,7 @@ export default class FBAdminManager extends AdminManager {
     const docRef = `branches/${this.branch.id}/repository/${department.id}`;
     this.db
       .doc(docRef)
-      .update({ 'data.name': name })
+      .update({ 'name': department.name })
       .then(() => this.onSucess(action, true))
       .catch(() => {
         const actionError: DepartmentActionError = {
@@ -126,7 +121,7 @@ export default class FBAdminManager extends AdminManager {
       emailPrefix: userBase.email.split('@')[0],
       password: userBase.password,
       name: userBase.name,
-      rank: userBase.rank,
+      rank: userBase.rank.text,
       departmentid: userBase.departmentid,
       regular: userBase.regular
     };
@@ -144,14 +139,33 @@ export default class FBAdminManager extends AdminManager {
       });
   }
 
+  private changePassword(action: UserAction, user): void {
+    const updatePasswordFunc = this.functions.httpsCallable('updatePassword');
+    updatePasswordFunc({ uid: user.uid, password: user.password })
+      .then(() => this.onSucess(action))
+      .catch(() => {
+        const actionError: UserActionError = {
+          action,
+          type: 'Updating user password failed',
+          message: `Failed to update '${user.name} password'`
+        };
+        this.onError(actionError);
+      });
+  }
+
   protected requestModifyUser(state: UserStoreState): void {
     const action = state.action;
     const user = action.payload as User;
-    //emailPrefix, name, rank, departmentid, regular
+    if (user.password) {
+      this.changePassword(action, user);
+      return;
+    }
+    //uid, emailPrefix, name, rank, departmentid, regular
     const data = {
+      uid: user.uid,
       emailPrefix: user.email.split('@')[0],
       name: user.name,
-      rank: user.rank,
+      rank: user.rank.text,
       departmentid: user.departmentid,
       regular: user.regular
     };
