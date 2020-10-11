@@ -45,13 +45,11 @@ export default class CustomDialog extends LitElement {
           position: absolute;
           width: 100%;
           padding: 10px;
-          z-index: 10;
+          z-index: 99;
           font-weight: 500;
           font-size: 1.1rem;
           box-shadow: none;
           background: #faf5fab8;
-          backdrop-filter: blur(2px);
-          -webkit-backdrop-filter: blur(2px);
           color: var(--color-primary-dark);
           border-radius: 0px;
         }

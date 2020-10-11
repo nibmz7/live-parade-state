@@ -33,7 +33,6 @@ export default class UserView extends LitElement {
   }
 
   render() {
-    console.log(this.isMorning);
     return html`<div id="root">
       <user-dep-list
         .user="${this.user}"

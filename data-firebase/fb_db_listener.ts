@@ -4,6 +4,8 @@ import Rank from '../model/rank';
 import Status from '../model/status';
 import User from '../model/user';
 
+let enabled = false;
+
 type FirestoreSnapshot = firebase.firestore.QuerySnapshot;
 
 type FirestoreDocument = firebase.firestore.QueryDocumentSnapshot;
@@ -34,7 +36,8 @@ function getDepartment(doc: FirestoreDocument): Department {
 
 export default function FirestoreDBListener(context) {
   context.db = window.firebase.firestore();
-  context.db.enablePersistence({ synchronizeTabs: true });
+  if(!enabled) context.db.enablePersistence({ synchronizeTabs: true });
+  enabled = true;
   let initialLoad = true;
   const branchid = context.branch.id;
   const repository = context.db.collection(`branches/${branchid}/repository`);
