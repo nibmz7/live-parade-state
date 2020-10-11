@@ -1,5 +1,5 @@
 # live-parade-state
-Digital attendance taking system built on top of Firestore, Firebase Authentication & Cloud Functions for Firebase.
+Digital attendance taking system built on top of lit-element, redux and firebase.
 <br>
 <br>
 <br>
@@ -12,9 +12,18 @@ Digital attendance taking system built on top of Firestore, Firebase Authenticat
 <img src="https://raw.githubusercontent.com/nibmz7/portfolio/main/website/assets/live_parade_state/screenshot_6.webp" width="15%" hspace="15"/>
 
 # Brief description
-Actual website is hosted on Firebase. The mock website is hosted on github pages. https://nibmz7.github.io/live-parade-state/  
-To try out the mock website, login as admin@domain.com to view the admin page and name@domain.com for the user page. Password can be any random combination.
-
+Production website is hosted on Firebase.   
+Try out the mock version below:
+- Admin page: https://nibmz7.github.io/live-parade-state/admin
+- User page: https://nibmz7.github.io/live-parade-state/user  
+- Login page: https://nibmz7.github.io/live-parade-state
+  - Mock Admin credentials
+    - Email: admin<span>@</span>anydomain.com
+    - Password: anypassword123
+  - Mock User credentials
+    - Email: name<span>@</span>anydomain.com
+    - Password: anypassword123
+    
 # License
 ```
 Copyright 2020 Nur Ilyas
