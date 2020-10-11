@@ -49,4 +49,9 @@ export default class FBAuthManager extends AuthManager {
       this.signInError(signInError);
     });
   }
+
+  protected signOut(){
+    super.signOut();
+    this.auth.signOut();
+  }
 }

@@ -77,7 +77,7 @@ export default class ViewSwitcher extends LitElement {
   }
 
   signedIn() {
-    let user = ApplicationStore.auth.action.payload as AuthUser;
+    const user = ApplicationStore.auth.action.payload as AuthUser;
     this.dataManager = user.isAdmin ? new MockAdminManager() : new FBStatusManager();
     this.dataManager.subscribe().then(() => {
       user.isAdmin
