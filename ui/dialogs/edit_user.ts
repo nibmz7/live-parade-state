@@ -350,50 +350,22 @@ export default class EditUser extends LitElement {
           --offset-item-height: 140px;
         }
 
-        #department-selector {
-          position: absolute;
-          top: 0;
-          bottom: 0;
-          left: 0;
-          right: 0;
-          background: #00000057;
-          border-radius: 5px;
-          display: flex;
-          flex-direction: column;
-          justify-content: center;
-          padding: 10px;
-          animation: fade-in 0.5s;
-        }
-
-        #department-selector[hide] {
-          animation: fade-out 0.5s;
-        }
-
-        #department-selector .card {
-          border-radius: 5px;
-        }
-
-        #department-selector p {
-          margin: 0;
-          padding: 20px;
-          transition: background-color 0.3s;
-        }
-
-        @media (hover: hover) {
-          #department-selector p:hover {
-            background-color: rgba(0, 0, 0, 0.1);
-          }
-        }
-
-        #department-selector p:active,
-        #department-selector p:focus {
-          background-color: rgba(0, 0, 0, 0.1);
-        }
-
         #root {
           display: flex;
           flex-direction: row;
           flex-wrap: wrap;
+        }
+
+        input {
+          margin: 0;
+        }
+
+        .header {
+          display: flex;
+          flex-direction: row;
+          justify-content: space-between;
+          align-items: center;
+          width: 100%;
         }
 
         .row-box {
@@ -409,26 +381,6 @@ export default class EditUser extends LitElement {
 
         #email {
           margin-bottom: 8px;
-        }
-
-        input {
-          margin: 0;
-        }
-
-        #department-name {
-          width: 100%;
-          text-align: center;
-          margin: 0;
-          font-size: 1.2rem;
-          font-weight: 900;
-        }
-
-        .header {
-          display: flex;
-          flex-direction: row;
-          justify-content: space-between;
-          align-items: center;
-          width: 100%;
         }
 
         #rank {
@@ -542,6 +494,54 @@ export default class EditUser extends LitElement {
           font-weight: 500;
           width: 100%;
           margin-top: 10px;
+        }
+
+        #department-name {
+          width: 100%;
+          text-align: center;
+          margin: 0;
+          font-size: 1.2rem;
+          font-weight: 900;
+        }
+
+        #department-selector {
+          position: absolute;
+          top: 0;
+          bottom: 0;
+          left: 0;
+          right: 0;
+          background: #00000057;
+          border-radius: 5px;
+          display: flex;
+          flex-direction: column;
+          justify-content: center;
+          padding: 10px;
+          animation: fade-in 0.5s;
+        }
+
+        #department-selector[hide] {
+          animation: fade-out 0.5s;
+        }
+
+        #department-selector .card {
+          border-radius: 5px;
+        }
+
+        #department-selector p {
+          margin: 0;
+          padding: 20px;
+          transition: background-color 0.3s;
+        }
+
+        #department-selector p:active,
+        #department-selector p:focus {
+          background-color: rgba(0, 0, 0, 0.1);
+        }
+
+        @media (hover: hover) {
+          #department-selector p:hover {
+            background-color: rgba(0, 0, 0, 0.1);
+          }
         }
       `
     ];

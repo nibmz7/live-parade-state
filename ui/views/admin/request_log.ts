@@ -54,15 +54,18 @@ export default class RequestLog extends LitElement {
     state: DataStoreState
   ) => {
     if (!REQUEST_TYPES.includes(state.action.type)) return;
+
     const type = state.action.type;
     const action = state.action as DepartmentAction | UserAction;
     const actionText = ACTION_TYPE_TEXT[type];
     const root = state.action.root;
     const rootText = root === ACTION_ROOT.USERS ? 'user' : 'department';
+
     let id: ACTION_ID;
     let message: string;
     let error: string | undefined = undefined;
     let payload: User | Department | undefined = undefined;
+
     if (action.type === ACTION_TYPE.REQUEST_SUCCESSFUL) {
       const requestAction = action.payload as DepartmentAction | UserAction;
       const requestActionText = ACTION_TYPE_TEXT[requestAction.type - 3];
@@ -175,6 +178,18 @@ export default class RequestLog extends LitElement {
       buttonStyles,
       cardStyles,
       css`
+        p {
+          overflow: hidden;
+          text-overflow: ellipsis;
+          white-space: nowrap;
+          margin: 0;
+          line-height: 1.2rem;
+        }
+
+        p::first-letter {
+          text-transform: uppercase;
+        }
+
         #root {
           width: 100%;
           max-height: 50%;
@@ -245,6 +260,11 @@ export default class RequestLog extends LitElement {
           font-size: 0.9rem;
         }
 
+        .error {
+          margin-top: 4px;
+          font-size: 0.8rem;
+        }
+
         button.dismiss {
           position: absolute;
           right: 5px;
@@ -259,23 +279,6 @@ export default class RequestLog extends LitElement {
           color: white;
           margin: 0;
           padding: 0;
-        }
-
-        .error {
-          margin-top: 4px;
-          font-size: 0.8rem;
-        }
-
-        p {
-          overflow: hidden;
-          text-overflow: ellipsis;
-          white-space: nowrap;
-          margin: 0;
-          line-height: 1.2rem;
-        }
-
-        p::first-letter {
-          text-transform: uppercase;
         }
 
         @keyframes item-appear-in {

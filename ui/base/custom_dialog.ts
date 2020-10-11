@@ -99,24 +99,6 @@ export default class CustomDialog extends LitElement {
           --offset-dialog: calc(var(--total-offset-height) * var(--offset-on));
         }
 
-        .close-prompt {
-          position: absolute;
-          left: 0;
-          right: 0;
-          bottom: -100px;
-          text-align: center;
-          pointer-events: auto;
-          animation: fade-in 0.5s;
-        }
-
-        .close-prompt > p {
-          padding: 10px;
-          font-weight: 500;
-          border-radius: 30px;
-          background: rgba(0, 0, 0, 0.1);
-          display: inline-block;
-        }
-
         #root {
           position: absolute;
           top: 0;
@@ -143,16 +125,6 @@ export default class CustomDialog extends LitElement {
           animation: fade-out 0.3s;
         }
 
-        .dialog {
-          width: 100%;
-          box-sizing: border-box;
-          border-radius: 5px;
-          padding: 15px 20px;
-          pointer-events: none;
-          transform: perspective(100px) translateZ(0px)
-            translateY(var(--offset-dialog));
-        }
-
         #root[show] > .dialog {
           animation: scale-in 0.5s;
         }
@@ -164,6 +136,34 @@ export default class CustomDialog extends LitElement {
         #root[ready] > .dialog {
           pointer-events: auto;
           transition: transform 0.3s;
+        }
+
+        .dialog {
+          width: 100%;
+          box-sizing: border-box;
+          border-radius: 5px;
+          padding: 15px 20px;
+          pointer-events: none;
+          transform: perspective(100px) translateZ(0px)
+            translateY(var(--offset-dialog));
+        }
+
+        .close-prompt {
+          position: absolute;
+          left: 0;
+          right: 0;
+          bottom: -100px;
+          text-align: center;
+          pointer-events: auto;
+          animation: fade-in 0.5s;
+        }
+
+        .close-prompt > p {
+          padding: 10px;
+          font-weight: 500;
+          border-radius: 30px;
+          background: rgba(0, 0, 0, 0.1);
+          display: inline-block;
         }
 
         @keyframes scale-in {
