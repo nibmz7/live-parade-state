@@ -263,13 +263,13 @@ export default abstract class BaseUserList extends LitElement {
 
         @keyframes flash {
           0% {
-            background-color: white;
+            background-color: transparent;
           }
           50% {
             background-color: rgba(255, 56, 56, 0.18);
           }
           100% {
-            background-color: white;
+            background-color: transparent;
           }
         }
       `

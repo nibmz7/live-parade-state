@@ -25,7 +25,8 @@ export default class EditDepartment extends LitElement {
   }
 
   submit() {
-    if (this.dialogState === DIALOG_STATE.INPUT_FOCUSED && window.offsetOn) return;
+    if (this.dialogState === DIALOG_STATE.INPUT_FOCUSED && window.offsetOn)
+      return;
     if (this.nameState.value.length === 0) {
       this.nameState = {
         ...this.nameState,
@@ -138,6 +139,11 @@ export default class EditDepartment extends LitElement {
           flex-direction: row;
           justify-content: space-between;
           align-items: center;
+        }
+
+        h3 {
+          color: var(--color-text-primary);
+          margin-bottom: 8px;
         }
 
         #delete {

@@ -1,7 +1,12 @@
 import { css, customElement, html, LitElement, property } from 'lit-element';
 import Department from '../../../model/department';
 import User from '../../../model/user';
-import { buttonStyles, cardStyles, globalStyles, slideAnimation } from '../../global_styles';
+import {
+  buttonStyles,
+  cardStyles,
+  globalStyles,
+  slideAnimation
+} from '../../global_styles';
 import { onPressed } from '../../utils';
 
 @customElement('admin-dep-item')
@@ -122,6 +127,7 @@ export default class AdminDepItem extends LitElement {
           text-transform: capitalize;
           font-weight: 500;
           margin: 0;
+          color: var(--color-text-primary);
         }
 
         .header #edit {

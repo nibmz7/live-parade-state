@@ -368,6 +368,10 @@ export default class EditUser extends LitElement {
           width: 100%;
         }
 
+        .header > h3 {
+          color: var(--color-text-primary);
+        }
+
         .row-box {
           width: 100%;
           display: flex;
@@ -400,6 +404,7 @@ export default class EditUser extends LitElement {
 
         #email > p {
           margin: 0 15px;
+          color: var(--color-text-primary);
         }
 
         #email > input {
@@ -434,6 +439,7 @@ export default class EditUser extends LitElement {
 
         .regular-box > label {
           font-size: 1rem;
+          color: var(--color-text-primary);
         }
 
         .regular-box > input {
@@ -502,6 +508,7 @@ export default class EditUser extends LitElement {
           margin: 0;
           font-size: 1.2rem;
           font-weight: 900;
+          color: var(--color-text-primary);
         }
 
         #department-selector {

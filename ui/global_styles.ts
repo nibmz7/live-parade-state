@@ -261,6 +261,6 @@ export const buttonStyles = css`
   button[static]:hover,
   button[static]:focus,
   button[static]:active {
-    box-shadow: 0px 2px 9px 1px rgba(var(--color-shadow-primary-dark-rgb), 0.5);
+    box-shadow: 0 1px 5px 0px rgba(var(--color-shadow-primary-rgb), 0.3);
   }
 `;

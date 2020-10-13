@@ -43,7 +43,7 @@ export default abstract class BaseDepList extends LitElement {
 
   connectedCallback() {
     if (this.authUser.isAdmin) {
-      this.welcomeTitle = 'Hi, admin user!';
+      this.welcomeTitle = 'Hi, Admin!';
     } else {
       const fullname =
         ApplicationStore.users.usersById[this.authUser.uid].fullname;

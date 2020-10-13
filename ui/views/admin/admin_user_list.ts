@@ -6,7 +6,7 @@ import BaseUserList from '../../base/base_user_list';
 @customElement('admin-user-list')
 export default class AdminUserList extends BaseUserList {
   listItemHeight = 3.5;
-  
+
   userItemTemplate(user: User) {
     return html`
       <p class="fullname">${user.fullname}</p>
@@ -40,6 +40,7 @@ export default class AdminUserList extends BaseUserList {
           font-weight: 500;
           font-size: 1rem;
           line-height: 1.2rem;
+          color: var(--color-text-primary);
         }
 
         .email {
@@ -47,6 +48,7 @@ export default class AdminUserList extends BaseUserList {
           font-size: 0.8rem;
           line-height: 1rem;
           font-weight: 400;
+          color: var(--color-text-secondary);
         }
       `
     ];

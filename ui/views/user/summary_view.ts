@@ -311,6 +311,7 @@ export default class SummaryView extends LitElement {
           z-index: 20;
           animation: slide-in-from-right 0.5s backwards;
           box-shadow: rgb(0 0 0 / 20%) -2px 0px 6px -3px;
+          background-color: var(--bg-primary);
         }
 
         #header {
@@ -323,6 +324,7 @@ export default class SummaryView extends LitElement {
           margin-top: 1.8rem;
           margin-bottom: 1.2rem;
           line-height: 2rem;
+          color: var(--color-text-primary);
         }
 
         #header #status-selector {
@@ -338,11 +340,6 @@ export default class SummaryView extends LitElement {
           line-height: 0.8rem;
           margin-bottom: 10px;
           margin-left: 10px;
-        }
-
-        #status-selector > button[selected] {
-          background-color: var(--color-primary);
-          color: white;
         }
 
         #status-card-container {
@@ -402,6 +399,7 @@ export default class SummaryView extends LitElement {
           text-transform: capitalize;
           color: #323232;
           font-weight: 500;
+          color: var(--color-text-primary);
         }
 
         .user .fullname[regular] {
@@ -412,10 +410,11 @@ export default class SummaryView extends LitElement {
           color: #878787;
           font-size: 0.8rem;
           font-weight: 400;
+          color: var(--color-text-secondary);
         }
 
         .user .remarks span {
-          color: var(--color-error);
+          color: var(--color-input-error);
           font-weight: 500;
           text-transform: capitalize;
         }
@@ -440,7 +439,7 @@ export default class SummaryView extends LitElement {
 
         #stats {
           animation: fade-in 0.5s;
-          background: rgba(0, 0, 0, 0.1);
+          background: rgba(0, 0, 0, 0.3);
           position: absolute;
           top: 0;
           bottom: 0;
@@ -466,6 +465,7 @@ export default class SummaryView extends LitElement {
         #stats p {
           font-weight: bold;
           margin: 10px 0 10px 0;
+          color: var(--color-text-primary);
         }
 
         #stats p span {
