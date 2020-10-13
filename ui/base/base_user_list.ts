@@ -234,12 +234,12 @@ export default abstract class BaseUserList extends LitElement {
 
         .user:focus,
         .user:active {
-          background-color: rgba(0, 0, 0, 0.1);
+          background-color: var(--hover-highlight);
         }
 
         @media (hover: hover) {
           .user:hover {
-            background-color: rgba(0, 0, 0, 0.1);
+            background-color: var(--hover-highlight);
           }
         }
 

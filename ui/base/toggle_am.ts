@@ -18,17 +18,17 @@ export default class ToggleAM extends LitElement {
     return html`
       <div id="root">
         <button
+          outline
           static
-          ?solid="${this.isMorning}"
-          ?outline="${!this.isMorning}"
+          ?selected="${this.isMorning}"
           @click="${this.toggleAm()}"
         >
           AM
         </button>
         <button
+          outline
           static
-          ?solid="${!this.isMorning}"
-          ?outline="${this.isMorning}"
+          ?selected="${!this.isMorning}"
           @click="${this.toggleAm()}"
         >
           PM
@@ -56,7 +56,23 @@ export default class ToggleAM extends LitElement {
           height: inherit;
           font-weight: 600;
           padding: var(--padding-button);
-          border: 2px solid var(--color-primary);          
+          border-color: var(--color-primary);
+        }
+
+        button[selected] {
+          color: var(--color-text-light);
+          background-color: var(--color-primary);
+        }
+
+        button[selected]:hover {
+          border-color: var(--color-primary-dark);
+          background-color: var(--color-primary-dark);
+        }
+
+        button[selected]:focus,
+        button[selected]:active {
+          border-color: var(--color-primary-dark);
+          background-color: var(--color-primary-dark);
         }
 
         button:first-child {

@@ -56,6 +56,7 @@ export default class UserList extends BaseUserList {
           font-size: 1rem;
           line-height: 1.2rem;
           margin-bottom: 0.2rem;
+          color: var(--color-text-primary);
         }
 
         .status {
@@ -65,10 +66,11 @@ export default class UserList extends BaseUserList {
           letter-spacing: 0.1em;
           text-transform: uppercase;
           line-height: 1rem;
+          color: var(--color-text-secondary);
         }
 
         .status > span {
-          color: var(--color-error);
+          color: var(--color-input-error);
           font-weight: 500;
           text-transform: capitalize;
         }

@@ -43,7 +43,7 @@ export default class CustomDialog extends LitElement {
         }
 
         button[plain] {
-          background-color: rgb(250 250 250 / 0.7);
+          background-color: var(--app-bar);
         }
 
         button {

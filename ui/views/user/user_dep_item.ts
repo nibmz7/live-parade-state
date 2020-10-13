@@ -111,6 +111,7 @@ export default class UserDepItem extends LitElement {
           text-transform: capitalize;
           font-weight: 500;
           margin: 0;
+          color: var(--color-text-primary);
         }
 
         .summary {
@@ -120,8 +121,8 @@ export default class UserDepItem extends LitElement {
           font-weight: 400;
           background: #33475a;
           font-size: 0.9rem;
-          color: white;
           border-radius: 15px 15px 0 0;
+          color: var(--color-text-primary);
         }
 
         .summary[empty] {

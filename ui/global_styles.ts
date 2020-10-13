@@ -183,12 +183,11 @@ export const buttonStyles = css`
   button[solid] {
     color: var(--color-text-light);
     background-color: var(--color-primary);
+    box-shadow: 0 1px 5px 0px rgba(var(--color-shadow-primary-rgb), 0.5);
     transition: background-color 0.3s, box-shadow 0.3s;
-    box-shadow: 0 2px 4px -1px rgba(var(--color-primary-rgb), 0.5);
   }
 
   button[plain] {
-    --color-primary-dark: var(--button-bg-dark);
     color: var(--color-primary);
     background-color: transparent;
     transition: background-color 0.3s;
@@ -196,31 +195,43 @@ export const buttonStyles = css`
 
   button[outline] {
     color: var(--color-primary);
-    background: var(--bg-primary-light);
-    border: 2px solid var(--color-primary);
-    box-shadow: 0 4px 6px -1px rgba(var(--color-primary-rgb), 0.2),
-      0 2px 4px -1px rgba(var(--color-primary-rgb), 0.12);
-    transition: background-color 0.3s, box-shadow 0.3s, color 0.3s;
-    --color-primary-dark: var(--button-bg-dark);
+    border-width: 2px;
+    border-style: solid;
+    border-color: var(--color-primary);
+    background-color: var(--bg-primary-light);
+    box-shadow: 0 1px 5px 0px rgba(var(--color-shadow-primary-rgb), 0.5);
+    transition: background-color 0.3s, box-shadow 0.3s, color 0.3s,
+      border-color 0.3s;
   }
 
   @media (hover: hover) {
-    button[solid]:hover,
-    button[outline]:hover {
+    button[solid]:hover {
       background-color: var(--color-primary-dark);
-      box-shadow: 0px 2px 9px 1px rgba(var(--color-primary-dark-rgb), 0.5);
+      box-shadow: 0px 2px 9px 1px
+        rgba(var(--color-shadow-primary-dark-rgb), 0.5);
+    }
+    button[outline]:hover {
+      border-color: var(--color-primary-dark);
+      background-color: var(--hover-highlight);
+      box-shadow: 0px 2px 9px 1px
+        rgba(var(--color-shadow-primary-dark-rgb), 0.5);
     }
     button[plain]:hover {
-      background-color: var(--color-primary-dark);
+      background-color: var(--hover-highlight);
     }
   }
 
   button[solid]:focus,
-  button[solid]:active,
+  button[solid]:active {
+    background-color: var(--color-primary-dark);
+    box-shadow: 0px 2px 9px 1px rgba(var(--color-shadow-primary-dark-rgb), 0.5);
+  }
+
   button[outline]:focus,
   button[outline]:active {
-    background-color: var(--color-primary-dark);
-    box-shadow: 0px 2px 9px 1px rgba(var(--color-primary-dark-rgb), 0.5);
+    border-color: var(--color-primary-dark);
+    background-color: var(--hover-highlight);
+    box-shadow: 0px 2px 9px 1px rgba(var(--color-shadow-primary-dark-rgb), 0.5);
   }
 
   button[plain]:focus,
@@ -232,7 +243,7 @@ export const buttonStyles = css`
   button[static]:hover,
   button[static]:focus,
   button[static]:active {
-    box-shadow: 0 4px 6px -1px rgba(var(--color-primary-rgb), 0.2),
-      0 2px 4px -1px rgba(var(--color-primary-rgb), 0.12);
+    box-shadow: 0 4px 6px -1px rgba(var(--color-shadow-primary-rgb), 0.2),
+      0 2px 4px -1px rgba(var(--color-shadow-primary-rgb), 0.12);
   }
 `;
