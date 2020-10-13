@@ -122,7 +122,7 @@ export default class UserDepItem extends LitElement {
           background: #33475a;
           font-size: 0.9rem;
           border-radius: 15px 15px 0 0;
-          color: var(--color-text-primary);
+          color: var(--color-text-light);
         }
 
         .summary[empty] {

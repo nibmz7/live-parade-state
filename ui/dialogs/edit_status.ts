@@ -242,7 +242,7 @@ export default class EditStatus extends LitElement {
           margin: 5px 0;
           color: var(--color-text-primary);
         }
-        
+
         .remarks > input {
           padding: 5px;
           border: 1px solid grey;
@@ -252,12 +252,13 @@ export default class EditStatus extends LitElement {
           text-transform: uppercase;
           color: var(--color-text-light);
           background-color: var(--bg-primary-light);
+          transition: background-color 0.3s;
         }
 
         .remarks > input::placeholder {
           color: var(--color-input-hint);
         }
-        
+
         .remarks > input:focus {
           outline: none;
           border: 1px solid #ff3838;
@@ -313,7 +314,7 @@ export default class EditStatus extends LitElement {
           font-size: 0.6rem;
           white-space: pre-line;
           text-align: center;
-          color: var(--color-text-light);
+          color: var(--color-text-dark);
         }
 
         .updated-by > span {

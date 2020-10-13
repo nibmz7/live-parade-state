@@ -87,6 +87,10 @@ export default class ViewSwitcher extends LitElement {
     this.showView(VIEW_TYPES.AUTH);
   }
 
+  toggleDarkMode() {
+    document.body.classList.toggle('dark');
+  }
+
   render() {
     const content = () => {
       switch (this.viewType) {
@@ -106,6 +110,8 @@ export default class ViewSwitcher extends LitElement {
       <div id="root" ?fade-out="${!this.visible}" ?fade-in="${this.visible}">
         ${content()}
       </div>
+
+      <p id="toggle-dark-mode" @click="${this.toggleDarkMode}">dark</p>
     `;
   }
 
@@ -124,6 +130,15 @@ export default class ViewSwitcher extends LitElement {
 
         #root[fade-out] {
           animation: fade-out 0.5s;
+        }
+
+        #toggle-dark-mode {
+          position: absolute;
+          top: 0px;
+          right: 10px;
+          color: var(--color-text-dark);
+          z-index: 99;
+    cursor: pointer;
         }
       `
     ];

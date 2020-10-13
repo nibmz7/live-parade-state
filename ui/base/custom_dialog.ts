@@ -133,7 +133,7 @@ export default class CustomDialog extends LitElement {
 
         #root[ready] > .dialog {
           pointer-events: auto;
-          transition: transform 0.3s;
+          transition: background-color 0.3s, box-shadow 0.3s, transform 0.3s;
         }
 
         .dialog {
@@ -162,6 +162,7 @@ export default class CustomDialog extends LitElement {
           font-weight: 500;
           border-radius: 30px;
           background: rgba(0, 0, 0, 0.1);
+          color: var(--color-text-light);
           display: inline-block;
         }
 

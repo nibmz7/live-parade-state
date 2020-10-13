@@ -312,6 +312,7 @@ export default class SummaryView extends LitElement {
           animation: slide-in-from-right 0.5s backwards;
           box-shadow: rgb(0 0 0 / 20%) -2px 0px 6px -3px;
           background-color: var(--bg-primary);
+          transition: background-color 0.3s;
         }
 
         #header {
@@ -363,7 +364,8 @@ export default class SummaryView extends LitElement {
         #status-card {
           margin-top: 1rem;
           border-radius: 15px;
-          transition: height 0.5s, transform 0.5s;
+          transition: height 0.5s, transform 0.5s, background-color 0.3s,
+            box-shadow 0.3s;
           transform: translateY(var(--offset-y));
           justify-content: start;
           margin-bottom: 70px;

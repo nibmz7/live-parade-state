@@ -41,6 +41,17 @@ export const globalStyles = css`
   }
 `;
 
+export const cardStyles = css`
+  .card {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    background-color: var(--bg-primary-light);
+    box-shadow: var(--color-shadow) 0px 1px 5px 0px;
+    transition: background-color 0.3s, box-shadow 0.3s;
+  }
+`;
+
 export const inputStyles = css`
   input[type='text'],
   input[type='password'],
@@ -48,8 +59,9 @@ export const inputStyles = css`
     -webkit-appearance: none;
     -moz-appearance: none;
     appearance: none;
-    color: var(--color-text-light);
+    color: var(--color-text-dark);
     background-color: var(--bg-primary-light);
+    transition: background-color 0.3s;
   }
 
   input::placeholder {
@@ -157,16 +169,6 @@ export const passwordInputStyles = css`
       transform: scale(1);
       opacity: 1;
     }
-  }
-`;
-
-export const cardStyles = css`
-  .card {
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    background-color: var(--bg-primary-light);
-    box-shadow: var(--color-shadow) 0px 1px 5px 0px;
   }
 `;
 
