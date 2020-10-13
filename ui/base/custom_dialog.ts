@@ -12,7 +12,7 @@ export enum DIALOG_STATE {
   OPENING,
   OPENED,
   CLOSING,
-  STALLING
+  INPUT_FOCUSED
 }
 
 @customElement('custom-dialog')
@@ -40,7 +40,7 @@ export default class CustomDialog extends LitElement {
   }
 
   close() {
-    if (this.state === DIALOG_STATE.STALLING) {
+    if (this.state === DIALOG_STATE.INPUT_FOCUSED) {
       this.closePrompt = true;
       this.reset();
     } else if (this.state === DIALOG_STATE.OPENED)
@@ -55,7 +55,7 @@ export default class CustomDialog extends LitElement {
       ?hide="${this.state === DIALOG_STATE.CLOSING}"
       ?show="${this.state === DIALOG_STATE.OPENING}"
       ?ready="${this.state === DIALOG_STATE.OPENED ||
-      this.state === DIALOG_STATE.STALLING}"
+      this.state === DIALOG_STATE.INPUT_FOCUSED}"
       aria-label="Close dialog"
       @click="${this.close}"
     >
@@ -65,7 +65,7 @@ export default class CustomDialog extends LitElement {
         aria-label="Dialog"
         @click="${(e: Event) => {
           e.stopPropagation();
-          if (this.state === DIALOG_STATE.STALLING && window.offsetOn) {
+          if (this.state === DIALOG_STATE.INPUT_FOCUSED && window.offsetOn) {
             const isInput = (e.composedPath()[0] as HTMLElement).tagName
               .toLowerCase()
               .includes('input');
@@ -92,11 +92,9 @@ export default class CustomDialog extends LitElement {
       fadeAnimation,
       css`
         :host {
-          --offset-item-height: 0px;
-          --total-offset-height: calc(
-            var(--offset-height) - var(--offset-item-height)
-          );
-          --offset-dialog: calc(var(--total-offset-height) * var(--offset-on));
+          --offset-reduce: 0px;
+          --offset-total: calc(var(--offset-height) + var(--offset-reduce));
+          --offset-dialog: calc(var(--offset-total) * var(--offset-on));
         }
 
         #root {
@@ -122,7 +120,7 @@ export default class CustomDialog extends LitElement {
         }
 
         #root[hide] {
-          animation: fade-out 0.3s;
+          animation: fade-out 0.5s;
         }
 
         #root[show] > .dialog {
@@ -130,7 +128,7 @@ export default class CustomDialog extends LitElement {
         }
 
         #root[hide] > .dialog {
-          animation: scale-out 0.3s;
+          animation: scale-out 0.5s;
         }
 
         #root[ready] > .dialog {
@@ -144,6 +142,7 @@ export default class CustomDialog extends LitElement {
           border-radius: 5px;
           padding: 15px 20px;
           pointer-events: none;
+          transform-style: preserve-3d;
           transform: perspective(100px) translateZ(0px)
             translateY(var(--offset-dialog));
         }
@@ -168,8 +167,7 @@ export default class CustomDialog extends LitElement {
 
         @keyframes scale-in {
           from {
-            transform: perspective(100px) translateZ(10px)
-              translateY(var(--offset-dialog));
+            transform: perspective(100px) translateZ(10px);
           }
           to {
             transform: perspective(100px) translateZ(0px);
@@ -178,8 +176,7 @@ export default class CustomDialog extends LitElement {
 
         @keyframes scale-out {
           to {
-            transform: perspective(100px) translateZ(10px)
-              translateY(var(--offset-dialog));
+            transform: perspective(100px) translateZ(5px);
           }
         }
       `

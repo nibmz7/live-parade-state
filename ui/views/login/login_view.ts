@@ -185,12 +185,12 @@ export class LoginView extends LitElement {
 
         form {
           width: 70%;
-          --offset-item-height: 50px;
-          --total-offset-height: calc(
-            var(--offset-height) - var(--offset-item-height)
+          --offset-reduce: 170px;
+          --total-offset: calc(
+            var(--offset-height) + var(--offset-reduce)
           );
           transform: translateY(
-            calc(var(--offset-height) - 120px * var(--offset-on))
+            calc(var(--total-offset) * var(--offset-on))
           );
           transition: transform 0.3s;
         }

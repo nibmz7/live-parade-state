@@ -112,7 +112,7 @@ export default abstract class BaseDepList extends LitElement {
         }
 
         #scrollable {
-          max-height: 99.9%;
+          height: 100%;
           overflow-x: hidden;
           overflow-y: scroll;
         }

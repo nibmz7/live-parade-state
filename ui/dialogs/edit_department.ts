@@ -25,7 +25,7 @@ export default class EditDepartment extends LitElement {
   }
 
   submit() {
-    if (this.dialogState === DIALOG_STATE.STALLING && window.offsetOn) return;
+    if (this.dialogState === DIALOG_STATE.INPUT_FOCUSED && window.offsetOn) return;
     if (this.nameState.value.length === 0) {
       this.nameState = {
         ...this.nameState,
@@ -36,13 +36,13 @@ export default class EditDepartment extends LitElement {
     if (this.editing) {
       let action = ACTION_DEPARTMENT.requestModify({
         ...this.department!,
-        name: this.nameState.value
+        name: this.nameState.value.trim()
       });
       ApplicationStore.dispatch(action);
     } else {
       let action = ACTION_DEPARTMENT.requestAdd({
         id: '0',
-        name: this.nameState.value
+        name: this.nameState.value.trim()
       });
       ApplicationStore.dispatch(action);
     }
@@ -56,7 +56,7 @@ export default class EditDepartment extends LitElement {
   }
 
   onInputFocus() {
-    this.dialogState = DIALOG_STATE.STALLING;
+    this.dialogState = DIALOG_STATE.INPUT_FOCUSED;
   }
 
   render() {
@@ -118,7 +118,7 @@ export default class EditDepartment extends LitElement {
       inputStyles,
       css`
         custom-dialog {
-          --offset-item-height: 110px;
+          --offset-reduce: 190px;
         }
 
         #root {

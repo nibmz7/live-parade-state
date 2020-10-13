@@ -34,12 +34,12 @@ export default class EditStatus extends LitElement {
   @property({ type: Number }) dialogState = DIALOG_STATE.OPENING;
 
   onInputFocus() {
-    this.dialogState = DIALOG_STATE.STALLING;
+    this.dialogState = DIALOG_STATE.INPUT_FOCUSED;
   }
 
   onInputBlur(e: Event) {
     const input = e.target as HTMLInputElement;
-    const remarks = input.value;
+    const remarks = input.value.trim();
     this.statusToEdit = { ...this.statusToEdit, remarks };
   }
 
@@ -188,7 +188,7 @@ export default class EditStatus extends LitElement {
       buttonStyles,
       css`
         custom-dialog {
-          --offset-item-height: 190px;
+          --offset-reduce: 100px;
         }
 
         toggle-am {

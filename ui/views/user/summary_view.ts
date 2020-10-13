@@ -292,6 +292,13 @@ export default class SummaryView extends LitElement {
           animation-delay: 0.1s;
         }
 
+        #close,
+        #view-stats {
+          --should-fade: 0;
+          --offset-y: 150%;
+          animation: slide-in 0.5s backwards;
+        }
+
         #root {
           overflow: hidden;
           position: absolute;
@@ -410,13 +417,6 @@ export default class SummaryView extends LitElement {
           color: var(--color-error);
           font-weight: 500;
           text-transform: capitalize;
-        }
-
-        #close,
-        #view-stats {
-          --should-fade: 0;
-          --offset-y: 150%;
-          animation: slide-in 0.5s backwards;
         }
 
         #close {

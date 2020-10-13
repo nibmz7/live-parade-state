@@ -96,13 +96,13 @@ export default class EditUser extends LitElement {
 
   submit() {
     return onPressed(() => {
-      if (this.dialogState === DIALOG_STATE.STALLING && window.offsetOn) return;
+      if (this.dialogState === DIALOG_STATE.INPUT_FOCUSED && window.offsetOn) return;
       this.checkValidity();
       if (this.errorState.visible) return;
 
-      const name = this.nameState.value;
-      const rank = new Rank(this.rankState.value);
-      const email = this.emailState.value + '@' + this.branch.domain;
+      const name = this.nameState.value.trim();
+      const rank = new Rank(this.rankState.value.trim());
+      const email = this.emailState.value.trim() + '@' + this.branch.domain;
       const regular = this.isRegularState;
       const departmentid = this.department!.id;
       const branchid = this.branch.id;
@@ -116,7 +116,7 @@ export default class EditUser extends LitElement {
           ...data
         });
       } else {
-        const password = this.passwordState.value;
+        const password = this.passwordState.value.trim();
         let user = new UserBase({ ...data, password });
         action = ACTION_USER.requestAdd(user);
       }
@@ -155,7 +155,7 @@ export default class EditUser extends LitElement {
       ...this.errorState,
       visible: false
     };
-    this.dialogState = DIALOG_STATE.STALLING;
+    this.dialogState = DIALOG_STATE.INPUT_FOCUSED;
   }
 
   render() {
@@ -347,7 +347,7 @@ export default class EditUser extends LitElement {
       fadeAnimation,
       css`
         custom-dialog {
-          --offset-item-height: 140px;
+          --offset-reduce: 160px;
         }
 
         #root {
