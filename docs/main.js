@@ -526,12 +526,12 @@ const pt=window.ShadowRoot&&(void 0===window.ShadyCSS||window.ShadyCSS.nativeSha
           justify-content: center;
         }
 
-        form {
+        form.card {
           width: 70%;
           --offset-reduce: 170px;
           --total-offset: calc(var(--offset-height) + var(--offset-reduce));
           transform: translateY(calc(var(--total-offset) * var(--offset-on)));
-          transition: transform 0.3s;
+          transition: background-color 0.3s, box-shadow 0.3s, transform 0.3s;
         }
 
         h3 {
