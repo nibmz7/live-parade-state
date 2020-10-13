@@ -218,7 +218,7 @@ export class LoginView extends LitElement {
           white-space: nowrap;
           overflow: hidden;
           font-size: 0.8rem;
-          color: var(--color-text-light);
+          color: var(--color-text-dark);
         }
 
         #error[aria-hidden='false'] {

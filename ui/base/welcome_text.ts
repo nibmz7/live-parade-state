@@ -38,8 +38,8 @@ export default class CustomDialog extends LitElement {
       globalStyles,
       buttonStyles,
       css`
-        button#welcome-text{
-          transition: background-color 0.5s, box-shadow 0.5s !important;
+        button#welcome-text {
+          transition: background-color 0.3s, box-shadow 0.5s !important;
         }
 
         button[plain] {

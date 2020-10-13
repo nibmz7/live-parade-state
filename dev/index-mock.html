@@ -8,13 +8,18 @@
     <link rel="stylesheet" href="main.css">
     </link>
     <script>
-        process = { env: { NODE_ENV: 'production' } }; 
+        process = { env: { NODE_ENV: 'production' } };
         window.authStatus = 1;
     </script>
     <script defer src="main-mock.js" type="module"></script>
 </head>
 
 <body>
+    <script>
+        const darkMode = localStorage.getItem('dark-mode') === 'true';
+        if (darkMode) document.body.classList.add('dark');
+    </script>
+
     <view-switcher splashscreen></view-switcher>
 
     <script>
