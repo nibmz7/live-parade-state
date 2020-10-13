@@ -70,8 +70,7 @@ export default abstract class BaseDepList extends LitElement {
       threshold: 0.99
     };
 
-    const callback = (entries: IntersectionObserverEntry[], observer) => {
-      console.log(entries)
+    const callback = (entries: IntersectionObserverEntry[]) => {
       const shouldElevate = entries[0].boundingClientRect.y !== 0;      ;
       const event = new CustomEvent('elevate', { detail: shouldElevate });
       this._welcomeText.dispatchEvent(event);
