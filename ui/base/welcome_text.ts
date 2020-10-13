@@ -54,7 +54,7 @@ export default class CustomDialog extends LitElement {
           font-weight: 500;
           font-size: 1.1rem;
           box-shadow: none;
-          color: var(--color-primary-dark);
+          color: var(--color-primary);
           border-radius: 0px;
         }
         button[elevate] {

@@ -140,9 +140,9 @@ export default class EditStatus extends LitElement {
         <div class="status-chooser">
           ${STATUSES.map((statusType, index) => {
             return html`<button
+              outline
               static
-              ?outline="${this.statusToEdit.code !== index}"
-              ?solid="${this.statusToEdit.code === index}"
+              ?selected="${this.statusToEdit.code === index}"
               @click="${this.statusChanged(index)}"
             >
               ${statusType.name}
@@ -231,7 +231,6 @@ export default class EditStatus extends LitElement {
           font-size: 0.9rem;
           padding: 7px;
           border-radius: 5px;
-          border: 2px solid var(--color-primary);
         }
 
         .remarks {

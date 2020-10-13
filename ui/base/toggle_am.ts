@@ -59,22 +59,6 @@ export default class ToggleAM extends LitElement {
           border-color: var(--color-primary);
         }
 
-        button[selected] {
-          color: var(--color-text-light);
-          background-color: var(--color-primary);
-        }
-
-        button[selected]:hover {
-          border-color: var(--color-primary-dark);
-          background-color: var(--color-primary-dark);
-        }
-
-        button[selected]:focus,
-        button[selected]:active {
-          border-color: var(--color-primary-dark);
-          background-color: var(--color-primary-dark);
-        }
-
         button:first-child {
           border-radius: 35px 0 0 35px;
         }

@@ -65,7 +65,7 @@ body.dark {
   --color-input-success: #42a75f;
   --color-input-password: rgb(151, 147, 147);
   --color-shadow: rgb(0 0 0);
-   : 0 0 0;
+  --color-shadow-primary-rgb: 0 0 0;
   --color-shadow-primary-dark-rgb: 0 0 0;
   --color-text-light: #ececec;
   --color-text-dark: #e1e1e1;

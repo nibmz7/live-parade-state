@@ -33,6 +33,7 @@ export default class EditDepartment extends LitElement {
           width: 100%;
           color: #313131;
           margin-top: 15px;
+          color: var(--color-text-dark);
         }
       `
     ];
