@@ -15,6 +15,11 @@
 </head>
 
 <body>
+    <script>
+        const darkMode = localStorage.getItem('dark-mode') === 'true';
+        if (darkMode) document.body.classList.add('dark');
+    </script>
+
     <view-switcher splashscreen></view-switcher>
 
     <script>

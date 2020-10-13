@@ -413,6 +413,7 @@ export default class SummaryView extends LitElement {
           font-size: 0.8rem;
           font-weight: 400;
           color: var(--color-text-secondary);
+          text-transform: uppercase;
         }
 
         .user .remarks span {

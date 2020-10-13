@@ -298,7 +298,7 @@ export default class EditStatus extends LitElement {
           color: white;
           border-radius: 5px;
           pointer-events: none;
-          box-shadow: 0 2px 4px -1px rgba(var(--color-primary-rgb), 0.5);
+          box-shadow: 0 2px 4px -1px rgba(var(--color-shadow-primary-rgb), 0.5);
           transform: scale(0);
           opacity: 0;
           transition: opacity 0.3s, transform 0.3s;
