@@ -1846,7 +1846,7 @@ const Wt=(e,t)=>{const r=e.startNode.parentNode,i=void 0===t?e.endNode:t.startNo
           font: inherit;
           text-transform: uppercase;
           color: var(--color-text-light);
-          background-color: var(--bg-primary-light);
+          background-color: var(--bg-primary-dark);
           transition: background-color 0.3s;
         }
 

@@ -251,7 +251,7 @@ export default class EditStatus extends LitElement {
           font: inherit;
           text-transform: uppercase;
           color: var(--color-text-light);
-          background-color: var(--bg-primary-light);
+          background-color: var(--bg-primary-dark);
           transition: background-color 0.3s;
         }
 
