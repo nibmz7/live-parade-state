@@ -270,6 +270,7 @@ export default class SummaryView extends LitElement {
           right: 0;
           background: #0000004a;
           animation: fade-in 0.5s;
+          z-index: 19;
         }
 
         .scrim[close] {

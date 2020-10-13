@@ -49,6 +49,7 @@ export default class AdminView extends LitElement {
       cardStyles,
       css`
         #root {
+          overflow: hidden;
           height: 100%;
           width: 100%;
           position: relative;

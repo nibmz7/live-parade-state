@@ -38,9 +38,14 @@ export default class CustomDialog extends LitElement {
       globalStyles,
       buttonStyles,
       css`
-        #welcome-text {
-          transition: box-shadow 0.5s, background-color 0.5s;
+        button#welcome-text{
+          transition: background-color 0.5s, box-shadow 0.5s !important;
         }
+
+        button[plain] {
+          background-color: rgb(250 250 250 / 0.7);
+        }
+
         button {
           position: absolute;
           width: 100%;
@@ -49,13 +54,11 @@ export default class CustomDialog extends LitElement {
           font-weight: 500;
           font-size: 1.1rem;
           box-shadow: none;
-          background: #faf5fab8;
           color: var(--color-primary-dark);
           border-radius: 0px;
         }
         button[elevate] {
           box-shadow: rgba(0, 0, 0, 0.1) 0px 1px 5px;
-          background-color: rgb(153 153 153 / 10%);
         }
       `
     ];

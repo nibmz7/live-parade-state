@@ -67,10 +67,10 @@ const ModelDepartment3: Department = {
 const ModelDepartment4: Department = { id: 'dep-321', name: 'Signal Wing' };
 
 const ModelDepartmentArray: Array<Department> = [
+  ModelDepartment4,
   ModelDepartment1,
   ModelDepartment2,
-  ModelDepartment3,
-  ModelDepartment4
+  ModelDepartment3
 ];
 
 function randomInt(max) {
@@ -92,13 +92,14 @@ export const makeUser = (
   name: string,
   uid: string,
   depId: string,
-  rank: string
+  rank: string,
+  regular: boolean
 ) =>
   new User({
     uid: `user-${uid}`,
     name,
     email: `${name}@lol.com`,
-    regular: randomInt(7) >= 3,
+    regular,
     rank: new Rank(rank),
     branchid: ModelBranch.id,
     departmentid: depId,
@@ -108,7 +109,7 @@ export const makeUser = (
 
 const ModelUser1 = new User({
   uid: 'user-101',
-  name: 'John',
+  name: 'Marquez',
   email: 'john1@lol.com',
   regular: false,
   rank: new Rank('CPL'),
@@ -119,7 +120,7 @@ const ModelUser1 = new User({
 });
 const ModelUser2 = new User({
   uid: 'user-201',
-  name: 'John',
+  name: 'Rebecca',
   email: 'john2@lol.com',
   regular: true,
   rank: new Rank('MAJ'),
@@ -152,20 +153,20 @@ const ModelUser3 = new User({
 });
 
 const ModelUserArray: Array<User> = [
+  makeUser('Lucas', '781929', 'dep-321', 'MAJ', true),
   ModelUser1,
   ModelUser2,
   ModelUser22,
   ModelUser3,
-  makeUser('lily', '1234', 'dep-123', 'LTC'),
-  makeUser('joe', '12344', 'dep-123', 'LCP'),
-  makeUser('bob', '123444', 'dep-123', '1WO'),
-  makeUser('joyce', '4568', 'dep-456', '1SG'),
-  makeUser('bill', '4566', 'dep-456', 'LCP'),
-  makeUser('sam', '45666', 'dep-456', 'CPL'),
-  makeUser('ruby', '78910', 'dep-789', 'MSG'),
-  makeUser('paula', '78999', 'dep-789', 'REC'),
-  makeUser('rob', '7899919', 'dep-789', 'PTE'),
-  makeUser('lucas', '781929', 'dep-321', 'MG')
+  makeUser('Lily', '1234', 'dep-123', 'LTC', true),
+  makeUser('Joe', '12344', 'dep-123', 'LCP', false),
+  makeUser('Bob', '123444', 'dep-456', '1WO', true),
+  makeUser('Joyce', '4568', 'dep-456', '1SG', true),
+  makeUser('Bill', '4566', 'dep-456', 'LCP', false),
+  makeUser('Sam', '45666', 'dep-456', 'CPL', false),
+  makeUser('Ruby', '78910', 'dep-789', 'MSG', true),
+  makeUser('Paula', '78999', 'dep-789', 'REC', false),
+  makeUser('Rob', '7899919', 'dep-789', 'PTE', false)
 ];
 
 export const MockModel = {

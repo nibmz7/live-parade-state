@@ -66,12 +66,13 @@ export default abstract class BaseDepList extends LitElement {
   firstUpdated() {
     let options = {
       root: this._scrollable,
-      rootMargin: '1px',
-      threshold: 1
+      rootMargin: '0px',
+      threshold: 0.99
     };
 
-    const callback = () => {
-      const shouldElevate = this._scrollable.scrollTop > 1;
+    const callback = (entries: IntersectionObserverEntry[], observer) => {
+      console.log(entries)
+      const shouldElevate = entries[0].boundingClientRect.y !== 0;      ;
       const event = new CustomEvent('elevate', { detail: shouldElevate });
       this._welcomeText.dispatchEvent(event);
     };
