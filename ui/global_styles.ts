@@ -48,13 +48,15 @@ export const inputStyles = css`
     -webkit-appearance: none;
     -moz-appearance: none;
     appearance: none;
+    color: var(--color-text-light);
+    background-color: var(--bg-primary-light);
+  }
+
+  input::placeholder {
+    color: var(--color-input-hint);
   }
 
   input {
-    --color-input-primary: #8899a9;
-    --color-input-primary-dark: #34495e;
-    --color-input-error: red;
-    --color-input-success: var(--color-input-primary);
     font: inherit;
     margin: 15px 0;
     padding: 5px;
@@ -83,13 +85,13 @@ export const inputStyles = css`
 
   @keyframes glow {
     0% {
-      border-color: var(--color-input-primary);
-    }
-    50% {
       border-color: var(--color-input-primary-dark);
     }
-    100% {
+    50% {
       border-color: var(--color-input-primary);
+    }
+    100% {
+      border-color: var(--color-input-primary-dark);
     }
   }
 `;
@@ -111,7 +113,7 @@ export const passwordInputStyles = css`
     right: 15px;
     top: 15px;
     bottom: 15px;
-    fill: rgb(151, 147, 147);
+    fill: var(--color-input-password);
     cursor: pointer;
   }
 
@@ -160,46 +162,46 @@ export const passwordInputStyles = css`
 
 export const cardStyles = css`
   .card {
-    background: white;
     display: flex;
     flex-direction: column;
     justify-content: center;
-    box-shadow: rgb(101 101 101 / 30%) 0px 1px 5px 0px;
+    background-color: var(--bg-primary-light);
+    box-shadow: var(--color-shadow) 0px 1px 5px 0px;
   }
 `;
 
 export const buttonStyles = css`
   button {
     font: inherit;
-    padding: 10px;
-    border-radius: 5px;
     cursor: pointer;
-    border: none;
     margin: 0;
+    padding: 10px;
+    border: none;
+    border-radius: 5px;
   }
 
   button[solid] {
-    color: white;
+    color: var(--color-text-light);
     background-color: var(--color-primary);
     transition: background-color 0.3s, box-shadow 0.3s;
     box-shadow: 0 2px 4px -1px rgba(var(--color-primary-rgb), 0.5);
   }
 
   button[plain] {
-    --color-primary-dark: rgba(0, 0, 0, 0.1);
+    --color-primary-dark: var(--button-bg-dark);
     color: var(--color-primary);
     background-color: transparent;
     transition: background-color 0.3s;
   }
 
   button[outline] {
-    background: white;
     color: var(--color-primary);
+    background: var(--bg-primary-light);
     border: 2px solid var(--color-primary);
-    --color-primary-dark: rgb(228 228 228);
     box-shadow: 0 4px 6px -1px rgba(var(--color-primary-rgb), 0.2),
       0 2px 4px -1px rgba(var(--color-primary-rgb), 0.12);
     transition: background-color 0.3s, box-shadow 0.3s, color 0.3s;
+    --color-primary-dark: var(--button-bg-dark);
   }
 
   @media (hover: hover) {

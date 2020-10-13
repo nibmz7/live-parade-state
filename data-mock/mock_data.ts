@@ -174,7 +174,7 @@ export const MockModel = {
   Branch: ModelBranch,
   Department: ModelDepartment1,
   DepartmentArray: ModelDepartmentArray,
-  User: ModelUser22,
+  User: ModelUser1,
   UserArray: ModelUserArray,
   Users: {
     [ModelDepartment1.id]: [ModelUser1],

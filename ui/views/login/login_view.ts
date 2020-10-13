@@ -186,17 +186,14 @@ export class LoginView extends LitElement {
         form {
           width: 70%;
           --offset-reduce: 170px;
-          --total-offset: calc(
-            var(--offset-height) + var(--offset-reduce)
-          );
-          transform: translateY(
-            calc(var(--total-offset) * var(--offset-on))
-          );
+          --total-offset: calc(var(--offset-height) + var(--offset-reduce));
+          transform: translateY(calc(var(--total-offset) * var(--offset-on)));
           transition: transform 0.3s;
         }
 
         h3 {
           margin: 15px 0 10px;
+          color: var(--color-text-dark);
         }
 
         .card {
@@ -221,6 +218,7 @@ export class LoginView extends LitElement {
           white-space: nowrap;
           overflow: hidden;
           font-size: 0.8rem;
+          color: var(--color-text-light);
         }
 
         #error[aria-hidden='false'] {

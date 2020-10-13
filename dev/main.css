@@ -27,16 +27,42 @@ body {
   max-width: 60rem;
   overflow: hidden;
   font-family: 'Quicksand', sans-serif;
-  background-color: #fafafa;
+  background-color: var(--bg-primary);
   --color-primary: #ff3d16;
   --color-primary-rgb: 255, 61, 22;
   --color-primary-dark: #df2a05;
   --color-primary-dark-rgb: 223, 42, 5;
-  --color-pending: #7a847d;
-  --color-success: #42a75f;
-  --color-error: #ff3d16;
+  --color-input-hint:#7b7b7b;
+  --color-input-primary: #8899a9;
+  --color-input-primary-dark: #34495e;
+  --color-input-error:  #ff3d16;
+  --color-input-success: #42a75f;
+  --color-input-password: rgb(151, 147, 147);
+  --color-shadow: rgb(201 201 201);
+  --color-text-light: #ffffff;
+  --color-text-dark: #000000;
+  --hover-highlight: rgb(230 230 230);
+  --bg-primary: #fafafa;
+  --bg-primary-light: #ffffff;
   --offset-height: 0px;
   --offset-on: 0;
+}
+
+body.dark {
+  --color-primary: #ff3d16;
+  --color-primary-rgb: 0,0,0;
+  --color-primary-dark: #df2a05;
+  --color-primary-dark-rgb: 0,0,0;
+  --color-input-hint:#b7b7b7;
+  --color-input-primary: #8899a9;
+  --color-input-primary-dark: #d7d3d3;
+  --color-input-error:  #ff3d16;
+  --color-input-success: #42a75f;
+  --color-shadow: rgb(0 0 0);
+  --color-text-light:  #ececec;
+  --color-text-dark: #e1e1e1;
+  --bg-primary: #212121;
+  --bg-primary-light: #323232;
 }
 
 @media all and (min-width: 60rem) {
