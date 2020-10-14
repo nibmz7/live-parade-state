@@ -529,8 +529,12 @@ const pt=window.ShadowRoot&&(void 0===window.ShadyCSS||window.ShadyCSS.nativeSha
         form.card {
           width: 70%;
           --offset-reduce: 170px;
-          --total-offset: calc(var(--offset-height) + var(--offset-reduce));
-          transform: translateY(calc(var(--total-offset) * var(--offset-on)));
+          --total-offset: calc(
+            var(--offset-keyboard) + var(--offset-reduce)
+          );
+          transform: translateY(
+            calc(var(--total-offset) * var(--offset-keyboard-on))
+          );
           transition: background-color 0.3s, box-shadow 0.3s, transform 0.3s;
         }
 
@@ -593,8 +597,8 @@ const pt=window.ShadowRoot&&(void 0===window.ShadyCSS||window.ShadyCSS.nativeSha
     </div>`}static get styles(){return[bt,wt,vt,mt`
         :host {
           --offset-reduce: 0px;
-          --offset-total: calc(var(--offset-height) + var(--offset-reduce));
-          --offset-dialog: calc(var(--offset-total) * var(--offset-on));
+          --offset-total: calc(var(--offset-keyboard) + var(--offset-reduce));
+          --offset-dialog: calc(var(--offset-total) * var(--offset-keyboard-on));
         }
 
         #root {
@@ -909,6 +913,7 @@ const pt=window.ShadowRoot&&(void 0===window.ShadyCSS||window.ShadyCSS.nativeSha
           transform: translateY(50%);
           opacity: 0;
           transition: transform 0.3s, opacity 0.3s;
+          pointer-events: none;
         }
 
         .error[show] {
@@ -2259,24 +2264,25 @@ const Wt=(e,t)=>{const r=e.startNode.parentNode,i=void 0===t?e.endNode:t.startNo
         ${(()=>{switch(this.viewType){case 1:return Qe`<login-view @signed-in="${this.signedIn}"></login-view>`;case 2:return Qe`<admin-view
             @signed-out="${this.signedOut}"
           ></admin-view>`;case 3:return Qe`<user-view @signed-out="${this.signedOut}"></user-view>`;default:return""}})()}
-      </div>
 
-      <svg
-        id="toggle-dark-mode"
-        @click="${this.toggleDarkMode}"
-        xmlns="http://www.w3.org/2000/svg"
-        height="24"
-        viewBox="0 0 24 24"
-        width="24"
-      >
-        <path
-          d="M20 15.31l1.9-1.9c.78-.78.78-2.05 0-2.83L20 8.69V6c0-1.1-.9-2-2-2h-2.69l-1.9-1.9c-.78-.78-2.05-.78-2.83 0L8.69 4H6c-1.1 0-2 .9-2 2v2.69l-1.9 1.9c-.78.78-.78 2.05 0 2.83l1.9 1.9V18c0 1.1.9 2 2 2h2.69l1.9 1.9c.78.78 2.05.78 2.83 0l1.9-1.9H18c1.1 0 2-.9 2-2v-2.69zm-8 1.59V7.1c0-.61.55-1.11 1.15-.99C15.91 6.65 18 9.08 18 12s-2.09 5.35-4.85 5.89c-.6.12-1.15-.38-1.15-.99z"
-        />
-      </svg>
+        <svg
+          id="toggle-dark-mode"
+          @click="${this.toggleDarkMode}"
+          xmlns="http://www.w3.org/2000/svg"
+          height="24"
+          viewBox="0 0 24 24"
+          width="24"
+        >
+          <path
+            d="M20 15.31l1.9-1.9c.78-.78.78-2.05 0-2.83L20 8.69V6c0-1.1-.9-2-2-2h-2.69l-1.9-1.9c-.78-.78-2.05-.78-2.83 0L8.69 4H6c-1.1 0-2 .9-2 2v2.69l-1.9 1.9c-.78.78-.78 2.05 0 2.83l1.9 1.9V18c0 1.1.9 2 2 2h2.69l1.9 1.9c.78.78 2.05.78 2.83 0l1.9-1.9H18c1.1 0 2-.9 2-2v-2.69zm-8 1.59V7.1c0-.61.55-1.11 1.15-.99C15.91 6.65 18 9.08 18 12s-2.09 5.35-4.85 5.89c-.6.12-1.15-.38-1.15-.99z"
+          />
+        </svg>
+      </div>
     `}static get styles(){return[vt,mt`
         #root {
           height: 100%;
           width: 100%;
+          position: relative;
         }
 
         #root[fade-in] {

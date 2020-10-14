@@ -93,8 +93,8 @@ export default class CustomDialog extends LitElement {
       css`
         :host {
           --offset-reduce: 0px;
-          --offset-total: calc(var(--offset-height) + var(--offset-reduce));
-          --offset-dialog: calc(var(--offset-total) * var(--offset-on));
+          --offset-total: calc(var(--offset-keyboard) + var(--offset-reduce));
+          --offset-dialog: calc(var(--offset-total) * var(--offset-keyboard-on));
         }
 
         #root {

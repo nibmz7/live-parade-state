@@ -484,6 +484,7 @@ export default class EditUser extends LitElement {
           transform: translateY(50%);
           opacity: 0;
           transition: transform 0.3s, opacity 0.3s;
+          pointer-events: none;
         }
 
         .error[show] {
