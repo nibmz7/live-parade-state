@@ -61,13 +61,13 @@ export class Status {
     const date = new Date();
     const dayDifference = statusDate.getDate() - date.getDate();
     const isSameDayBeforeSix =
-      dayDifference === 0 && statusDate.getHours() < 17 && date.getHours() < 17;
+      dayDifference === 0 && statusDate.getHours() < 18 && date.getHours() < 18;
     const isSameDayAfterSix =
-      dayDifference === 0 && statusDate.getHours() > 17 && date.getHours() > 17;
+      dayDifference === 0 && statusDate.getHours() > 18 && date.getHours() > 18;
     const isPrevDayAfterSix =
       dayDifference === -1 &&
-      statusDate.getHours() > 17 &&
-      date.getHours() < 17;
+      statusDate.getHours() > 18 &&
+      date.getHours() < 18;
     return (
       date.getFullYear() === statusDate.getFullYear() &&
       date.getMonth() === statusDate.getMonth() &&

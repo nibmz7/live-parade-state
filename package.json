@@ -39,7 +39,7 @@
     "test:watch": "karma start --auto-watch=true --single-run=false",
     "build:prod": "webpack",
     "build": "tsc",
-    "build:watch": "tsc --watch",
+    "build:watch": "tsc --build --watch",
     "build:tests": "tsc --build test --watch",
     "build:tests:clean": "tsc --build --clean test",
     "lint:prettier": "prettier \"**/*.js\" \"**/*.ts\" --check --ignore-path .gitignore",

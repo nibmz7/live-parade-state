@@ -19,6 +19,7 @@
     "rootDir": ".",
     "outDir": "dev"
   },
+  "references": [{ "path": "./functions/tsconfig.json" }],
   "files": ["./node_modules/firebase/index.d.ts"],
   "include": [
     "./model/**/*.ts",

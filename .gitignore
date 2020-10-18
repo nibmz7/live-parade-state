@@ -3,6 +3,7 @@ js/
 test/js
 prod/**/*.js
 
+
 add_users
 
 # Logs
@@ -17,6 +18,8 @@ firebase-debug.log*
 dev/**/*.js
 dev/**/*.ts
 dev/**/*.map
+
+functions/src
 
 
 firestore-database
