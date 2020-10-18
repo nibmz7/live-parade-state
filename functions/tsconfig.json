@@ -5,9 +5,9 @@
     "esModuleInterop": true,
     "target": "ES2019",
     "moduleResolution": "node",
-    "rootDir": "../",
-    "outDir": "./src"
+    "rootDir": ".",
+    "outDir": "./src/"
   },
-  "include": ["../model/**/*.ts", "./**/*.ts"],
+  "include": ["./**/*.ts"],
   "exclude": ["./src/**/*"]
 }
