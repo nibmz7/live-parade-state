@@ -1,37 +1,25 @@
-# live-parade-state
+### Live Parade State
 Digital attendance taking system built on top of lit-element, redux and firebase.
-<br>
-# Brief description
 
+### Demo
 Production website is hosted on Firebase.   
-
-Try out the mock version below:
+Try out the <b>mock site</b> below:
 
 - Admin page: https://nibmz7.github.io/live-parade-state/admin
-
 - User page: https://nibmz7.github.io/live-parade-state/user  
-
 - Login page: https://nibmz7.github.io/live-parade-state
 
   - Mock Admin credentials
-
     - Email: admin<span>@</span>anydomain.com
-
     - Password: anypassword123
-
+    
   - Mock User credentials
-
     - Email: name<span>@</span>anydomain.com
-
     - Password: anypassword123
 
-    
+<img src="https://raw.githubusercontent.com/nibmz7/live-parade-state/master/screenshot.png" width="50%"/>
 
-<img src="https://raw.githubusercontent.com/nibmz7/live-parade-state/master/20201014_031537-COLLAGE.jpg"/>
-
-    
-
-# License
+### License
 
 ```
 Copyright 2020 Nur Ilyas
