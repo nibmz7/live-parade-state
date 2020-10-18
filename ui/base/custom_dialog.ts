@@ -162,7 +162,7 @@ export default class CustomDialog extends LitElement {
           font-weight: 500;
           border-radius: 30px;
           background: rgba(0, 0, 0, 0.1);
-          color: var(--color-text-light);
+          color: var(--color-text-dark);
           display: inline-block;
         }
 

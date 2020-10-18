@@ -32,6 +32,7 @@ export default class FBAdminManager extends AdminManager {
     //prettier-ignore
     await import(/* webpackIgnore: true */ '/__/firebase/7.22.1/firebase-functions.js');
     this.functions = window.firebase.app().functions('asia-northeast1');
+    // this.functions.useFunctionsEmulator('http://192.168.0.198:5001');
     return FirestoreDBListener(this);
   }
 
@@ -74,7 +75,7 @@ export default class FBAdminManager extends AdminManager {
     const docRef = `branches/${this.branch.id}/repository/${department.id}`;
     this.db
       .doc(docRef)
-      .update({ 'name': department.name })
+      .update({ name: department.name })
       .then(() => this.onSucess(action, true))
       .catch(() => {
         const actionError: DepartmentActionError = {
