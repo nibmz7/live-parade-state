@@ -6,7 +6,7 @@
     "target": "ES2019",
     "moduleResolution": "node",
     "rootDir": ".",
-    "outDir": "./src/"
+    "outDir": "."
   },
   "include": ["./**/*.ts"],
   "exclude": ["./src/**/*"]

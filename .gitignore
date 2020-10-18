@@ -19,9 +19,6 @@ dev/**/*.js
 dev/**/*.ts
 dev/**/*.map
 
-functions/src
-
-
 firestore-database
 firestore-db
 
